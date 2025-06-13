@@ -1,4 +1,4 @@
-<!-- Código actualizado con separación clara entre los bloques superiores e inferiores -->
+<!-- Código actualizado con tamaños fijos para bloques de resumen y calendario -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -23,23 +23,19 @@
       margin: 0 auto;
       display: flex;
       flex-direction: column;
-      gap: 3rem; /* Se aumenta el espacio entre bloques superiores e inferiores */
+      gap: 3rem;
     }
 
     .header-grid {
-      display: grid;
-      grid-template-columns: 3fr 1fr;
+      display: flex;
       gap: 2rem;
-      align-items: stretch;
-    }
-
-    .resumen-unificado,
-    .calendario-box {
-      height: 100%;
+      justify-content: space-between;
     }
 
     .resumen-unificado {
       background: white;
+      width: 609px;
+      height: 95px;
       padding: 1.5rem 0;
       border-radius: 16px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.05);
@@ -94,6 +90,8 @@
 
     .calendario-box {
       background: white;
+      width: 473px;
+      height: 95px;
       padding: 1.5rem;
       border-radius: 16px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.05);
