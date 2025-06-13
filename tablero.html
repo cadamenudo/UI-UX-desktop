@@ -1,3 +1,4 @@
+<!-- Código base actualizado con cards de resumen refinadas -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -24,105 +25,24 @@
       gap: 2rem;
     }
 
-    .top-header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 80px;
-      background: #3956E8;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 2rem 0 260px;
-      color: white;
-      z-index: 1000;
-    }
-
-    .top-header .logo {
-      font-size: 1.25rem;
-      font-weight: 700;
-    }
-
-    .top-header .usuario {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-weight: 500;
-    }
-
-    .top-header .usuario img {
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-    }
-
-    .sidebar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 240px;
-      height: 100vh;
-      background: #3956E8;
-      color: white;
-      padding-top: 100px;
-      box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
-      z-index: 1001;
-    }
-
-    .sidebar nav ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .sidebar nav li {
-      padding: 0.75rem 1.5rem;
-      margin-bottom: 0.5rem;
-      border-radius: 12px;
-      cursor: pointer;
-      font-size: 0.95rem;
-      transition: background 0.2s;
-    }
-
-    .sidebar nav li:hover {
-      background: rgba(255, 255, 255, 0.15);
-    }
-
-    .sidebar nav .activo {
-      background: rgba(255,255,255,0.1);
-      font-weight: 600;
-    }
-
-    .bloque-superior {
+    .resumen-grid {
       display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 2rem;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
     }
 
-    .resumen-bloque,
-    .calendario-bloque,
-    .tarjeta {
+    .resumen-card-final {
       background: white;
-      border-radius: 16px;
       padding: 1.5rem;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-      min-height: 130px;
-    }
-
-    .resumen-bloque {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .resumen-item {
+      border-radius: 16px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
       display: flex;
       align-items: center;
       gap: 1rem;
+      position: relative;
     }
 
-    .icono-circulo {
+    .resumen-card-final .icono-svg {
       width: 48px;
       height: 48px;
       border-radius: 50%;
@@ -132,247 +52,75 @@
       font-size: 1.5rem;
     }
 
-    .icono-circulo.ingreso { background: #e0f2fe; }
-    .icono-circulo.gasto   { background: #f1f5f9; }
-    .icono-circulo.ahorro  { background: #fef9c3; }
+    .icono-ingreso { background-color: #E0F2FE; }
+    .icono-gasto   { background-color: #F1F5F9; }
+    .icono-ahorro  { background-color: #FEF9C3; }
 
-    .resumen-texto {
+    .resumen-info-final {
       display: flex;
       flex-direction: column;
     }
 
-    .resumen-monto {
+    .resumen-info-final .monto {
       font-size: 1.5rem;
       font-weight: 600;
-      color: #0f172a;
     }
 
-    .resumen-label {
-      font-size: 0.85rem;
+    .resumen-info-final .titulo {
+      font-size: 0.9rem;
       color: #64748b;
     }
 
-    .input-grupo {
+    .variacion {
+      position: absolute;
+      right: 1rem;
+      top: 1.5rem;
+      font-size: 0.85rem;
+      font-weight: 500;
       display: flex;
-      gap: 1rem;
-      margin-top: 1rem;
+      align-items: center;
+      gap: 4px;
     }
 
-    input[type="text"] {
-      padding: 0.6rem 1rem;
-      border-radius: 12px;
-      border: 1px solid #d1d5db;
-      font-size: 0.9rem;
-      width: 100%;
-      background: #fff;
+    .variacion.positivo {
+      color: #16a34a;
     }
 
-    button {
-      background-color: #3956E8;
-      color: white;
-      border: none;
-      padding: 0.75rem 1.5rem;
-      border-radius: 12px;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: box-shadow 0.2s;
-    }
-
-    button:hover {
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-    }
-
-    .titulo {
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
-    }
-
-    .grafico {
-      height: 300px;
+    .variacion.negativo {
+      color: #dc2626;
     }
   </style>
 </head>
 <body>
-  <header class="top-header">
-    <div class="logo">Cada Menudo</div>
-    <div class="usuario">
-      <span>Hola, Frank</span>
-      <img src="https://i.pravatar.cc/40" alt="Avatar de usuario" />
-    </div>
-  </header>
-
-  <aside class="sidebar">
-    <nav>
-      <ul>
-        <li class="activo">📊 Dashboard</li>
-        <li>💸 Transacciones</li>
-        <li>🎯 Metas</li>
-        <li>📁 Categorías</li>
-        <li>⚙️ Ajustes</li>
-      </ul>
-    </nav>
-  </aside>
-
   <div class="contenido">
-    <div class="bloque-superior">
-      <div class="resumen-bloque">
-        <div class="resumen-item">
-          <div class="icono-circulo ingreso">💰</div>
-          <div class="resumen-texto">
-            <div class="resumen-monto">$3,000.00</div>
-            <div class="resumen-label">Ingresos</div>
-          </div>
+    <div class="resumen-grid">
+      <div class="resumen-card-final">
+        <div class="icono-svg icono-ingreso">💰</div>
+        <div class="resumen-info-final">
+          <div class="monto">$3,000.00</div>
+          <div class="titulo">Ingresos este mes</div>
         </div>
-        <div class="resumen-item">
-          <div class="icono-circulo gasto">👜</div>
-          <div class="resumen-texto">
-            <div class="resumen-monto">$20.83</div>
-            <div class="resumen-label">Gastos</div>
-          </div>
+        <div class="variacion positivo">⬆ 37.8%</div>
+      </div>
+
+      <div class="resumen-card-final">
+        <div class="icono-svg icono-gasto">👜</div>
+        <div class="resumen-info-final">
+          <div class="monto">$1,200.00</div>
+          <div class="titulo">Gastos este mes</div>
         </div>
-        <div class="resumen-item">
-          <div class="icono-circulo ahorro">💸</div>
-          <div class="resumen-texto">
-            <div class="resumen-monto">$300.00</div>
-            <div class="resumen-label">Ahorros</div>
-          </div>
+        <div class="variacion positivo">⬆ 11%</div>
+      </div>
+
+      <div class="resumen-card-final">
+        <div class="icono-svg icono-ahorro">💸</div>
+        <div class="resumen-info-final">
+          <div class="monto">$450.00</div>
+          <div class="titulo">Ahorros este mes</div>
         </div>
-      </div>
-
-      <div class="calendario-bloque">
-        <div class="titulo">Selecciona un rango de fechas</div>
-        <div class="input-grupo">
-          <input type="text" id="desde" placeholder="Desde" />
-          <input type="text" id="hasta" placeholder="Hasta" />
-          <button>🔍 Buscar</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="grid">
-      <div class="tarjeta">
-        <div class="titulo">Meta para el Año</div>
-        <canvas id="graficoMeta" class="grafico"></canvas>
-      </div>
-
-      <div class="tarjeta">
-        <div class="titulo">Ingresos vs Gastos</div>
-        <canvas id="graficoComparativo" class="grafico"></canvas>
-      </div>
-    </div>
-
-    <div class="grid">
-      <div class="tarjeta">
-        <div class="titulo">Ingresos Totales</div>
-        <canvas id="graficoIngresos" class="grafico"></canvas>
-      </div>
-
-      <div class="tarjeta">
-        <div class="titulo">Gastos Totales</div>
-        <canvas id="graficoGastos" class="grafico"></canvas>
+        <div class="variacion negativo">⬇ 7%</div>
       </div>
     </div>
   </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script>
-    flatpickr("#desde", { dateFormat: "d/m/Y" });
-    flatpickr("#hasta", { dateFormat: "d/m/Y" });
-
-    const metaCtx = document.getElementById('graficoMeta').getContext('2d');
-    new Chart(metaCtx, {
-      type: 'bar',
-      data: {
-        labels: ['Meta', 'Acumulado'],
-        datasets: [{
-          label: 'Cantidad',
-          data: [21000, 7847.82],
-          backgroundColor: ["#7459D9", "#E8C239"],
-          borderRadius: 12
-        }]
-      },
-      options: {
-        plugins: { tooltip: { backgroundColor: '#fff', titleColor: '#000', bodyColor: '#000' } },
-        scales: { y: { beginAtZero: true } }
-      }
-    });
-
-    const comparativoCtx = document.getElementById('graficoComparativo').getContext('2d');
-    new Chart(comparativoCtx, {
-      type: 'line',
-      data: {
-        labels: ['Jun 02', 'Jun 06'],
-        datasets: [
-          {
-            label: 'Ingresos',
-            data: [3000, 0],
-            borderColor: '#7459D9',
-            backgroundColor: '#7459D9',
-            tension: 0.4
-          },
-          {
-            label: 'Gastos',
-            data: [0, 20.83],
-            borderColor: '#64748B',
-            backgroundColor: '#64748B',
-            tension: 0.4
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        plugins: { tooltip: { backgroundColor: '#fff', titleColor: '#000', bodyColor: '#000' } },
-        scales: { y: { beginAtZero: true } }
-      }
-    });
-
-    const ingresosCtx = document.getElementById('graficoIngresos').getContext('2d');
-    new Chart(ingresosCtx, {
-      type: 'doughnut',
-      data: {
-        labels: ['Salario'],
-        datasets: [{
-          label: 'Ingresos',
-          data: [3000],
-          backgroundColor: ['#3b82f6'],
-          borderWidth: 0
-        }]
-      },
-      options: {
-        plugins: {
-          tooltip: { backgroundColor: '#fff', titleColor: '#000', bodyColor: '#000' },
-          legend: { display: true, position: 'right' }
-        }
-      }
-    });
-
-    const gastosCtx = document.getElementById('graficoGastos').getContext('2d');
-    new Chart(gastosCtx, {
-      type: 'doughnut',
-      data: {
-        labels: ['Alimentación'],
-        datasets: [{
-          label: 'Gastos',
-          data: [20.83],
-          backgroundColor: ['#3b82f6'],
-          borderWidth: 0
-        }]
-      },
-      options: {
-        plugins: {
-          tooltip: { backgroundColor: '#fff', titleColor: '#000', bodyColor: '#000' },
-          legend: { display: true, position: 'right' }
-        }
-      }
-    });
-  </script>
 </body>
 </html>
