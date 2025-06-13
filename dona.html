@@ -22,16 +22,20 @@
       max-width: 500px;
       margin: 2rem auto;
       box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-      text-align: center;
+      position: relative;
+      text-align: left;
     }
 
-    h2 {
+    .contenedor-dona h2 {
       margin: 0;
       font-size: 1.25rem;
       font-weight: 700;
+      text-align: left;
     }
 
     canvas {
+      display: block;
+      margin: 0 auto;
       margin-top: 1.5rem;
     }
   </style>
@@ -43,23 +47,20 @@
   </div>
 
   <script>
-    // Plugin para mostrar texto en el centro de la dona
+    const dataValores = [14000, 3500, 2100];
+    const total = dataValores.reduce((a, b) => a + b, 0);
+
     const centroDona = {
       id: 'centroTexto',
       beforeDraw(chart) {
-        const { width } = chart;
-        const { height } = chart;
+        const { width, height } = chart;
         const ctx = chart.ctx;
         ctx.restore();
-
-        const total = chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
-        const texto = `$${total.toLocaleString("en-US")}`;
-
-        ctx.font = '700 24px "Greycliff CF", sans-serif';
+        ctx.font = '700 36px "Greycliff CF", sans-serif';
         ctx.fillStyle = '#1e293b';
         ctx.textBaseline = 'middle';
         ctx.textAlign = 'center';
-        ctx.fillText(texto, width / 2, height / 2);
+        ctx.fillText(`$${total.toLocaleString("en-US")}`, width / 2, height / 2);
         ctx.save();
       }
     };
@@ -71,7 +72,7 @@
       data: {
         labels: ["Sueldo", "Freelance", "Otros"],
         datasets: [{
-          data: [14000, 3500, 2100],
+          data: dataValores,
           backgroundColor: ["#7D4AEA", "#9E75F0", "#C3B4FB"],
           borderWidth: 0
         }]
@@ -84,9 +85,17 @@
             display: false
           },
           tooltip: {
+            backgroundColor: "#FFFFFF",
+            titleColor: "#1e293b",
+            bodyColor: "#1e293b",
+            borderColor: "#E2E8F0",
+            borderWidth: 1,
+            padding: 12,
             callbacks: {
               label: function(context) {
-                return `${context.label}: $${context.raw.toLocaleString("en-US")}`;
+                const valor = context.raw;
+                const porcentaje = ((valor / total) * 100).toFixed(1);
+                return `${context.label}: $${valor.toLocaleString("en-US")} (${porcentaje}%)`;
               }
             }
           }
@@ -97,3 +106,4 @@
   </script>
 </body>
 </html>
+
