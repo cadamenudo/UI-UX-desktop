@@ -257,7 +257,17 @@
   margin-top: 0 !important;
 }
 
-.bloque-ingresos-totales,
+.bloque-ingresos-totales {
+  flex: 1;
+  height: 300px;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 .bloque-gastos-totales,
 .bloque-ahorros-totales {
   flex: 1;
@@ -271,7 +281,11 @@
   justify-content: center;
 }
 
-.bloque-ingresos-totales .titulo,
+.bloque-ingresos-totales .titulo {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
 .bloque-gastos-totales .titulo,
 .bloque-ahorros-totales .titulo {
   font-size: 1.1rem;
@@ -382,6 +396,45 @@
   <script>
     flatpickr("#desde", { dateFormat: "d/m/Y" });
     flatpickr("#hasta", { dateFormat: "d/m/Y" });
+
+   
+    <!-- Dona ingresos totales--->
+      
+    const ctx = document.getElementById('graficoDonaIngresos').getContext('2d');
+
+  const data = {
+    labels: ['Salario', 'Acciones', 'Renta de inmueble'],
+    datasets: [{
+      data: [3124213, 612445, 2824213],
+      backgroundColor: ['#7C3AED', '#C4B5FD', '#8B5CF6'],
+      borderWidth: 0,
+      hoverOffset: 8,
+    }]
+  };
+
+  const options = {
+    cutout: '75%',
+    plugins: {
+      legend: {
+        display: false
+      },
+      tooltip: {
+        callbacks: {
+          label: function (context) {
+            let label = context.label || '';
+            let value = context.parsed || 0;
+            return `${label}: $${value.toLocaleString()}`;
+          }
+        }
+      }
+    }
+  };
+
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: data,
+    options: options
+  });
   </script>
     
     <footer class="footer-app">
