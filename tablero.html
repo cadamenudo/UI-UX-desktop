@@ -1,4 +1,3 @@
-<!-- Código actualizado con tamaños fijos para bloques de resumen y calendario -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -17,10 +16,8 @@
     }
 
     .contenido {
-      padding-left: 272px;
-      padding-right: 32px;
-      padding-top: 100px;
-      width: calc(100% - 304px); /* 272 + 32 */
+      padding: 100px 32px 0 272px;
+      width: calc(100% - 304px);
       margin: 0 auto;
       display: flex;
       flex-direction: column;
@@ -33,13 +30,16 @@
       justify-content: space-between;
     }
 
-    .resumen-unificado {
+    .resumen-unificado, .calendario-box {
       background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+
+    .resumen-unificado {
       width: 1100px;
       height: 95px;
       padding: 1.5rem 0;
-      border-radius: 16px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -78,24 +78,21 @@
       line-height: 1.4;
     }
 
-    .texto-indicador span.label {
+    .texto-indicador .label {
       font-size: 0.85rem;
       color: #94a3b8;
     }
 
-    .texto-indicador span.valor {
+    .texto-indicador .valor {
       font-size: 1.4rem;
       font-weight: 700;
       color: #0f172a;
     }
 
     .calendario-box {
-      background: white;
       width: 600px;
       height: 95px;
       padding: 1.5rem;
-      border-radius: 16px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -117,7 +114,7 @@
       color: #94a3b8;
     }
 
-    .calendario-box .fila-fechas {
+    .fila-fechas {
       display: flex;
       gap: 0.5rem;
       align-items: center;
@@ -128,13 +125,10 @@
       border-radius: 12px;
       border: 1px solid #cbd5e1;
       font-size: 0.9rem;
-      background: #fff;
-      background-image: url('https://cdn-icons-png.flaticon.com/512/747/747310.png');
-      background-repeat: no-repeat;
-      background-position: right 12px center;
-      background-size: 16px;
       flex: 1;
       min-width: 120px;
+      background: #fff url('https://cdn-icons-png.flaticon.com/512/747/747310.png') no-repeat right 12px center;
+      background-size: 16px;
     }
 
     .boton-periodo {
@@ -152,57 +146,44 @@
       background-color: #5a42b5;
     }
 
+    .fila-centro {
+      display: flex;
+      justify-content: space-between;
+      gap: 2rem;
+      align-items: stretch;
+    }
+
+    .bloque-ingresos-vs-gastos, .bloque-metas-anuales {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      padding: 1.5rem;
+      height: 300px;
+    }
+
     .bloque-ingresos-vs-gastos {
-  width: 100%;
-  max-width: 1100px;
-  height: 300px;
-  background: white;
-  padding: 1.5rem;
-  border-radius: 16px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-}
-
-.bloque-ingresos-vs-gastos .titulo {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-}
-
-.bloque-ingresos-vs-gastos canvas {
-  width: 100%;
-  height: 240px;
-}
+      flex: 2;
+    }
 
     .bloque-metas-anuales {
-  width: 100%;
-  max-width: 600px;
-  height: 300px;
-  background: white;
-  padding: 1.5rem;
-  border-radius: 16px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-}
+      flex: 1;
+    }
 
-.bloque-metas-anuales .titulo {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-}
+    .titulo {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
 
-.bloque-metas-anuales canvas {
-  width: 100%;
-  height: 240px;
-}
-    .graficos-grid {
-      display: grid;
-      grid-template-areas:
-        "linea barra"
-        "donut barraH";
-      grid-template-columns: 3fr 1fr;
+    .fila-inferior {
+      display: flex;
+      justify-content: space-between;
       gap: 2rem;
     }
 
-    .tarjeta-grafico {
+    .bloque-ingresos-totales, .bloque-gastos-totales, .bloque-ahorros-totales {
+      flex: 1;
+      height: 300px;
       background: white;
       padding: 1.5rem;
       border-radius: 16px;
@@ -213,131 +194,40 @@
       align-items: center;
     }
 
-    #graficoMeta        { grid-area: linea; }
-    #graficoComparativo { grid-area: barra; }
-    #graficoIngresos    { grid-area: donut; }
-    #graficoGastos      { grid-area: barraH; }
-
-    .tarjeta-grafico .titulo {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
-      align-self: flex-start;
-    }
-
-    .grafico {
+    .bloque-ingresos-totales canvas,
+    .bloque-gastos-totales canvas,
+    .bloque-ahorros-totales canvas {
       width: 100%;
-      height: 280px;
+      height: 240px;
     }
-        .fila-centro {
-  display: flex;
-  justify-content: space-between;
-  gap: 2rem;
-  align-items: stretch; /* asegura altura uniforme */
-}
-.fila-central {
-  display: flex;
-  justify-content: space-between;
-  gap: 2rem;
-  align-items: stretch; /* ✅ asegura que ambos bloques tengan misma altura */
-}
-    .fila-centro {
-  display: flex;
-  justify-content: space-between;
-  gap: 2rem;
-  align-items: stretch; /* asegura altura uniforme */
-}
-.fila-inferior {
-  display: flex;
-  justify-content: space-between;
-  gap: 2rem;
-  overflow: visible; /* 👈 añade esto */
-}
 
-    .bloque-ingresos-vs-gastos,
-.bloque-metas-anuales {
-  margin-top: 0 !important;
-}
+    .footer-app {
+      margin-top: 4rem;
+      padding: 2rem 1rem;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #64748b;
+    }
 
-.bloque-ingresos-totales {
-  flex: 1;
-  height: 300px;
-  background: white;
-  padding: 1.5rem;
-  border-radius: 16px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  overflow: visible !important; /* ✅ esto permite que el hoverOffset sobresalga */
-  position: relative; /* ayuda a posicionar bien el tooltip */
-  isolation: isolate; /* 👈 asegura que z-index se respete */
-}
-.bloque-gastos-totales,
-.bloque-ahorros-totales {
-  flex: 1;
-  height: 300px;
-  background: white;
-  padding: 1.5rem;
-  border-radius: 16px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
+    .footer-contenido {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
 
-.bloque-ingresos-totales .titulo {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-}
-.bloque-gastos-totales .titulo,
-.bloque-ahorros-totales .titulo {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-}
+    .footer-link {
+      color: #64748b;
+      text-decoration: none;
+    }
 
-.bloque-ingresos-totales canvas {
-  width: 100%;
-  height: 200px;
-  overflow: visible;
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.bloque-gastos-totales canvas,
-.bloque-ahorros-totales canvas {
-  width: 100%;
-  height: 240px;
-}
-.footer-app {
-  margin-top: 4rem;
-  padding: 2rem 1rem;
-  background: transparent;
-  text-align: center;
-  font-size: 0.85rem;
-  color: #64748b;
-}
-
-.footer-contenido {
-  display: flex;
-  justify-content: center;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-}
-
-.footer-link {
-  color: #64748b;
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-.footer-link:hover {
-  color: #3956E8;
-  text-decoration: underline;
-}
+    .footer-link:hover {
+      color: #3956E8;
+      text-decoration: underline;
+    }
   </style>
+</head>
+<body>
 </head>
 <body>
   <div class="contenido">
