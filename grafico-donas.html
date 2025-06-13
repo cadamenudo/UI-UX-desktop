@@ -18,28 +18,12 @@
         .simbolo-dinero {
       font-family: Arial, sans-serif;
     }
-.bloque-donas {
-  display: flex;
-  justify-content: space-between;
-  align-items: stretch;
-  gap: 2rem;
-  background: white;
-  padding: 1.5rem;
-  border-radius: 16px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-  max-width: 1100px;
-  width: 100%;
-  margin: 0 auto;
-  flex-wrap: wrap;
-}
-
-.dona-box {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-}
+    .bloque-donas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: center;
+    }
     .contenedor-dona {
       background: #fff;
       border-radius: 24px;
@@ -156,25 +140,27 @@
   </style>
 </head>
 <body>
-<section class="bloque-donas">
-  <div class="dona-box">
-    <h2 class="titulo-grafico">Ingresos Totales</h2>
-    <canvas id="graficoIngresos" width="260" height="260"></canvas>
-  </div>
-
-  <div class="dona-box">
-    <div class="titulo-con-boton">
-      <h2 class="titulo-grafico">Gastos Totales</h2>
-      <button class="boton-detalle" onclick="abrirModal()">Ver detalle</button>
+  <section class="bloque-donas">
+    <div class="contenedor-dona">
+      <h2>Ingresos Totales</h2>
+      <canvas id="graficoIngresos" width="260" height="260"></canvas>
     </div>
-    <canvas id="graficoGastos" width="260" height="260"></canvas>
-  </div>
-
-  <div class="dona-box">
-    <h2 class="titulo-grafico">Ahorros Totales</h2>
-    <canvas id="graficoAhorros" width="260" height="260"></canvas>
-  </div>
-</section>
+    <div class="contenedor-dona">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div class="titulo-con-boton">
+          <h2 class="titulo-grafico">Gastos Totales</h2>
+          <div class="boton-wrapper">
+            <button class="boton-detalle" onclick="abrirModal()">Ver detalle</button>
+          </div>
+        </div>
+      </div>
+      <canvas id="graficoGastos" width="260" height="260"></canvas>
+    </div>
+    <div class="contenedor-dona">
+      <h2>Ahorros Totales</h2>
+      <canvas id="graficoAhorros" width="260" height="260"></canvas>
+    </div>
+  </section>
 
   <!-- Modal para gastos -->
 <div class="modal" id="modalDetalle">
