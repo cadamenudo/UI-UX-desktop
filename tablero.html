@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UI Refinado | Cada Menudo</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <style>
+    body {
+      font-family: 'Greycliff CF', sans-serif;
+      background: #FAFBFF;
+      margin: 0;
+      padding: 2rem;
+      color: #0f172a;
+    }
+
+    .tarjeta {
+      background: white;
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+      margin-bottom: 2rem;
+      max-width: 600px;
+    }
+
+    .titulo {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .input-grupo {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    input[type="text"] {
+      padding: 0.6rem 1rem;
+      border-radius: 12px;
+      border: 1px solid #d1d5db;
+      font-size: 0.9rem;
+      width: 100%;
+      background: #fff;
+    }
+
+    button {
+      background-color: #3956E8;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: box-shadow 0.2s;
+    }
+
+    button:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .grafico {
+      height: 300px;
+    }
+  </style>
+</head>
+<body>
+  <div class="tarjeta">
+    <div class="titulo">Selecciona un rango de fechas</div>
+    <div class="input-grupo">
+      <input type="text" id="desde" placeholder="Desde" />
+      <input type="text" id="hasta" placeholder="Hasta" />
+      <button>🔍 Buscar</button>
+    </div>
+  </div>
+
+  <div class="tarjeta">
+    <div class="titulo">Ingresos vs Gastos</div>
+    <canvas id="grafico" class="grafico"></canvas>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    flatpickr("#desde", { dateFormat: "d/m/Y" });
+    flatpickr("#hasta", { dateFormat: "d/m/Y" });
+
+    const ctx = document.getElementById('grafico').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Jun 01', 'Jun 06'],
+        datasets: [
+          {
+            label: 'Ingresos',
+            data: [3000, 0],
+            backgroundColor: '#7459D9',
+            borderRadius: 10
+          },
+          {
+            label: 'Gastos',
+            data: [0, 20.83],
+            backgroundColor: '#64748B',
+            borderRadius: 10
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          tooltip: {
+            backgroundColor: '#fff',
+            titleColor: '#000',
+            bodyColor: '#000',
+            borderColor: '#e2e8f0',
+            borderWidth: 1
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
