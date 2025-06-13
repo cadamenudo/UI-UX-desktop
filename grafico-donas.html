@@ -140,25 +140,27 @@
   </style>
 </head>
 <body>
-<div class="bloque-ingresos-totales">
-  <div class="titulo">Ingresos Totales</div>
-  <canvas id="graficoIngresos" width="260" height="260"></canvas>
-</div>
-
-<div class="bloque-gastos-totales">
-  <div class="titulo-con-boton">
-    <h2 class="titulo-grafico">Gastos Totales</h2>
-    <div class="boton-wrapper">
-      <button class="boton-detalle" onclick="abrirModal()">Ver detalle</button>
+  <section class="bloque-donas">
+    <div class="contenedor-dona">
+      <h2>Ingresos Totales</h2>
+      <canvas id="graficoIngresos" width="260" height="260"></canvas>
     </div>
-  </div>
-  <canvas id="graficoGastos" width="260" height="260"></canvas>
-</div>
-
-<div class="bloque-ahorros-totales">
-  <div class="titulo">Ahorros Totales</div>
-  <canvas id="graficoAhorros" width="260" height="260"></canvas>
-</div>
+    <div class="contenedor-dona">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div class="titulo-con-boton">
+          <h2 class="titulo-grafico">Gastos Totales</h2>
+          <div class="boton-wrapper">
+            <button class="boton-detalle" onclick="abrirModal()">Ver detalle</button>
+          </div>
+        </div>
+      </div>
+      <canvas id="graficoGastos" width="260" height="260"></canvas>
+    </div>
+    <div class="contenedor-dona">
+      <h2>Ahorros Totales</h2>
+      <canvas id="graficoAhorros" width="260" height="260"></canvas>
+    </div>
+  </section>
 
   <!-- Modal para gastos -->
 <div class="modal" id="modalDetalle">
