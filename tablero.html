@@ -228,6 +228,11 @@
       width: 100%;
       height: 280px;
     }
+    .fila-central {
+  display: flex;
+  gap: 2rem;
+  justify-content: space-between;
+}
   </style>
 </head>
 <body>
@@ -267,15 +272,17 @@
       </div>
     </div>
 
+    <div class="fila-central">
       <div class="bloque-ingresos-vs-gastos">
         <div class="titulo">Ingresos vs Gastos</div>
         <canvas id="graficoIngresosVsGastos"></canvas>
       </div>
-
+    
       <div class="bloque-metas-anuales">
         <div class="titulo">Metas</div>
         <canvas id="graficoMetasAnuales"></canvas>
       </div>
+    </div>
 
       <div class="tarjeta-grafico" style="grid-area: donut">
         <div class="titulo">Ingresos Totales</div>
