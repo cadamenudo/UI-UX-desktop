@@ -14,13 +14,18 @@
       color: #0f172a;
     }
 
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
     .tarjeta {
       background: white;
       border-radius: 16px;
       padding: 1.5rem;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
       margin-bottom: 2rem;
-      max-width: 600px;
     }
 
     .titulo {
@@ -74,9 +79,28 @@
     </div>
   </div>
 
-  <div class="tarjeta">
-    <div class="titulo">Ingresos vs Gastos</div>
-    <canvas id="grafico" class="grafico"></canvas>
+  <div class="grid">
+    <div class="tarjeta">
+      <div class="titulo">Meta para el Año</div>
+      <canvas id="graficoMeta" class="grafico"></canvas>
+    </div>
+
+    <div class="tarjeta">
+      <div class="titulo">Ingresos vs Gastos</div>
+      <canvas id="graficoComparativo" class="grafico"></canvas>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="tarjeta">
+      <div class="titulo">Ingresos Totales</div>
+      <canvas id="graficoIngresos" class="grafico"></canvas>
+    </div>
+
+    <div class="tarjeta">
+      <div class="titulo">Gastos Totales</div>
+      <canvas id="graficoGastos" class="grafico"></canvas>
+    </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -85,41 +109,89 @@
     flatpickr("#desde", { dateFormat: "d/m/Y" });
     flatpickr("#hasta", { dateFormat: "d/m/Y" });
 
-    const ctx = document.getElementById('grafico').getContext('2d');
-    new Chart(ctx, {
+    const metaCtx = document.getElementById('graficoMeta').getContext('2d');
+    new Chart(metaCtx, {
       type: 'bar',
       data: {
-        labels: ['Jun 01', 'Jun 06'],
+        labels: ['Meta', 'Acumulado'],
+        datasets: [{
+          label: 'Cantidad',
+          data: [21000, 7847.82],
+          backgroundColor: ["#7459D9", "#E8C239"],
+          borderRadius: 12
+        }]
+      },
+      options: {
+        plugins: { tooltip: { backgroundColor: '#fff', titleColor: '#000', bodyColor: '#000' } },
+        scales: { y: { beginAtZero: true } }
+      }
+    });
+
+    const comparativoCtx = document.getElementById('graficoComparativo').getContext('2d');
+    new Chart(comparativoCtx, {
+      type: 'line',
+      data: {
+        labels: ['Jun 02', 'Jun 06'],
         datasets: [
           {
             label: 'Ingresos',
             data: [3000, 0],
+            borderColor: '#7459D9',
             backgroundColor: '#7459D9',
-            borderRadius: 10
+            tension: 0.4
           },
           {
             label: 'Gastos',
             data: [0, 20.83],
+            borderColor: '#64748B',
             backgroundColor: '#64748B',
-            borderRadius: 10
+            tension: 0.4
           }
         ]
       },
       options: {
         responsive: true,
+        plugins: { tooltip: { backgroundColor: '#fff', titleColor: '#000', bodyColor: '#000' } },
+        scales: { y: { beginAtZero: true } }
+      }
+    });
+
+    const ingresosCtx = document.getElementById('graficoIngresos').getContext('2d');
+    new Chart(ingresosCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Salario'],
+        datasets: [{
+          label: 'Ingresos',
+          data: [3000],
+          backgroundColor: ['#3b82f6'],
+          borderWidth: 0
+        }]
+      },
+      options: {
         plugins: {
-          tooltip: {
-            backgroundColor: '#fff',
-            titleColor: '#000',
-            bodyColor: '#000',
-            borderColor: '#e2e8f0',
-            borderWidth: 1
-          }
-        },
-        scales: {
-          y: {
-            beginAtZero: true
-          }
+          tooltip: { backgroundColor: '#fff', titleColor: '#000', bodyColor: '#000' },
+          legend: { display: true, position: 'right' }
+        }
+      }
+    });
+
+    const gastosCtx = document.getElementById('graficoGastos').getContext('2d');
+    new Chart(gastosCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Alimentación'],
+        datasets: [{
+          label: 'Gastos',
+          data: [20.83],
+          backgroundColor: ['#3b82f6'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        plugins: {
+          tooltip: { backgroundColor: '#fff', titleColor: '#000', bodyColor: '#000' },
+          legend: { display: true, position: 'right' }
         }
       }
     });
