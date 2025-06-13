@@ -22,6 +22,7 @@
       max-width: 500px;
       margin: 2rem auto;
       box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      text-align: center;
     }
 
     h2 {
@@ -42,6 +43,27 @@
   </div>
 
   <script>
+    // Plugin para mostrar texto en el centro de la dona
+    const centroDona = {
+      id: 'centroTexto',
+      beforeDraw(chart) {
+        const { width } = chart;
+        const { height } = chart;
+        const ctx = chart.ctx;
+        ctx.restore();
+
+        const total = chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+        const texto = `$${total.toLocaleString("en-US")}`;
+
+        ctx.font = '700 24px "Greycliff CF", sans-serif';
+        ctx.fillStyle = '#1e293b';
+        ctx.textBaseline = 'middle';
+        ctx.textAlign = 'center';
+        ctx.fillText(texto, width / 2, height / 2);
+        ctx.save();
+      }
+    };
+
     const ctx = document.getElementById("graficoDona").getContext("2d");
 
     new Chart(ctx, {
@@ -49,9 +71,9 @@
       data: {
         labels: ["Sueldo", "Freelance", "Otros"],
         datasets: [{
-          data: [70, 20, 10],
+          data: [14000, 3500, 2100],
           backgroundColor: ["#7D4AEA", "#9E75F0", "#C3B4FB"],
-          borderWidth: 0,
+          borderWidth: 0
         }]
       },
       options: {
@@ -62,10 +84,15 @@
             display: false
           },
           tooltip: {
-            enabled: true
+            callbacks: {
+              label: function(context) {
+                return `${context.label}: $${context.raw.toLocaleString("en-US")}`;
+              }
+            }
           }
         }
-      }
+      },
+      plugins: [centroDona]
     });
   </script>
 </body>
