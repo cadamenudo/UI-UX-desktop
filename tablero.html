@@ -91,20 +91,27 @@
       font-weight: 600;
     }
 
-    .resumen-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
+    .bloque-superior {
+      display: flex;
       gap: 2rem;
       margin-bottom: 2rem;
     }
 
-    .resumen-card {
+    .resumen-bloque {
+      flex: 2;
+      background: white;
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .resumen-item {
       display: flex;
       align-items: center;
-      background: white;
-      border-radius: 20px;
-      padding: 1.25rem;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      gap: 1rem;
     }
 
     .icono-circulo {
@@ -115,14 +122,13 @@
       align-items: center;
       justify-content: center;
       font-size: 1.5rem;
-      margin-right: 1rem;
     }
 
     .icono-circulo.ingreso { background: #e0f2fe; }
     .icono-circulo.gasto   { background: #f1f5f9; }
     .icono-circulo.ahorro  { background: #fef9c3; }
 
-    .resumen-info {
+    .resumen-texto {
       display: flex;
       flex-direction: column;
     }
@@ -138,30 +144,18 @@
       color: #64748b;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-    }
-
-    .tarjeta {
+    .calendario-bloque {
+      flex: 1;
       background: white;
       border-radius: 16px;
       padding: 1.5rem;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-      margin-bottom: 2rem;
-    }
-
-    .titulo {
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
     }
 
     .input-grupo {
       display: flex;
       gap: 1rem;
-      margin-bottom: 1rem;
+      margin-top: 1rem;
     }
 
     input[type="text"] {
@@ -186,6 +180,26 @@
 
     button:hover {
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    .tarjeta {
+      background: white;
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+      margin-bottom: 2rem;
+    }
+
+    .titulo {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
     }
 
     .grafico {
@@ -215,36 +229,38 @@
   </aside>
 
   <div class="contenido">
-    <div class="resumen-grid">
-      <div class="resumen-card">
-        <div class="icono-circulo ingreso"><span>💰</span></div>
-        <div class="resumen-info">
-          <div class="resumen-monto">$3,000.00</div>
-          <div class="resumen-label">Ingresos</div>
+    <div class="bloque-superior">
+      <div class="resumen-bloque">
+        <div class="resumen-item">
+          <div class="icono-circulo ingreso">💰</div>
+          <div class="resumen-texto">
+            <div class="resumen-monto">$3,000.00</div>
+            <div class="resumen-label">Ingresos</div>
+          </div>
+        </div>
+        <div class="resumen-item">
+          <div class="icono-circulo gasto">👜</div>
+          <div class="resumen-texto">
+            <div class="resumen-monto">$20.83</div>
+            <div class="resumen-label">Gastos</div>
+          </div>
+        </div>
+        <div class="resumen-item">
+          <div class="icono-circulo ahorro">💸</div>
+          <div class="resumen-texto">
+            <div class="resumen-monto">$300.00</div>
+            <div class="resumen-label">Ahorros</div>
+          </div>
         </div>
       </div>
-      <div class="resumen-card">
-        <div class="icono-circulo gasto"><span>👜</span></div>
-        <div class="resumen-info">
-          <div class="resumen-monto">$20.83</div>
-          <div class="resumen-label">Gastos</div>
-        </div>
-      </div>
-      <div class="resumen-card">
-        <div class="icono-circulo ahorro"><span>💸</span></div>
-        <div class="resumen-info">
-          <div class="resumen-monto">$300.00</div>
-          <div class="resumen-label">Ahorros</div>
-        </div>
-      </div>
-    </div>
 
-    <div class="tarjeta">
-      <div class="titulo">Selecciona un rango de fechas</div>
-      <div class="input-grupo">
-        <input type="text" id="desde" placeholder="Desde" />
-        <input type="text" id="hasta" placeholder="Hasta" />
-        <button>🔍 Buscar</button>
+      <div class="calendario-bloque">
+        <div class="titulo">Selecciona un rango de fechas</div>
+        <div class="input-grupo">
+          <input type="text" id="desde" placeholder="Desde" />
+          <input type="text" id="hasta" placeholder="Hasta" />
+          <button>🔍 Buscar</button>
+        </div>
       </div>
     </div>
 
