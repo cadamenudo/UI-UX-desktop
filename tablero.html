@@ -1,4 +1,4 @@
-<!-- Código actualizado con resumen limpio y calendario con rango de fechas -->
+<!-- Código actualizado con calendario visual como imagen de referencia -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -89,8 +89,18 @@
     }
 
     .calendario-box .titulo {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .calendario-box .titulo::after {
+      content: "\2139";
       font-size: 1rem;
-      font-weight: 600;
+      color: #94a3b8;
     }
 
     .input-fechas {
@@ -102,14 +112,18 @@
       flex: 1;
       padding: 0.5rem 0.75rem;
       border-radius: 12px;
-      border: 1px solid #d1d5db;
+      border: 1px solid #cbd5e1;
       font-size: 0.9rem;
       background: #fff;
+      background-image: url('https://cdn-icons-png.flaticon.com/512/747/747310.png');
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 16px;
     }
 
     .boton-periodo {
       padding: 0.5rem 1rem;
-      background-color: #3956E8;
+      background-color: #7459D9;
       color: white;
       border: none;
       border-radius: 12px;
@@ -120,7 +134,7 @@
     }
 
     .boton-periodo:hover {
-      background-color: #293bb8;
+      background-color: #5a42b5;
     }
 
     .graficos-grid {
@@ -178,7 +192,7 @@
       </div>
 
       <div class="calendario-box">
-        <div class="titulo">Periodo de análisis</div>
+        <div class="titulo">Seleccione un rango deseado</div>
         <div class="input-fechas">
           <input type="text" id="desde" placeholder="Desde">
           <input type="text" id="hasta" placeholder="Hasta">
