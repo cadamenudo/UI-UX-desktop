@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gráficos Donas</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX/css-fonts.css" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #FAFBFF;
+      font-family: 'Greycliff CF', sans-serif;
+      color: #0f172a;
+    }
+    .bloque-donas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: center;
+    }
+    .contenedor-dona {
+      background: #fff;
+      border-radius: 24px;
+      padding: 2rem;
+      width: 300px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+    .contenedor-dona h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin: 0;
+      text-align: left;
+    }
+    canvas {
+      display: block;
+      margin: 1.5rem auto 0 auto;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.4);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .modal-contenido {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 16px;
+      max-width: 400px;
+      width: 90%;
+    }
+    .modal-contenido h3 {
+      margin-top: 0;
+    }
+    .modal-contenido button {
+      display: block;
+      width: 100%;
+      margin-bottom: 0.75rem;
+      background: #F9FAFB;
+      border: 1px solid #E5E7EB;
+      border-radius: 8px;
+      padding: 10px;
+      font-family: 'Greycliff CF', sans-serif;
+      cursor: pointer;
+    }
+    .cerrar-modal {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1rem;
+    }
+    .cerrar-modal button {
+      background: none;
+      border: none;
+      color: #64748B;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <section class="bloque-donas">
+    <div class="contenedor-dona">
+      <h2>Ingresos Totales</h2>
+      <canvas id="graficoIngresos" width="260" height="260"></canvas>
+    </div>
+
+    <div class="contenedor-dona">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2>Gastos Totales</h2>
+        <button onclick="abrirModalGastos()">Ver detalle</button>
+      </div>
+      <canvas id="graficoGastos" width="260" height="260"></canvas>
+    </div>
+
+    <div class="contenedor-dona">
+      <h2>Ahorros Totales</h2>
+      <canvas id="graficoAhorros" width="260" height="260"></canvas>
+    </div>
+  </section>
+
+  <div class="modal" id="modalGastos">
+    <div class="modal-contenido">
+      <h3>Ver subcategorías</h3>
+      <button onclick="renderChartGastos('alimentacion')">Alimentación <span>$600</span></button>
+      <button onclick="renderChartGastos('transporte')">Transporte <span>$300</span></button>
+      <button onclick="renderChartGastos('hogar')">Hogar <span>$400</span></button>
+      <button onclick="renderChartGastos('deudas')">Deudas <span>$500</span></button>
+      <div class="cerrar-modal">
+        <button onclick="renderChartGastos('general')">Volver a general</button>
+        <button onclick="cerrarModalGastos()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // INGRESOS
+    const ingresosData = [14000, 3500, 2100];
+    const ingresosTotal = ingresosData.reduce((a, b) => a + b, 0);
+
+    new Chart(document.getElementById('graficoIngresos').getContext('2d'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Sueldo', 'Freelance', 'Otros'],
+        datasets: [{ data: ingresosData, backgroundColor: ['#7D4AEA', '#9E75F0', '#C3B4FB'], borderWidth: 0 }]
+      },
+      options: {
+        responsive: true,
+        cutout: '70%',
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#FFFFFF',
+            titleColor: '#0f172a',
+            bodyColor: '#0f172a',
+            borderColor: '#E5E7EB',
+            borderWidth: 1,
+            callbacks: {
+              label: ctx => `${ctx.label}: $${ctx.raw.toLocaleString('en-US')} (${((ctx.raw / ingresosTotal) * 100).toFixed(1)}%)`
+            }
+          }
+        },
+        plugins: [{
+          id: 'centroTexto',
+          beforeDraw(chart) {
+            const ctx = chart.ctx, width = chart.width, height = chart.height;
+            ctx.restore();
+            ctx.font = '700 32px "Greycliff CF", sans-serif';
+            ctx.fillStyle = '#0f172a';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(`$${ingresosTotal.toLocaleString("en-US")}`, width / 2, height / 2);
+            ctx.save();
+          }
+        }]
+      }
+    });
+
+    // GASTOS
+    let tipoGasto = 'general';
+    const categoriasGastos = {
+      general: { labels: ['Alimentación', 'Transporte', 'Hogar', 'Deudas'], data: [600, 300, 400, 500], colors: ['#F472B6', '#FBBF24', '#60A5FA', '#A78BFA'] },
+      alimentacion: { labels: ['Supermercado', 'Restaurantes', 'Café'], data: [350, 180, 70], colors: ['#FDA4AF', '#F9A8D4', '#FBCFE8'] },
+      transporte: { labels: ['Gasolina', 'Uber', 'Seguro Auto'], data: [120, 100, 80], colors: ['#FCD34D', '#FDE68A', '#FEF9C3'] },
+      hogar: { labels: ['Alquiler', 'Electricidad', 'Internet'], data: [300, 70, 30], colors: ['#93C5FD', '#BFDBFE', '#DBEAFE'] },
+      deudas: { labels: ['Préstamo Estudiantil', 'Tarjeta Crédito', 'Préstamo Auto'], data: [200, 180, 120], colors: ['#DDD6FE', '#C4B5FD', '#A78BFA'] }
+    };
+    let graficoGastos;
+    function renderChartGastos(tipo) {
+      tipoGasto = tipo;
+      const cat = categoriasGastos[tipo], total = cat.data.reduce((a, b) => a + b, 0);
+      if (graficoGastos) graficoGastos.destroy();
+      graficoGastos = new Chart(document.getElementById('graficoGastos').getContext('2d'), {
+        type: 'doughnut',
+        data: { labels: cat.labels, datasets: [{ data: cat.data, backgroundColor: cat.colors, borderWidth: 0 }] },
+        options: {
+          responsive: true,
+          cutout: '70%',
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#FFFFFF',
+              titleColor: '#0f172a',
+              bodyColor: '#0f172a',
+              borderColor: '#E5E7EB',
+              borderWidth: 1,
+              callbacks: {
+                label: ctx => `${ctx.label}: $${ctx.raw.toLocaleString('en-US')} (${((ctx.raw / total) * 100).toFixed(1)}%)`
+              }
+            }
+          },
+          plugins: [{
+            id: 'centroTexto',
+            beforeDraw(chart) {
+              const ctx = chart.ctx, width = chart.width, height = chart.height;
+              ctx.restore();
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              if (tipo !== 'general') {
+                ctx.font = '600 16px "Greycliff CF", sans-serif';
+                ctx.fillStyle = '#64748B';
+                ctx.fillText(tipo.charAt(0).toUpperCase() + tipo.slice(1), width / 2, height / 2 - 18);
+                ctx.font = '700 32px "Greycliff CF", sans-serif';
+                ctx.fillStyle = '#0f172a';
+                ctx.fillText(`$${total.toLocaleString("en-US")}`, width / 2, height / 2 + 12);
+              } else {
+                ctx.font = '700 32px "Greycliff CF", sans-serif';
+                ctx.fillStyle = '#0f172a';
+                ctx.fillText(`$${total.toLocaleString("en-US")}`, width / 2, height / 2);
+              }
+              ctx.save();
+            }
+          }]
+        }
+      });
+      cerrarModalGastos();
+    }
+    renderChartGastos('general');
+    function abrirModalGastos() {
+      document.getElementById('modalGastos').style.display = 'flex';
+    }
+    function cerrarModalGastos() {
+      document.getElementById('modalGastos').style.display = 'none';
+    }
+
+    // AHORROS
+    const ahorrosData = [700, 400, 300];
+    const ahorrosTotal = ahorrosData.reduce((a, b) => a + b, 0);
+    new Chart(document.getElementById('graficoAhorros').getContext('2d'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Emergencia', 'Retiro', 'Vacaciones'],
+        datasets: [{ data: ahorrosData, backgroundColor: ['#34D399', '#6EE7B7', '#A7F3D0'], borderWidth: 0 }]
+      },
+      options: {
+        responsive: true,
+        cutout: '70%',
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#FFFFFF',
+            titleColor: '#0f172a',
+            bodyColor: '#0f172a',
+            borderColor: '#E5E7EB',
+            borderWidth: 1,
+            callbacks: {
+              label: ctx => `${ctx.label}: $${ctx.raw.toLocaleString('en-US')} (${((ctx.raw / ahorrosTotal) * 100).toFixed(1)}%)`
+            }
+          }
+        },
+        plugins: [{
+          id: 'centroTexto',
+          beforeDraw(chart) {
+            const ctx = chart.ctx, width = chart.width, height = chart.height;
+            ctx.restore();
+            ctx.font = '700 32px "Greycliff CF", sans-serif';
+            ctx.fillStyle = '#0f172a';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(`$${ahorrosTotal.toLocaleString("en-US")}`, width / 2, height / 2);
+            ctx.save();
+          }
+        }]
+      }
+    });
+  </script>
+</body>
+</html>
