@@ -259,31 +259,11 @@
   margin-top: 0 !important;
 }
 
-.bloque-ingresos-totales {
-  flex: 1;
-  height: 300px;
-  background: white;
-  padding: 1.5rem;
-  border-radius: 16px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  overflow: visible !important; /* ✅ esto permite que el hoverOffset sobresalga */
-  position: relative; /* ayuda a posicionar bien el tooltip */
-  isolation: isolate; /* 👈 asegura que z-index se respete */
-}
+.bloque-ingresos-totales,
 .bloque-gastos-totales,
 .bloque-ahorros-totales {
   flex: 1;
-  height: 300px;
-  background: white;
-  padding: 1.5rem;
-  border-radius: 16px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  min-width: 0; /* 👈 ayuda a evitar desbordes en pantallas pequeñas */
 }
 
 .bloque-ingresos-totales .titulo {
@@ -337,13 +317,15 @@
   color: #3956E8;
   text-decoration: underline;
 }
-    #contenedorDonas {
+#contenedorDonas {
   display: flex;
   justify-content: space-between;
+  align-items: stretch;
   gap: 2rem;
-  max-width: 1100px; /* 👈 igual que .resumen-unificado */
+  max-width: 1100px;
   width: 100%;
-  margin: 0 auto;     /* 👈 centra dentro del layout */
+  margin: 0 auto;
+  flex-wrap: wrap; /* 👈 permite que se ajuste si se necesita */
 }
 
   </style>
