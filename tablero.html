@@ -10,8 +10,81 @@
       font-family: 'Greycliff CF', sans-serif;
       background: #FAFBFF;
       margin: 0;
-      padding: 2rem;
+      padding-left: 240px;
+      padding-top: 100px;
       color: #0f172a;
+    }
+
+    .top-header {
+      position: fixed;
+      top: 0;
+      left: 240px;
+      right: 0;
+      height: 80px;
+      background: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 2rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      z-index: 1000;
+    }
+
+    .top-header .logo {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #3956E8;
+    }
+
+    .top-header .usuario {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 500;
+    }
+
+    .top-header .usuario img {
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 240px;
+      height: 100vh;
+      background: #3956E8;
+      color: white;
+      padding: 1.5rem 1rem;
+      box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+      z-index: 1001;
+    }
+
+    .sidebar nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar nav li {
+      padding: 0.75rem 1rem;
+      margin-bottom: 0.5rem;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: background 0.2s;
+    }
+
+    .sidebar nav li:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .sidebar nav .activo {
+      background: white;
+      color: #3956E8;
+      font-weight: 600;
     }
 
     .resumen-grid {
@@ -117,6 +190,27 @@
   </style>
 </head>
 <body>
+  <header class="top-header">
+    <div class="logo">Cada Menudo</div>
+    <div class="usuario">
+      <span>Hola, Frank</span>
+      <img src="https://i.pravatar.cc/40" alt="Avatar de usuario" />
+    </div>
+  </header>
+
+  <aside class="sidebar">
+    <nav>
+      <ul>
+        <li class="activo">📊 Dashboard</li>
+        <li>💸 Transacciones</li>
+        <li>🎯 Metas</li>
+        <li>📁 Categorías</li>
+        <li>⚙️ Ajustes</li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- CONTENIDO PRINCIPAL -->
   <div class="resumen-grid">
     <div class="resumen-card">
       <div class="icono-circulo ingreso"><span>💰</span></div>
