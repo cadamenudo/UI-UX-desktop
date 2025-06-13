@@ -387,66 +387,37 @@
   </div>
 </div>
 
-    <div class="fila-inferior">
-      <div class="bloque-ingresos-totales">
-        <div class="titulo">Ingresos Totales</div>
-        <canvas id="graficoIngresosTotales"></canvas>
-      </div>
+// seccion de donas
     
-      <div class="bloque-gastos-totales">
-        <div class="titulo">Gastos Totales</div>
-        <canvas id="graficoGastosTotales"></canvas>
-      </div>
+    <div id="contenedorDonas"></div>
     
-      <div class="bloque-ahorros-totales">
-        <div class="titulo">Ahorros Totales</div>
-        <canvas id="graficoAhorrosTotales"></canvas>
-      </div>
-    </div>
-
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script>
     flatpickr("#desde", { dateFormat: "d/m/Y" });
     flatpickr("#hasta", { dateFormat: "d/m/Y" });
 
    
-    <!-- Dona ingresos totales--->
-      
-  const ctx = document.getElementById('graficoIngresosTotales').getContext('2d');
+ // Dona ingresos totales
 
-  const data = {
-    labels: ['Salario', 'Acciones', 'Renta de inmueble'],
-    datasets: [{
-      data: [3124213, 612445, 2824213],
-      backgroundColor: ['#7C3AED', '#C4B5FD', '#8B5CF6'],
-      borderWidth: 0,
-      hoverOffset: 8,
-    }]
-  };
+  fetch("graficos-donas.html")
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById("contenedorDonas").innerHTML = html;
+      evalScriptTags(html);
+    });
 
-  const options = {
-    cutout: '75%',
-    plugins: {
-      legend: {
-        display: false
-      },
-      tooltip: {
-        callbacks: {
-          label: function (context) {
-            let label = context.label || '';
-            let value = context.parsed || 0;
-            return `${label}: $${value.toLocaleString()}`;
-          }
-        }
+  function evalScriptTags(html) {
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    doc.querySelectorAll("script").forEach(oldScript => {
+      const newScript = document.createElement("script");
+      if (oldScript.src) {
+        newScript.src = oldScript.src;
+      } else {
+        newScript.textContent = oldScript.textContent;
       }
-    }
-  };
-
-  new Chart(ctx, {
-    type: 'doughnut',
-    data: data,
-    options: options
-  });
+      document.body.appendChild(newScript);
+    });
+  }
   </script>
     
     <footer class="footer-app">
