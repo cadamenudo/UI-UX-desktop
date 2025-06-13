@@ -280,14 +280,13 @@
 <div id="contenedorDonas"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-  <script>
-    flatpickr("#desde", { dateFormat: "d/m/Y" });
-    flatpickr("#hasta", { dateFormat: "d/m/Y" });
-
-   
-    <!-- Dona ingresos totales--->
       
-  const ctx = document.getElementById('graficoIngresosTotales').getContext('2d');
+<script>
+  flatpickr("#desde", { dateFormat: "d/m/Y" });
+  flatpickr("#hasta", { dateFormat: "d/m/Y" });
+
+  // Dona ingresos totales
+  const ctx = document.getElementById('graficoIngresos').getContext('2d');
 
   const data = {
     labels: ['Salario', 'Acciones', 'Renta de inmueble'],
@@ -322,6 +321,8 @@
     data: data,
     options: options
   });
+</script>
+
   </script>
     
     <footer class="footer-app">
