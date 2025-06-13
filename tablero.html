@@ -339,21 +339,21 @@
   flatpickr("#desde", { dateFormat: "d/m/Y" });
   flatpickr("#hasta", { dateFormat: "d/m/Y" });
 
-  fetch("https://cadamenudo.github.io/UI-UX-desktop/grafico-donas.html")
-    .then(res => res.text())
-    .then(html => {
-      document.getElementById("contenedorDonas").innerHTML = html;
-      const scripts = document.getElementById("contenedorDonas").querySelectorAll("script");
-      scripts.forEach(script => {
-        const s = document.createElement("script");
-        if (script.src) {
-          s.src = script.src;
-        } else {
-          s.textContent = script.textContent;
-        }
-        document.body.appendChild(s);
-      });
+fetch("https://cadamenudo.github.io/UI-UX-desktop/grafico-donas.html")
+  .then(res => res.text())
+  .then(html => {
+    document.getElementById("contenedorDonas").innerHTML = html;
+    const scripts = document.getElementById("contenedorDonas").querySelectorAll("script");
+    scripts.forEach(script => {
+      const s = document.createElement("script");
+      if (script.src) {
+        s.src = script.src;
+      } else {
+        s.textContent = script.textContent;
+      }
+      document.body.appendChild(s);
     });
+  });
 
   function evalScriptTags(html) {
     const doc = new DOMParser().parseFromString(html, "text/html");
