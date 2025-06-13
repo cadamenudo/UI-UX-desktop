@@ -14,6 +14,53 @@
       color: #0f172a;
     }
 
+    .resumen-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .resumen-card {
+      display: flex;
+      align-items: center;
+      background: white;
+      border-radius: 20px;
+      padding: 1.25rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .icono-circulo {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-right: 1rem;
+    }
+
+    .icono-circulo.ingreso { background: #e0f2fe; }
+    .icono-circulo.gasto   { background: #f1f5f9; }
+    .icono-circulo.ahorro  { background: #fef9c3; }
+
+    .resumen-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .resumen-monto {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #0f172a;
+    }
+
+    .resumen-label {
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+
     .grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -70,6 +117,30 @@
   </style>
 </head>
 <body>
+  <div class="resumen-grid">
+    <div class="resumen-card">
+      <div class="icono-circulo ingreso"><span>💰</span></div>
+      <div class="resumen-info">
+        <div class="resumen-monto">$3,000.00</div>
+        <div class="resumen-label">Ingresos</div>
+      </div>
+    </div>
+    <div class="resumen-card">
+      <div class="icono-circulo gasto"><span>👜</span></div>
+      <div class="resumen-info">
+        <div class="resumen-monto">$20.83</div>
+        <div class="resumen-label">Gastos</div>
+      </div>
+    </div>
+    <div class="resumen-card">
+      <div class="icono-circulo ahorro"><span>💸</span></div>
+      <div class="resumen-info">
+        <div class="resumen-monto">$300.00</div>
+        <div class="resumen-label">Ahorros</div>
+      </div>
+    </div>
+  </div>
+
   <div class="tarjeta">
     <div class="titulo">Selecciona un rango de fechas</div>
     <div class="input-grupo">
