@@ -1,4 +1,4 @@
-<!-- Código ajustado: calendario con inputs + botón en la misma línea, altura igual a resumen -->
+<!-- Código ajustado para que resumen y calendario compartan espacio equitativo usando flex -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -16,9 +16,10 @@
     }
 
     .contenido {
-      padding-left: 240px;
+      padding-left: 200px;
+      padding-right: 2rem;
       padding-top: 100px;
-      max-width: 1200px;
+      width: calc(100% - 200px);
       margin: 0 auto;
       display: flex;
       flex-direction: column;
@@ -26,10 +27,14 @@
     }
 
     .header-grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
+      display: flex;
       gap: 2rem;
       align-items: stretch;
+    }
+
+    .resumen-unificado,
+    .calendario-box {
+      flex: 1;
     }
 
     .resumen-unificado {
@@ -130,7 +135,7 @@
       background-repeat: no-repeat;
       background-position: right 12px center;
       background-size: 16px;
-      width: 100%;
+      flex: 1;
     }
 
     .boton-periodo {
