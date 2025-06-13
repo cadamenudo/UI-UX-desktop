@@ -247,10 +247,11 @@
   gap: 2rem;
   align-items: stretch; /* asegura altura uniforme */
 }
-    .fila-inferior {
+.fila-inferior {
   display: flex;
   justify-content: space-between;
   gap: 2rem;
+  overflow: visible; /* 👈 añade esto */
 }
 
     .bloque-ingresos-vs-gastos,
@@ -298,8 +299,10 @@
 
 .bloque-ingresos-totales canvas {
   width: 100%;
-  height: 220px;
+  height: 240px;
   overflow: visible;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .bloque-gastos-totales canvas,
