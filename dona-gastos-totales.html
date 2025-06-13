@@ -36,19 +36,77 @@
       font-weight: 700;
     }
 
-    select {
+    button.ver-detalle {
       font-family: 'Greycliff CF', sans-serif;
-      font-size: 1rem;
-      padding: 6px 10px;
+      font-size: 0.95rem;
+      padding: 6px 12px;
       border-radius: 10px;
       border: 1px solid #E5E7EB;
       background: #fff;
-      color: #0f172a;
+      cursor: pointer;
     }
 
     canvas {
       display: block;
       margin: 1.5rem auto 0 auto;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      left: 0;
+      top: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.4);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-contenido {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .modal-contenido h3 {
+      margin-top: 0;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    .categoria-item {
+      margin-bottom: 0.75rem;
+    }
+
+    .categoria-item button {
+      width: 100%;
+      text-align: left;
+      background: #F9FAFB;
+      border: 1px solid #E5E7EB;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-family: 'Greycliff CF', sans-serif;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .cerrar-modal {
+      margin-top: 1rem;
+      text-align: right;
+    }
+
+    .cerrar-modal button {
+      font-size: 0.9rem;
+      background: none;
+      border: none;
+      color: #64748B;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -56,15 +114,21 @@
   <div class="contenedor-dona">
     <div class="header-dona">
       <h2>Gastos Totales</h2>
-      <select id="selectorCategoria">
-        <option value="general">Ver categorías</option>
-        <option value="alimentacion">Alimentación</option>
-        <option value="transporte">Transporte</option>
-        <option value="hogar">Hogar</option>
-        <option value="deudas">Deudas</option>
-      </select>
+      <button class="ver-detalle" onclick="abrirModal()">📊 Ver detalle</button>
     </div>
     <canvas id="graficoGastos" width="400" height="400"></canvas>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal" id="modalCategorias">
+    <div class="modal-contenido">
+      <h3>Ver subcategorías</h3>
+      <div class="categoria-item"><button onclick="renderChart('alimentacion')">🍽 Alimentación</button></div>
+      <div class="categoria-item"><button onclick="renderChart('transporte')">🚗 Transporte</button></div>
+      <div class="categoria-item"><button onclick="renderChart('hogar')">🏡 Hogar</button></div>
+      <div class="categoria-item"><button onclick="renderChart('deudas')">💳 Deudas</button></div>
+      <div class="cerrar-modal"><button onclick="cerrarModal()">Cerrar</button></div>
+    </div>
   </div>
 
   <script>
@@ -155,15 +219,20 @@
           }
         }]
       });
+
+      cerrarModal();
     }
 
-    // Cargar gráfica inicial
-    renderChart("general");
+    function abrirModal() {
+      document.getElementById("modalCategorias").style.display = "flex";
+    }
 
-    // Cambiar según selección
-    document.getElementById("selectorCategoria").addEventListener("change", function () {
-      renderChart(this.value);
-    });
+    function cerrarModal() {
+      document.getElementById("modalCategorias").style.display = "none";
+    }
+
+    // Cargar la gráfica inicial
+    renderChart("general");
   </script>
 </body>
 </html>
