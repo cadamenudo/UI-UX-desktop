@@ -119,7 +119,7 @@
   <div class="contenedor-dona">
     <div class="header-dona">
       <h2>Gastos Totales</h2>
-      <button class="ver-detalle" onclick="abrirModal()">📊 Ver detalle</button>
+      <button class="ver-detalle" onclick="abrirModal()">Ver detalle</button>
     </div>
     <canvas id="graficoGastos" width="400" height="400"></canvas>
   </div>
@@ -128,10 +128,10 @@
   <div class="modal" id="modalCategorias">
     <div class="modal-contenido">
       <h3>Ver subcategorías</h3>
-      <div class="categoria-item"><button onclick="renderChart('alimentacion')">🍽 Alimentación <span>$600</span></button></div>
-      <div class="categoria-item"><button onclick="renderChart('transporte')">🚗 Transporte <span>$300</span></button></div>
-      <div class="categoria-item"><button onclick="renderChart('hogar')">🏡 Hogar <span>$400</span></button></div>
-      <div class="categoria-item"><button onclick="renderChart('deudas')">💳 Deudas <span>$500</span></button></div>
+      <div class="categoria-item"><button onclick="renderChart('alimentacion')">Alimentación <span>$600</span></button></div>
+      <div class="categoria-item"><button onclick="renderChart('transporte')">Transporte <span>$300</span></button></div>
+      <div class="categoria-item"><button onclick="renderChart('hogar')">Hogar <span>$400</span></button></div>
+      <div class="categoria-item"><button onclick="renderChart('deudas')">Deudas <span>$500</span></button></div>
       <div class="cerrar-modal">
         <button onclick="renderChart('general')">← Volver a categorías generales</button>
         <button onclick="cerrarModal()">Cerrar</button>
@@ -170,10 +170,12 @@
 
     const ctx = document.getElementById("graficoGastos").getContext("2d");
     let chart;
+    let tipoActivo = "general";
 
     function renderChart(tipo) {
       const { labels, data, colors } = categorias[tipo];
       const total = data.reduce((a, b) => a + b, 0);
+      tipoActivo = tipo;
 
       if (chart) chart.destroy();
 
@@ -218,11 +220,25 @@
             const { width, height } = chart;
             const ctx = chart.ctx;
             ctx.restore();
-            ctx.font = '700 32px "Greycliff CF", sans-serif';
-            ctx.fillStyle = '#0f172a';
-            ctx.textBaseline = 'middle';
+            const total = chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+
             ctx.textAlign = 'center';
-            ctx.fillText(`$${total.toLocaleString("en-US")}`, width / 2, height / 2);
+            ctx.textBaseline = 'middle';
+
+            if (tipoActivo !== 'general') {
+              const nombre = tipoActivo.charAt(0).toUpperCase() + tipoActivo.slice(1);
+              ctx.font = '600 16px "Greycliff CF", sans-serif';
+              ctx.fillStyle = '#64748B';
+              ctx.fillText(nombre, width / 2, height / 2 - 18);
+              ctx.font = '700 32px "Greycliff CF", sans-serif';
+              ctx.fillStyle = '#0f172a';
+              ctx.fillText(`$${total.toLocaleString("en-US")}`, width / 2, height / 2 + 12);
+            } else {
+              ctx.font = '700 32px "Greycliff CF", sans-serif';
+              ctx.fillStyle = '#0f172a';
+              ctx.fillText(`$${total.toLocaleString("en-US")}`, width / 2, height / 2);
+            }
+
             ctx.save();
           }
         }]
