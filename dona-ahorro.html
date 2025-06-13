@@ -46,12 +46,10 @@
   </div>
 
   <script>
-    const dataValores = [700, 400, 300]; // ejemplos: Emergencia, Retiro, Vacaciones
+    const dataValores = [700, 400, 300];
     const etiquetas = ["Emergencia", "Retiro", "Vacaciones"];
     const colores = ["#34D399", "#6EE7B7", "#A7F3D0"];
     const total = dataValores.reduce((a, b) => a + b, 0);
-
-    let categoriaActiva = null;
 
     const centroDona = {
       id: 'centroTexto',
@@ -59,32 +57,18 @@
         const { width, height } = chart;
         const ctx = chart.ctx;
         ctx.restore();
-
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-
-        if (categoriaActiva !== null) {
-          const nombre = etiquetas[categoriaActiva];
-          const valor = dataValores[categoriaActiva];
-          ctx.font = '600 16px "Greycliff CF", sans-serif';
-          ctx.fillStyle = '#64748B';
-          ctx.fillText(nombre, width / 2, height / 2 - 18);
-          ctx.font = '700 32px "Greycliff CF", sans-serif';
-          ctx.fillStyle = '#0f172a';
-          ctx.fillText(`$${valor.toLocaleString("en-US")}`, width / 2, height / 2 + 12);
-        } else {
-          ctx.font = '700 32px "Greycliff CF", sans-serif';
-          ctx.fillStyle = '#0f172a';
-          ctx.fillText(`$${total.toLocaleString("en-US")}`, width / 2, height / 2);
-        }
-
+        ctx.font = '700 32px "Greycliff CF", sans-serif';
+        ctx.fillStyle = '#0f172a';
+        ctx.fillText(`$${total.toLocaleString("en-US")}`, width / 2, height / 2);
         ctx.save();
       }
     };
 
     const ctx = document.getElementById("graficoAhorros").getContext("2d");
 
-    const grafico = new Chart(ctx, {
+    new Chart(ctx, {
       type: "doughnut",
       data: {
         labels: etiquetas,
@@ -115,20 +99,6 @@
                 const porcentaje = ((valor / total) * 100).toFixed(1);
                 return `${context.label}: $${valor.toLocaleString("en-US")} (${porcentaje}%)`;
               }
-            }
-          }
-        },
-        onHover: (event, elements) => {
-          if (elements.length > 0) {
-            const index = elements[0].index;
-            if (categoriaActiva !== index) {
-              categoriaActiva = index;
-              grafico.update();
-            }
-          } else {
-            if (categoriaActiva !== null) {
-              categoriaActiva = null;
-              grafico.update();
             }
           }
         }
