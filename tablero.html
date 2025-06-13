@@ -151,6 +151,26 @@
       background-color: #5a42b5;
     }
 
+    .bloque-metas-anuales {
+  width: 100%;
+  max-width: 550px;
+  height: 300px;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+.bloque-metas-anuales .titulo {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.bloque-metas-anuales canvas {
+  width: 100%;
+  height: 240px;
+}
     .graficos-grid {
       display: grid;
       grid-template-areas:
@@ -232,9 +252,9 @@
         <canvas class="grafico" id="graficoMeta"></canvas>
       </div>
 
-      <div class="tarjeta-grafico" style="grid-area: barra">
-        <div class="titulo">Ahorros anuales</div>
-        <canvas class="grafico" id="graficoComparativo"></canvas>
+      <div class="bloque-metas-anuales">
+        <div class="titulo">Metas</div>
+        <canvas id="graficoMetasAnuales"></canvas>
       </div>
 
       <div class="tarjeta-grafico" style="grid-area: donut">
