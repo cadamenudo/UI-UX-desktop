@@ -151,9 +151,30 @@
       background-color: #5a42b5;
     }
 
+    .bloque-ingresos-vs-gastos {
+  width: 100%;
+  max-width: 1100px;
+  height: 300px;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+.bloque-ingresos-vs-gastos .titulo {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.bloque-ingresos-vs-gastos canvas {
+  width: 100%;
+  height: 240px;
+}
+
     .bloque-metas-anuales {
   width: 100%;
-  max-width: 550px;
+  max-width: 600px;
   height: 300px;
   background: white;
   padding: 1.5rem;
@@ -246,10 +267,9 @@
       </div>
     </div>
 
-    <div class="graficos-grid">
-      <div class="tarjeta-grafico" style="grid-area: linea">
-        <div class="titulo">Totales mensuales</div>
-        <canvas class="grafico" id="graficoMeta"></canvas>
+      <div class="bloque-ingresos-vs-gastos">
+        <div class="titulo">Ingresos vs Gastos</div>
+        <canvas id="graficoIngresosVsGastos"></canvas>
       </div>
 
       <div class="bloque-metas-anuales">
