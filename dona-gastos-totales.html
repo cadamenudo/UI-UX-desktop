@@ -70,7 +70,7 @@
       padding: 2rem;
       border-radius: 16px;
       width: 90%;
-      max-width: 400px;
+      max-width: 420px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     }
 
@@ -94,11 +94,15 @@
       font-family: 'Greycliff CF', sans-serif;
       font-size: 1rem;
       cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .cerrar-modal {
-      margin-top: 1rem;
-      text-align: right;
+      margin-top: 1.5rem;
+      display: flex;
+      justify-content: space-between;
     }
 
     .cerrar-modal button {
@@ -107,6 +111,7 @@
       border: none;
       color: #64748B;
       cursor: pointer;
+      text-decoration: underline;
     }
   </style>
 </head>
@@ -123,11 +128,14 @@
   <div class="modal" id="modalCategorias">
     <div class="modal-contenido">
       <h3>Ver subcategorías</h3>
-      <div class="categoria-item"><button onclick="renderChart('alimentacion')">🍽 Alimentación</button></div>
-      <div class="categoria-item"><button onclick="renderChart('transporte')">🚗 Transporte</button></div>
-      <div class="categoria-item"><button onclick="renderChart('hogar')">🏡 Hogar</button></div>
-      <div class="categoria-item"><button onclick="renderChart('deudas')">💳 Deudas</button></div>
-      <div class="cerrar-modal"><button onclick="cerrarModal()">Cerrar</button></div>
+      <div class="categoria-item"><button onclick="renderChart('alimentacion')">🍽 Alimentación <span>$600</span></button></div>
+      <div class="categoria-item"><button onclick="renderChart('transporte')">🚗 Transporte <span>$300</span></button></div>
+      <div class="categoria-item"><button onclick="renderChart('hogar')">🏡 Hogar <span>$400</span></button></div>
+      <div class="categoria-item"><button onclick="renderChart('deudas')">💳 Deudas <span>$500</span></button></div>
+      <div class="cerrar-modal">
+        <button onclick="renderChart('general')">← Volver a categorías generales</button>
+        <button onclick="cerrarModal()">Cerrar</button>
+      </div>
     </div>
   </div>
 
@@ -231,7 +239,7 @@
       document.getElementById("modalCategorias").style.display = "none";
     }
 
-    // Cargar la gráfica inicial
+    // Inicia con vista general
     renderChart("general");
   </script>
 </body>
