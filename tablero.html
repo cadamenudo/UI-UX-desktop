@@ -1,4 +1,4 @@
-<!-- Código ajustado para que resumen y calendario compartan espacio equitativo usando flex -->
+<!-- Código ajustado con distribución tipo tablero final (gráfico ancho + bloques a 2x1) -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -155,7 +155,10 @@
 
     .graficos-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-areas:
+        "linea barra"
+        "donut barraH";
+      grid-template-columns: 2fr 1fr;
       gap: 2rem;
     }
 
@@ -165,6 +168,11 @@
       border-radius: 16px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.05);
     }
+
+    #graficoMeta        { grid-area: linea; }
+    #graficoComparativo { grid-area: barra; }
+    #graficoIngresos    { grid-area: donut; }
+    #graficoGastos      { grid-area: barraH; }
 
     .tarjeta-grafico .titulo {
       font-size: 1.1rem;
@@ -218,22 +226,22 @@
     </div>
 
     <div class="graficos-grid">
-      <div class="tarjeta-grafico">
-        <div class="titulo">Meta para el Año</div>
+      <div class="tarjeta-grafico" style="grid-area: linea">
+        <div class="titulo">Totales mensuales</div>
         <canvas class="grafico" id="graficoMeta"></canvas>
       </div>
 
-      <div class="tarjeta-grafico">
-        <div class="titulo">Ingresos vs Gastos</div>
+      <div class="tarjeta-grafico" style="grid-area: barra">
+        <div class="titulo">Ahorros anuales</div>
         <canvas class="grafico" id="graficoComparativo"></canvas>
       </div>
 
-      <div class="tarjeta-grafico">
+      <div class="tarjeta-grafico" style="grid-area: donut">
         <div class="titulo">Ingresos Totales</div>
         <canvas class="grafico" id="graficoIngresos"></canvas>
       </div>
 
-      <div class="tarjeta-grafico">
+      <div class="tarjeta-grafico" style="grid-area: barraH">
         <div class="titulo">Gastos Totales</div>
         <canvas class="grafico" id="graficoGastos"></canvas>
       </div>
