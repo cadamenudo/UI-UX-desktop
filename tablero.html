@@ -1,4 +1,4 @@
-<!-- Código actualizado con resumen, calendario y gráficos refinados -->
+<!-- Código actualizado con resumen limpio y calendario con rango de fechas -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -47,7 +47,6 @@
       display: flex;
       align-items: center;
       gap: 1rem;
-      position: relative;
     }
 
     .resumen-card-final .icono-svg {
@@ -79,25 +78,6 @@
       color: #64748b;
     }
 
-    .variacion {
-      position: absolute;
-      right: 1rem;
-      top: 1.5rem;
-      font-size: 0.85rem;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .variacion.positivo {
-      color: #16a34a;
-    }
-
-    .variacion.negativo {
-      color: #dc2626;
-    }
-
     .calendario-box {
       background: white;
       padding: 1.5rem;
@@ -105,16 +85,29 @@
       box-shadow: 0 4px 8px rgba(0,0,0,0.05);
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      gap: 1rem;
     }
 
     .calendario-box .titulo {
       font-size: 1rem;
       font-weight: 600;
-      margin-bottom: 1rem;
     }
 
-    .calendario-box .boton-periodo {
+    .input-fechas {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .input-fechas input[type="text"] {
+      flex: 1;
+      padding: 0.5rem 0.75rem;
+      border-radius: 12px;
+      border: 1px solid #d1d5db;
+      font-size: 0.9rem;
+      background: #fff;
+    }
+
+    .boton-periodo {
       padding: 0.5rem 1rem;
       background-color: #3956E8;
       color: white;
@@ -126,7 +119,7 @@
       align-self: flex-start;
     }
 
-    .calendario-box .boton-periodo:hover {
+    .boton-periodo:hover {
       background-color: #293bb8;
     }
 
@@ -165,7 +158,6 @@
             <div class="monto">$3,000.00</div>
             <div class="titulo">Ingresos este mes</div>
           </div>
-          <div class="variacion positivo">⬆ 37.8%</div>
         </div>
 
         <div class="resumen-card-final">
@@ -174,7 +166,6 @@
             <div class="monto">$1,200.00</div>
             <div class="titulo">Gastos este mes</div>
           </div>
-          <div class="variacion positivo">⬆ 11%</div>
         </div>
 
         <div class="resumen-card-final">
@@ -183,12 +174,15 @@
             <div class="monto">$450.00</div>
             <div class="titulo">Ahorros este mes</div>
           </div>
-          <div class="variacion negativo">⬇ 7%</div>
         </div>
       </div>
 
       <div class="calendario-box">
         <div class="titulo">Periodo de análisis</div>
+        <div class="input-fechas">
+          <input type="text" id="desde" placeholder="Desde">
+          <input type="text" id="hasta" placeholder="Hasta">
+        </div>
         <button class="boton-periodo">Últimos 30 días</button>
       </div>
     </div>
@@ -215,5 +209,11 @@
       </div>
     </div>
   </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script>
+    flatpickr("#desde", { dateFormat: "d/m/Y" });
+    flatpickr("#hasta", { dateFormat: "d/m/Y" });
+  </script>
 </body>
 </html>
