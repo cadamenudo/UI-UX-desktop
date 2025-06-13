@@ -10,30 +10,35 @@
       font-family: 'Greycliff CF', sans-serif;
       background: #FAFBFF;
       margin: 0;
+      padding: 0;
+      color: #0f172a;
+    }
+
+    .contenido {
       padding-left: 240px;
       padding-top: 100px;
-      color: #0f172a;
+      max-width: 1200px;
+      margin: 0 auto;
     }
 
     .top-header {
       position: fixed;
       top: 0;
-      left: 240px;
+      left: 0;
       right: 0;
       height: 80px;
-      background: white;
+      background: #3956E8;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 2rem;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      padding: 0 2rem 0 260px;
+      color: white;
       z-index: 1000;
     }
 
     .top-header .logo {
       font-size: 1.25rem;
       font-weight: 700;
-      color: #3956E8;
     }
 
     .top-header .usuario {
@@ -57,7 +62,7 @@
       height: 100vh;
       background: #3956E8;
       color: white;
-      padding: 1.5rem 1rem;
+      padding-top: 100px;
       box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
       z-index: 1001;
     }
@@ -69,7 +74,7 @@
     }
 
     .sidebar nav li {
-      padding: 0.75rem 1rem;
+      padding: 0.75rem 1.5rem;
       margin-bottom: 0.5rem;
       border-radius: 12px;
       cursor: pointer;
@@ -82,8 +87,7 @@
     }
 
     .sidebar nav .activo {
-      background: white;
-      color: #3956E8;
+      background: rgba(255,255,255,0.1);
       font-weight: 600;
     }
 
@@ -210,61 +214,62 @@
     </nav>
   </aside>
 
-  <!-- CONTENIDO PRINCIPAL -->
-  <div class="resumen-grid">
-    <div class="resumen-card">
-      <div class="icono-circulo ingreso"><span>💰</span></div>
-      <div class="resumen-info">
-        <div class="resumen-monto">$3,000.00</div>
-        <div class="resumen-label">Ingresos</div>
+  <div class="contenido">
+    <div class="resumen-grid">
+      <div class="resumen-card">
+        <div class="icono-circulo ingreso"><span>💰</span></div>
+        <div class="resumen-info">
+          <div class="resumen-monto">$3,000.00</div>
+          <div class="resumen-label">Ingresos</div>
+        </div>
+      </div>
+      <div class="resumen-card">
+        <div class="icono-circulo gasto"><span>👜</span></div>
+        <div class="resumen-info">
+          <div class="resumen-monto">$20.83</div>
+          <div class="resumen-label">Gastos</div>
+        </div>
+      </div>
+      <div class="resumen-card">
+        <div class="icono-circulo ahorro"><span>💸</span></div>
+        <div class="resumen-info">
+          <div class="resumen-monto">$300.00</div>
+          <div class="resumen-label">Ahorros</div>
+        </div>
       </div>
     </div>
-    <div class="resumen-card">
-      <div class="icono-circulo gasto"><span>👜</span></div>
-      <div class="resumen-info">
-        <div class="resumen-monto">$20.83</div>
-        <div class="resumen-label">Gastos</div>
+
+    <div class="tarjeta">
+      <div class="titulo">Selecciona un rango de fechas</div>
+      <div class="input-grupo">
+        <input type="text" id="desde" placeholder="Desde" />
+        <input type="text" id="hasta" placeholder="Hasta" />
+        <button>🔍 Buscar</button>
       </div>
     </div>
-    <div class="resumen-card">
-      <div class="icono-circulo ahorro"><span>💸</span></div>
-      <div class="resumen-info">
-        <div class="resumen-monto">$300.00</div>
-        <div class="resumen-label">Ahorros</div>
+
+    <div class="grid">
+      <div class="tarjeta">
+        <div class="titulo">Meta para el Año</div>
+        <canvas id="graficoMeta" class="grafico"></canvas>
+      </div>
+
+      <div class="tarjeta">
+        <div class="titulo">Ingresos vs Gastos</div>
+        <canvas id="graficoComparativo" class="grafico"></canvas>
       </div>
     </div>
-  </div>
 
-  <div class="tarjeta">
-    <div class="titulo">Selecciona un rango de fechas</div>
-    <div class="input-grupo">
-      <input type="text" id="desde" placeholder="Desde" />
-      <input type="text" id="hasta" placeholder="Hasta" />
-      <button>🔍 Buscar</button>
-    </div>
-  </div>
+    <div class="grid">
+      <div class="tarjeta">
+        <div class="titulo">Ingresos Totales</div>
+        <canvas id="graficoIngresos" class="grafico"></canvas>
+      </div>
 
-  <div class="grid">
-    <div class="tarjeta">
-      <div class="titulo">Meta para el Año</div>
-      <canvas id="graficoMeta" class="grafico"></canvas>
-    </div>
-
-    <div class="tarjeta">
-      <div class="titulo">Ingresos vs Gastos</div>
-      <canvas id="graficoComparativo" class="grafico"></canvas>
-    </div>
-  </div>
-
-  <div class="grid">
-    <div class="tarjeta">
-      <div class="titulo">Ingresos Totales</div>
-      <canvas id="graficoIngresos" class="grafico"></canvas>
-    </div>
-
-    <div class="tarjeta">
-      <div class="titulo">Gastos Totales</div>
-      <canvas id="graficoGastos" class="grafico"></canvas>
+      <div class="tarjeta">
+        <div class="titulo">Gastos Totales</div>
+        <canvas id="graficoGastos" class="grafico"></canvas>
+      </div>
     </div>
   </div>
 
