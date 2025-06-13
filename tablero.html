@@ -1,4 +1,3 @@
-<!-- Código base actualizado con cards de resumen refinadas -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -25,10 +24,18 @@
       gap: 2rem;
     }
 
+    .header-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 2rem;
+      align-items: stretch;
+    }
+
     .resumen-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 1.5rem;
+      height: 100%;
     }
 
     .resumen-card-final {
@@ -89,36 +96,75 @@
     .variacion.negativo {
       color: #dc2626;
     }
+
+    .calendario-box {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .calendario-box .titulo {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .calendario-box .boton-periodo {
+      padding: 0.5rem 1rem;
+      background-color: #3956E8;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      align-self: flex-start;
+    }
+
+    .calendario-box .boton-periodo:hover {
+      background-color: #293bb8;
+    }
   </style>
 </head>
 <body>
   <div class="contenido">
-    <div class="resumen-grid">
-      <div class="resumen-card-final">
-        <div class="icono-svg icono-ingreso">💰</div>
-        <div class="resumen-info-final">
-          <div class="monto">$3,000.00</div>
-          <div class="titulo">Ingresos este mes</div>
+    <div class="header-grid">
+      <div class="resumen-grid">
+        <div class="resumen-card-final">
+          <div class="icono-svg icono-ingreso">💰</div>
+          <div class="resumen-info-final">
+            <div class="monto">$3,000.00</div>
+            <div class="titulo">Ingresos este mes</div>
+          </div>
+          <div class="variacion positivo">⬆ 37.8%</div>
         </div>
-        <div class="variacion positivo">⬆ 37.8%</div>
+
+        <div class="resumen-card-final">
+          <div class="icono-svg icono-gasto">👜</div>
+          <div class="resumen-info-final">
+            <div class="monto">$1,200.00</div>
+            <div class="titulo">Gastos este mes</div>
+          </div>
+          <div class="variacion positivo">⬆ 11%</div>
+        </div>
+
+        <div class="resumen-card-final">
+          <div class="icono-svg icono-ahorro">💸</div>
+          <div class="resumen-info-final">
+            <div class="monto">$450.00</div>
+            <div class="titulo">Ahorros este mes</div>
+          </div>
+          <div class="variacion negativo">⬇ 7%</div>
+        </div>
       </div>
 
-      <div class="resumen-card-final">
-        <div class="icono-svg icono-gasto">👜</div>
-        <div class="resumen-info-final">
-          <div class="monto">$1,200.00</div>
-          <div class="titulo">Gastos este mes</div>
-        </div>
-        <div class="variacion positivo">⬆ 11%</div>
-      </div>
-
-      <div class="resumen-card-final">
-        <div class="icono-svg icono-ahorro">💸</div>
-        <div class="resumen-info-final">
-          <div class="monto">$450.00</div>
-          <div class="titulo">Ahorros este mes</div>
-        </div>
-        <div class="variacion negativo">⬇ 7%</div>
+      <div class="calendario-box">
+        <div class="titulo">Periodo de análisis</div>
+        <button class="boton-periodo">Últimos 30 días</button>
       </div>
     </div>
   </div>
