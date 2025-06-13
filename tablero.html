@@ -1,3 +1,4 @@
+<!-- Código actualizado con resumen, calendario y gráficos refinados -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -128,6 +129,30 @@
     .calendario-box .boton-periodo:hover {
       background-color: #293bb8;
     }
+
+    .graficos-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    .tarjeta-grafico {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+
+    .tarjeta-grafico .titulo {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .grafico {
+      width: 100%;
+      height: 260px;
+    }
   </style>
 </head>
 <body>
@@ -165,6 +190,28 @@
       <div class="calendario-box">
         <div class="titulo">Periodo de análisis</div>
         <button class="boton-periodo">Últimos 30 días</button>
+      </div>
+    </div>
+
+    <div class="graficos-grid">
+      <div class="tarjeta-grafico">
+        <div class="titulo">Meta para el Año</div>
+        <canvas class="grafico" id="graficoMeta"></canvas>
+      </div>
+
+      <div class="tarjeta-grafico">
+        <div class="titulo">Ingresos vs Gastos</div>
+        <canvas class="grafico" id="graficoComparativo"></canvas>
+      </div>
+
+      <div class="tarjeta-grafico">
+        <div class="titulo">Ingresos Totales</div>
+        <canvas class="grafico" id="graficoIngresos"></canvas>
+      </div>
+
+      <div class="tarjeta-grafico">
+        <div class="titulo">Gastos Totales</div>
+        <canvas class="grafico" id="graficoGastos"></canvas>
       </div>
     </div>
   </div>
