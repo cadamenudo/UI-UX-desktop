@@ -215,18 +215,22 @@
             ctx.save();
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
+        
             if (label) {
-              ctx.font = '600 16px "Greycliff CF", sans-serif';
+              ctx.font = '600 16px Arial, "Greycliff CF", sans-serif';
               ctx.fillStyle = '#64748B';
               ctx.fillText(label, width / 2, height / 2 - 18);
-              ctx.font = '700 32px "Greycliff CF", sans-serif';
+        
+              ctx.font = '700 32px Arial, "Greycliff CF", sans-serif';
               ctx.fillStyle = '#0f172a';
               ctx.fillText(`$${total.toLocaleString()}`, width / 2, height / 2 + 12);
             } else {
-              ctx.font = '700 32px "Greycliff CF", sans-serif';
+              ctx.font = '700 32px Arial, "Greycliff CF", sans-serif';
               ctx.fillStyle = '#0f172a';
               ctx.fillText(`$${total.toLocaleString()}`, width / 2, height / 2);
             }
+        
+            ctx.restore();
           }
         }]
       });
