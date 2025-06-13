@@ -247,6 +247,11 @@
   border-radius: 12px;
   cursor: pointer;
 }
+    .envoltura-donas {
+  width: 100%;
+  max-width: 1100px;  /* o 100% si quieres full width */
+  margin: 0 auto;
+}
 
     .footer-app {
       margin-top: 4rem;
@@ -325,7 +330,7 @@
 </div>
 
 <section class="fila-inferior">
-  <div id="contenedorDonas"></div>
+  <div id="contenedorDonas" class="envoltura-donas"></div>
 </section>
 
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -338,7 +343,16 @@
     .then(res => res.text())
     .then(html => {
       document.getElementById("contenedorDonas").innerHTML = html;
-      evalScriptTags(html); // ⚠️ ejecuta scripts internos
+      const scripts = document.getElementById("contenedorDonas").querySelectorAll("script");
+      scripts.forEach(script => {
+        const s = document.createElement("script");
+        if (script.src) {
+          s.src = script.src;
+        } else {
+          s.textContent = script.textContent;
+        }
+        document.body.appendChild(s);
+      });
     });
 
   function evalScriptTags(html) {
