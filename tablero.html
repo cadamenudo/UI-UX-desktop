@@ -269,8 +269,9 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  overflow: visible;
+  overflow: visible !important; /* ✅ esto permite que el hoverOffset sobresalga */
   position: relative; /* ayuda a posicionar bien el tooltip */
+  isolation: isolate; /* 👈 asegura que z-index se respete */
 }
 .bloque-gastos-totales,
 .bloque-ahorros-totales {
