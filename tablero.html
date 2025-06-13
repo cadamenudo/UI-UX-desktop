@@ -1,4 +1,4 @@
-<!-- Código actualizado con calendario visual como imagen de referencia -->
+<!-- Código actualizado con resumen compacto unificado estilo dashboard -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -32,24 +32,30 @@
       align-items: stretch;
     }
 
-    .resumen-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem;
-      height: 100%;
-    }
-
-    .resumen-card-final {
+    .resumen-unificado {
       background: white;
-      padding: 1.5rem;
+      padding: 1.5rem 0;
       border-radius: 16px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.05);
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      gap: 1rem;
     }
 
-    .resumen-card-final .icono-svg {
+    .bloque-indicador {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      border-right: 1px solid #f1f5f9;
+    }
+
+    .bloque-indicador:last-child {
+      border-right: none;
+    }
+
+    .icono-svg-resumen {
       width: 48px;
       height: 48px;
       border-radius: 50%;
@@ -59,23 +65,25 @@
       font-size: 1.5rem;
     }
 
-    .icono-ingreso { background-color: #E0F2FE; }
-    .icono-gasto   { background-color: #F1F5F9; }
-    .icono-ahorro  { background-color: #FEF9C3; }
+    .i-ingreso { background-color: #ede9fe; }
+    .i-gasto   { background-color: #f1f5f9; }
+    .i-ahorro  { background-color: #fef9c3; }
 
-    .resumen-info-final {
+    .texto-indicador {
       display: flex;
       flex-direction: column;
+      line-height: 1.4;
     }
 
-    .resumen-info-final .monto {
-      font-size: 1.5rem;
-      font-weight: 600;
+    .texto-indicador span.label {
+      font-size: 0.85rem;
+      color: #94a3b8;
     }
 
-    .resumen-info-final .titulo {
-      font-size: 0.9rem;
-      color: #64748b;
+    .texto-indicador span.valor {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #0f172a;
     }
 
     .calendario-box {
@@ -165,28 +173,28 @@
 <body>
   <div class="contenido">
     <div class="header-grid">
-      <div class="resumen-grid">
-        <div class="resumen-card-final">
-          <div class="icono-svg icono-ingreso">💰</div>
-          <div class="resumen-info-final">
-            <div class="monto">$3,000.00</div>
-            <div class="titulo">Ingresos este mes</div>
+      <div class="resumen-unificado">
+        <div class="bloque-indicador">
+          <div class="icono-svg-resumen i-ingreso">💰</div>
+          <div class="texto-indicador">
+            <span class="label">Ingresos</span>
+            <span class="valor">$3,000.00</span>
           </div>
         </div>
 
-        <div class="resumen-card-final">
-          <div class="icono-svg icono-gasto">👜</div>
-          <div class="resumen-info-final">
-            <div class="monto">$1,200.00</div>
-            <div class="titulo">Gastos este mes</div>
+        <div class="bloque-indicador">
+          <div class="icono-svg-resumen i-gasto">👜</div>
+          <div class="texto-indicador">
+            <span class="label">Gastos</span>
+            <span class="valor">$1,200.00</span>
           </div>
         </div>
 
-        <div class="resumen-card-final">
-          <div class="icono-svg icono-ahorro">💸</div>
-          <div class="resumen-info-final">
-            <div class="monto">$450.00</div>
-            <div class="titulo">Ahorros este mes</div>
+        <div class="bloque-indicador">
+          <div class="icono-svg-resumen i-ahorro">💸</div>
+          <div class="texto-indicador">
+            <span class="label">Ahorro</span>
+            <span class="valor">$450.00</span>
           </div>
         </div>
       </div>
