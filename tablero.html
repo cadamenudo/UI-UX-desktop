@@ -259,11 +259,31 @@
   margin-top: 0 !important;
 }
 
-.bloque-ingresos-totales,
+.bloque-ingresos-totales {
+  flex: 1;
+  height: 300px;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: visible !important; /* ✅ esto permite que el hoverOffset sobresalga */
+  position: relative; /* ayuda a posicionar bien el tooltip */
+  isolation: isolate; /* 👈 asegura que z-index se respete */
+}
 .bloque-gastos-totales,
 .bloque-ahorros-totales {
   flex: 1;
-  min-width: 0; /* 👈 ayuda a evitar desbordes en pantallas pequeñas */
+  height: 300px;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .bloque-ingresos-totales .titulo {
@@ -317,17 +337,6 @@
   color: #3956E8;
   text-decoration: underline;
 }
-#contenedorDonas {
-  display: flex;
-  justify-content: space-between;
-  align-items: stretch;
-  gap: 2rem;
-  max-width: 1100px;
-  width: 100%;
-  margin: 0 auto;
-  flex-wrap: wrap; /* 👈 permite que se ajuste si se necesita */
-}
-
   </style>
 </head>
 <body>
@@ -378,37 +387,66 @@
   </div>
 </div>
 
-<!-- sección de donas -->
+    <div class="fila-inferior">
+      <div class="bloque-ingresos-totales">
+        <div class="titulo">Ingresos Totales</div>
+        <canvas id="graficoIngresosTotales"></canvas>
+      </div>
     
-  <div id="contenedorDonas" class="fila-inferior"></div>
+      <div class="bloque-gastos-totales">
+        <div class="titulo">Gastos Totales</div>
+        <canvas id="graficoGastosTotales"></canvas>
+      </div>
     
+      <div class="bloque-ahorros-totales">
+        <div class="titulo">Ahorros Totales</div>
+        <canvas id="graficoAhorrosTotales"></canvas>
+      </div>
+    </div>
+
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script>
     flatpickr("#desde", { dateFormat: "d/m/Y" });
     flatpickr("#hasta", { dateFormat: "d/m/Y" });
 
    
- // Dona ingresos totales
+    <!-- Dona ingresos totales--->
+      
+  const ctx = document.getElementById('graficoIngresosTotales').getContext('2d');
 
-  fetch("https://cadamenudo.github.io/UI-UX-desktop/grafico-donas.html")
-    .then(res => res.text())
-    .then(html => {
-      document.getElementById("contenedorDonas").innerHTML = html;
-      evalScriptTags(html);
-    });
+  const data = {
+    labels: ['Salario', 'Acciones', 'Renta de inmueble'],
+    datasets: [{
+      data: [3124213, 612445, 2824213],
+      backgroundColor: ['#7C3AED', '#C4B5FD', '#8B5CF6'],
+      borderWidth: 0,
+      hoverOffset: 8,
+    }]
+  };
 
-  function evalScriptTags(html) {
-    const doc = new DOMParser().parseFromString(html, "text/html");
-    doc.querySelectorAll("script").forEach(oldScript => {
-      const newScript = document.createElement("script");
-      if (oldScript.src) {
-        newScript.src = oldScript.src;
-      } else {
-        newScript.textContent = oldScript.textContent;
+  const options = {
+    cutout: '75%',
+    plugins: {
+      legend: {
+        display: false
+      },
+      tooltip: {
+        callbacks: {
+          label: function (context) {
+            let label = context.label || '';
+            let value = context.parsed || 0;
+            return `${label}: $${value.toLocaleString()}`;
+          }
+        }
       }
-      document.body.appendChild(newScript);
-    });
-  }
+    }
+  };
+
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: data,
+    options: options
+  });
   </script>
     
     <footer class="footer-app">
