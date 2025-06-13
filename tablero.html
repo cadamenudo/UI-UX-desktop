@@ -1,4 +1,4 @@
-<!-- Código ajustado: resumen ocupa más espacio, calendario más compacto pero altura igualada -->
+<!-- Código ajustado: columna izquierda expandida, grid 3fr 1fr, gráficos más amplios -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -28,7 +28,7 @@
 
     .header-grid {
       display: grid;
-      grid-template-columns: 3fr 1.2fr;
+      grid-template-columns: 3fr 1fr;
       gap: 2rem;
       align-items: stretch;
     }
@@ -158,7 +158,7 @@
       grid-template-areas:
         "linea barra"
         "donut barraH";
-      grid-template-columns: 2fr 1fr;
+      grid-template-columns: 3fr 1fr;
       gap: 2rem;
     }
 
@@ -167,6 +167,10 @@
       padding: 1.5rem;
       border-radius: 16px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
 
     #graficoMeta        { grid-area: linea; }
@@ -178,11 +182,12 @@
       font-size: 1.1rem;
       font-weight: 600;
       margin-bottom: 1rem;
+      align-self: flex-start;
     }
 
     .grafico {
       width: 100%;
-      height: 260px;
+      height: 280px;
     }
   </style>
 </head>
