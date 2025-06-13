@@ -1,4 +1,4 @@
-<!DOCTYPE html>:-(
+<!DOCTYPE html>;-)
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -36,6 +36,21 @@
     canvas {
       display: block;
       margin: 1.5rem auto 0 auto;
+    }
+    .boton-detalle {
+      font-family: 'Greycliff CF', sans-serif;
+      font-size: 0.95rem;
+      padding: 6px 14px;
+      border: 1px solid #E5E7EB;
+      background-color: #fff;
+      color: #0f172a;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 0 0 1px #E5E7EB inset;
+      transition: all 0.2s ease-in-out;
+    }
+    .boton-detalle:hover {
+      background-color: #f9fafb;
     }
     .modal {
       display: none;
@@ -82,22 +97,6 @@
       text-decoration: underline;
       cursor: pointer;
     }
-    .boton-detalle {
-  font-family: 'Greycliff CF', sans-serif;
-  font-size: 0.95rem;
-  padding: 6px 14px;
-  border: 1px solid #E5E7EB;
-  background-color: #fff;
-  color: #0f172a;
-  border-radius: 12px;
-  cursor: pointer;
-  box-shadow: 0 0 0 1px #E5E7EB inset;
-  transition: all 0.2s ease-in-out;
-}
-
-.boton-detalle:hover {
-  background-color: #f9fafb;
-}
   </style>
 </head>
 <body>
@@ -110,7 +109,7 @@
     <div class="contenedor-dona">
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <h2>Gastos Totales</h2>
-       <button class="boton-detalle" onclick="abrirModalGastos()">Ver detalle</button>
+        <button class="boton-detalle" onclick="abrirModalGastos()">Ver detalle</button>
       </div>
       <canvas id="graficoGastos" width="260" height="260"></canvas>
     </div>
