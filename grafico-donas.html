@@ -108,22 +108,20 @@
   <div class="modal" id="modalGastos">
     <div class="modal-contenido">
       <h3>Ver subcategorías</h3>
-      <button onclick="renderChartGastos('alimentacion')">Alimentación <span>$600</span></button>
-      <button onclick="renderChartGastos('transporte')">Transporte <span>$300</span></button>
-      <button onclick="renderChartGastos('hogar')">Hogar <span>$400</span></button>
-      <button onclick="renderChartGastos('deudas')">Deudas <span>$500</span></button>
+      <button onclick="renderChartGastos('alimentacion', 'Alimentación')">Alimentación <span>$600</span></button>
+      <button onclick="renderChartGastos('transporte', 'Transporte')">Transporte <span>$300</span></button>
+      <button onclick="renderChartGastos('hogar', 'Hogar')">Hogar <span>$400</span></button>
+      <button onclick="renderChartGastos('deudas', 'Deudas')">Deudas <span>$500</span></button>
       <div class="cerrar-modal">
-        <button onclick="renderChartGastos('general')">Volver a general</button>
+        <button onclick="renderChartGastos('general', '')">Volver a general</button>
         <button onclick="cerrarModalGastos()">Cerrar</button>
       </div>
     </div>
   </div>
 
   <script>
-    // INGRESOS
     const ingresosData = [14000, 3500, 2100];
     const ingresosTotal = ingresosData.reduce((a, b) => a + b, 0);
-
     new Chart(document.getElementById('graficoIngresos').getContext('2d'), {
       type: 'doughnut',
       data: {
@@ -162,8 +160,6 @@
       }
     });
 
-    // GASTOS
-    let tipoGasto = 'general';
     const categoriasGastos = {
       general: { labels: ['Alimentación', 'Transporte', 'Hogar', 'Deudas'], data: [600, 300, 400, 500], colors: ['#F472B6', '#FBBF24', '#60A5FA', '#A78BFA'] },
       alimentacion: { labels: ['Supermercado', 'Restaurantes', 'Café'], data: [350, 180, 70], colors: ['#FDA4AF', '#F9A8D4', '#FBCFE8'] },
@@ -171,9 +167,12 @@
       hogar: { labels: ['Alquiler', 'Electricidad', 'Internet'], data: [300, 70, 30], colors: ['#93C5FD', '#BFDBFE', '#DBEAFE'] },
       deudas: { labels: ['Préstamo Estudiantil', 'Tarjeta Crédito', 'Préstamo Auto'], data: [200, 180, 120], colors: ['#DDD6FE', '#C4B5FD', '#A78BFA'] }
     };
+    let tipoGasto = 'general';
+    let labelActivo = '';
     let graficoGastos;
-    function renderChartGastos(tipo) {
+    function renderChartGastos(tipo, label) {
       tipoGasto = tipo;
+      labelActivo = label;
       const cat = categoriasGastos[tipo], total = cat.data.reduce((a, b) => a + b, 0);
       if (graficoGastos) graficoGastos.destroy();
       graficoGastos = new Chart(document.getElementById('graficoGastos').getContext('2d'), {
@@ -202,10 +201,10 @@
               ctx.restore();
               ctx.textAlign = 'center';
               ctx.textBaseline = 'middle';
-              if (tipo !== 'general') {
+              if (label) {
                 ctx.font = '600 16px "Greycliff CF", sans-serif';
                 ctx.fillStyle = '#64748B';
-                ctx.fillText(tipo.charAt(0).toUpperCase() + tipo.slice(1), width / 2, height / 2 - 18);
+                ctx.fillText(label, width / 2, height / 2 - 18);
                 ctx.font = '700 32px "Greycliff CF", sans-serif';
                 ctx.fillStyle = '#0f172a';
                 ctx.fillText(`$${total.toLocaleString("en-US")}`, width / 2, height / 2 + 12);
@@ -221,15 +220,14 @@
       });
       cerrarModalGastos();
     }
-    renderChartGastos('general');
     function abrirModalGastos() {
       document.getElementById('modalGastos').style.display = 'flex';
     }
     function cerrarModalGastos() {
       document.getElementById('modalGastos').style.display = 'none';
     }
+    renderChartGastos('general', '');
 
-    // AHORROS
     const ahorrosData = [700, 400, 300];
     const ahorrosTotal = ahorrosData.reduce((a, b) => a + b, 0);
     new Chart(document.getElementById('graficoAhorros').getContext('2d'), {
