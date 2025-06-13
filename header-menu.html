@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Header + Menú | CadaMenudo</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #F9FAFB;
+      display: flex;
+      height: 100vh;
+    }
+
+    /* Menú lateral */
+    .sidebar {
+      width: 220px;
+      background-color: #FFFFFF;
+      border-right: 1px solid #E5E7EB;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .logo {
+      background-color: #573AEF;
+      padding: 1.5rem;
+      color: white;
+      font-weight: bold;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 80px;
+    }
+
+    .sidebar-section {
+      padding: 1rem 1.25rem 0.5rem;
+      font-size: 0.85rem;
+      color: #6B7280;
+      font-weight: 500;
+    }
+
+    .sidebar-nav {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar-nav li {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1.25rem;
+      font-size: 0.95rem;
+      color: #374151;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .sidebar-nav li:hover {
+      background-color: #F3F4F6;
+    }
+
+    .sidebar-nav li i {
+      margin-right: 0.75rem;
+      font-size: 1.1rem;
+    }
+
+    /* Header superior */
+    .header {
+      flex: 1;
+      background-color: #FFFFFF;
+      border-bottom: 1px solid #E5E7EB;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      height: 80px;
+    }
+
+    .alerta {
+      display: flex;
+      align-items: center;
+      font-size: 0.95rem;
+      color: #4B5563;
+    }
+
+    .alerta i {
+      margin-right: 0.5rem;
+      color: #F59E0B;
+    }
+
+    .acciones {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .acciones i {
+      font-size: 1.2rem;
+      color: #3B82F6;
+      cursor: pointer;
+    }
+
+    .usuario {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 500;
+      color: #374151;
+    }
+
+    .usuario-avatar {
+      background-color: #3B82F6;
+      color: white;
+      font-size: 0.85rem;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  <!-- Menú lateral -->
+  <div class="sidebar">
+    <div class="logo">cada <strong>menudo</strong></div>
+
+    <div class="sidebar-section">Menu</div>
+    <ul class="sidebar-nav">
+      <li><i>🏠</i> Tablero</li>
+      <li><i>📋</i> Transacciones</li>
+      <li><i>📘</i> Educación</li>
+    </ul>
+
+    <div class="sidebar-section">Configuración</div>
+    <ul class="sidebar-nav">
+      <li><i>📊</i> Metas</li>
+      <li><i>🧾</i> Categorías</li>
+      <li><i>👥</i> Usuarios</li>
+    </ul>
+  </div>
+
+  <!-- Header superior -->
+  <div style="flex: 1; display: flex; flex-direction: column;">
+    <div class="header">
+      <div class="alerta"><i>⚠️</i> El próximo 14 de Noviembre tendremos mantenimiento en nuestra plataforma</div>
+      <div class="acciones">
+        <i title="Ayuda">❓</i>
+        <i title="Notificaciones">🔔</i>
+        <div class="usuario">
+          <div class="usuario-avatar">PF</div>
+          Pedro Fernandez ▾
+        </div>
+      </div>
+    </div>
+    <!-- Aquí puedes continuar con el contenido -->
+  </div>
+</body>
+</html>
