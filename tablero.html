@@ -200,20 +200,22 @@
       width: 100%;
       height: 240px;
     }
-    #contenedorDonas {
+    
+#contenedorDonas {
   display: flex;
   justify-content: space-between;
   gap: 2rem;
-  width: 100%;
-  max-width: 1100px;
+  width: 100%;          /* ✅ ocupa todo el ancho posible */
+  max-width: none;      /* ✅ remueve el límite artificial */
 }
+
 
 .bloque-donas {
   display: flex;
-  justify-content: space-between; /* 🔁 distribución completa */
-  align-items: stretch;
+  justify-content: space-between;
   gap: 2rem;
-  width: 100%; /* 👈 ocupa todo el ancho del contenedor padre */
+  width: 100%;              /* ✅ Ocupar todo el ancho posible */
+  max-width: 100%;          /* ✅ Asegura que no se recorte */
 }
 
 .contenedor-dona {
@@ -329,9 +331,7 @@
   </div>
 </div>
 
-<section class="fila-inferior">
-  <div id="contenedorDonas" class="envoltura-donas"></div>
-</section>
+<section id="contenedorDonas" style="width: 100%; display: flex; justify-content: center;"></section>
 
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
       
