@@ -136,16 +136,16 @@
   border: 1px solid #E5E7EB;
   background: white;
 }
-    .bloque-donas-expandido {
+.bloque-donas-expandido {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: stretch;
   gap: 2rem;
   width: 100%;
-  max-width: 1100px;
+  max-width: 1150px;
   margin: 0 auto;
   background: white;
-  padding: 1.5rem;
+  padding: 2rem 2rem;
   border-radius: 16px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.05);
 }
@@ -157,12 +157,18 @@
   align-items: center;
 }
 
+.contenedor-dona canvas {
+  width: 100% !important;
+  height: auto !important;
+  max-width: 300px;
+}
+
 .titulo-con-boton {
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
 }
 
 .titulo-grafico {
@@ -176,9 +182,9 @@
   border: 1px solid #e2e8f0;
   padding: 0.4rem 0.75rem;
   border-radius: 12px;
+  font-size: 0.85rem;
   cursor: pointer;
 }
-
 
   </style>
 </head>
@@ -186,18 +192,18 @@
 <section class="bloque-donas-expandido">
   <div class="contenedor-dona">
     <h2>Ingresos Totales</h2>
-    <canvas id="graficoIngresos" width="260" height="260"></canvas>
+    <canvas id="graficoIngresos"></canvas>
   </div>
   <div class="contenedor-dona">
     <div class="titulo-con-boton">
       <h2 class="titulo-grafico">Gastos Totales</h2>
       <button class="boton-detalle" onclick="abrirModal()">Ver detalle</button>
     </div>
-    <canvas id="graficoGastos" width="260" height="260"></canvas>
+    <canvas id="graficoGastos"></canvas>
   </div>
   <div class="contenedor-dona">
     <h2>Ahorros Totales</h2>
-    <canvas id="graficoAhorros" width="260" height="260"></canvas>
+    <canvas id="graficoAhorros"></canvas>
   </div>
 </section>
 
