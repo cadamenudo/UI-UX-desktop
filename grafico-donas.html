@@ -138,16 +138,16 @@
 }
 .bloque-donas-expandido {
   display: flex;
-  justify-content: space-evenly;
-  align-items: stretch;
+  justify-content: space-between;
+  align-items: flex-start;
   gap: 2rem;
+  max-width: 1100px;
   width: 100%;
-  max-width: 1150px;
   margin: 0 auto;
   background: white;
-  padding: 2rem 2rem;
+  padding: 2rem;
   border-radius: 16px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
 
 .contenedor-dona {
@@ -160,7 +160,8 @@
 .contenedor-dona canvas {
   width: 100% !important;
   height: auto !important;
-  max-width: 300px;
+  max-width: 330px;
+  aspect-ratio: 1/1;
 }
 
 .titulo-con-boton {
