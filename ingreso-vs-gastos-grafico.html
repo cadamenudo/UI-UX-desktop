@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ingresos vs Gastos</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Greycliff CF', sans-serif;
+      background: transparent;
+    }
+
+    .bloque-linea {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+      height: 100%;
+    }
+
+    .bloque-linea h2 {
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+      color: #0f172a;
+    }
+
+    canvas {
+      width: 100%;
+      max-height: 320px;
+    }
+  </style>
+</head>
+<body>
+  <div class="bloque-linea">
+    <h2>Ingresos vs Gastos</h2>
+    <canvas id="graficoLineas"></canvas>
+  </div>
+
+  <script>
+    const ctx = document.getElementById('graficoLineas').getContext('2d');
+
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+        datasets: [
+          {
+            label: 'Ingresos',
+            data: [3200, 4100, 3700, 4600, 5200, 5000, 5400, 5600, 5800, 5900, 6100, 6300],
+            borderColor: '#7459D9',
+            backgroundColor: 'rgba(116, 89, 217, 0.1)',
+            fill: false,
+            tension: 0.3,
+            pointRadius: 4,
+            pointBackgroundColor: '#7459D9'
+          },
+          {
+            label: 'Gastos',
+            data: [2800, 3900, 3500, 4000, 4600, 4700, 4800, 4900, 5100, 5300, 5500, 5700],
+            borderColor: '#64748B',
+            backgroundColor: 'rgba(100, 116, 139, 0.1)',
+            fill: false,
+            tension: 0.3,
+            pointRadius: 4,
+            pointBackgroundColor: '#64748B'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: {
+              color: '#0f172a',
+              boxWidth: 16,
+              boxHeight: 16,
+              font: {
+                family: 'Greycliff CF',
+                size: 12
+              }
+            }
+          },
+          tooltip: {
+            backgroundColor: '#ffffff',
+            titleColor: '#0f172a',
+            bodyColor: '#0f172a',
+            borderColor: '#e5e7eb',
+            borderWidth: 1,
+            padding: 10
+          }
+        },
+        scales: {
+          x: {
+            ticks: {
+              color: '#64748B'
+            },
+            grid: {
+              display: false
+            }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: {
+              color: '#64748B'
+            },
+            grid: {
+              color: '#e5e7eb'
+            }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
