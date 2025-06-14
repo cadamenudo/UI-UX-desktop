@@ -14,15 +14,26 @@
     .fila-graficos {
       display: flex;
       gap: 2rem;
+      align-items: flex-start;
     }
-
-    .bloque-linea, .bloque-metas {
+    
+    .bloque-linea {
+      flex: 2;
+      min-width: 0;
       background: white;
       padding: 1.5rem;
       border-radius: 16px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-      height: 100%;
+    }
+    
+    .bloque-metas {
       flex: 1;
+      min-width: 0;
+      max-width: 300px; /* ✅ opcional, evita que se estire demasiado */
+      background: white;
+      padding: 1.5rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
     }
 
     canvas {
