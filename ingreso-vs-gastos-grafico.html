@@ -35,24 +35,18 @@
   cursor: pointer;
 }
 
-.info-tooltip {
-  position: absolute;
-  top: 140%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: max-content;
-  min-width: 220px;
-  padding: 10px;
-  background: #ffffff;
-  color: #0f172a;
-  font-size: 0.75rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  white-space: normal;
-  z-index: 20;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-  pointer-events: none;
+.circle-i {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  background-color: #e2e8f0; /* azul grisáceo suave */
+  color: #334155;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 18px;
+  text-align: center;
+  border-radius: 50%;
+  cursor: pointer;
 }
 
 .info-icon:hover .info-tooltip {
@@ -66,7 +60,7 @@
   <h2 style="display: flex; align-items: center; gap: 0.5rem;">
     Ingresos vs Gastos
     <span class="info-icon">
-      ℹ️
+      <span class="circle-i">i</span>
       <div class="info-tooltip">
         Los gastos no incluyen ahorro.<br>
         Si los gastos sobrepasan el ingreso estás afectando el ahorro.
