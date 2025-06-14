@@ -5,31 +5,46 @@
   <title>Ingresos vs Gastos</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    body {
-      margin: 0;
-      font-family: 'Greycliff CF', sans-serif;
-      background: transparent;
-    }
+body {
+  margin: 0;
+  font-family: 'Greycliff CF', sans-serif;
+  background: transparent;
+}
 
-    .bloque-linea {
-      background: white;
-      padding: 1.5rem;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-      height: 100%;
-    }
+.bloque-linea {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  height: 100%;
+}
 
-    .bloque-linea h2 {
-      font-size: 1.25rem;
-      margin-bottom: 1rem;
-      color: #0f172a;
-    }
+canvas {
+  width: 100%;
+  max-height: 320px;
+}
 
-    canvas {
-      width: 100%;
-      max-height: 320px;
-    }
-    .info-icon {
+/* Título y alineación */
+.titulo-grafico {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.titulo-principal {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.titulo-principal h2 {
+  font-size: 1.25rem;
+  color: #0f172a;
+  margin: 0;
+}
+
+/* Ícono "i" */
+.info-icon {
   position: relative;
   font-size: 1rem;
   cursor: pointer;
@@ -39,7 +54,7 @@
   display: inline-block;
   width: 18px;
   height: 18px;
-  background-color: #e2e8f0; /* azul grisáceo suave */
+  background-color: #e2e8f0;
   color: #334155;
   font-size: 12px;
   font-weight: bold;
@@ -47,6 +62,26 @@
   text-align: center;
   border-radius: 50%;
   cursor: pointer;
+}
+
+/* Tooltip */
+.info-tooltip {
+  position: absolute;
+  top: 140%;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 220px;
+  padding: 10px;
+  background: #ffffff;
+  color: #0f172a;
+  font-size: 0.75rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  white-space: normal;
+  z-index: 20;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
 }
 
 .info-icon:hover .info-tooltip {
@@ -57,18 +92,22 @@
 </head>
 <body>
 <div class="bloque-linea">
-  <h2 style="display: flex; align-items: center; gap: 0.5rem;">
-    Ingresos vs Gastos
-    <span class="info-icon">
-      <span class="circle-i">i</span>
-      <div class="info-tooltip">
-        Los gastos no incluyen ahorro.<br>
-        Si los gastos sobrepasan el ingreso estás afectando el ahorro.
-      </div>
-    </span>
-  </h2>
+  <div class="titulo-grafico">
+    <div class="titulo-principal">
+      <h2>Ingresos vs Gastos</h2>
+      <span class="info-icon">
+        <span class="circle-i">i</span>
+        <div class="info-tooltip">
+          Los gastos no incluyen ahorro.<br>
+          Si los gastos sobrepasan el ingreso estás afectando el ahorro.
+        </div>
+      </span>
+    </div>
+  </div>
+
   <canvas id="graficoLineas"></canvas>
 </div>
+
 <script>
   // Plugin personalizado: relleno rojo tenue donde gastos > ingresos
   const resaltarSobrepaso = {
