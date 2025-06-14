@@ -40,6 +40,14 @@
   <script>
     const ctx = document.getElementById('graficoLineas').getContext('2d');
 
+    const gradientIngresos = ctx.createLinearGradient(0, 0, 0, 300);
+    gradientIngresos.addColorStop(0, 'rgba(116, 89, 217, 0.15)');
+    gradientIngresos.addColorStop(1, 'rgba(116, 89, 217, 0)');
+
+    const gradientGastos = ctx.createLinearGradient(0, 0, 0, 300);
+    gradientGastos.addColorStop(0, 'rgba(100, 116, 139, 0.15)');
+    gradientGastos.addColorStop(1, 'rgba(100, 116, 139, 0)');
+
     new Chart(ctx, {
       type: 'line',
       data: {
@@ -49,39 +57,26 @@
             label: 'Ingresos',
             data: [3200, 4100, 3700, 4600, 5200, 5000, 5400, 5600, 5800, 5900, 6100, 6300],
             borderColor: '#7459D9',
-            backgroundColor: 'rgba(116, 89, 217, 0.1)',
-            fill: false,
-            tension: 0.3,
-            pointRadius: 4,
-            pointBackgroundColor: '#7459D9'
+            backgroundColor: gradientIngresos,
+            fill: true,
+            tension: 0.4,
+            pointRadius: 0
           },
           {
             label: 'Gastos',
             data: [2800, 3900, 3500, 4000, 4600, 4700, 4800, 4900, 5100, 5300, 5500, 5700],
             borderColor: '#64748B',
-            backgroundColor: 'rgba(100, 116, 139, 0.1)',
-            fill: false,
-            tension: 0.3,
-            pointRadius: 4,
-            pointBackgroundColor: '#64748B'
+            backgroundColor: gradientGastos,
+            fill: true,
+            tension: 0.4,
+            pointRadius: 0
           }
         ]
       },
       options: {
         responsive: true,
         plugins: {
-          legend: {
-            position: 'top',
-            labels: {
-              color: '#0f172a',
-              boxWidth: 16,
-              boxHeight: 16,
-              font: {
-                family: 'Greycliff CF',
-                size: 12
-              }
-            }
-          },
+          legend: { display: false },
           tooltip: {
             backgroundColor: '#ffffff',
             titleColor: '#0f172a',
@@ -93,21 +88,13 @@
         },
         scales: {
           x: {
-            ticks: {
-              color: '#64748B'
-            },
-            grid: {
-              display: false
-            }
+            ticks: { color: '#64748B' },
+            grid: { display: false }
           },
           y: {
             beginAtZero: true,
-            ticks: {
-              color: '#64748B'
-            },
-            grid: {
-              color: '#e5e7eb'
-            }
+            ticks: { color: '#64748B' },
+            grid: { color: '#e5e7eb' }
           }
         }
       }
