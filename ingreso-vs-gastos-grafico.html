@@ -112,7 +112,7 @@ canvas {
   // Plugin personalizado: relleno rojo tenue donde gastos > ingresos
   const resaltarSobrepaso = {
     id: 'resaltarSobrepaso',
-    beforeDatasetsDraw(chart) {
+    afterDatasetsDraw(chart) {
       const { ctx, chartArea: { top, bottom }, scales: { x, y } } = chart;
       const ingresos = chart.data.datasets[0].data;
       const gastos = chart.data.datasets[1].data;
