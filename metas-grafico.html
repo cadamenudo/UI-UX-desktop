@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Meta para el año</title>
   <style>
     body {
@@ -47,13 +47,11 @@
     }
 
     .barra-meta {
-      height: 180px;
       background: #d1d5db;
     }
 
     .barra-acumulado {
       background: #4f46e5;
-      height: calc(180px * 0.45); /* 45% acumulado */
     }
 
     .etiqueta {
@@ -63,7 +61,6 @@
       color: #0f172a;
     }
 
-    /* Tooltip */
     .tooltip {
       visibility: hidden;
       opacity: 0;
@@ -73,7 +70,7 @@
       border-radius: 6px;
       padding: 6px 10px;
       position: absolute;
-      top: -32px;
+      top: -40px;
       z-index: 1;
       font-size: 0.75rem;
       white-space: nowrap;
@@ -90,22 +87,37 @@
   <div class="bloque-metas">
     <h2>Meta para el año</h2>
     <div class="contenedor-barras">
-      
-      <!-- Barra Meta -->
+      <!-- Meta total -->
       <div class="barra-item">
-        <div class="tooltip">Meta total: $10,000</div>
-        <div class="barra-valor barra-meta"></div>
+        <div class="tooltip" id="tooltipMeta">Meta total</div>
+        <div class="barra-valor barra-meta" id="barraMeta"></div>
         <div class="etiqueta">Meta</div>
       </div>
 
-      <!-- Barra Acumulado -->
+      <!-- Acumulado -->
       <div class="barra-item">
-        <div class="tooltip">Acumulado: $4,500<br>Faltan: $5,500</div>
-        <div class="barra-valor barra-acumulado"></div>
+        <div class="tooltip" id="tooltipAcumulado">Acumulado</div>
+        <div class="barra-valor barra-acumulado" id="barraAcumulado"></div>
         <div class="etiqueta">Acumulado</div>
       </div>
-
     </div>
   </div>
+
+  <script>
+    // 🔁 Simulación de datos desde backend
+    const metaTotal = 10000;
+    const acumuladoActual = 4500;
+    const porcentaje = (acumuladoActual / metaTotal) * 100;
+    const faltante = metaTotal - acumuladoActual;
+
+    // Aplica alturas
+    document.getElementById('barraMeta').style.height = '180px';
+    document.getElementById('barraAcumulado').style.height = `${180 * (porcentaje / 100)}px`;
+
+    // Tooltips
+    document.getElementById('tooltipMeta').innerText = `Meta total: $${metaTotal.toLocaleString()}`;
+    document.getElementById('tooltipAcumulado').innerText =
+      `Acumulado: $${acumuladoActual.toLocaleString()}\nFaltan: $${faltante.toLocaleString()}`;
+  </script>
 </body>
 </html>
