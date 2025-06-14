@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard: Ingresos vs Gastos y Metas</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Greycliff CF', sans-serif;
+      background: transparent;
+    }
+
+    .fila-graficos {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .bloque-linea, .bloque-metas {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+      height: 100%;
+      flex: 1;
+    }
+
+    canvas {
+      width: 100%;
+      max-height: 320px;
+    }
+
+    .titulo-grafico {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 1rem;
+    }
+
+    .titulo-principal {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .titulo-principal h2,
+    .bloque-metas h2 {
+      font-size: 1.25rem;
+      color: #0f172a;
+      margin: 0 0 1rem 0;
+    }
+
+    .info-icon {
+      position: relative;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .circle-i {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      background-color: #e2e8f0;
+      color: #334155;
+      font-size: 12px;
+      font-weight: bold;
+      line-height: 18px;
+      text-align: center;
+      border-radius: 50%;
+    }
+
+    .info-tooltip {
+      position: absolute;
+      top: 140%;
+      left: 50%;
+      transform: translateX(-50%);
+      min-width: 220px;
+      padding: 10px;
+      background: #ffffff;
+      color: #0f172a;
+      font-size: 0.75rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      white-space: normal;
+      z-index: 20;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .info-icon:hover .info-tooltip {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Meta gráfico */
+    .contenedor-barras {
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-end;
+      height: 320px;
+      position: relative;
+    }
+
+    .barra-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .barra-meta {
+      background: #5932EA;
+      height: 260px;
+      width: 60px;
+      border-radius: 16px;
+      position: relative;
+    }
+
+    .botella {
+      width: 60px;
+      height: 260px;
+      background: #F2EFFF;
+      border-radius: 16px;
+      position: relative;
+      overflow: visible;
+    }
+
+    .relleno {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      background-color: #E8C239;
+      border-radius: 0 0 16px 16px;
+      transition: height 0.3s ease;
+    }
+
+    .etiqueta {
+      margin-top: 0.75rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #0f172a;
+    }
+
+    .tooltip {
+      position: absolute;
+      bottom: 110%;
+      left: 50%;
+      transform: translateX(-50%) translateY(-8px);
+      padding: 6px 12px;
+      background: #ffffff;
+      color: #0f172a;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+      z-index: 10;
+    }
+
+    .hover-target:hover .tooltip {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .hover-target {
+      position: absolute;
+      width: 100%;
+      left: 0;
+    }
+  </style>
+</head>
+<body>
+<div class="fila-graficos">
+  <div class="bloque-linea">
+    <div class="titulo-grafico">
+      <div class="titulo-principal">
+        <h2>Ingresos vs Gastos</h2>
+        <span class="info-icon">
+          <span class="circle-i">i</span>
+          <div class="info-tooltip">
+            Los gastos no incluyen el ahorro.<br>
+            Si los gastos sobrepasan el ingreso verás una sombra roja.
+          </div>
+        </span>
+      </div>
+    </div>
+    <canvas id="graficoLineas"></canvas>
+  </div>
+
+  <div class="bloque-metas">
+    <h2>Meta para el año</h2>
+    <div class="contenedor-barras">
+      <div class="barra-item">
+        <div class="barra-meta">
+          <div class="hover-target">
+            <div class="tooltip" id="tooltipMeta">Meta total: $10,000</div>
+          </div>
+        </div>
+        <div class="etiqueta">Meta</div>
+      </div>
+
+      <div class="barra-item">
+        <div class="botella">
+          <div class="hover-target" id="hoverFaltante">
+            <div class="tooltip" id="tooltipFaltante">Faltan: $5,500</div>
+          </div>
+          <div class="relleno" id="rellenoAcumulado"></div>
+          <div class="hover-target" id="hoverAcumulado">
+            <div class="tooltip" id="tooltipAcumulado">Acumulado: $4,500</div>
+          </div>
+        </div>
+        <div class="etiqueta">Acumulado</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const resaltarSobrepaso = {
+  id: 'resaltarSobrepaso',
+  afterDatasetsDraw(chart) {
+    const { ctx, chartArea: { top, bottom }, scales: { x, y } } = chart;
+    const ingresos = chart.data.datasets[0].data;
+    const gastos = chart.data.datasets[1].data;
+
+    ctx.save();
+    ctx.fillStyle = 'rgba(239, 68, 68, 0.12)';
+
+    for (let i = 0; i < ingresos.length - 1; i++) {
+      const gasto1 = gastos[i];
+      const gasto2 = gastos[i + 1];
+      const ingreso1 = ingresos[i];
+      const ingreso2 = ingresos[i + 1];
+
+      if (gasto1 > ingreso1 || gasto2 > ingreso2) {
+        const x1 = x.getPixelForValue(i);
+        const x2 = x.getPixelForValue(i + 1);
+        const yGasto1 = y.getPixelForValue(gasto1);
+        const yGasto2 = y.getPixelForValue(gasto2);
+        const yIngreso1 = y.getPixelForValue(ingreso1);
+        const yIngreso2 = y.getPixelForValue(ingreso2);
+
+        ctx.beginPath();
+        ctx.moveTo(x1, yGasto1);
+        ctx.lineTo(x2, yGasto2);
+        ctx.lineTo(x2, yIngreso2);
+        ctx.lineTo(x1, yIngreso1);
+        ctx.closePath();
+        ctx.fill();
+      }
+    }
+
+    ctx.restore();
+    chart.getDatasetMeta(0).dataset.draw(ctx);
+    chart.getDatasetMeta(1).dataset.draw(ctx);
+  }
+};
+
+const ctx = document.getElementById('graficoLineas').getContext('2d');
+const gradientIngresos = ctx.createLinearGradient(0, 0, 0, 300);
+gradientIngresos.addColorStop(0, 'rgba(116, 89, 217, 0.15)');
+gradientIngresos.addColorStop(1, 'rgba(116, 89, 217, 0)');
+
+const gradientGastos = ctx.createLinearGradient(0, 0, 0, 300);
+gradientGastos.addColorStop(0, 'rgba(100, 116, 139, 0.15)');
+gradientGastos.addColorStop(1, 'rgba(100, 116, 139, 0)');
+
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+    datasets: [
+      {
+        label: 'Ingresos',
+        data: [3200, 4100, 3700, 4600, 4200, 5000, 5400, 5000, 4800, 4600, 4900, 5100],
+        borderColor: '#7459D9',
+        backgroundColor: gradientIngresos,
+        fill: {
+          target: 'origin',
+          above: 'rgba(116, 89, 217, 0.15)',
+          below: 'rgba(116, 89, 217, 0.15)'
+        },
+        tension: 0.4,
+        pointRadius: 0,
+        pointHoverRadius: 5
+      },
+      {
+        label: 'Gastos',
+        data: [2800, 3900, 4000, 4700, 4400, 5100, 5600, 5200, 5000, 4700, 4950, 5300],
+        borderColor: '#64748B',
+        backgroundColor: gradientGastos,
+        fill: {
+          target: 'origin',
+          above: 'rgba(100, 116, 139, 0.15)',
+          below: 'rgba(100, 116, 139, 0.15)'
+        },
+        tension: 0.4,
+        pointRadius: 0,
+        pointHoverRadius: 5
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    interaction: {
+      mode: 'index',
+      intersect: false
+    },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#ffffff',
+        titleColor: '#64748B',
+        bodyColor: '#0f172a',
+        borderColor: '#e5e7eb',
+        borderWidth: 1,
+        padding: 10,
+        displayColors: true,
+        usePointStyle: true,
+        callbacks: {
+          title: (context) => context[0].label,
+          label: (context) => {
+            const valor = context.raw.toLocaleString();
+            const tipo = context.dataset.label;
+            return `${tipo}: $${valor}`;
+          },
+          labelColor: (context) => ({
+            borderColor: context.dataset.borderColor,
+            backgroundColor: context.dataset.borderColor
+          })
+        }
+      }
+    },
+    scales: {
+      x: {
+        ticks: { color: '#64748B' },
+        grid: { display: false }
+      },
+      y: {
+        beginAtZero: true,
+        ticks: { color: '#64748B' },
+        grid: { color: '#e5e7eb' }
+      }
+    }
+  },
+  plugins: [resaltarSobrepaso]
+});
+
+const metaTotal = 10000;
+const acumuladoActual = 4500;
+const porcentaje = acumuladoActual / metaTotal;
+const faltante = metaTotal - acumuladoActual;
+const alturaTotal = 260;
+const alturaAcumulado = alturaTotal * porcentaje;
+const alturaFaltante = alturaTotal - alturaAcumulado;
+
+document.getElementById('rellenoAcumulado').style.height = `${alturaAcumulado}px`;
+document.getElementById('tooltipAcumulado').innerText = `Acumulado: $${acumuladoActual.toLocaleString()}`;
+document.getElementById('tooltipFaltante').innerText = `Faltan: $${faltante.toLocaleString()}`;
+document.getElementById('hoverFaltante').style.height = `${alturaFaltante}px`;
+document.getElementById('hoverAcumulado').style.height = `${alturaAcumulado}px`;
+document.getElementById('hoverAcumulado').style.bottom = '0';
+</script>
+</body>
+</html>
