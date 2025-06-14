@@ -48,7 +48,7 @@
     gradientGastos.addColorStop(0, 'rgba(100, 116, 139, 0.15)');
     gradientGastos.addColorStop(1, 'rgba(100, 116, 139, 0)');
 
-    new Chart(ctx, {
+    const chart = new Chart(ctx, {
       type: 'line',
       data: {
         labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
@@ -60,7 +60,8 @@
             backgroundColor: gradientIngresos,
             fill: true,
             tension: 0.4,
-            pointRadius: 0
+            pointRadius: 0,
+            pointHoverRadius: 5
           },
           {
             label: 'Gastos',
@@ -69,21 +70,35 @@
             backgroundColor: gradientGastos,
             fill: true,
             tension: 0.4,
-            pointRadius: 0
+            pointRadius: 0,
+            pointHoverRadius: 5
           }
         ]
       },
       options: {
         responsive: true,
+        interaction: {
+          mode: 'index',
+          intersect: false
+        },
         plugins: {
           legend: { display: false },
           tooltip: {
             backgroundColor: '#ffffff',
-            titleColor: '#0f172a',
+            titleColor: '#64748B',
             bodyColor: '#0f172a',
             borderColor: '#e5e7eb',
             borderWidth: 1,
-            padding: 10
+            padding: 10,
+            displayColors: false,
+            callbacks: {
+              title: (context) => context[0].label,
+              label: (context) => {
+                const valor = context.raw.toLocaleString();
+                const tipo = context.dataset.label;
+                return `${tipo}: $${valor}`;
+              }
+            }
           }
         },
         scales: {
