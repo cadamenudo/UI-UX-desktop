@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tablero | Cada Menudo</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: 'Greycliff CF', sans-serif;
+      background: #FAFBFF;
+      margin: 0;
+      padding: 0;
+      color: #0f172a;
+    }
+
+.contenido {
+  padding: 100px 32px 0 272px;
+  max-width: 1440px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+    .header-grid {
+      display: flex;
+      gap: 2rem;
+      justify-content: space-between;
+    }
+
+    .resumen-unificado, .calendario-box {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+
+    .resumen-unificado {
+      width: 1100px;
+      height: 95px;
+      padding: 1.5rem 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .bloque-indicador {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      border-right: 1px solid #f1f5f9;
+    }
+
+    .bloque-indicador:last-child {
+      border-right: none;
+    }
+
+    .icono-svg-resumen {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    .i-ingreso { background-color: #ede9fe; }
+    .i-gasto   { background-color: #f1f5f9; }
+    .i-ahorro  { background-color: #fef9c3; }
+
+    .texto-indicador {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.4;
+    }
+
+    .texto-indicador .label {
+      font-size: 0.85rem;
+      color: #94a3b8;
+    }
+
+    .texto-indicador .valor {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .calendario-box {
+      width: 600px;
+      height: 95px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .calendario-box .titulo {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 0.75rem;
+    }
+
+    .calendario-box .titulo::after {
+      content: "\2139";
+      font-size: 1rem;
+      color: #94a3b8;
+    }
+
+    .fila-fechas {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .fila-fechas input[type="text"] {
+      padding: 0.5rem 0.75rem;
+      border-radius: 12px;
+      border: 1px solid #cbd5e1;
+      font-size: 0.9rem;
+      flex: 1;
+      min-width: 120px;
+      background: #fff url('https://cdn-icons-png.flaticon.com/512/747/747310.png') no-repeat right 12px center;
+      background-size: 16px;
+    }
+
+    .boton-periodo {
+      padding: 0.5rem 1rem;
+      background-color: #7459D9;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .boton-periodo:hover {
+      background-color: #5a42b5;
+    }
+
+    .fila-centro {
+      display: flex;
+      justify-content: space-between;
+      gap: 2rem;
+      align-items: stretch;
+    }
+
+      .fila-graficos {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 2rem;
+        align-items: stretch;
+        width: 100%;
+        min-height: 360px; /* opcional, para mantener altura mínima armónica */
+      }
+
+        .bloque-linea {
+          flex: 2;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          min-width: 0;
+          background: white;
+          padding: 1.5rem;
+          border-radius: 16px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        }
+      
+        .bloque-metas {
+          flex: 1;
+          min-width: 0;
+          max-width: 360px;
+          background: white;
+          padding: 1.5rem;
+          border-radius: 16px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+        }
+        .bloque-ingresos-vs-gastos canvas,
+    .bloque-metas-anuales canvas {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .titulo {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .fila-inferior {
+      display: flex;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+
+    .bloque-ingresos-totales, .bloque-gastos-totales, .bloque-ahorros-totales {
+      flex: 1;
+      height: 300px;
+      background: white;
+      padding: 1.5rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .bloque-ingresos-totales canvas,
+    .bloque-gastos-totales canvas,
+    .bloque-ahorros-totales canvas {
+      width: 100%;
+      height: 240px;
+    }
+    
+#contenedorDonas {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem; /* o incluso 1rem si quieres más compacto */
+  width: 100%;
+}
+
+
+.bloque-donas {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  width: 100%;              /* ✅ Ocupar todo el ancho posible */
+  max-width: 100%;          /* ✅ Asegura que no se recorte */
+}
+
+.contenedor-dona {
+  flex: 1;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.titulo-con-boton {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.titulo-grafico {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.boton-detalle {
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  padding: 0.4rem 0.75rem;
+  border-radius: 12px;
+  cursor: pointer;
+}
+.envoltura-donas {
+  width: 100%;
+  margin: 0;
+}
+
+    .footer-app {
+      margin-top: 4rem;
+      padding: 2rem 1rem;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+
+    .footer-contenido {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-link {
+      color: #64748b;
+      text-decoration: none;
+    }
+
+    .footer-link:hover {
+      color: #3956E8;
+      text-decoration: underline;
+    }
+    canvas {
+  width: 100%;
+  height: auto;
+  max-height: none; /* sobrescribe límites previos */
+  display: block;
+}
+  </style>
+</head>
+<body>
+</head>
+<body>
+  <div class="contenido">
+    <div class="header-grid">
+      <div class="resumen-unificado">
+        <div class="bloque-indicador">
+          <div class="icono-svg-resumen i-ingreso">💰</div>
+          <div class="texto-indicador">
+            <span class="label">Ingresos</span>
+            <span class="valor">$3,000.00</span>
+          </div>
+        </div>
+        <div class="bloque-indicador">
+          <div class="icono-svg-resumen i-gasto">👜</div>
+          <div class="texto-indicador">
+            <span class="label">Gastos</span>
+            <span class="valor">$1,200.00</span>
+          </div>
+        </div>
+        <div class="bloque-indicador">
+          <div class="icono-svg-resumen i-ahorro">💸</div>
+          <div class="texto-indicador">
+            <span class="label">Ahorro</span>
+            <span class="valor">$450.00</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="calendario-box">
+        <div class="titulo">Seleccione un rango deseado</div>
+        <div class="fila-fechas">
+          <input type="text" id="desde" placeholder="Desde">
+          <input type="text" id="hasta" placeholder="Hasta">
+          <button class="boton-periodo">Últimos 30 días</button>
+        </div>
+      </div>
+    </div>
+
+<div id="contenedorLineasYMetas" class="fila-centro"></div>
+
+<section id="contenedorDonas" style="width: 100%; display: flex; justify-content: center;"></section>
+
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+      
+<script>
+  flatpickr("#desde", { dateFormat: "d/m/Y" });
+  flatpickr("#hasta", { dateFormat: "d/m/Y" });
+
+    // PRIMERO: Cargar ingreso-gastos + metas
+  fetch("https://cadamenudo.github.io/UI-UX-desktop/ingreso-gastos-meta-final.html")
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById("contenedorLineasYMetas").innerHTML = html;
+
+      const scripts = document.getElementById("contenedorLineasYMetas").querySelectorAll("script");
+      scripts.forEach(script => {
+        const s = document.createElement("script");
+        if (script.src) {
+          s.src = script.src;
+        } else {
+          s.textContent = script.textContent;
+        }
+        document.body.appendChild(s);
+      });
+    });
+
+    // DESPUÉS: Cargar donas
+fetch("https://cadamenudo.github.io/UI-UX-desktop/grafico-donas.html")
+  .then(res => res.text())
+  .then(html => {
+    document.getElementById("contenedorDonas").innerHTML = html;
+    const scripts = document.getElementById("contenedorDonas").querySelectorAll("script");
+    scripts.forEach(script => {
+      const s = document.createElement("script");
+      if (script.src) {
+        s.src = script.src;
+      } else {
+        s.textContent = script.textContent;
+      }
+      document.body.appendChild(s);
+    });
+  });
+
+  function evalScriptTags(html) {
+    const doc = new DOMParser().parseFromString(html, "text/html");
+    doc.querySelectorAll("script").forEach(oldScript => {
+      const newScript = document.createElement("script");
+      if (oldScript.src) {
+        newScript.src = oldScript.src;
+      } else {
+        newScript.textContent = oldScript.textContent;
+      }
+      document.body.appendChild(newScript);
+    });
+  }
+  </script>
+    
+    <footer class="footer-app">
+  <div class="footer-contenido">
+    <a href="#" class="footer-link">Términos y Condiciones</a>
+    <span>/</span>
+    <a href="#" class="footer-link">Políticas de Privacidad</a>
+    <span>/</span>
+    <a href="mailto:tech@cadamenudo.com" class="footer-link">tech@cadamenudo.com</a>
+  </div>
+</footer>
+
+</body>
+</html>
