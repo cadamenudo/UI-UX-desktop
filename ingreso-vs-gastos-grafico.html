@@ -112,7 +112,7 @@ canvas {
   // Plugin personalizado: relleno rojo tenue donde gastos > ingresos
 const resaltarSobrepaso = {
   id: 'resaltarSobrepaso',
-  afterDraw(chart) {
+  afterDatasetsDraw(chart, args, pluginOptions) {
     const { ctx, chartArea: { top, bottom }, scales: { x, y } } = chart;
     const ingresos = chart.data.datasets[0].data;
     const gastos = chart.data.datasets[1].data;
@@ -145,8 +145,13 @@ const resaltarSobrepaso = {
     }
 
     ctx.restore();
+
+    // 🔁 Vuelve a dibujar las líneas para asegurarte que queden encima
+    chart.getDatasetMeta(0).dataset.draw(ctx);
+    chart.getDatasetMeta(1).dataset.draw(ctx);
   }
 };
+
   const ctx = document.getElementById('graficoLineas').getContext('2d');
 
   const gradientIngresos = ctx.createLinearGradient(0, 0, 0, 300);
