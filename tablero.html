@@ -6,7 +6,7 @@
   <title>Tablero | Cada Menudo</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
+<style>
     body {
       font-family: 'Greycliff CF', sans-serif;
       background: #FAFBFF;
@@ -58,12 +58,15 @@
       border-right: none;
     }
 
-.icono-svg-resumen img {
-  width: 28px;
-  height: 28px;
-  object-fit: contain;
-  display: block;
-}
+    .icono-svg-resumen {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
 
     .i-ingreso { background-color: #ede9fe; }
     .i-gasto   { background-color: #f1f5f9; }
@@ -150,37 +153,39 @@
       align-items: stretch;
     }
 
-.fila-graficos {
-  display: flex;
-  gap: 2rem;
-  align-items: stretch;
-  width: 100%;
-}
-    .bloque-linea {
-      flex: 2;
-      min-width: 0;
-      background: white;
-      padding: 1.5rem;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-    
-    .bloque-metas {
-      flex: 1;
-      min-width: 0;
-      max-width: 340px;
-      background: white;
-      padding: 1.5rem;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-    
+      .fila-graficos {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 2rem;
+        align-items: stretch;
+        width: 100%;
+        min-height: 360px; /* opcional, para mantener altura mínima armónica */
+      }
+
+        .bloque-linea {
+          flex: 2;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          min-width: 0;
+          background: white;
+          padding: 1.5rem;
+          border-radius: 16px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        }
+      
+        .bloque-metas {
+          flex: 1;
+          min-width: 0;
+          max-width: 360px;
+          background: white;
+          padding: 1.5rem;
+          border-radius: 16px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+        }
         .bloque-ingresos-vs-gastos canvas,
     .bloque-metas-anuales canvas {
       width: 100%;
@@ -255,7 +260,7 @@
 }
 
 .titulo-grafico {
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 600;
   margin: 0;
 }
