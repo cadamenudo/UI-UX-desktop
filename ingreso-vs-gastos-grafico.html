@@ -167,7 +167,11 @@ const resaltarSobrepaso = {
           data: [3200, 4100, 3700, 4600, 4200, 5000, 5400, 5000, 4800, 4600, 4900, 5100],
           borderColor: '#7459D9',
           backgroundColor: gradientIngresos,
-          fill: true,
+          fill: {
+            target: 'origin',
+            above: 'rgba(100, 116, 139, 0.15)',
+            below: 'rgba(100, 116, 139, 0.15)'
+          },
           tension: 0.4,
           pointRadius: 0,
           pointHoverRadius: 5
@@ -177,7 +181,11 @@ const resaltarSobrepaso = {
           data: [2800, 3900, 4000, 4700, 4400, 5100, 5600, 5200, 5000, 4700, 4950, 5300],
           borderColor: '#64748B',
           backgroundColor: gradientGastos,
-          fill: true,
+          fill: {
+            target: 'origin',
+            above: 'rgba(100, 116, 139, 0.15)',
+            below: 'rgba(100, 116, 139, 0.15)'
+          },
           tension: 0.4,
           pointRadius: 0,
           pointHoverRadius: 5
