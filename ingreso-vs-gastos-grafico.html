@@ -29,13 +29,52 @@
       width: 100%;
       max-height: 320px;
     }
+    .info-icon {
+  position: relative;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.info-tooltip {
+  position: absolute;
+  top: 140%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  min-width: 220px;
+  padding: 10px;
+  background: #ffffff;
+  color: #0f172a;
+  font-size: 0.75rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  white-space: normal;
+  z-index: 20;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.info-icon:hover .info-tooltip {
+  opacity: 1;
+  pointer-events: auto;
+}
   </style>
 </head>
 <body>
-  <div class="bloque-linea">
-    <h2>Ingresos vs Gastos</h2>
-    <canvas id="graficoLineas"></canvas>
-  </div>
+<div class="bloque-linea">
+  <h2 style="display: flex; align-items: center; gap: 0.5rem;">
+    Ingresos vs Gastos
+    <span class="info-icon">
+      ℹ️
+      <div class="info-tooltip">
+        💡 Los gastos no incluyen ahorro.<br>
+        Por eso, un ingreso mayor no implica necesariamente superávit.
+      </div>
+    </span>
+  </h2>
+  <canvas id="graficoLineas"></canvas>
+</div>
 
   <script>
     const ctx = document.getElementById('graficoLineas').getContext('2d');
