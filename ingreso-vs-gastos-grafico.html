@@ -110,44 +110,43 @@ canvas {
 
 <script>
   // Plugin personalizado: relleno rojo tenue donde gastos > ingresos
-  const resaltarSobrepaso = {
-    id: 'resaltarSobrepaso',
-    afterDatasetsDraw(chart) {
-      const { ctx, chartArea: { top, bottom }, scales: { x, y } } = chart;
-      const ingresos = chart.data.datasets[0].data;
-      const gastos = chart.data.datasets[1].data;
+const resaltarSobrepaso = {
+  id: 'resaltarSobrepaso',
+  afterDraw(chart) {
+    const { ctx, chartArea: { top, bottom }, scales: { x, y } } = chart;
+    const ingresos = chart.data.datasets[0].data;
+    const gastos = chart.data.datasets[1].data;
 
-      ctx.save();
-      ctx.fillStyle = 'rgba(239, 68, 68, 0.12)'; // rojo tenue
+    ctx.save();
+    ctx.fillStyle = 'rgba(239, 68, 68, 0.12)'; // rojo tenue
 
-      for (let i = 0; i < ingresos.length - 1; i++) {
-        const gasto1 = gastos[i];
-        const gasto2 = gastos[i + 1];
-        const ingreso1 = ingresos[i];
-        const ingreso2 = ingresos[i + 1];
+    for (let i = 0; i < ingresos.length - 1; i++) {
+      const gasto1 = gastos[i];
+      const gasto2 = gastos[i + 1];
+      const ingreso1 = ingresos[i];
+      const ingreso2 = ingresos[i + 1];
 
-        if (gasto1 > ingreso1 || gasto2 > ingreso2) {
-          const x1 = x.getPixelForValue(i);
-          const x2 = x.getPixelForValue(i + 1);
-          const yGasto1 = y.getPixelForValue(gasto1);
-          const yGasto2 = y.getPixelForValue(gasto2);
-          const yIngreso1 = y.getPixelForValue(ingreso1);
-          const yIngreso2 = y.getPixelForValue(ingreso2);
+      if (gasto1 > ingreso1 || gasto2 > ingreso2) {
+        const x1 = x.getPixelForValue(i);
+        const x2 = x.getPixelForValue(i + 1);
+        const yGasto1 = y.getPixelForValue(gasto1);
+        const yGasto2 = y.getPixelForValue(gasto2);
+        const yIngreso1 = y.getPixelForValue(ingreso1);
+        const yIngreso2 = y.getPixelForValue(ingreso2);
 
-          ctx.beginPath();
-          ctx.moveTo(x1, yGasto1);
-          ctx.lineTo(x2, yGasto2);
-          ctx.lineTo(x2, yIngreso2);
-          ctx.lineTo(x1, yIngreso1);
-          ctx.closePath();
-          ctx.fill();
-        }
+        ctx.beginPath();
+        ctx.moveTo(x1, yGasto1);
+        ctx.lineTo(x2, yGasto2);
+        ctx.lineTo(x2, yIngreso2);
+        ctx.lineTo(x1, yIngreso1);
+        ctx.closePath();
+        ctx.fill();
       }
-
-      ctx.restore();
     }
-  };
 
+    ctx.restore();
+  }
+};
   const ctx = document.getElementById('graficoLineas').getContext('2d');
 
   const gradientIngresos = ctx.createLinearGradient(0, 0, 0, 300);
