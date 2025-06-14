@@ -319,16 +319,7 @@
       </div>
     </div>
 
-<div class="fila-centro">
-  <div class="bloque-ingresos-vs-gastos">
-    <div class="titulo">Ingresos vs Gastos</div>
-    <!-- canvas o contenido aquí -->
-  </div>
-  <div class="bloque-metas-anuales">
-    <div class="titulo">Metas</div>
-    <!-- canvas o contenido aquí -->
-  </div>
-</div>
+<div id="contenedorLineasYMetas" class="fila-centro"></div>
 
 <section id="contenedorDonas" style="width: 100%; display: flex; justify-content: center;"></section>
 
@@ -338,6 +329,25 @@
   flatpickr("#desde", { dateFormat: "d/m/Y" });
   flatpickr("#hasta", { dateFormat: "d/m/Y" });
 
+    // PRIMERO: Cargar ingreso-gastos + metas
+  fetch("https://cadamenudo.github.io/UI-UX-desktop/ingreso-gastos-meta-final.html")
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById("contenedorLineasYMetas").innerHTML = html;
+
+      const scripts = document.getElementById("contenedorLineasYMetas").querySelectorAll("script");
+      scripts.forEach(script => {
+        const s = document.createElement("script");
+        if (script.src) {
+          s.src = script.src;
+        } else {
+          s.textContent = script.textContent;
+        }
+        document.body.appendChild(s);
+      });
+    });
+
+    // DESPUÉS: Cargar donas
 fetch("https://cadamenudo.github.io/UI-UX-desktop/grafico-donas.html")
   .then(res => res.text())
   .then(html => {
