@@ -55,21 +55,21 @@
       cursor: pointer;
     }
 
-      .circle-i {
-        display: inline-block;
-        width: 18px;
-        height: 18px;
-        background-color: #e2e8f0;
-        color: #334155;
-        font-size: 12px;
-        font-weight: bold;
-        line-height: 18px;
-        text-align: center;
-        border-radius: 50%;
-        vertical-align: baseline;  /* ✅ cambio clave */
-        transform: translateY(-1px); /* ✅ ajuste fino opcional */
-      }
-
+    .circle-i {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      background-color: #e2e8f0;
+      color: #334155;
+      font-size: 12px;
+      font-weight: bold;
+      line-height: 18px;
+      text-align: center;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    
+    /* Tooltip */
     .info-tooltip {
       position: absolute;
       top: 140%;
@@ -83,7 +83,7 @@
       border-radius: 8px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       white-space: normal;
-      z-index: 50;
+      z-index: 20;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.2s ease;
