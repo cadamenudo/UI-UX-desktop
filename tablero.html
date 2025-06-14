@@ -150,41 +150,37 @@
       align-items: stretch;
     }
 
-      .fila-graficos {
-        display: flex;
-        flex-wrap: nowrap;
-        gap: 2rem;
-        align-items: stretch;
-        width: 100%;
-        min-height: 360px; /* opcional, para mantener altura mínima armónica */
-        margin-bottom: 2rem; /* Espacio bajo antes de las donas */
-      }
-
-        .bloque-linea {
-          flex: 2;
-          display: flex;
-          flex-direction: column;
-          justify-content: flex-start;
-          min-width: 0;
-          background: white;
-          padding: 1.5rem;
-          border-radius: 16px;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-        }
-      
-        .bloque-metas {
-          flex: 1;
-          min-width: 0;
-          max-width: 360px;
-          background: white;
-          padding: 1.5rem;
-          border-radius: 16px;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-          display: flex;
-          flex-direction: column;
-          justify-content: flex-start;
-          margin-bottom: 1rem;
-        }
+.fila-graficos {
+  display: flex;
+  gap: 2rem;
+  align-items: stretch;
+  width: 100%;
+}
+    .bloque-linea {
+      flex: 2;
+      min-width: 0;
+      background: white;
+      padding: 1.5rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    
+    .bloque-metas {
+      flex: 1;
+      min-width: 0;
+      max-width: 340px;
+      background: white;
+      padding: 1.5rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    
         .bloque-ingresos-vs-gastos canvas,
     .bloque-metas-anuales canvas {
       width: 100%;
