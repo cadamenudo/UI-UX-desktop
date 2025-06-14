@@ -213,13 +213,18 @@ const resaltarSobrepaso = {
           borderWidth: 1,
           padding: 10,
           displayColors: true,
+          usePointStyle: true,
           callbacks: {
             title: (context) => context[0].label,
             label: (context) => {
               const valor = context.raw.toLocaleString();
               const tipo = context.dataset.label;
               return `${tipo}: $${valor}`;
-            }
+            },
+            labelColor: (context) => ({
+              borderColor: context.dataset.borderColor,
+              backgroundColor: context.dataset.borderColor
+            })
           }
         }
       },
