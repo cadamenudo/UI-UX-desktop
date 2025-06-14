@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Metas</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Greycliff CF', sans-serif;
+      background: transparent;
+    }
+
+    .bloque-metas {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+      height: 100%;
+    }
+
+    .bloque-metas h2 {
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+      color: #0f172a;
+    }
+
+    .contenedor-metas {
+      display: flex;
+      gap: 2rem;
+      justify-content: space-around;
+      align-items: flex-end;
+      height: 240px;
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .barra-externa {
+      width: 36px;
+      height: 180px;
+      background: #e5e7eb;
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .barra-interna {
+      width: 100%;
+      position: absolute;
+      bottom: 0;
+      background-color: #60a5fa;
+      border-radius: 8px 8px 0 0;
+    }
+
+    .meta-info {
+      text-align: center;
+      margin-top: 0.5rem;
+    }
+
+    .nombre-meta {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .progreso-meta {
+      font-size: 0.8rem;
+      color: #64748b;
+    }
+
+    .faltante-meta {
+      font-size: 0.75rem;
+      color: #ef4444;
+    }
+  </style>
+</head>
+<body>
+  <div class="bloque-metas">
+    <h2>Metas</h2>
+    <div class="contenedor-metas">
+      <!-- Meta 1 -->
+      <div class="meta-item">
+        <div class="barra-externa">
+          <div class="barra-interna" style="height: 45%;"></div>
+        </div>
+        <div class="meta-info">
+          <span class="nombre-meta">🪙 Fondo de emergencia</span><br>
+          <span class="progreso-meta">$4,500 / $10,000</span><br>
+          <span class="faltante-meta">Faltan $5,500</span>
+        </div>
+      </div>
+
+      <!-- Meta 2 -->
+      <div class="meta-item">
+        <div class="barra-externa">
+          <div class="barra-interna" style="height: 75%; background-color: #4f46e5;"></div>
+        </div>
+        <div class="meta-info">
+          <span class="nombre-meta">✈️ Viaje familiar</span><br>
+          <span class="progreso-meta">$1,500 / $2,000</span><br>
+          <span class="faltante-meta">Faltan $500</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
