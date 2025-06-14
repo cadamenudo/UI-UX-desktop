@@ -28,7 +28,7 @@
       display: flex;
       justify-content: space-around;
       align-items: flex-end;
-      height: 240px;
+      height: 320px;
       position: relative;
     }
 
@@ -39,19 +39,31 @@
       position: relative;
     }
 
-    .barra-valor {
-      width: 48px;
-      border-radius: 8px;
+    .barra-meta {
+      width: 60px;
+      height: 260px;
+      background: #d1d5db;
+      border-radius: 16px;
       position: relative;
       transition: 0.3s ease;
     }
 
-    .barra-meta {
+    .botella {
+      width: 60px;
+      height: 260px;
       background: #d1d5db;
+      border-radius: 16px;
+      position: relative;
+      overflow: hidden;
     }
 
-    .barra-acumulado {
-      background: #4f46e5;
+    .relleno {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      background-color: #4f46e5;
+      border-radius: 16px 16px 0 0;
+      transition: height 0.3s ease;
     }
 
     .etiqueta {
@@ -61,6 +73,7 @@
       color: #0f172a;
     }
 
+    /* Tooltip */
     .tooltip {
       visibility: hidden;
       opacity: 0;
@@ -70,7 +83,7 @@
       border-radius: 6px;
       padding: 6px 10px;
       position: absolute;
-      top: -40px;
+      top: -42px;
       z-index: 1;
       font-size: 0.75rem;
       white-space: nowrap;
@@ -87,37 +100,41 @@
   <div class="bloque-metas">
     <h2>Meta para el año</h2>
     <div class="contenedor-barras">
-      <!-- Meta total -->
+      
+      <!-- Barra Meta total -->
       <div class="barra-item">
-        <div class="tooltip" id="tooltipMeta">Meta total</div>
-        <div class="barra-valor barra-meta" id="barraMeta"></div>
+        <div class="tooltip" id="tooltipMeta">Meta total: $10,000</div>
+        <div class="barra-meta"></div>
         <div class="etiqueta">Meta</div>
       </div>
 
-      <!-- Acumulado -->
+      <!-- Barra Acumulado tipo botella -->
       <div class="barra-item">
         <div class="tooltip" id="tooltipAcumulado">Acumulado</div>
-        <div class="barra-valor barra-acumulado" id="barraAcumulado"></div>
+        <div class="botella">
+          <div class="relleno" id="rellenoAcumulado"></div>
+        </div>
         <div class="etiqueta">Acumulado</div>
       </div>
+
     </div>
   </div>
 
   <script>
-    // 🔁 Simulación de datos desde backend
+    // Valores que el backend reemplazará
     const metaTotal = 10000;
     const acumuladoActual = 4500;
-    const porcentaje = (acumuladoActual / metaTotal) * 100;
+
+    const porcentaje = acumuladoActual / metaTotal;
     const faltante = metaTotal - acumuladoActual;
 
-    // Aplica alturas
-    document.getElementById('barraMeta').style.height = '180px';
-    document.getElementById('barraAcumulado').style.height = `${180 * (porcentaje / 100)}px`;
+    // Aplicar altura de relleno
+    const alturaMaxima = 260; // misma que la botella
+    document.getElementById('rellenoAcumulado').style.height = `${alturaMaxima * porcentaje}px`;
 
-    // Tooltips
+    // Tooltips dinámicos
     document.getElementById('tooltipMeta').innerText = `Meta total: $${metaTotal.toLocaleString()}`;
-    document.getElementById('tooltipAcumulado').innerText =
-      `Acumulado: $${acumuladoActual.toLocaleString()}\nFaltan: $${faltante.toLocaleString()}`;
+    document.getElementById('tooltipAcumulado').innerText = `Acumulado: $${acumuladoActual.toLocaleString()}\nFaltan: $${faltante.toLocaleString()}`;
   </script>
 </body>
 </html>
