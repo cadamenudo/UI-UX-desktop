@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard Cada Menudo</title>
+  <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX/css-fonts.css"/>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Greycliff CF', sans-serif;
+      background-color: #F9FAFB;
+      display: flex;
+      height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 220px;
+      background-color: #FFFFFF;
+      border-right: 1px solid #E5E7EB;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 10;
+      transition: width 0.3s ease;
+    }
+
+    .sidebar.colapsado {
+      width: 72px;
+    }
+
+    .logo {
+      background-color: #573AEF;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo img {
+      height: 28px;
+      object-fit: contain;
+    }
+
+    .menu-item, .menu-title {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1.25rem;
+      cursor: pointer;
+      font-size: 0.95rem;
+      color: #374151;
+      transition: background 0.2s;
+    }
+
+    .menu-item:hover, .menu-title:hover {
+      background-color: #F3F4F6;
+    }
+
+    .menu-item i, .menu-title i {
+      margin-right: 0.75rem;
+      width: 1.5rem;
+      text-align: center;
+    }
+
+    .menu-section {
+      margin-top: 1rem;
+    }
+
+    .menu-title {
+      font-weight: 600;
+      justify-content: space-between;
+      padding-right: 1.5rem;
+      color: #111827;
+    }
+
+    .menu-items {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .menu-items li {
+      display: flex;
+      align-items: center;
+      padding: 0.6rem 1.25rem;
+      cursor: pointer;
+      color: #374151;
+      font-size: 0.95rem;
+    }
+
+    .menu-items li i {
+      margin-right: 0.75rem;
+      width: 1.5rem;
+      text-align: center;
+    }
+
+    .menu-items li.activo {
+      background-color: #F5F3FF;
+      color: #594AE2;
+      font-weight: 600;
+      border-right: 4px solid #594AE2;
+    }
+
+    .menu-items li.activo i {
+      color: #594AE2;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .text {
+      transition: opacity 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .sidebar.colapsado .text {
+      opacity: 0;
+      width: 0;
+      overflow: hidden;
+    }
+
+    hr {
+      margin: 1rem 0;
+      border: none;
+      border-top: 1px solid #E5E7EB;
+    }
+
+    .salir {
+      margin-top: auto;
+      padding-bottom: 1rem;
+    }
+
+    .contraer-btn {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      font-size: 1.2rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #4B5563;
+    }
+
+    /* Header */
+    .header-principal {
+      position: fixed;
+      top: 0;
+      left: 220px;
+      width: calc(100% - 220px);
+      height: 64px;
+      background-color: white;
+      border-bottom: 1px solid #E5E7EB;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 27px;
+      box-sizing: border-box;
+      z-index: 5;
+    }
+
+    .contenido-alerta {
+      color: #4B5563;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .bloque-usuario {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 1.5rem;
+      width: 506px;
+    }
+
+    .icono {
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .usuario {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 500;
+      color: #374151;
+    }
+
+    .usuario-avatar {
+      background-color: #3B82F6;
+      color: white;
+      font-size: 0.85rem;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Contenido */
+    .contenido {
+      margin-left: 220px;
+      margin-top: 64px;
+      padding: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <div class="logo">
+      <img src="https://cadamenudo.github.io/UI-UX/assets/logo/cada-menudo-logo-white.png" alt="Logo Cada Menudo" />
+    </div>
+
+    <div class="menu-item" onclick="nuevaTransaccion()">
+      <i>➕</i> <span class="text">Nueva Transacción</span>
+    </div>
+
+    <div class="menu-section">
+      <div class="menu-title" onclick="toggleSeccion('menu')">
+        <span class="text">Menú</span>
+        <span class="arrow text" id="arrow-menu">▾</span>
+      </div>
+      <ul class="menu-items" id="menu-items">
+        <li class="activo"><i>🏠</i> <span class="text">Tablero</span></li>
+        <li><i>📋</i> <span class="text">Transacciones</span></li>
+        <li><i>📘</i> <span class="text">Educación</span></li>
+      </ul>
+    </div>
+
+    <div class="menu-section">
+      <div class="menu-title" onclick="toggleSeccion('config')">
+        <span class="text">Configuración</span>
+        <span class="arrow text" id="arrow-config">▾</span>
+      </div>
+      <ul class="menu-items" id="config-items">
+        <li><i>📊</i> <span class="text">Metas</span></li>
+        <li><i>🧾</i> <span class="text">Categorías</span></li>
+      </ul>
+    </div>
+
+    <hr />
+
+    <div class="menu-item salir">
+      <i>↩️</i> <span class="text">Salir</span>
+    </div>
+
+    <button onclick="toggleSidebar()" class="contraer-btn">⇤</button>
+  </div>
+
+  <!-- Header -->
+  <div class="header-principal">
+    <div class="contenido-alerta">🔔 Próximo mantenimiento el 14 de Noviembre</div>
+    <div class="bloque-usuario">
+      <div class="icono" title="Ayuda">❓</div>
+      <div class="icono" title="Alertas">⚠️</div>
+      <div class="usuario">
+        <div class="usuario-avatar">PF</div>
+        Pedro Fernandez ▾
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenido -->
+  <div class="contenido">
+    <h2>Contenido del dashboard aquí…</h2>
+  </div>
+
+  <script>
+    function toggleSeccion(id) {
+      const lista = document.getElementById(`${id}-items`);
+      const flecha = document.getElementById(`arrow-${id}`);
+      lista.classList.toggle('hidden');
+      flecha.textContent = lista.classList.contains('hidden') ? '▸' : '▾';
+    }
+
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('colapsado');
+    }
+
+    function nuevaTransaccion() {
+      alert("Función: Nueva Transacción");
+    }
+  </script>
+
+</body>
+</html>
