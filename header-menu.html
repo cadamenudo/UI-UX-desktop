@@ -14,7 +14,6 @@
       height: 100vh;
     }
 
-    /* Sidebar */
     .sidebar {
       width: 220px;
       background-color: #FFFFFF;
@@ -203,11 +202,12 @@
       justify-content: center;
     }
 
-    /* Contenido */
+    /* Contenido principal dinámico */
     .contenido {
       margin-left: 220px;
       margin-top: 64px;
       padding: 2rem;
+      min-height: calc(100vh - 64px);
     }
   </style>
 </head>
@@ -229,9 +229,9 @@
         <span class="arrow text" id="arrow-menu">▾</span>
       </div>
       <ul class="menu-items" id="menu-items">
-        <li class="activo"><i>🏠</i> <span class="text">Tablero</span></li>
-        <li><i>📋</i> <span class="text">Transacciones</span></li>
-        <li><i>📘</i> <span class="text">Educación</span></li>
+        <li class="activo" onclick="cargarVista('tablero.html', this)"><i>🏠</i> <span class="text">Tablero</span></li>
+        <li onclick="cargarVista('transacciones.html', this)"><i>📋</i> <span class="text">Transacciones</span></li>
+        <li onclick="cargarVista('educacion.html', this)"><i>📘</i> <span class="text">Educación</span></li>
       </ul>
     </div>
 
@@ -241,8 +241,8 @@
         <span class="arrow text" id="arrow-config">▾</span>
       </div>
       <ul class="menu-items" id="config-items">
-        <li><i>📊</i> <span class="text">Metas</span></li>
-        <li><i>🧾</i> <span class="text">Categorías</span></li>
+        <li onclick="cargarVista('metas.html', this)"><i>📊</i> <span class="text">Metas</span></li>
+        <li onclick="cargarVista('categorias.html', this)"><i>🧾</i> <span class="text">Categorías</span></li>
       </ul>
     </div>
 
@@ -268,8 +268,8 @@
     </div>
   </div>
 
-  <!-- Contenido -->
-  <div class="contenido">
+  <!-- Contenido dinámico -->
+  <div class="contenido" id="contenido-dinamico">
     <h2>Contenido del dashboard aquí…</h2>
   </div>
 
@@ -287,6 +287,21 @@
 
     function nuevaTransaccion() {
       alert("Función: Nueva Transacción");
+    }
+
+    function cargarVista(ruta, item) {
+      fetch(ruta)
+        .then(res => res.text())
+        .then(html => {
+          document.getElementById('contenido-dinamico').innerHTML = html;
+          // Quitar clase activa de todos los ítems
+          document.querySelectorAll('.menu-items li').forEach(li => li.classList.remove('activo'));
+          // Agregar clase activa al clic actual
+          if (item) item.classList.add('activo');
+        })
+        .catch(err => {
+          document.getElementById('contenido-dinamico').innerHTML = "<p>Error cargando contenido.</p>";
+        });
     }
   </script>
 
