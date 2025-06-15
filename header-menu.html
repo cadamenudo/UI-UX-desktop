@@ -297,14 +297,21 @@
       alert("Función: Nueva Transacción");
     }
 
-function cargarVista(ruta, item) {
+      function cargarVista(ruta, item) {
   fetch(ruta)
     .then(res => res.text())
     .then(html => {
       const contenedor = document.getElementById('contenido-dinamico');
       contenedor.innerHTML = html;
 
-      // ⬇️ Reinyectar los scripts para que se ejecuten
+      // ✅ Aplica clase de ajuste solo si el tablero fue cargado
+      if (ruta.includes("tablero")) {
+        contenedor.classList.add("contenido-tablero");
+      } else {
+        contenedor.classList.remove("contenido-tablero");
+      }
+
+      // Reinyectar los scripts para que se ejecuten
       const scripts = contenedor.querySelectorAll("script");
       scripts.forEach(script => {
         const nuevoScript = document.createElement("script");
@@ -316,7 +323,7 @@ function cargarVista(ruta, item) {
         document.body.appendChild(nuevoScript);
       });
 
-      // ⬇️ Marcar ítem activo del menú
+      // Marcar ítem activo del menú
       document.querySelectorAll('.menu-items li').forEach(li => li.classList.remove('activo'));
       if (item) item.classList.add('activo');
     })
