@@ -189,15 +189,13 @@
           box-sizing: border-box;
         }
 
-    .bloque-metas {
-  background-color: red; /* solo para test visual */
-}
         .bloque-ingresos-vs-gastos canvas,
     .bloque-metas-anuales canvas {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
+        flex-grow: 1;
+        width: 100%;
+        height: 100%;
+      }
+
     .titulo {
       font-size: 1.1rem;
       font-weight: 600;
@@ -319,6 +317,52 @@
   align-items: stretch;
   width: 100%;
 }
+    #graficoMetas {
+  flex-grow: 1;
+  min-height: 240px;
+}
+.fila-graficos {
+  display: flex;
+  gap: 2rem;
+  align-items: stretch;
+  width: 100%;
+  min-height: 360px;
+}
+
+.bloque-linea,
+.bloque-metas {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.bloque-linea {
+  flex: 2;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
+}
+
+.bloque-metas {
+  flex: 1;
+  max-width: 360px;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
+}
+
+.bloque-linea canvas,
+.bloque-metas canvas {
+  width: 100%;
+  height: 100%;
+  flex: 1;
+}
+
   </style>
 </head>
 <body>
@@ -366,7 +410,17 @@
       </div>
     </div>
 
-<div id="contenedorLineasYMetas" class="fila-centro"></div>
+<div id="contenedorLineasYMetas" class="fila-graficos">
+  <div class="bloque-linea">
+    <div class="titulo">Ingresos vs Gastos</div>
+    <canvas id="graficoLineas"></canvas>
+  </div>
+  <div class="bloque-metas">
+    <div class="titulo">Progreso hacia metas</div>
+    <canvas id="graficoMetas"></canvas>
+  </div>
+</div>
+
 
 <section id="contenedorDonas" style="width: 100%; display: flex; justify-content: center;"></section>
 
