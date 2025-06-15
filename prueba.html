@@ -68,9 +68,9 @@
       font-size: 1.5rem;
     }
 
-    .i-ingreso { background-color: #ede9fe; }
-    .i-gasto   { background-color: #f1f5f9; }
-    .i-ahorro  { background-color: #fef9c3; }
+    .i-ingreso { background-color: #F8F6FF; }
+    .i-gasto   { background-color: #F8F8F8; }
+    .i-ahorro  { background-color: #FCFAEA; }
 
     .texto-indicador {
       display: flex;
@@ -166,7 +166,7 @@
           flex: 2;
           display: flex;
           flex-direction: column;
-          justify-content: space-between;
+          justify-content: flex-start;;
           min-width: 0;
           background: white;
           padding: 1.5rem;
@@ -184,8 +184,14 @@
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
           display: flex;
           flex-direction: column;
-          justify-content: space-between;
+          justify-content: flex-start;
+          align-self: stretch; /* ✅ clave para emparejar altura */
+          box-sizing: border-box;
         }
+
+    .bloque-metas {
+  background-color: red; /* solo para test visual */
+}
         .bloque-ingresos-vs-gastos canvas,
     .bloque-metas-anuales canvas {
       width: 100%;
@@ -307,6 +313,12 @@
   max-height: none; /* sobrescribe límites previos */
   display: block;
 }
+    #contenedorLineasYMetas {
+  display: flex;
+  gap: 2rem;
+  align-items: stretch;
+  width: 100%;
+}
   </style>
 </head>
 <body>
@@ -316,21 +328,27 @@
     <div class="header-grid">
       <div class="resumen-unificado">
         <div class="bloque-indicador">
-          <div class="icono-svg-resumen i-ingreso">💰</div>
+          <div class="icono-svg-resumen i-ingreso">
+             <img src="https://cadamenudo.github.io/UI-UX/assets/icons/ingreso.png" alt="Ingresos"/>
+          </div>
           <div class="texto-indicador">
             <span class="label">Ingresos</span>
             <span class="valor">$3,000.00</span>
           </div>
         </div>
         <div class="bloque-indicador">
-          <div class="icono-svg-resumen i-gasto">👜</div>
+          <div class="icono-svg-resumen i-gasto">
+            <img src="https://cadamenudo.github.io/UI-UX/assets/icons/gastos.png" alt="Gastos"/>
+            </div>
           <div class="texto-indicador">
             <span class="label">Gastos</span>
             <span class="valor">$1,200.00</span>
           </div>
         </div>
         <div class="bloque-indicador">
-          <div class="icono-svg-resumen i-ahorro">💸</div>
+          <div class="icono-svg-resumen i-ahorro">
+            <img src="https://cadamenudo.github.io/UI-UX/assets/icons/ahorro.png" alt="Ahorros"/>
+            </div>
           <div class="texto-indicador">
             <span class="label">Ahorro</span>
             <span class="valor">$450.00</span>
