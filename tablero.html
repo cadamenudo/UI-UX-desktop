@@ -321,6 +321,47 @@
   flex-grow: 1;
   min-height: 240px;
 }
+.fila-graficos {
+  display: flex;
+  gap: 2rem;
+  align-items: stretch;
+  width: 100%;
+  min-height: 360px;
+}
+
+.bloque-linea,
+.bloque-metas {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.bloque-linea {
+  flex: 2;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
+}
+
+.bloque-metas {
+  flex: 1;
+  max-width: 360px;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
+}
+
+.bloque-linea canvas,
+.bloque-metas canvas {
+  width: 100%;
+  height: 100%;
+  flex: 1;
+}
 
   </style>
 </head>
