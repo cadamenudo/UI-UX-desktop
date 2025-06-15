@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Header + Menú | CadaMenudo</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap">
+  <title>Header + Menú | Cada Menudo</title>
+  <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX/css-fonts.css"/>
   <style>
     body {
       margin: 0;
@@ -14,7 +14,7 @@
       height: 100vh;
     }
 
-    /* Menú lateral */
+    /* Sidebar */
     .sidebar {
       width: 220px;
       background-color: #FFFFFF;
@@ -25,14 +25,15 @@
 
     .logo {
       background-color: #573AEF;
-      padding: 1.5rem;
-      color: white;
-      font-weight: bold;
-      font-size: 1.2rem;
+      height: 80px;
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 80px;
+    }
+
+    .logo img {
+      height: 40px;
+      object-fit: contain;
     }
 
     .sidebar-section {
@@ -72,7 +73,7 @@
       text-align: center;
     }
 
-    /* Header completo */
+    /* Header principal */
     .header-principal {
       width: 100%;
       max-width: 1440px;
@@ -85,14 +86,6 @@
       width: 240px;
       height: 64px;
       background-color: #594AE2;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .logo-box img {
-      height: 40px;
-      object-fit: contain;
     }
 
     .barra-blanca {
@@ -146,7 +139,7 @@
       justify-content: center;
     }
 
-    /* Contenedor principal */
+    /* Contenido principal */
     .contenido {
       flex: 1;
       display: flex;
@@ -155,11 +148,14 @@
   </style>
 </head>
 <body>
-  <!-- Menú lateral -->
-  <div class="sidebar">
-    <div class="logo">cada <strong>menudo</strong></div>
 
-    <div class="sidebar-section">Menu</div>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="logo">
+      <img src="https://cadamenudo.github.io/UI-UX/assets/logo/cada-menudo-logo-white.png" alt="Cada Menudo Logo">
+    </div>
+
+    <div class="sidebar-section">Menú</div>
     <ul class="sidebar-nav">
       <li><i>🏠</i> Tablero</li>
       <li><i>📋</i> Transacciones</li>
@@ -174,11 +170,12 @@
     </ul>
   </div>
 
-  <!-- Header superior -->
+  <!-- Contenido principal -->
+  <div class="contenido">
+    
+    <!-- Header superior -->
     <div class="header-principal">
-      <div class="logo-box">
-        <img src="https://cadamenudo.github.io/UI-UX/assets/logo/cada-menudo-logo-white.png" alt="Logo Cada Menudo">
-      </div>
+      <div class="logo-box"></div>
       <div class="barra-blanca">
         <div class="contenido-alerta">🔔 Próximo mantenimiento el 14 de Noviembre</div>
         <div class="bloque-usuario">
@@ -191,7 +188,11 @@
         </div>
       </div>
     </div>
-    <!-- Aquí puedes continuar con el contenido -->
+
+    <!-- Zona de contenido -->
+    <div style="padding: 2rem;">Contenido del dashboard aquí…</div>
+
   </div>
+
 </body>
 </html>
