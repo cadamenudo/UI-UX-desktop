@@ -148,10 +148,9 @@
 }
 
 .contenedor-dona canvas {
-  width: 100% !important;
-  height: auto !important;
-  max-width: 220px;  /* puedes ajustar esto ligeramente para igualdad visual */
-  aspect-ratio: 1/1;
+  height: 200px;
+  max-height: 220px;
+  width: 100%;
 }
 
 .titulo-con-boton {
