@@ -5,7 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dashboard Cada Menudo</title>
   <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX/css-fonts.css"/>
+
+  <!-- CSS globales de las vistas -->
   <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX-desktop/css/tablero.css">
+  <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX-desktop/css/ingreso-gastos-meta-final.css">
+  <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX-desktop/css/grafico-donas.css">
+
   <style>
     body {
       margin: 0;
@@ -292,20 +297,35 @@
       alert("Función: Nueva Transacción");
     }
 
-    function cargarVista(ruta, item) {
-      fetch(ruta)
-        .then(res => res.text())
-        .then(html => {
-          document.getElementById('contenido-dinamico').innerHTML = html;
-          // Quitar clase activa de todos los ítems
-          document.querySelectorAll('.menu-items li').forEach(li => li.classList.remove('activo'));
-          // Agregar clase activa al clic actual
-          if (item) item.classList.add('activo');
-        })
-        .catch(err => {
-          document.getElementById('contenido-dinamico').innerHTML = "<p>Error cargando contenido.</p>";
-        });
-    }
+function cargarVista(ruta, item) {
+  fetch(ruta)
+    .then(res => res.text())
+    .then(html => {
+      const contenedor = document.getElementById('contenido-dinamico');
+      contenedor.innerHTML = html;
+
+      // ⬇️ Reinyectar los scripts para que se ejecuten
+      const scripts = contenedor.querySelectorAll("script");
+      scripts.forEach(script => {
+        const nuevoScript = document.createElement("script");
+        if (script.src) {
+          nuevoScript.src = script.src;
+        } else {
+          nuevoScript.textContent = script.textContent;
+        }
+        document.body.appendChild(nuevoScript);
+      });
+
+      // ⬇️ Marcar ítem activo del menú
+      document.querySelectorAll('.menu-items li').forEach(li => li.classList.remove('activo'));
+      if (item) item.classList.add('activo');
+    })
+    .catch(err => {
+      document.getElementById('contenido-dinamico').innerHTML = "<p>Error cargando contenido.</p>";
+      console.error("Error cargando vista:", err);
+    });
+}
+
   </script>
 
 </body>
