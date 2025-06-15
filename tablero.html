@@ -7,13 +7,13 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    body {
-      font-family: 'Greycliff CF', sans-serif;
-      background: #FAFBFF;
-      margin: 0;
-      padding: 0;
-      color: #0f172a;
-    }
+body {
+  font-family: 'Greycliff CF', sans-serif;
+  background: #FAFBFF;
+  margin: 0;
+  padding: 0;
+  color: #0f172a;
+}
 
 .contenido {
   padding: 100px 32px 0 272px;
@@ -24,224 +24,219 @@
   flex-direction: column;
   gap: 3rem;
 }
-    .header-grid {
-      display: flex;
-      gap: 2rem;
-      justify-content: space-between;
-    }
 
-    .resumen-unificado, .calendario-box {
-      background: white;
-      border-radius: 16px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-    }
+.header-grid {
+  display: flex;
+  gap: 2rem;
+  justify-content: space-between;
+}
 
-    .resumen-unificado {
-      width: 1100px;
-      height: 95px;
-      padding: 1.5rem 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+.resumen-unificado, .calendario-box {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
 
-    .bloque-indicador {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 1rem;
-      border-right: 1px solid #f1f5f9;
-    }
-
-    .bloque-indicador:last-child {
-      border-right: none;
-    }
-
-    .icono-svg-resumen {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-    }
-
-    .i-ingreso { background-color: #F8F6FF; }
-    .i-gasto   { background-color: #F8F8F8; }
-    .i-ahorro  { background-color: #FCFAEA; }
-
-    .texto-indicador {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.4;
-    }
-
-    .texto-indicador .label {
-      font-size: 0.85rem;
-      color: #94a3b8;
-    }
-
-    .texto-indicador .valor {
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: #0f172a;
-    }
-
-    .calendario-box {
-      width: 600px;
-      height: 95px;
-      padding: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .calendario-box .titulo {
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: #64748b;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-bottom: 0.75rem;
-    }
-
-    .calendario-box .titulo::after {
-      content: "\2139";
-      font-size: 1rem;
-      color: #94a3b8;
-    }
-
-    .fila-fechas {
-      display: flex;
-      gap: 0.5rem;
-      align-items: center;
-    }
-
-    .fila-fechas input[type="text"] {
-      padding: 0.5rem 0.75rem;
-      border-radius: 12px;
-      border: 1px solid #cbd5e1;
-      font-size: 0.9rem;
-      flex: 1;
-      min-width: 120px;
-      background: #fff url('https://cdn-icons-png.flaticon.com/512/747/747310.png') no-repeat right 12px center;
-      background-size: 16px;
-    }
-
-    .boton-periodo {
-      padding: 0.5rem 1rem;
-      background-color: #7459D9;
-      color: white;
-      border: none;
-      border-radius: 12px;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .boton-periodo:hover {
-      background-color: #5a42b5;
-    }
-
-    .fila-centro {
-      display: flex;
-      justify-content: space-between;
-      gap: 2rem;
-      align-items: stretch;
-    }
-
-      .fila-graficos {
-        display: flex;
-        flex-wrap: nowrap;
-        gap: 2rem;
-        align-items: stretch;
-        width: 100%;
-        min-height: 360px; /* opcional, para mantener altura mínima armónica */
-      }
-
-        .bloque-linea {
-          flex: 2;
-          display: flex;
-          flex-direction: column;
-          justify-content: flex-start;;
-          min-width: 0;
-          background: white;
-          padding: 1.5rem;
-          border-radius: 16px;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-        }
-      
-        .bloque-metas {
-          flex: 1;
-          min-width: 0;
-          max-width: 360px;
-          background: white;
-          padding: 1.5rem;
-          border-radius: 16px;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-          display: flex;
-          flex-direction: column;
-          justify-content: flex-start;
-          align-self: stretch; /* ✅ clave para emparejar altura */
-          box-sizing: border-box;
-        }
-
-        .bloque-ingresos-vs-gastos canvas,
-    .bloque-metas-anuales canvas {
-        flex-grow: 1;
-        width: 100%;
-        height: 100%;
-      }
-
-    .titulo {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
-    }
-
-    .fila-inferior {
-      display: flex;
-      justify-content: space-between;
-      gap: 2rem;
-    }
-
-    .bloque-ingresos-totales, .bloque-gastos-totales, .bloque-ahorros-totales {
-      flex: 1;
-      height: 300px;
-      background: white;
-      padding: 1.5rem;
-      border-radius: 16px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .bloque-ingresos-totales canvas,
-    .bloque-gastos-totales canvas,
-    .bloque-ahorros-totales canvas {
-      width: 100%;
-      height: 240px;
-    }
-    
-#contenedorDonas {
+.resumen-unificado {
+  width: 1100px;
+  height: 95px;
+  padding: 1.5rem 0;
   display: flex;
   justify-content: space-between;
-  gap: 1.5rem; /* o incluso 1rem si quieres más compacto */
+  align-items: center;
+}
+
+.bloque-indicador {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  border-right: 1px solid #f1f5f9;
+}
+
+.bloque-indicador:last-child {
+  border-right: none;
+}
+
+.icono-svg-resumen {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.i-ingreso { background-color: #F8F6FF; }
+.i-gasto   { background-color: #F8F8F8; }
+.i-ahorro  { background-color: #FCFAEA; }
+
+.texto-indicador {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.4;
+}
+
+.texto-indicador .label {
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.texto-indicador .valor {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.calendario-box {
+  width: 600px;
+  height: 95px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.calendario-box .titulo {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 0.75rem;
+}
+
+.calendario-box .titulo::after {
+  content: "\2139";
+  font-size: 1rem;
+  color: #94a3b8;
+}
+
+.fila-fechas {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.fila-fechas input[type="text"] {
+  padding: 0.5rem 0.75rem;
+  border-radius: 12px;
+  border: 1px solid #cbd5e1;
+  font-size: 0.9rem;
+  flex: 1;
+  min-width: 120px;
+  background: #fff url('https://cdn-icons-png.flaticon.com/512/747/747310.png') no-repeat right 12px center;
+  background-size: 16px;
+}
+
+.boton-periodo {
+  padding: 0.5rem 1rem;
+  background-color: #7459D9;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.boton-periodo:hover {
+  background-color: #5a42b5;
+}
+
+.fila-centro, .fila-graficos, #contenedorLineasYMetas {
+  display: flex;
+  gap: 2rem;
+  align-items: stretch;
   width: 100%;
 }
 
+.fila-graficos {
+  flex-wrap: nowrap;
+  min-height: 360px;
+}
+
+.bloque-linea, .bloque-metas {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  background: white;
+  box-sizing: border-box;
+}
+
+.bloque-linea {
+  flex: 2;
+}
+
+.bloque-metas {
+  flex: 1;
+  max-width: 360px;
+}
+
+.bloque-linea canvas,
+.bloque-metas canvas,
+.bloque-ingresos-vs-gastos canvas,
+.bloque-metas-anuales canvas,
+canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  max-height: none;
+  flex: 1;
+}
+
+.titulo {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.fila-inferior {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.bloque-ingresos-totales, .bloque-gastos-totales, .bloque-ahorros-totales {
+  flex: 1;
+  height: 300px;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.bloque-ingresos-totales canvas,
+.bloque-gastos-totales canvas,
+.bloque-ahorros-totales canvas {
+  width: 100%;
+  height: 240px;
+}
+
+#contenedorDonas {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  width: 100%;
+}
 
 .bloque-donas {
   display: flex;
   justify-content: space-between;
   gap: 2rem;
-  width: 100%;              /* ✅ Ocupar todo el ancho posible */
-  max-width: 100%;          /* ✅ Asegura que no se recorte */
+  width: 100%;
+  max-width: 100%;
 }
 
 .contenedor-dona {
@@ -276,91 +271,40 @@
   border-radius: 12px;
   cursor: pointer;
 }
+
 .envoltura-donas {
   width: 100%;
   margin: 0;
 }
 
-    .footer-app {
-      margin-top: 4rem;
-      padding: 2rem 1rem;
-      text-align: center;
-      font-size: 0.85rem;
-      color: #64748b;
-    }
-
-    .footer-contenido {
-      display: flex;
-      justify-content: center;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-    }
-
-    .footer-link {
-      color: #64748b;
-      text-decoration: none;
-    }
-
-    .footer-link:hover {
-      color: #3956E8;
-      text-decoration: underline;
-    }
-    canvas {
-  width: 100%;
-  height: auto;
-  max-height: none; /* sobrescribe límites previos */
-  display: block;
+.footer-app {
+  margin-top: 4rem;
+  padding: 2rem 1rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #64748b;
 }
-    #contenedorLineasYMetas {
+
+.footer-contenido {
   display: flex;
-  gap: 2rem;
-  align-items: stretch;
-  width: 100%;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
 }
-    #graficoMetas {
+
+.footer-link {
+  color: #64748b;
+  text-decoration: none;
+}
+
+.footer-link:hover {
+  color: #3956E8;
+  text-decoration: underline;
+}
+
+#graficoMetas {
   flex-grow: 1;
   min-height: 240px;
-}
-.fila-graficos {
-  display: flex;
-  gap: 2rem;
-  align-items: stretch;
-  width: 100%;
-  min-height: 360px;
-}
-
-.bloque-linea,
-.bloque-metas {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-}
-
-.bloque-linea {
-  flex: 2;
-  background: white;
-  padding: 1.5rem;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-  box-sizing: border-box;
-}
-
-.bloque-metas {
-  flex: 1;
-  max-width: 360px;
-  background: white;
-  padding: 1.5rem;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-  box-sizing: border-box;
-}
-
-.bloque-linea canvas,
-.bloque-metas canvas {
-  width: 100%;
-  height: 100%;
-  flex: 1;
 }
 
   </style>
