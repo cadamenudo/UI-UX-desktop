@@ -189,15 +189,13 @@
           box-sizing: border-box;
         }
 
-    .bloque-metas {
-  background-color: red; /* solo para test visual */
-}
         .bloque-ingresos-vs-gastos canvas,
     .bloque-metas-anuales canvas {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
+        flex-grow: 1;
+        width: 100%;
+        height: 100%;
+      }
+
     .titulo {
       font-size: 1.1rem;
       font-weight: 600;
@@ -319,6 +317,11 @@
   align-items: stretch;
   width: 100%;
 }
+    #graficoMetas {
+  flex-grow: 1;
+  min-height: 240px;
+}
+
   </style>
 </head>
 <body>
