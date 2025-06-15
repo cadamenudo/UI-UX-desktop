@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard: Ingresos vs Gastos y Metas</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX/css-fonts.css"/>
+  <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX-desktop/css/ingreso-gastos-meta-final.css" />
+</head>
+<body>
+<div class="fila-graficos">
+  <div class="bloque-linea">
+    <div class="titulo-grafico">
+      <div class="titulo-principal">
+        <h2 style="display: flex; align-items: center; gap: 0.5rem; margin: 0;">
+          Ingresos vs Gastos
+          <span class="info-icon">
+            <span class="circle-i">i</span>
+            <div class="info-tooltip">
+            Los gastos no incluyen el ahorro.<br>
+            Si los gastos sobrepasan el ingreso verás una sombra roja.
+          </div>
+        </span>
+      </div>
+    </div>
+    <canvas id="graficoLineas"></canvas>
+  </div>
+
+  <div class="bloque-metas">
+    <h2>Meta para el año</h2>
+    <div class="contenedor-barras">
+      <div class="barra-item">
+      <div class="barra-meta" style="position: relative;">
+        <div class="hover-target" style="height: 260px;">
+          <div class="tooltip" id="tooltipMeta">Meta total: $10,000</div>
+        </div>
+      </div>
+        <div class="etiqueta">Meta</div>
+      </div>
+
+      <div class="barra-item">
+        <div class="botella">
+          <div class="hover-target" id="hoverFaltante">
+            <div class="tooltip" id="tooltipFaltante">Faltan: $5,500</div>
+          </div>
+          <div class="relleno" id="rellenoAcumulado"></div>
+          <div class="hover-target" id="hoverAcumulado">
+            <div class="tooltip" id="tooltipAcumulado">Acumulado: $4,500</div>
+          </div>
+        </div>
+        <div class="etiqueta">Acumulado</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const resaltarSobrepaso = {
+  id: 'resaltarSobrepaso',
+  afterDatasetsDraw(chart) {
+    const { ctx, chartArea: { top, bottom }, scales: { x, y } } = chart;
+    const ingresos = chart.data.datasets[0].data;
+    const gastos = chart.data.datasets[1].data;
+
+    ctx.save();
+    ctx.fillStyle = 'rgba(239, 68, 68, 0.12)';
+
+    for (let i = 0; i < ingresos.length - 1; i++) {
+      const gasto1 = gastos[i];
+      const gasto2 = gastos[i + 1];
+      const ingreso1 = ingresos[i];
+      const ingreso2 = ingresos[i + 1];
+
+      if (gasto1 > ingreso1 || gasto2 > ingreso2) {
+        const x1 = x.getPixelForValue(i);
+        const x2 = x.getPixelForValue(i + 1);
+        const yGasto1 = y.getPixelForValue(gasto1);
+        const yGasto2 = y.getPixelForValue(gasto2);
+        const yIngreso1 = y.getPixelForValue(ingreso1);
+        const yIngreso2 = y.getPixelForValue(ingreso2);
+
+        ctx.beginPath();
+        ctx.moveTo(x1, yGasto1);
+        ctx.lineTo(x2, yGasto2);
+        ctx.lineTo(x2, yIngreso2);
+        ctx.lineTo(x1, yIngreso1);
+        ctx.closePath();
+        ctx.fill();
+      }
+    }
+
+    ctx.restore();
+    chart.getDatasetMeta(0).dataset.draw(ctx);
+    chart.getDatasetMeta(1).dataset.draw(ctx);
+  }
+};
+
+const ctx = document.getElementById('graficoLineas').getContext('2d');
+const gradientIngresos = ctx.createLinearGradient(0, 0, 0, 300);
+gradientIngresos.addColorStop(0, 'rgba(116, 89, 217, 0.15)');
+gradientIngresos.addColorStop(1, 'rgba(116, 89, 217, 0)');
+
+const gradientGastos = ctx.createLinearGradient(0, 0, 0, 300);
+gradientGastos.addColorStop(0, 'rgba(100, 116, 139, 0.15)');
+gradientGastos.addColorStop(1, 'rgba(100, 116, 139, 0)');
+
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+    datasets: [
+      {
+        label: 'Ingresos',
+        data: [3200, 4100, 3700, 4600, 4200, 5000, 5400, 5000, 4800, 4600, 4900, 5100],
+        borderColor: '#7459D9',
+        backgroundColor: gradientIngresos,
+        fill: {
+          target: 'origin',
+          above: 'rgba(116, 89, 217, 0.15)',
+          below: 'rgba(116, 89, 217, 0.15)'
+        },
+        tension: 0.4,
+        pointRadius: 0,
+        pointHoverRadius: 5
+      },
+      {
+        label: 'Gastos',
+        data: [2800, 3900, 4000, 4700, 4400, 5100, 5600, 5200, 5000, 4700, 4950, 5300],
+        borderColor: '#64748B',
+        backgroundColor: gradientGastos,
+        fill: {
+          target: 'origin',
+          above: 'rgba(100, 116, 139, 0.15)',
+          below: 'rgba(100, 116, 139, 0.15)'
+        },
+        tension: 0.4,
+        pointRadius: 0,
+        pointHoverRadius: 5
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    interaction: {
+      mode: 'index',
+      intersect: false
+    },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#ffffff',
+        titleColor: '#64748B',
+        bodyColor: '#0f172a',
+        borderColor: '#e5e7eb',
+        borderWidth: 1,
+        padding: 10,
+        displayColors: true,
+        usePointStyle: true,
+        callbacks: {
+          title: (context) => context[0].label,
+          label: (context) => {
+            const valor = context.raw.toLocaleString();
+            const tipo = context.dataset.label;
+            return `${tipo}: $${valor}`;
+          },
+          labelColor: (context) => ({
+            borderColor: context.dataset.borderColor,
+            backgroundColor: context.dataset.borderColor
+          })
+        }
+      }
+    },
+    scales: {
+      x: {
+        ticks: { color: '#64748B' },
+        grid: { display: false }
+      },
+      y: {
+        beginAtZero: true,
+        ticks: { color: '#64748B' },
+        grid: { color: '#e5e7eb' }
+      }
+    }
+  },
+  plugins: [resaltarSobrepaso]
+});
+
+const metaTotal = 10000;
+const acumuladoActual = 4500;
+const porcentaje = acumuladoActual / metaTotal;
+const faltante = metaTotal - acumuladoActual;
+const alturaTotal = 260;
+const alturaAcumulado = alturaTotal * porcentaje;
+const alturaFaltante = alturaTotal - alturaAcumulado;
+
+document.getElementById('rellenoAcumulado').style.height = `${alturaAcumulado}px`;
+document.getElementById('tooltipAcumulado').innerText = `Acumulado: $${acumuladoActual.toLocaleString()}`;
+document.getElementById('tooltipFaltante').innerText = `Faltan: $${faltante.toLocaleString()}`;
+document.getElementById('hoverFaltante').style.height = `${alturaFaltante}px`;
+document.getElementById('hoverAcumulado').style.height = `${alturaAcumulado}px`;
+document.getElementById('hoverAcumulado').style.bottom = '0';
+</script>
+</body>
+</html>
