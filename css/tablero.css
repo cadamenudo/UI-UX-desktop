@@ -145,44 +145,6 @@
       align-items: stretch;
     }
 
-      .fila-graficos {
-        display: flex;
-        flex-wrap: nowrap;
-        gap: 2rem;
-        align-items: stretch;
-        width: 100%;
-        min-height: 360px; /* opcional, para mantener altura mínima armónica */
-      }
-
-        .bloque-linea {
-          flex: 2;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          min-width: 0;
-          background: white;
-          padding: 1.5rem;
-          border-radius: 16px;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-         box-sizing: border-box;
-           align-self: stretch; /* ✅ clave para emparejar altura */
-        }
-      
-        .bloque-metas {
-          flex: 1;
-          min-width: 0;
-          max-width: 360px;
-          background: white;
-          padding: 1.5rem;
-          border-radius: 16px;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          align-self: stretch; /* ✅ clave para emparejar altura */
-          box-sizing: border-box;
-        }
-
         .bloque-ingresos-vs-gastos canvas,
     .bloque-metas-anuales canvas {
         flex-grow: 1;
