@@ -318,3 +318,13 @@
   height: 100%;
   flex: 1;
 }
+.contenido.contenido-tablero {
+  padding: 2rem;
+  max-width: 1440px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  box-sizing: border-box;
+}
