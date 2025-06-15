@@ -291,37 +291,37 @@
     <h2>Contenido del dashboard aquí…</h2>
   </div>
 
-  <script>
-    function toggleSeccion(id) {
-      const lista = document.getElementById(`${id}-items`);
-      const flecha = document.getElementById(`arrow-${id}`);
-      lista.classList.toggle('hidden');
-      flecha.textContent = lista.classList.contains('hidden') ? '▸' : '▾';
-    }
+<script>
+function toggleSeccion(id) {
+  const lista = document.getElementById(`${id}-items`);
+  const flecha = document.getElementById(`arrow-${id}`);
+  lista.classList.toggle('hidden');
+  flecha.textContent = lista.classList.contains('hidden') ? '▸' : '▾';
+}
 
-    function toggleSidebar() {
-      document.getElementById('sidebar').classList.toggle('colapsado');
-    }
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('colapsado');
+}
 
-    function nuevaTransaccion() {
-      alert("Función: Nueva Transacción");
-    }
+function nuevaTransaccion() {
+  alert("Función: Nueva Transacción");
+}
 
-      function cargarVista(ruta, item) {
+function cargarVista(ruta, item) {
   fetch(ruta)
     .then(res => res.text())
     .then(html => {
       const contenedor = document.getElementById('contenido-dinamico');
       contenedor.innerHTML = html;
 
-      // ✅ Aplica clase de ajuste solo si el tablero fue cargado
+      // ✅ Añade o remueve clase según vista
       if (ruta.includes("tablero")) {
         contenedor.classList.add("contenido-tablero");
       } else {
         contenedor.classList.remove("contenido-tablero");
       }
 
-      // Reinyectar los scripts para que se ejecuten
+      // Reinyectar scripts
       const scripts = contenedor.querySelectorAll("script");
       scripts.forEach(script => {
         const nuevoScript = document.createElement("script");
@@ -342,8 +342,7 @@
       console.error("Error cargando vista:", err);
     });
 }
-
-  </script>
+</script>
 
 </body>
 </html>
