@@ -1,0 +1,244 @@
+<!-- graficos-donas.html (versión final limpia y funcional) -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gráficos Donas</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX/css-fonts.css" />
+  <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX-desktop/css/grafico-donas.css" />
+
+</head>
+<body>
+<section class="bloque-donas-expandido">
+  <div class="contenedor-dona">
+    <h2>Ingresos Totales</h2>
+    <canvas id="graficoIngresos"></canvas>
+  </div>
+  <div class="contenedor-dona">
+    <div class="titulo-con-boton">
+      <h2>Gastos Totales</h2>
+      <button class="boton-detalle" onclick="abrirModal()">Ver detalle</button>
+    </div>
+    <canvas id="graficoGastos"></canvas>
+  </div>
+  <div class="contenedor-dona">
+    <h2>Ahorros Totales</h2>
+    <canvas id="graficoAhorros"></canvas>
+  </div>
+</section>
+
+  <!-- Modal para gastos -->
+<div class="modal" id="modalDetalle">
+  <div class="modal-contenido">
+    <h3>Selecciona una subcategoría</h3>
+
+    <button class="categoria-btn" onclick="renderGastos('alimentacion', 'Alimentación')">
+      <span>Alimentación</span><span>$600</span>
+    </button>
+    <button class="categoria-btn" onclick="renderGastos('transporte', 'Transporte')">
+      <span>Transporte</span><span>$300</span>
+    </button>
+    <button class="categoria-btn" onclick="renderGastos('hogar', 'Hogar')">
+      <span>Hogar</span><span>$400</span>
+    </button>
+    <button class="categoria-btn" onclick="renderGastos('deudas', 'Deudas')">
+      <span>Deudas</span><span>$500</span>
+    </button>
+
+    <div class="modal-footer">
+      <button onclick="renderGastos('general', '')">Volver a general</button>
+      <button onclick="cerrarModal()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+  <script>
+    const ctxIngresos = document.getElementById("graficoIngresos").getContext("2d");
+    const ingresosData = [14000, 3500, 2100];
+    const ingresosTotal = ingresosData.reduce((a, b) => a + b);
+
+    new Chart(ctxIngresos, {
+      type: "doughnut",
+      data: {
+        labels: ["Sueldo", "Freelance", "Otros"],
+        datasets: [{
+          data: ingresosData,
+          backgroundColor: ["#7D4AEA", "#9E75F0", "#C3B4FB"],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        cutout: "70%",
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: "#fff",
+            borderColor: "#E5E7EB",
+            borderWidth: 1,
+            titleColor: "#0f172a",
+            bodyColor: "#0f172a",
+            callbacks: {
+              label: ctx => `${ctx.label}: $${ctx.raw.toLocaleString()} (${((ctx.raw / ingresosTotal) * 100).toFixed(1)}%)`
+            }
+          }
+        }
+      },
+      plugins: [{
+        id: "centroTexto",
+        beforeDraw(chart) {
+          const { ctx, width, height } = chart;
+          ctx.save();
+          ctx.font = '700 32px "Greycliff CF", sans-serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillStyle = '#0f172a';
+          ctx.fillText(`$${ingresosTotal.toLocaleString()}`, width / 2, height / 2);
+        }
+      }]
+    });
+
+    // Gastos dinámico con subcategoría
+    let labelActivo = "";
+    const categorias = {
+      general: {
+        data: [600, 300, 400, 500],
+        labels: ["Alimentación", "Transporte", "Hogar", "Deudas"],
+        colors: ["#F472B6", "#FBBF24", "#60A5FA", "#A78BFA"]
+      },
+      alimentacion: {
+        data: [350, 180, 70],
+        labels: ["Supermercado", "Restaurantes", "Café"],
+        colors: ["#FDA4AF", "#F9A8D4", "#FBCFE8"]
+      },
+      transporte: {
+        data: [120, 100, 80],
+        labels: ["Gasolina", "Uber", "Seguro Auto"],
+        colors: ["#FCD34D", "#FDE68A", "#FEF9C3"]
+      },
+      hogar: {
+        data: [300, 70, 30],
+        labels: ["Alquiler", "Electricidad", "Internet"],
+        colors: ["#93C5FD", "#BFDBFE", "#DBEAFE"]
+      },
+      deudas: {
+        data: [200, 180, 120],
+        labels: ["Préstamo Estudiantil", "Tarjeta Crédito", "Préstamo Auto"],
+        colors: ["#DDD6FE", "#C4B5FD", "#A78BFA"]
+      }
+    };
+
+    let chartGastos;
+    function renderGastos(tipo = "general", label = "") {
+      const info = categorias[tipo];
+      const total = info.data.reduce((a, b) => a + b);
+      if (chartGastos) chartGastos.destroy();
+      chartGastos = new Chart(document.getElementById("graficoGastos").getContext("2d"), {
+        type: "doughnut",
+        data: {
+          labels: info.labels,
+          datasets: [{ data: info.data, backgroundColor: info.colors, borderWidth: 0 }]
+        },
+        options: {
+          cutout: "70%",
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: "#fff",
+              borderColor: "#E5E7EB",
+              borderWidth: 1,
+              titleColor: "#0f172a",
+              bodyColor: "#0f172a",
+              callbacks: {
+                label: ctx => `${ctx.label}: $${ctx.raw.toLocaleString()} (${((ctx.raw / total) * 100).toFixed(1)}%)`
+              }
+            }
+          }
+        },
+        plugins: [{
+          id: "centroTexto",
+          beforeDraw(chart) {
+            const ctx = chart.ctx;
+            const { width, height } = chart;
+            ctx.save();
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+        
+            if (label) {
+              ctx.font = '600 16px Arial, "Greycliff CF", sans-serif';
+              ctx.fillStyle = '#64748B';
+              ctx.fillText(label, width / 2, height / 2 - 18);
+        
+              ctx.font = '700 32px Arial, "Greycliff CF", sans-serif';
+              ctx.fillStyle = '#0f172a';
+              ctx.fillText(`$${total.toLocaleString()}`, width / 2, height / 2 + 12);
+            } else {
+              ctx.font = '700 32px Arial, "Greycliff CF", sans-serif';
+              ctx.fillStyle = '#0f172a';
+              ctx.fillText(`$${total.toLocaleString()}`, width / 2, height / 2);
+            }
+        
+            ctx.restore();
+          }
+        }]
+      });
+      cerrarModal();
+    }
+
+    renderGastos("general");
+
+    function abrirModal() {
+      document.getElementById("modalDetalle").style.display = "flex";
+    }
+    function cerrarModal() {
+      document.getElementById("modalDetalle").style.display = "none";
+    }
+
+    // Ahorros
+    const ctxAhorros = document.getElementById("graficoAhorros").getContext("2d");
+    const ahorrosData = [700, 400, 300];
+    const ahorrosTotal = ahorrosData.reduce((a, b) => a + b);
+
+    new Chart(ctxAhorros, {
+      type: "doughnut",
+      data: {
+        labels: ["Emergencia", "Retiro", "Vacaciones"],
+        datasets: [{
+          data: ahorrosData,
+          backgroundColor: ["#34D399", "#6EE7B7", "#A7F3D0"],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        cutout: "70%",
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: "#fff",
+            borderColor: "#E5E7EB",
+            borderWidth: 1,
+            titleColor: "#0f172a",
+            bodyColor: "#0f172a",
+            callbacks: {
+              label: ctx => `${ctx.label}: $${ctx.raw.toLocaleString()} (${((ctx.raw / ahorrosTotal) * 100).toFixed(1)}%)`
+            }
+          }
+        }
+      },
+      plugins: [{
+        id: "centroTexto",
+        beforeDraw(chart) {
+          const { ctx, width, height } = chart;
+          ctx.save();
+          ctx.font = '700 32px "Greycliff CF", sans-serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillStyle = '#0f172a';
+          ctx.fillText(`$${ahorrosTotal.toLocaleString()}`, width / 2, height / 2);
+        }
+      }]
+    });
+  </script>
+</body>
+</html>
