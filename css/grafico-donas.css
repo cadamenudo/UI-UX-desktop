@@ -14,20 +14,19 @@
       gap: 2rem;
       justify-content: center;
     }
-    .contenedor-dona {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      background: #fff;
-      border-radius: 24px;
-      padding: 2rem;
-      width: 300px;
-      max-width: 300px;
-      height: 320px; /* 🔧 forzamos altura igual */
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    }
-    
+        .contenedor-dona {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          background: #fff;
+          border-radius: 24px;
+          padding: 1.5rem;
+          width: 300px;
+          max-width: 300px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+          height: auto; /* ⬅️ clave */
+        }
     h2 {
       font-size: 1.25rem;
       font-weight: 700;
@@ -148,9 +147,9 @@
 }
 
 .contenedor-dona canvas {
-  height: 200px;
-  max-height: 220px;
   width: 100%;
+  height: 180px;
+  max-height: 200px;
 }
 
 .titulo-con-boton {
