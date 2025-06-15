@@ -25,14 +25,14 @@
 
     .logo {
       background-color: #573AEF;
-      height: 80px;
+      height: 64px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
     .logo img {
-      height: 40px;
+      height: 28px;
       object-fit: contain;
     }
 
@@ -73,45 +73,31 @@
       text-align: center;
     }
 
-    /* Header principal */
+    /* Header completo */
     .header-principal {
       width: 100%;
-      max-width: 1440px;
-      height: 64px;
-      display: flex;
-      background-color: #594AE2;
-    }
-
-    .logo-box {
-      width: 240px;
-      height: 64px;
-      background-color: #594AE2;
-    }
-
-    .barra-blanca {
-      flex: 1;
       height: 64px;
       background-color: white;
       display: flex;
+      align-items: center;
       justify-content: space-between;
+      padding: 0 27px;
+      border-bottom: 1px solid #E5E7EB;
     }
 
     .contenido-alerta {
-      display: flex;
-      align-items: center;
       color: #4B5563;
       font-size: 0.9rem;
-      margin-left: 27px;
+      display: flex;
+      align-items: center;
     }
 
     .bloque-usuario {
       width: 506px;
-      height: 64px;
       display: flex;
       align-items: center;
       justify-content: flex-end;
       gap: 1.5rem;
-      padding-right: 27px;
     }
 
     .icono {
@@ -139,7 +125,7 @@
       justify-content: center;
     }
 
-    /* Contenido principal */
+    /* Contenedor principal */
     .contenido {
       flex: 1;
       display: flex;
@@ -175,21 +161,18 @@
     
     <!-- Header superior -->
     <div class="header-principal">
-      <div class="logo-box"></div>
-      <div class="barra-blanca">
-        <div class="contenido-alerta">🔔 Próximo mantenimiento el 14 de Noviembre</div>
-        <div class="bloque-usuario">
-          <div class="icono" title="Ayuda">❓</div>
-          <div class="icono" title="Alertas">⚠️</div>
-          <div class="usuario">
-            <div class="usuario-avatar">PF</div>
-            Pedro Fernandez ▾
-          </div>
+      <div class="contenido-alerta">🔔 Próximo mantenimiento el 14 de Noviembre</div>
+      <div class="bloque-usuario">
+        <div class="icono" title="Ayuda">❓</div>
+        <div class="icono" title="Alertas">⚠️</div>
+        <div class="usuario">
+          <div class="usuario-avatar">PF</div>
+          Pedro Fernandez ▾
         </div>
       </div>
     </div>
 
-    <!-- Zona de contenido -->
+    <!-- Contenido de la página -->
     <div style="padding: 2rem;">Contenido del dashboard aquí…</div>
 
   </div>
