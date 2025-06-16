@@ -262,6 +262,35 @@
 .flecha-usuario.rotar {
   transform: rotate(180deg);
 }
+    .modal-perfil {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(15, 23, 42, 0.3); /* fondo oscuro */
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-perfil.hidden {
+  display: none;
+}
+
+.contenido-modal {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 700px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
 
   </style>
 </head>
@@ -309,29 +338,38 @@
     <button onclick="toggleSidebar()" class="contraer-btn">⇤</button>
   </div>
 
-  <!-- Header -->
-  <div class="header-principal">
-    <div class="superavit">
-  ✅ SUPER: Tienes un sobrante de <strong>$1,868.77</strong>
-</div>
-    <div class="bloque-usuario">
-      <div class="usuario" id="usuarioDropdown">
-        <div class="usuario-avatar">PF</div>
-        Pedro Fernandez <span class="flecha-usuario">▾</span>
+<!-- Header -->
+<div class="header-principal">
+  <div class="superavit">
+    ✅ SUPER: Tienes un sobrante de <strong>$1,868.77</strong>
+  </div>
+  <div class="bloque-usuario">
+    <div class="usuario" id="usuarioDropdown">
+      <div class="usuario-avatar">PF</div>
+      Pedro Fernandez <span class="flecha-usuario">▾</span>
+    </div>
+
+    <!-- Dropdown de usuario -->
+    <div id="menuUsuario" class="menu-usuario hidden">
+      <div class="opcion" onclick="irAPerfil()">
+        <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="Perfil" />
+        <span>Perfil</span>
+      </div>
+      <div class="opcion" onclick="cerrarSesion()">
+        <img src="https://cdn-icons-png.flaticon.com/512/1828/1828479.png" alt="Salir" />
+        <span>Salir</span>
       </div>
     </div>
   </div>
-<!-- Dropdown de usuario -->
-<div id="menuUsuario" class="menu-usuario hidden">
-  <div class="opcion" onclick="irAPerfil()">
-    <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="Perfil" />
-    <span>Perfil</span>
-  </div>
-  <div class="opcion" onclick="cerrarSesion()">
-    <img src="https://cdn-icons-png.flaticon.com/512/1828/1828479.png" alt="Salir" />
-    <span>Salir</span>
+</div>
+
+<!-- Modal para perfil -->
+<div id="modalPerfil" class="modal-perfil hidden">
+  <div class="contenido-modal" id="contenidoPerfil">
+    <!-- Aquí se cargará usuario.html -->
   </div>
 </div>
+
 
   <script>
     function toggleSeccion(id) {
@@ -370,6 +408,22 @@
   function cerrarSesion() {
     alert("Cerrar sesión");
   }
+
+  function irAPerfil() {
+    fetch("https://cadamenudo.github.io/UI-UX/usuario.html")
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById('contenidoPerfil').innerHTML = html;
+        document.getElementById('modalPerfil').classList.remove('hidden');
+      });
+  }
+
+  // Opción para cerrar el modal al hacer clic fuera del contenido
+  document.getElementById('modalPerfil').addEventListener('click', function (e) {
+    if (e.target.id === 'modalPerfil') {
+      this.classList.add('hidden');
+    }
+  });
 
   </script>
 
