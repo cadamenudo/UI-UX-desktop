@@ -208,18 +208,16 @@
   border-radius: 8px;
   font-size: 0.85rem;
 }
-    .nueva-transaccion-box {
-  margin-top: 0 !important; 
+
+  .nueva-transaccion-box {
   display: flex;
   align-items: center;
   background-color: #F2EFFF;
   padding: 0.75rem 1.25rem;
-  margin-bottom: 0;
-  margin-top: 0;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
+  border-radius: 0 0 12px 12px;
   cursor: pointer;
-  width: 100%;
+  width: 100%; /* 🔧 Asegura que se ajuste al sidebar */
+  box-sizing: border-box; /* 🔧 Incluye padding en el ancho */
 }
 
 .nueva-transaccion-box img {
