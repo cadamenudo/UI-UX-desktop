@@ -584,7 +584,7 @@ function abrirModalTransaccion() {
 
 // Cerrar al hacer clic fuera
 window.addEventListener("click", function (e) {
-  const modal = document.getElementById("modalMetas");
+  const modal = document.getElementById("modalCategorias");
   if (e.target === modal) {
     modal.classList.add("hidden");
   }
@@ -605,7 +605,7 @@ window.addEventListener("click", function (e) {
   contenedor.innerHTML = "";
   contenedor.appendChild(iframe);
 
-  document.getElementById("modalMetas").classList.remove("hidden");
+  document.getElementById("modalCategorias").classList.remove("hidden");
 }
 
 // Cerrar al hacer clic fuera
