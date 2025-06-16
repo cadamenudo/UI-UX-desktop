@@ -86,7 +86,10 @@ const resaltarSobrepaso = {
 };
 
 const canvas = document.getElementById('graficoLineas');
-if (!canvas) return;
+if (!canvas) {
+  console.warn("Canvas #graficoLineas no encontrado.");
+  return;
+}
 
 const ctx = canvas.getContext('2d');
 
