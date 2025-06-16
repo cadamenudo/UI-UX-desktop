@@ -217,6 +217,52 @@
   border-radius: 8px;
   font-size: 0.85rem;
 }
+    .menu-usuario {
+  position: absolute;
+  top: 72px;
+  right: 32px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  padding: 1rem;
+  width: 160px;
+  z-index: 20;
+}
+
+.menu-usuario .opcion {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0;
+  font-size: 0.95rem;
+  color: #573AEF;
+  cursor: pointer;
+  transition: background 0.2s;
+  border-radius: 8px;
+}
+
+.menu-usuario .opcion:hover {
+  background-color: #f4f4ff;
+}
+
+.menu-usuario img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.hidden {
+  display: none;
+}
+    .flecha-usuario {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.flecha-usuario.rotar {
+  transform: rotate(180deg);
+}
+
   </style>
 </head>
 <body>
@@ -269,17 +315,23 @@
   ✅ SUPER: Tienes un sobrante de <strong>$1,868.77</strong>
 </div>
     <div class="bloque-usuario">
-      <div class="usuario">
+      <div class="usuario" id="usuarioDropdown">
         <div class="usuario-avatar">PF</div>
-        Pedro Fernandez ▾
+        Pedro Fernandez <span class="flecha-usuario">▾</span>
       </div>
     </div>
   </div>
-
-  <!-- Contenido -->
-  <div class="contenido">
-    <h2>Contenido del dashboard aquí…</h2>
+<!-- Dropdown de usuario -->
+<div id="menuUsuario" class="menu-usuario hidden">
+  <div class="opcion" onclick="irAPerfil()">
+    <img src="https://cdn-icons-png.flaticon.com/512/747/747376.png" alt="Perfil" />
+    <span>Perfil</span>
   </div>
+  <div class="opcion" onclick="cerrarSesion()">
+    <img src="https://cdn-icons-png.flaticon.com/512/1828/1828479.png" alt="Salir" />
+    <span>Salir</span>
+  </div>
+</div>
 
   <script>
     function toggleSeccion(id) {
@@ -296,6 +348,29 @@
     function nuevaTransaccion() {
       alert("Función: Nueva Transacción");
     }
+    
+  const avatar = document.querySelector('.usuario'); // o el botón/flecha exacto
+  const menu = document.getElementById('menuUsuario');
+
+  avatar.addEventListener('click', () => {
+    menu.classList.toggle('hidden');
+  });
+
+  // Cierra si haces clic fuera
+  window.addEventListener('click', (e) => {
+    if (!menu.contains(e.target) && !avatar.contains(e.target)) {
+      menu.classList.add('hidden');
+    }
+  });
+
+  function irAPerfil() {
+    alert("Ir al perfil");
+  }
+
+  function cerrarSesion() {
+    alert("Cerrar sesión");
+  }
+
   </script>
 
 </body>
