@@ -431,14 +431,26 @@
       alert("Función: Nueva Transacción");
     }
     
-  const avatar = document.querySelector('.usuario'); // o el botón/flecha exacto
+ function mostrarModalSalir() {
+    document.getElementById("modalSalir").classList.remove("hidden");
+  }
+
+  function cancelarCerrarSesion() {
+    document.getElementById("modalSalir").classList.add("hidden");
+  }
+
+  function confirmarCerrarSesion() {
+    window.location.href = "https://cadamenudo.github.io/UI-UX/iniciar_sesion.html";
+  }
+
+  // Menú de usuario toggle
+  const avatar = document.querySelector('.usuario');
   const menu = document.getElementById('menuUsuario');
 
   avatar.addEventListener('click', () => {
     menu.classList.toggle('hidden');
   });
 
-  // Cierra si haces clic fuera
   window.addEventListener('click', (e) => {
     if (!menu.contains(e.target) && !avatar.contains(e.target)) {
       menu.classList.add('hidden');
@@ -446,52 +458,28 @@
   });
 
   function irAPerfil() {
-    alert("Ir al perfil");
+    fetch("https://cadamenudo.github.io/UI-UX/usuario.html")
+      .then(res => res.text())
+      .then(html => {
+        const div = document.createElement("div");
+        div.innerHTML = html;
+
+        const contenido = div.querySelector("body") || div;
+        document.getElementById('contenidoPerfil').innerHTML = contenido.innerHTML;
+
+        div.querySelectorAll("script").forEach(oldScript => {
+          const newScript = document.createElement("script");
+          if (oldScript.src) {
+            newScript.src = oldScript.src;
+          } else {
+            newScript.textContent = oldScript.textContent;
+          }
+          document.body.appendChild(newScript);
+        });
+
+        document.getElementById('modalPerfil').classList.remove('hidden');
+      });
   }
-
-  function cerrarSesion() {
-    alert("Cerrar sesión");
-  }
-function irAPerfil() {
-fetch("https://cadamenudo.github.io/UI-UX/usuario.html")
-  .then(res => res.text())
-  .then(html => {
-    const div = document.createElement("div");
-    div.innerHTML = html;
-
-    // Insertar contenido visual
-    const contenido = div.querySelector("body") || div;
-    document.getElementById('contenidoPerfil').innerHTML = contenido.innerHTML;
-
-    // Ejecutar scripts
-    div.querySelectorAll("script").forEach(oldScript => {
-      const newScript = document.createElement("script");
-      if (oldScript.src) {
-        newScript.src = oldScript.src;
-      } else {
-        newScript.textContent = oldScript.textContent;
-      }
-      document.body.appendChild(newScript);
-    });
-
-    document.getElementById('modalPerfil').classList.remove('hidden');
-  });
- }
-    function cerrarSesion() {
-  document.getElementById('modalSalir').classList.remove('hidden');
-}
-
-function cancelarCerrarSesion() {
-  document.getElementById('modalSalir').classList.add('hidden');
-}
-
-function confirmarCerrarSesion() {
-  window.location.href = "https://cadamenudo.github.io/UI-UX/iniciar_sesion.html";
-}
-    function mostrarModalSalir() {
-  document.getElementById("modalSalir").classList.remove("hidden");
-}
-
   </script>
 
 </body>
