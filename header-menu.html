@@ -211,12 +211,13 @@
     }
 
     /* Contenido principal dinámico */
-    .contenido {
+      .contenido {
+      height: auto; /* 🔁 cambia min-height */
+      max-height: 100vh; /* 🔁 para permitir scroll interno */
+      overflow-y: auto;
       margin-left: 220px;
       margin-top: 64px;
       padding: 2rem;
-      min-height: calc(100vh - 64px);
-      overflow-y: auto;
       box-sizing: border-box;
     }
     .contenido-tablero {
@@ -346,6 +347,11 @@ function cargarVista(ruta, item) {
     });
 }
 </script>
-
+<script>
+  window.addEventListener('load', () => {
+    const contenedor = document.querySelector('.contenido');
+    contenedor.style.overflowY = 'auto';
+  });
+</script>
 </body>
 </html>
