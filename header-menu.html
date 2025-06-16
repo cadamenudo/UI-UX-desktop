@@ -408,22 +408,9 @@
   function cerrarSesion() {
     alert("Cerrar sesión");
   }
-
-  function irAPerfil() {
-    fetch("https://cadamenudo.github.io/UI-UX/usuario.html")
-      .then(res => res.text())
-      .then(html => {
-        document.getElementById('contenidoPerfil').innerHTML = html;
-        document.getElementById('modalPerfil').classList.remove('hidden');
-      });
-  }
-
-  // Opción para cerrar el modal al hacer clic fuera del contenido
-  document.getElementById('modalPerfil').addEventListener('click', function (e) {
-    if (e.target.id === 'modalPerfil') {
-      this.classList.add('hidden');
-    }
-  });
+function irAPerfil() {
+  window.location.href = "https://cadamenudo.github.io/UI-UX/usuario.html";
+}
 
   </script>
 
