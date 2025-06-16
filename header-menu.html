@@ -328,6 +328,7 @@ function cargarVista(ruta, item) {
         const nuevoScript = document.createElement("script");
         if (script.src) {
           nuevoScript.src = script.src;
+          nuevoScript.async = false; // ⬅️ clave
         } else {
           nuevoScript.textContent = script.textContent;
         }
