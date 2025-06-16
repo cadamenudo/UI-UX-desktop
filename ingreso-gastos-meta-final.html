@@ -85,14 +85,7 @@ const resaltarSobrepaso = {
   }
 };
 
-const canvas = document.getElementById('graficoLineas');
-if (!canvas) {
-  console.warn("Canvas #graficoLineas no encontrado.");
-  return;
-}
-
-const ctx = canvas.getContext('2d');
-
+const ctx = document.getElementById('graficoLineas').getContext('2d');
 const gradientIngresos = ctx.createLinearGradient(0, 0, 0, 300);
 gradientIngresos.addColorStop(0, 'rgba(116, 89, 217, 0.15)');
 gradientIngresos.addColorStop(1, 'rgba(116, 89, 217, 0)');
