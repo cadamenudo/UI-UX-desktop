@@ -3,16 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard Cada Menudo</title>
+  <title>Head-Menu Cada Menudo</title>
   <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX/css-fonts.css"/>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
-  <!-- CSS globales de las vistas -->
-  <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX-desktop/css/tablero.css">
-  <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX-desktop/css/ingreso-gastos-meta-final.css">
-  <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX-desktop/css/grafico-donas.css">
-
   <style>
     body {
       margin: 0;
@@ -22,6 +14,7 @@
       height: 100vh;
     }
 
+    /* Sidebar */
     .sidebar {
       width: 220px;
       background-color: #FFFFFF;
@@ -210,26 +203,12 @@
       justify-content: center;
     }
 
-    /* Contenido principal dinámico */
-      .contenido {
-      height: auto; /* 🔁 cambia min-height */
-      max-height: 100vh; /* 🔁 para permitir scroll interno */
-      overflow-y: auto;
+    /* Contenido */
+    .contenido {
       margin-left: 220px;
       margin-top: 64px;
       padding: 2rem;
-      box-sizing: border-box;
     }
-    .contenido-tablero {
-  padding: 2rem;
-  max-width: 1440px;
-  width: 100%;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 3rem;
-  box-sizing: border-box;
-}
   </style>
 </head>
 <body>
@@ -250,9 +229,9 @@
         <span class="arrow text" id="arrow-menu">▾</span>
       </div>
       <ul class="menu-items" id="menu-items">
-        <li class="activo" onclick="cargarVista('https://cadamenudo.github.io/UI-UX-desktop/tablero.html', this)"><i>🏠</i> <span class="text">Tablero</span></li>
-        <li onclick="cargarVista('transacciones.html', this)"><i>📋</i> <span class="text">Transacciones</span></li>
-        <li onclick="cargarVista('educacion.html', this)"><i>📘</i> <span class="text">Educación</span></li>
+        <li class="activo"><i>🏠</i> <span class="text">Tablero</span></li>
+        <li><i>📋</i> <span class="text">Transacciones</span></li>
+        <li><i>📘</i> <span class="text">Educación</span></li>
       </ul>
     </div>
 
@@ -262,8 +241,8 @@
         <span class="arrow text" id="arrow-config">▾</span>
       </div>
       <ul class="menu-items" id="config-items">
-        <li onclick="cargarVista('metas.html', this)"><i>📊</i> <span class="text">Metas</span></li>
-        <li onclick="cargarVista('categorias.html', this)"><i>🧾</i> <span class="text">Categorías</span></li>
+        <li><i>📊</i> <span class="text">Metas</span></li>
+        <li><i>🧾</i> <span class="text">Categorías</span></li>
       </ul>
     </div>
 
@@ -289,69 +268,27 @@
     </div>
   </div>
 
-  <!-- Contenido dinámico -->
-  <div class="contenido contenido-tablero" id="contenido-dinamico">
+  <!-- Contenido -->
+  <div class="contenido">
     <h2>Contenido del dashboard aquí…</h2>
   </div>
 
-<script>
-function toggleSeccion(id) {
-  const lista = document.getElementById(`${id}-items`);
-  const flecha = document.getElementById(`arrow-${id}`);
-  lista.classList.toggle('hidden');
-  flecha.textContent = lista.classList.contains('hidden') ? '▸' : '▾';
-}
+  <script>
+    function toggleSeccion(id) {
+      const lista = document.getElementById(`${id}-items`);
+      const flecha = document.getElementById(`arrow-${id}`);
+      lista.classList.toggle('hidden');
+      flecha.textContent = lista.classList.contains('hidden') ? '▸' : '▾';
+    }
 
-function toggleSidebar() {
-  document.getElementById('sidebar').classList.toggle('colapsado');
-}
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('colapsado');
+    }
 
-function nuevaTransaccion() {
-  alert("Función: Nueva Transacción");
-}
+    function nuevaTransaccion() {
+      alert("Función: Nueva Transacción");
+    }
+  </script>
 
-function cargarVista(ruta, item) {
-  fetch(ruta)
-    .then(res => res.text())
-    .then(html => {
-      const contenedor = document.getElementById('contenido-dinamico');
-      contenedor.innerHTML = html;
-
-      // ✅ Añade o remueve clase según vista
-      if (ruta.includes("tablero")) {
-        contenedor.classList.add("contenido-tablero");
-      } else {
-        contenedor.classList.remove("contenido-tablero");
-      }
-
-      // Reinyectar scripts
-      const scripts = contenedor.querySelectorAll("script");
-      scripts.forEach(script => {
-        const nuevoScript = document.createElement("script");
-        if (script.src) {
-          nuevoScript.src = script.src;
-          nuevoScript.async = false; // ⬅️ clave
-        } else {
-          nuevoScript.textContent = script.textContent;
-        }
-        document.body.appendChild(nuevoScript);
-      });
-
-      // Marcar ítem activo del menú
-      document.querySelectorAll('.menu-items li').forEach(li => li.classList.remove('activo'));
-      if (item) item.classList.add('activo');
-    })
-    .catch(err => {
-      document.getElementById('contenido-dinamico').innerHTML = "<p>Error cargando contenido.</p>";
-      console.error("Error cargando vista:", err);
-    });
-}
-</script>
-<script>
-  window.addEventListener('load', () => {
-    const contenedor = document.querySelector('.contenido');
-    contenedor.style.overflowY = 'auto';
-  });
-</script>
 </body>
 </html>
