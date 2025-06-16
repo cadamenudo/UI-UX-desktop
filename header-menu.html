@@ -376,7 +376,7 @@
           <img src="https://cadamenudo.github.io/UI-UX/assets/icons/home_blue.png" alt="Tablero" style="width: 20px; height: 20px; margin-right: 0.75rem;" />
           <span class="text">Tablero</span>
         </li>
-        <li onclick="abrirModalOldTransacciones()">
+        <li onclick="cargarVista('https://cadamenudo.github.io/UI-UX-desktop/transacciones.html', this)">
           <img src="https://cadamenudo.github.io/UI-UX/assets/icons/transacciones_blue.png" alt="Tablero" style="width: 20px; height: 20px; margin-right: 0.75rem;" />
           <span class="text">Transacciones</span>
         </li>
@@ -458,13 +458,6 @@
 <div id="modalTransaccion" class="modal-perfil hidden">
   <div class="contenido-modal" id="contenidoTransaccion">
     <!-- Se cargará nueva-transaccion.html -->
-  </div>
-</div>
-
-    <!-- Modal para Viejas Transacciones -->
-<div id="modalOldTransacciones" class="modal-perfil hidden">
-  <div class="contenido-modal" id="contenidoOldTransacciones">
-    <!-- Aquí se cargará viejas transaccioness.html -->
   </div>
 </div>
   
@@ -621,32 +614,6 @@ window.addEventListener("click", function (e) {
 // Cerrar al hacer clic fuera
 window.addEventListener("click", function (e) {
   const modal = document.getElementById("modalCategorias");
-  if (e.target === modal) {
-    modal.classList.add("hidden");
-  }
-});
-    function abrirModalOldTransacciones() {
-  const iframe = document.createElement("iframe");
-  iframe.src = "https://cadamenudo.github.io/UI-UX/transacciones.html";
-  iframe.style.width = "100%";
-  iframe.style.height = "650px";
-  iframe.style.border = "none";
-  iframe.style.borderRadius = "16px";
-  iframe.style.background = "white";
-  iframe.style.maxWidth = "700px";
-  iframe.style.margin = "0 auto";
-  iframe.style.display = "block";
-
-  const contenedor = document.getElementById("contenidoOldTransacciones");
-  contenedor.innerHTML = "";
-  contenedor.appendChild(iframe);
-
-  document.getElementById("modalOldTransacciones").classList.remove("hidden");
-}
-
-// Cerrar al hacer clic fuera
-window.addEventListener("click", function (e) {
-  const modal = document.getElementById("modalOldTransacciones");
   if (e.target === modal) {
     modal.classList.add("hidden");
   }
