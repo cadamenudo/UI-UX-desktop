@@ -377,8 +377,9 @@
           <img src="https://cadamenudo.github.io/UI-UX/assets/icons/transacciones_blue.png" alt="Tablero" style="width: 20px; height: 20px; margin-right: 0.75rem;" />
           <span class="text">Transacciones</span>
         </li>
-        <li onclick="cargarVista('educacion.html', this)">
-          <i>📘</i> <span class="text">Educación</span>
+        <li onclick="cargarVista('https://cadamenudo.github.io/UI-UX/videos.html', this)">
+          <img src="https://cadamenudo.github.io/UI-UX/assets/icons/apprender.png" alt="Tablero" style="width: 20px; height: 20px; margin-right: 0.75rem;" />
+          <span class="text">Aprender</span>
         </li>
       </ul>
     </div>
@@ -393,8 +394,10 @@
         <li onclick="abrirModalMetas()">
           <img src="https://cadamenudo.github.io/UI-UX/assets/icons/metas_blue.png" alt="Metas" style="width: 20px; height: 20px; margin-right: 0.75rem;" />
           <span class="text">Metas</span>
+        <li onclick="abrirModalCategorias()">
+          <img src="https://cadamenudo.github.io/UI-UX/assets/icons/categorias.png" alt="Metas" style="width: 20px; height: 20px; margin-right: 0.75rem;" />
+          <span class="text">Categorias</span>
         </li>
-        <li><i>🧾</i> <span class="text">Categorías</span></li>
       </ul>
     </div>
 
@@ -460,7 +463,12 @@
     <!-- Aquí se cargará metas.html -->
   </div>
 </div>
-
+  <!-- Modal para Categorias -->
+<div id="modalCategorias" class="modal-perfil hidden">
+  <div class="contenido-modal" id="contenidoCategorias">
+    <!-- Aquí se cargará metas.html -->
+  </div>
+</div>
   <script>
     function toggleSeccion(id) {
       const lista = document.getElementById(`${id}-items`);
@@ -580,7 +588,32 @@ window.addEventListener("click", function (e) {
     modal.classList.add("hidden");
   }
 });
+    function abrirModalCategorias() {
+  const iframe = document.createElement("iframe");
+  iframe.src = "https://cadamenudo.github.io/UI-UX/categorias.html";
+  iframe.style.width = "100%";
+  iframe.style.height = "650px";
+  iframe.style.border = "none";
+  iframe.style.borderRadius = "16px";
+  iframe.style.background = "white";
+  iframe.style.maxWidth = "700px";
+  iframe.style.margin = "0 auto";
+  iframe.style.display = "block";
 
+  const contenedor = document.getElementById("contenidoCategorias");
+  contenedor.innerHTML = "";
+  contenedor.appendChild(iframe);
+
+  document.getElementById("modalMetas").classList.remove("hidden");
+}
+
+// Cerrar al hacer clic fuera
+window.addEventListener("click", function (e) {
+  const modal = document.getElementById("modalMetas");
+  if (e.target === modal) {
+    modal.classList.add("hidden");
+  }
+});
 
   </script>
 
