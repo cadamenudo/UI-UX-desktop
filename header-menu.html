@@ -94,11 +94,18 @@
     }
 
     .menu-items li.activo {
-      background-color: #F5F3FF;
+      background-color: #FCFAEA !important;
       color: #594AE2;
       font-weight: 600;
       border-right: 4px solid #594AE2;
     }
+    
+.menu-items li:hover {
+  background-color: #F8FAFC;
+}
+    .menu-items li.activo img {
+  filter: brightness(0) saturate(100%) invert(21%) sepia(89%) saturate(1300%) hue-rotate(223deg) brightness(95%) contrast(90%);
+}
 
     .hidden {
       display: none;
