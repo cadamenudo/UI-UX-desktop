@@ -489,37 +489,32 @@ function irAPerfil() {
   });
 }
     
-function nuevaTransaccion() {
-  fetch("https://cadamenudo.github.io/UI-UX/nueva-transaccion.html")
-    .then(res => res.text())
-    .then(html => {
-      const div = document.createElement("div");
-      div.innerHTML = html;
+function abrirModalTransaccion() {
+  const iframe = document.createElement("iframe");
+  iframe.src = "https://cadamenudo.github.io/UI-UX/nueva-transaccion.html";
+  iframe.style.width = "100%";
+  iframe.style.height = "650px";
+  iframe.style.border = "none";
+  iframe.style.borderRadius = "16px";
+  iframe.style.background = "white";
+  iframe.style.maxWidth = "700px";
+  iframe.style.margin = "0 auto";
+  iframe.style.display = "block";
 
-      const contenido = div.querySelector("body") || div;
-      document.getElementById('contenidoTransaccion').innerHTML = contenido.innerHTML;
+  const contenedor = document.getElementById("contenidoTransaccion");
+  contenedor.innerHTML = "";
+  contenedor.appendChild(iframe);
 
-      div.querySelectorAll("script").forEach(oldScript => {
-        const newScript = document.createElement("script");
-        if (oldScript.src) {
-          newScript.src = oldScript.src;
-        } else {
-          newScript.textContent = oldScript.textContent;
-        }
-        document.body.appendChild(newScript);
-      });
+  document.getElementById("modalTransaccion").classList.remove("hidden");
 
-      document.getElementById('modalTransaccion').classList.remove('hidden');
-    });
+  // Cierre al hacer clic fuera del modal
+  document.getElementById("modalTransaccion").addEventListener("click", function (e) {
+    if (e.target.id === "modalTransaccion") {
+      this.classList.add("hidden");
+    }
+  });
 }
 
-// Cerrar modal al hacer clic fuera
-window.addEventListener('click', (e) => {
-  const modal = document.getElementById('modalTransaccion');
-  if (e.target === modal) {
-    modal.classList.add('hidden');
-  }
-});
   </script>
 
 </body>
