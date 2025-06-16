@@ -369,6 +369,16 @@
     <!-- Aquí se cargará usuario.html -->
   </div>
 </div>
+<!-- Modal de confirmación de cierre de sesión -->
+<div id="modalSalir" class="modal-perfil hidden">
+  <div class="contenido-modal" style="text-align: center;">
+    <h2 style="margin-bottom: 2rem;">¿Deseas cerrar sesión?</h2>
+    <div style="display: flex; justify-content: center; gap: 2rem;">
+      <button onclick="cancelarCerrarSesion()" style="padding: 1rem 2rem; border-radius: 16px; background: #f6f3ff; border: none; color: #7459D9; font-size: 1rem;">Cancelar</button>
+      <button onclick="confirmarCerrarSesion()" style="padding: 1rem 2rem; border-radius: 16px; background: #5c4ee5; border: none; color: white; font-size: 1rem;">Salir</button>
+    </div>
+  </div>
+</div>
 
 
   <script>
@@ -433,6 +443,17 @@ fetch("https://cadamenudo.github.io/UI-UX/usuario.html")
     document.getElementById('modalPerfil').classList.remove('hidden');
   });
  }
+    function cerrarSesion() {
+  document.getElementById('modalSalir').classList.remove('hidden');
+}
+
+function cancelarCerrarSesion() {
+  document.getElementById('modalSalir').classList.add('hidden');
+}
+
+function confirmarCerrarSesion() {
+  window.location.href = "https://cadamenudo.github.io/UI-UX/iniciar_sesion.html";
+}
   </script>
 
 </body>
