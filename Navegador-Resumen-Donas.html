@@ -67,6 +67,7 @@
       background: white;
       border-radius: 16px;
       padding: 2rem;
+      margin-top: 0;
       box-shadow: 0 4px 8px rgba(0,0,0,0.05);
     }
 
@@ -136,6 +137,13 @@
   flex: 1;
 }
 
+    .fila-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end; 
+  margin-bottom: 0;     
+}
+
 .cabecera-transacciones h2 {
   margin: 0;
   font-size: 1.5rem;
@@ -154,7 +162,7 @@
 
 <!-- CABECERA -->
 <div class="cabecera-transacciones">
-  <div class="fila-cabecera">
+  <div class="cabecera-transacciones fila-cabecera">
     <h2 class="titulo-transacciones">Lista de Transacciones</h2>
     <div class="contenedor-tabs">
       <button class="activo" onclick="cambiarTab('ingresos', this)">
