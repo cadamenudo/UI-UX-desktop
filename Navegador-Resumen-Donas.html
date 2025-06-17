@@ -153,6 +153,7 @@
 .cabecera-transacciones {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 1rem;
 }
 
@@ -160,27 +161,27 @@
 </head>
 <body>
 
-<!-- CABECERA -->
-<div class="cabecera-transacciones">
-  <div class="cabecera-transacciones fila-cabecera">
-    <h2 class="titulo-transacciones">Lista de Transacciones</h2>
-    <div class="contenedor-tabs">
-      <button class="activo" onclick="cambiarTab('ingresos', this)">
-        <span class="punto p-ingresos"></span> Ingresos
-      </button>
-      <button onclick="cambiarTab('gastos', this)">
-        <span class="punto p-gastos"></span> Gastos
-      </button>
-      <button onclick="cambiarTab('ahorro', this)">
-        <span class="punto p-ahorro"></span> Ahorro
-      </button>
-    </div>
-  </div>
-</div>
-
+<!-- TITULO Y TABS + RESUMEN -->
 <div class="seccion-layout">
   <div class="columna-izquierda">
-    <!-- RESUMEN -->
+    
+    <!-- TÍTULO + TABS -->
+    <div class="fila-cabecera">
+      <h2 class="titulo-transacciones">Lista de Transacciones</h2>
+      <div class="contenedor-tabs">
+        <button class="activo" onclick="cambiarTab('ingresos', this)">
+          <span class="punto p-ingresos"></span> Ingresos
+        </button>
+        <button onclick="cambiarTab('gastos', this)">
+          <span class="punto p-gastos"></span> Gastos
+        </button>
+        <button onclick="cambiarTab('ahorro', this)">
+          <span class="punto p-ahorro"></span> Ahorro
+        </button>
+      </div>
+    </div>
+
+    <!-- BLOQUE RESUMEN -->
     <div class="bloque-resumen">
       <div id="resumen-ingresos" class="bloque-tab">
         <h3>Resumen</h3>
@@ -188,12 +189,14 @@
         <div class="fila"><span>Ingreso por registrar</span><strong>$0.00</strong></div>
         <div class="fila fila-total"><span>Ingreso total en el periodo</span><strong>$2,400.00</strong></div>
       </div>
+
       <div id="resumen-gastos" class="bloque-tab oculto">
         <h3>Resumen</h3>
         <div class="fila"><span>Último Gasto</span><strong>$560.00</strong></div>
         <div class="fila"><span>Gasto por categorizar</span><strong>$15.00</strong></div>
         <div class="fila fila-total"><span>Gasto total en el periodo</span><strong>$1,985.00</strong></div>
       </div>
+
       <div id="resumen-ahorro" class="bloque-tab oculto">
         <h3>Resumen</h3>
         <div class="fila"><span>Último Ahorro</span><strong>$300.00</strong></div>
@@ -201,6 +204,7 @@
         <div class="fila fila-total"><span>Ahorro total en el periodo</span><strong>$900.00</strong></div>
       </div>
     </div>
+
   </div>
 
   <div class="columna-derecha">
