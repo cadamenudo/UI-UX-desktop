@@ -201,7 +201,27 @@
   font-size: 1.25rem;
   color: #0f172a;
 }
+.simbolo {
+  font-weight: normal;
+  font-family: Arial, sans-serif;
+  margin-right: 2px;
+}
 
+.monto {
+  font-weight: bold;
+  font-size: 1rem;
+  white-space: nowrap;
+}
+
+.subcategoria {
+  color: #64748b;
+  font-size: 0.8rem;
+}
+
+.fecha {
+  font-size: 0.85rem;
+  color: #64748b;
+}
   </style>
 </head>
 <body>
@@ -259,16 +279,7 @@
     </section>
 
 <section class="bloque-lista-transacciones">
-  <div class="encabezado">
-    <h4>Lista de Transacciones</h4>
-    <button class="btn-nueva">+ Nueva Transacción</button>
-  </div>
-
-  <div class="tabs">
-    <button class="activo" onclick="cambiarCategoria('ingresos', this)"><span class="punto" style="background:#5849E1;"></span> Ingresos</button>
-    <button onclick="cambiarCategoria('gastos', this)"><span class="punto" style="background:#BDBDBD;"></span> Gastos</button>
-    <button onclick="cambiarCategoria('ahorro', this)"><span class="punto" style="background:#E8C239;"></span> Ahorro</button>
-  </div>
+  <h4 style="margin-bottom: 1rem;">Lista de Transacciones</h4>
 
   <!-- Ingresos -->
 <div id="ingresos" class="categoria activa">
