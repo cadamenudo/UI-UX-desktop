@@ -55,6 +55,12 @@
     .p-gastos   { background-color: #BDBDBD; }
     .p-ahorro   { background-color: #E8C239; }
 
+    .contenedor-boton {
+      display: flex;
+      justify-content: flex-start; 
+      margin-bottom: 0.5rem;
+      margin-top: 1rem;
+}
         .boton-nueva {
       background-color: #5c47dc;
       color: white;
@@ -224,8 +230,9 @@
       <button onclick="cambiarTab('ahorro', this)">
         <span class="punto p-ahorro"></span> Ahorro
       </button>
-    </div>
-      <button class="boton-nueva">+ Nueva Transacción</button>
+    <div class="contenedor-boton">
+  <button class="boton-nueva">+ Nueva Transacción</button>
+</div>
 </div>
   
     <!-- BLOQUE RESUMEN -->
