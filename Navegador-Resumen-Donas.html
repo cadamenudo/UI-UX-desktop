@@ -262,6 +262,64 @@
   height: 100%;
   border: none;
 }
+.modal-contenido {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 400px;
+  margin: auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+}
+
+.titulo-modal {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #0f172a;
+}
+
+.subcategoria-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8fafc;
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.subcategoria-item:hover {
+  background: #eef2ff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+
+.botones-subcategorias {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.botones-subcategorias button {
+  flex: 1;
+  padding: 0.75rem 1.25rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.botones-subcategorias button:hover {
+  background: #f1f5f9;
+}
 
 
   </style>
@@ -347,20 +405,31 @@
     </div>
   </div>
 </div>
-      <!-- Modal -->
-  <div class="modal" id="modalCategorias">
-    <div class="modal-contenido">
-      <h3>Ver subcategorías</h3>
-      <div class="categoria-item"><button onclick="renderChart('alimentacion')">Alimentación <span>$600</span></button></div>
-      <div class="categoria-item"><button onclick="renderChart('transporte')">Transporte <span>$300</span></button></div>
-      <div class="categoria-item"><button onclick="renderChart('hogar')">Hogar <span>$400</span></button></div>
-      <div class="categoria-item"><button onclick="renderChart('deudas')">Deudas <span>$500</span></button></div>
-      <div class="cerrar-modal">
-        <button onclick="renderChart('general')">← Volver a categorías generales</button>
-        <button onclick="cerrarModal()">Cerrar</button>
-      </div>
+
+  <!-- Modal -->
+<div class="modal" id="modalCategorias">
+  <div class="modal-contenido">
+    <h3 class="titulo-modal">Selecciona una subcategoría</h3>
+
+    <div class="subcategoria-item" onclick="renderChart('alimentacion')">
+      <span>Alimentación</span><strong>₥600</strong>
+    </div>
+    <div class="subcategoria-item" onclick="renderChart('transporte')">
+      <span>Transporte</span><strong>₥300</strong>
+    </div>
+    <div class="subcategoria-item" onclick="renderChart('hogar')">
+      <span>Hogar</span><strong>₥400</strong>
+    </div>
+    <div class="subcategoria-item" onclick="renderChart('deudas')">
+      <span>Deudas</span><strong>₥500</strong>
+    </div>
+
+    <div class="botones-subcategorias">
+      <button onclick="renderChart('general')">Volver a general</button>
+      <button onclick="cerrarModal()">Cerrar</button>
     </div>
   </div>
+</div>
 </div>
 
   <!-- Modal de Nueva Transacción -->
@@ -617,6 +686,15 @@
       });
     }
   }
+  // Cierra el modal si se hace clic fuera del contenido
+document.addEventListener("click", function (e) {
+  const modal = document.getElementById("modalCategorias");
+  const contenido = document.querySelector(".modal-contenido");
+
+  if (modal.style.display === "flex" && !contenido.contains(e.target)) {
+    cerrarModal(); // tu función existente para cerrar
+  }
+});
 </script>
 
 </body>
