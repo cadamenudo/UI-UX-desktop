@@ -138,12 +138,11 @@
   </style>
 </head>
 <body>
-  <div class="contenido-tablero">
     <div class="header-grid">
       <div class="resumen-unificado">
         <div class="bloque-indicador">
           <div class="icono-svg-resumen i-ingreso">
-            <img src="https://cadamenudo.github.io/UI-UX/assets/icons/ingreso.png" alt="Ingresos"/>
+             <img src="https://cadamenudo.github.io/UI-UX/assets/icons/ingreso.png" alt="Ingresos"/>
           </div>
           <div class="texto-indicador">
             <span class="label">Ingresos</span>
@@ -153,7 +152,7 @@
         <div class="bloque-indicador">
           <div class="icono-svg-resumen i-gasto">
             <img src="https://cadamenudo.github.io/UI-UX/assets/icons/gastos.png" alt="Gastos"/>
-          </div>
+            </div>
           <div class="texto-indicador">
             <span class="label">Gastos</span>
             <span class="valor">$1,200.00</span>
@@ -162,7 +161,7 @@
         <div class="bloque-indicador">
           <div class="icono-svg-resumen i-ahorro">
             <img src="https://cadamenudo.github.io/UI-UX/assets/icons/ahorro.png" alt="Ahorros"/>
-          </div>
+            </div>
           <div class="texto-indicador">
             <span class="label">Ahorro</span>
             <span class="valor">$450.00</span>
@@ -171,20 +170,14 @@
       </div>
 
       <div class="calendario-box">
-       <div class="titulo">
-          Seleccione un rango deseado
-          <svg width="14" height="14" fill="#94a3b8" style="margin-left: 6px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10
-                     10-4.48 10-10S17.52 2 12 2zm0 17
-                     c-.55 0-1-.45-1-1v-4c0-.55.45-1
-                     1-1s1 .45 1 1v4c0 .55-.45 1-1 1zm0-10
-                     c-.55 0-1-.45-1-1s.45-1 1-1
-                     1 .45 1 1-.45 1-1 1z"/>
-          </svg>
+        <div class="titulo">Seleccione un rango deseado</div>
+        <div class="fila-fechas">
+          <input type="text" id="desde" placeholder="Desde">
+          <input type="text" id="hasta" placeholder="Hasta">
+          <button class="boton-periodo">Buscar</button>
         </div>
       </div>
     </div>
-  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script>
