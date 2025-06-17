@@ -460,11 +460,23 @@
 
 </body>
   
-  <!-- Chart.js -->
+<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- FUNCIONES VISIBLES GLOBALMENTE -->
+<script>
+function abrirModal() {
+  document.getElementById("modalCategorias").classList.remove("oculto");
+}
+
+function cerrarModal() {
+  document.getElementById("modalCategorias").classList.add("oculto");
+}
+</script>
+
+<!-- RESTO DEL SCRIPT -->
 <script>
 window.addEventListener("DOMContentLoaded", () => {
-
   const charts = {
     graficoIngresos: null,
     graficoAhorros: null
@@ -629,7 +641,7 @@ window.addEventListener("DOMContentLoaded", () => {
       }]
     });
 
-    cerrarModal();
+    cerrarModal(); // sigue funcionando al final del render
   }
 
   // AHORRO
@@ -711,15 +723,7 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // MODAL SUBCATEGORÍAS
-  function abrirModal() {
-    document.getElementById("modalCategorias").classList.remove("oculto");
-  }
-
-  function cerrarModal() {
-    document.getElementById("modalCategorias").classList.add("oculto");
-  }
-
+  // CIERRE DE MODAL DE SUBCATEGORÍAS CUANDO SE HACE CLIC FUERA
   document.addEventListener("click", function (e) {
     const modal = document.getElementById("modalCategorias");
     const contenido = document.querySelector(".modal-contenido");
@@ -745,10 +749,9 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Exponer función globalmente si hace falta
+  // EXPONER FUNCIONES
   window.cambiarTab = cambiarTab;
   window.renderChart = renderChart;
-  window.abrirModal = abrirModal;
 });
 </script>
 </body>
