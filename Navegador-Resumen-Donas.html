@@ -16,7 +16,7 @@
 
     .contenedor-tabs {
       display: flex;
-      gap: 3rem;
+      gap: 2.5rem;
       align-items: center;
       justify-content: flex-start;
       margin-bottom: 0.50rem;
@@ -61,15 +61,21 @@
       margin-bottom: 0.5rem;
       margin-top: 1rem;
 }
+    .grupo-tabs {
+  display: flex;
+  gap: 1rem;
+}
         .boton-nueva {
       background-color: #5c47dc;
       color: white;
-      padding: 0.75rem 1.5rem;
+      padding: 0.75rem 1.25rem;
       border: none;
       border-radius: 16px;
       font-weight: 600;
+      border-radius: 999px;
       font-size: 1rem;
       cursor: pointer;
+      white-space: nowrap;
       transition: background 0.3s ease;
     }
     
@@ -223,22 +229,20 @@
     <!-- TABS -->
   <div class="fila-tabs">
     <div class="contenedor-tabs">
-      <button class="activo" onclick="cambiarTab('ingresos', this)">
-        <span class="punto p-ingresos"></span> Ingresos
-      </button>
-      <button onclick="cambiarTab('gastos', this)">
-        <span class="punto p-gastos"></span> Gastos
-      </button>
-      <button onclick="cambiarTab('ahorro', this)">
-        <span class="punto p-ahorro"></span> Ahorro
-      </button>
-    </div>
-
-<!-- BOTÓN DE NUEVA TRANSACCIÓN -->
-    <div class="contenedor-boton">
+      <div class="grupo-tabs">
+        <button class="activo" onclick="cambiarTab('ingresos', this)">
+          <span class="punto p-ingresos"></span> Ingresos
+        </button>
+        <button onclick="cambiarTab('gastos', this)">
+          <span class="punto p-gastos"></span> Gastos
+        </button>
+        <button onclick="cambiarTab('ahorro', this)">
+          <span class="punto p-ahorro"></span> Ahorro
+        </button>
+      </div>
+    
       <button class="boton-nueva">+ Nueva Transacción</button>
     </div>
-</div>
   
     <!-- BLOQUE RESUMEN -->
     <div class="bloque-resumen">
