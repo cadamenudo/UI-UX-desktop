@@ -18,7 +18,8 @@
       display: flex;
       gap: 2rem;
       align-items: center;
-      margin-bottom: 2rem;
+      justify-content: flex-start;
+      margin-bottom: 2.0rem;
     }
 
     .contenedor-tabs button {
@@ -156,6 +157,11 @@
   align-items: center;
   gap: 1rem;
 }
+    .titulo-transacciones {
+  margin-bottom: 0.75rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
 
   </style>
 </head>
@@ -164,10 +170,11 @@
 <!-- TITULO Y TABS + RESUMEN -->
 <div class="seccion-layout">
   <div class="columna-izquierda">
+
+ <!-- TÍTULO -->
+<h2 class="titulo-transacciones">Lista de Transacciones</h2>
     
-    <!-- TÍTULO + TABS -->
-    <div class="fila-cabecera">
-      <h2 class="titulo-transacciones">Lista de Transacciones</h2>
+    <!--TABS -->
       <div class="contenedor-tabs">
         <button class="activo" onclick="cambiarTab('ingresos', this)">
           <span class="punto p-ingresos"></span> Ingresos
@@ -179,7 +186,6 @@
           <span class="punto p-ahorro"></span> Ahorro
         </button>
       </div>
-    </div>
 
     <!-- BLOQUE RESUMEN -->
     <div class="bloque-resumen">
@@ -204,7 +210,6 @@
         <div class="fila fila-total"><span>Ahorro total en el periodo</span><strong>$900.00</strong></div>
       </div>
     </div>
-
   </div>
 
   <div class="columna-derecha">
@@ -233,7 +238,7 @@
   </div>
 </div>
 </div>
-  
+</div>
   <!-- Modal de Subcategorías -->
   <div class="modal" id="modalCategorias">
     <div class="modal-contenido">
