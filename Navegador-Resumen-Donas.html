@@ -55,6 +55,21 @@
     .p-gastos   { background-color: #BDBDBD; }
     .p-ahorro   { background-color: #E8C239; }
 
+        .boton-nueva {
+      background-color: #5c47dc;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 16px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    
+    .boton-nueva:hover {
+      background-color: #4735b7;
+    }
     .seccion-contenido {
       display: flex;
       gap: 2rem;
@@ -203,7 +218,9 @@
         <span class="punto p-ahorro"></span> Ahorro
       </button>
     </div>
-
+      <button class="boton-nueva">+ Nueva Transacción</button>
+</div>
+  
     <!-- BLOQUE RESUMEN -->
     <div class="bloque-resumen">
       <div id="resumen-ingresos" class="bloque-tab">
