@@ -63,13 +63,22 @@
       max-width: 220px;
       margin: 0 auto;
     }
-    .bloque-resumen, .bloque-dona {
+    .bloque-resumen,
+    .bloque-dona {
       flex: 1;
       background: white;
       border-radius: 16px;
       padding: 2rem;
       margin-top: 0;
       box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+    
+    /* Solo aplica centrado a la dona */
+    .bloque-dona {
+      min-height: 320px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     .bloque-resumen h3 {
@@ -95,13 +104,17 @@
     .oculto {
       display: none;
     }
-    #graficoIngresos {
+    
+#graficoIngresos,
+#graficoGastos,
+#graficoAhorros {
   max-width: 300px;
   max-height: 300px;
   width: 100%;
   height: auto;
   margin: 0 auto;
 }
+
 .fila-total {
   background: #f8fafc;
   padding: 1rem;
@@ -113,13 +126,6 @@
   margin-top: 1rem;
 }
 
-    #graficoGastos {
-  max-width: 300px;
-  max-height: 300px;
-  width: 100%;
-  height: auto;
-  margin: 0 auto;
-}
     .seccion-layout {
   display: flex;
   justify-content: space-between;
@@ -128,14 +134,14 @@
 }
 
 .columna-izquierda {
-  flex: 1.6;
+  flex: 1.2;
   display: flex;
   flex-direction: column;
   gap: 2rem;
 }
 
 .columna-derecha {
-  flex: 1;
+  flex: 1.8;
 }
 
     .fila-cabecera {
