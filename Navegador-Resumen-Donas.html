@@ -230,13 +230,13 @@
   font-size: 1.5rem;
   font-weight: 700;
 }
-    .modal-nueva {
+ .modal-nueva {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(15, 23, 42, 0.4); /* fondo oscuro */
+  background: rgba(15, 23, 42, 0.4);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -248,23 +248,27 @@
 }
 
 .contenido-modal {
-  background: white;
+  background: transparent;
   border-radius: 16px;
+  padding: 0;
+  border: none;
   width: auto;
-  max-width: 420px;
-  max-height: 90vh;
-  overflow-y: auto;
-  padding: 0; /* 🔸 para que el iframe ocupe todo */
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+  height: auto;
+  max-height: 95vh;
+  overflow: visible;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .contenido-modal iframe {
-  width: 100%;
-  height: auto;
-  min-height: 500px;
   border: none;
   display: block;
+  width: 100%;
+  height: auto;
+  max-height: 95vh;
 }
+
     /* Estilo general del modal */
 .modal {
   position: fixed;
@@ -455,7 +459,7 @@
 <!-- Modal de Nueva Transacción -->
 <div id="modalNueva" class="modal-nueva oculto">
   <div class="contenido-modal" id="contenidoModalNueva">
-    <iframe src="https://cadamenudo.github.io/UI-UX/nueva-transaccion.html" frameborder="0" style="width: 100%; height: 600px; border: none; border-radius: 16px;"></iframe>
+    <iframe src="https://cadamenudo.github.io/UI-UX/nueva-transaccion.html" frameborder="0"></iframe>
   </div>
 </div>
   
