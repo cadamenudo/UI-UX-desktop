@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Navegador + Resumen + Donas</title>
+  <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX/css-fonts.css"/>
+  <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX-desktop/css/grafico-donas.css" />
+  <style>
+    body {
+      margin: 0;
+      padding: 2rem;
+      background: #FAFBFF;
+      font-family: 'Greycliff CF', sans-serif;
+      color: #0f172a;
+    }
+
+    .contenedor-tabs {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .contenedor-tabs button {
+      background: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 16px;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #94a3b8;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s ease;
+    }
+
+    .contenedor-tabs button.activo {
+      color: #2f2f2f;
+      border-bottom: 3px solid #7459D9;
+    }
+
+    .contenedor-tabs .punto {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .p-ingresos { background-color: #7459D9; }
+    .p-gastos   { background-color: #BDBDBD; }
+    .p-ahorro   { background-color: #E8C239; }
+
+    .seccion-contenido {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .bloque-resumen, .bloque-dona {
+      flex: 1;
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+
+    .bloque-resumen h3 {
+      margin-top: 0;
+      font-size: 1.5rem;
+    }
+
+    .fila {
+      display: flex;
+      justify-content: space-between;
+      margin: 1rem 0;
+      border-bottom: 1px solid #f1f5f9;
+      padding-bottom: 1rem;
+    }
+
+    .fila:last-child {
+      background: #f8fafc;
+      padding: 1rem;
+      border-radius: 12px;
+      border-bottom: none;
+    }
+
+    .oculto {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Lista de Transacciones</h2>
+
+  <div class="contenedor-tabs">
+    <button class="activo" onclick="cambiarTab('ingresos', this)">
+      <span class="punto p-ingresos"></span> Ingresos
+    </button>
+    <button onclick="cambiarTab('gastos', this)">
+      <span class="punto p-gastos"></span> Gastos
+    </button>
+    <button onclick="cambiarTab('ahorro', this)">
+      <span class="punto p-ahorro"></span> Ahorro
+    </button>
+  </div>
+
+  <div class="seccion-contenido">
+    <!-- RESUMEN -->
+    <div class="bloque-resumen">
+      <div id="resumen-ingresos" class="bloque-tab">
+        <h3>Resumen</h3>
+        <div class="fila"><span>Último Ingreso</span><strong>$1,200.00</strong></div>
+        <div class="fila"><span>Ingreso por registrar</span><strong>$0.00</strong></div>
+        <div class="fila"><span>Ingreso total en el periodo</span><strong>$2,400.00</strong></div>
+      </div>
+      <div id="resumen-gastos" class="bloque-tab oculto">
+        <h3>Resumen</h3>
+        <div class="fila"><span>Último Gasto</span><strong>$560.00</strong></div>
+        <div class="fila"><span>Gasto por categorizar</span><strong>$15.00</strong></div>
+        <div class="fila"><span>Gasto total en el periodo</span><strong>$1,985.00</strong></div>
+      </div>
+      <div id="resumen-ahorro" class="bloque-tab oculto">
+        <h3>Resumen</h3>
+        <div class="fila"><span>Último Ahorro</span><strong>$300.00</strong></div>
+        <div class="fila"><span>Ahorro automático</span><strong>$250.00</strong></div>
+        <div class="fila"><span>Ahorro total en el periodo</span><strong>$900.00</strong></div>
+      </div>
+    </div>
+
+    <!-- GRAFICO DONA -->
+    <div class="bloque-dona">
+      <div id="dona-ingresos" class="bloque-tab">
+        <h3 style="text-align:center;">Ingresos Totales</h3>
+        <canvas id="graficoIngresos"></canvas>
+      </div>
+      <div id="dona-gastos" class="bloque-tab oculto">
+        <h3 style="text-align:center;">Gastos Totales</h3>
+        <canvas id="graficoGastos"></canvas>
+      </div>
+      <div id="dona-ahorro" class="bloque-tab oculto">
+        <h3 style="text-align:center;">Ahorro Total</h3>
+        <canvas id="graficoAhorros"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const charts = {
+      graficoIngresos: new Chart(document.getElementById('graficoIngresos'), {
+        type: 'doughnut',
+        data: {
+          labels: ['Salario', 'Bonos', 'Extras'],
+          datasets: [{
+            data: [16000, 2000, 1600],
+            backgroundColor: ['#7459D9', '#B69BEB', '#E0D3FB']
+          }]
+        },
+        options: { cutout: '70%', plugins: { legend: { display: false } } }
+      }),
+      graficoGastos: new Chart(document.getElementById('graficoGastos'), {
+        type: 'doughnut',
+        data: {
+          labels: ['Casa', 'Comida', 'Transporte'],
+          datasets: [{
+            data: [800, 500, 685],
+            backgroundColor: ['#BDBDBD', '#D6D6D6', '#ECECEC']
+          }]
+        },
+        options: { cutout: '70%', plugins: { legend: { display: false } } }
+      }),
+      graficoAhorros: new Chart(document.getElementById('graficoAhorros'), {
+        type: 'doughnut',
+        data: {
+          labels: ['Cuenta ahorro', 'Fondo emergencia', 'Inversión'],
+          datasets: [{
+            data: [400, 250, 250],
+            backgroundColor: ['#E8C239', '#F1D96D', '#FCF5D0']
+          }]
+        },
+        options: { cutout: '70%', plugins: { legend: { display: false } } }
+      })
+    };
+
+    function cambiarTab(tabId, boton) {
+      document.querySelectorAll('.bloque-tab').forEach(el => el.classList.add('oculto'));
+      document.getElementById(`resumen-${tabId}`).classList.remove('oculto');
+      document.getElementById(`dona-${tabId}`).classList.remove('oculto');
+      document.querySelectorAll('.contenedor-tabs button').forEach(b => b.classList.remove('activo'));
+      boton.classList.add('activo');
+    }
+  </script>
+</body>
+</html>
