@@ -58,6 +58,10 @@
       gap: 2rem;
     }
 
+        #graficoDona {
+      max-width: 220px;
+      margin: 0 auto;
+    }
     .bloque-resumen, .bloque-dona {
       flex: 1;
       background: white;
@@ -133,8 +137,8 @@
     <!-- GRAFICO DONA -->
     <div class="bloque-dona">
       <div id="dona-ingresos" class="bloque-tab">
-        <h3 style="text-align:center;">Ingresos Totales</h3>
-        <canvas id="graficoIngresos"></canvas>
+        <h2>Ingresos Totales</h2>
+        <canvas id="graficoDona" width="220" height="220"></canvas>
       </div>
       <div id="dona-gastos" class="bloque-tab oculto">
         <h3 style="text-align:center;">Gastos Totales</h3>
@@ -148,51 +152,100 @@
   </div>
 
   <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script>
-    const charts = {
-      graficoIngresos: new Chart(document.getElementById('graficoIngresos'), {
-        type: 'doughnut',
-        data: {
-          labels: ['Salario', 'Bonos', 'Extras'],
-          datasets: [{
-            data: [16000, 2000, 1600],
-            backgroundColor: ['#7459D9', '#B69BEB', '#E0D3FB']
-          }]
-        },
-        options: { cutout: '70%', plugins: { legend: { display: false } } }
-      }),
-      graficoGastos: new Chart(document.getElementById('graficoGastos'), {
-        type: 'doughnut',
-        data: {
-          labels: ['Casa', 'Comida', 'Transporte'],
-          datasets: [{
-            data: [800, 500, 685],
-            backgroundColor: ['#BDBDBD', '#D6D6D6', '#ECECEC']
-          }]
-        },
-        options: { cutout: '70%', plugins: { legend: { display: false } } }
-      }),
-      graficoAhorros: new Chart(document.getElementById('graficoAhorros'), {
-        type: 'doughnut',
-        data: {
-          labels: ['Cuenta ahorro', 'Fondo emergencia', 'Inversión'],
-          datasets: [{
-            data: [400, 250, 250],
-            backgroundColor: ['#E8C239', '#F1D96D', '#FCF5D0']
-          }]
-        },
-        options: { cutout: '70%', plugins: { legend: { display: false } } }
-      })
-    };
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const dataValoresIngresos = [14000, 3500, 2100];
+  const totalIngresos = dataValoresIngresos.reduce((a, b) => a + b, 0);
 
-    function cambiarTab(tabId, boton) {
-      document.querySelectorAll('.bloque-tab').forEach(el => el.classList.add('oculto'));
-      document.getElementById(`resumen-${tabId}`).classList.remove('oculto');
-      document.getElementById(`dona-${tabId}`).classList.remove('oculto');
-      document.querySelectorAll('.contenedor-tabs button').forEach(b => b.classList.remove('activo'));
-      boton.classList.add('activo');
+  const centroDona = {
+    id: 'centroTexto',
+    beforeDraw(chart) {
+      const { width, height } = chart;
+      const ctx = chart.ctx;
+      ctx.restore();
+      ctx.font = '700 24px "Greycliff CF", sans-serif';
+      ctx.fillStyle = '#1e293b';
+      ctx.textBaseline = 'middle';
+      ctx.textAlign = 'center';
+      ctx.fillText(`$${totalIngresos.toLocaleString("en-US")}`, width / 2, height / 2);
+      ctx.save();
     }
-  </script>
+  };
+
+  const charts = {
+    graficoIngresos: new Chart(document.getElementById('graficoIngresos'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Sueldo', 'Freelance', 'Otros'],
+        datasets: [{
+          data: dataValoresIngresos,
+          backgroundColor: ['#7D4AEA', '#9E75F0', '#C3B4FB'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        cutout: '65%',
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: "#FFFFFF",
+            titleColor: "#1e293b",
+            bodyColor: "#1e293b",
+            borderColor: "#E2E8F0",
+            borderWidth: 1,
+            padding: 12,
+            callbacks: {
+              label: function(context) {
+                const valor = context.raw;
+                const porcentaje = ((valor / totalIngresos) * 100).toFixed(1);
+                return `${context.label}: $${valor.toLocaleString("en-US")} (${porcentaje}%)`;
+              }
+            }
+          }
+        }
+      },
+      plugins: [centroDona]
+    }),
+
+    graficoGastos: new Chart(document.getElementById('graficoGastos'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Casa', 'Comida', 'Transporte'],
+        datasets: [{
+          data: [800, 500, 685],
+          backgroundColor: ['#BDBDBD', '#D6D6D6', '#ECECEC']
+        }]
+      },
+      options: {
+        cutout: '70%',
+        plugins: { legend: { display: false } }
+      }
+    }),
+
+    graficoAhorros: new Chart(document.getElementById('graficoAhorros'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Cuenta ahorro', 'Fondo emergencia', 'Inversión'],
+        datasets: [{
+          data: [400, 250, 250],
+          backgroundColor: ['#E8C239', '#F1D96D', '#FCF5D0']
+        }]
+      },
+      options: {
+        cutout: '70%',
+        plugins: { legend: { display: false } }
+      }
+    })
+  };
+
+  function cambiarTab(tabId, boton) {
+    document.querySelectorAll('.bloque-tab').forEach(el => el.classList.add('oculto'));
+    document.getElementById(`resumen-${tabId}`).classList.remove('oculto');
+    document.getElementById(`dona-${tabId}`).classList.remove('oculto');
+    document.querySelectorAll('.contenedor-tabs button').forEach(b => b.classList.remove('activo'));
+    boton.classList.add('activo');
+  }
+</script>
 </body>
 </html>
