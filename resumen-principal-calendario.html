@@ -179,11 +179,17 @@
       <div class="calendario-box">
         <div class="titulo">Seleccione un rango deseado</div>
         <div class="fila-fechas">
-          <input type="text" id="desde" placeholder="Desde">
-          <input type="text" id="hasta" placeholder="Hasta">
+          <input type="text" id="desde" placeholder="Desde" aria-label="Fecha desde">
+          <input type="text" id="hasta" placeholder="Hasta" aria-label="Fecha hasta">
           <button class="boton-periodo">Buscar</button>
         </div>
       </div>
     </div>
-    </body>
+</div>
+     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+  flatpickr("#desde", { dateFormat: "d/m/Y" });
+  flatpickr("#hasta", { dateFormat: "d/m/Y" });
+</script>
+</body>
 </html>
