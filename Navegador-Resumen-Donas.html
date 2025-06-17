@@ -250,18 +250,18 @@
 .contenido-modal {
   background: white;
   border-radius: 16px;
-  width: 480px;
-  max-width: 90vw;
-  height: auto;       
-  max-height: none;      
-  overflow: visible;           
-  box-shadow: 0 12px 24px rgba(0,0,0,0.2);
-  padding: 0;
+  width: auto;
+  max-width: 420px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 0; /* 🔸 para que el iframe ocupe todo */
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
 }
 
 .contenido-modal iframe {
   width: 100%;
-  height: 640px; 
+  height: auto;
+  min-height: 500px;
   border: none;
   display: block;
 }
