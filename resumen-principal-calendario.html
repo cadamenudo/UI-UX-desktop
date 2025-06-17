@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<style>
-     body {
+  <style>
+    body {
       font-family: 'Greycliff CF', sans-serif;
       background: #FAFBFF;
       margin: 0;
@@ -10,16 +10,17 @@
       color: #0f172a;
     }
 
-.contenido-tablero {
-  padding: 2rem;
-  max-width: 1440px;
-  width: 100%;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 3rem;
-  box-sizing: border-box;
-}
+    .contenido-tablero {
+      padding: 2rem;
+      max-width: 1440px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+      box-sizing: border-box;
+    }
+
     .header-grid {
       display: flex;
       gap: 2rem;
@@ -123,8 +124,7 @@
       font-size: 0.9rem;
       flex: 1;
       min-width: 120px;
-      background: #fff url('https://cdn-icons-png.flaticon.com/512/747/747310.png') no-repeat right 12px center;
-      background-size: 16px;
+      background: #fff;
     }
 
     .boton-periodo {
@@ -149,7 +149,7 @@
       <div class="resumen-unificado">
         <div class="bloque-indicador">
           <div class="icono-svg-resumen i-ingreso">
-             <img src="https://cadamenudo.github.io/UI-UX/assets/icons/ingreso.png" alt="Ingresos"/>
+            <img src="https://cadamenudo.github.io/UI-UX/assets/icons/ingreso.png" alt="Ingresos"/>
           </div>
           <div class="texto-indicador">
             <span class="label">Ingresos</span>
@@ -159,7 +159,7 @@
         <div class="bloque-indicador">
           <div class="icono-svg-resumen i-gasto">
             <img src="https://cadamenudo.github.io/UI-UX/assets/icons/gastos.png" alt="Gastos"/>
-            </div>
+          </div>
           <div class="texto-indicador">
             <span class="label">Gastos</span>
             <span class="valor">$1,200.00</span>
@@ -168,7 +168,7 @@
         <div class="bloque-indicador">
           <div class="icono-svg-resumen i-ahorro">
             <img src="https://cadamenudo.github.io/UI-UX/assets/icons/ahorro.png" alt="Ahorros"/>
-            </div>
+          </div>
           <div class="texto-indicador">
             <span class="label">Ahorro</span>
             <span class="valor">$450.00</span>
@@ -185,11 +185,12 @@
         </div>
       </div>
     </div>
-</div>
-     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script>
-  flatpickr("#desde", { dateFormat: "d/m/Y" });
-  flatpickr("#hasta", { dateFormat: "d/m/Y" });
-</script>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script>
+    flatpickr("#desde", { dateFormat: "d/m/Y" });
+    flatpickr("#hasta", { dateFormat: "d/m/Y" });
+  </script>
 </body>
 </html>
