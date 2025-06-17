@@ -267,63 +267,80 @@
   display: block;
   max-height: 90vh; 
 }
+    /* Estilo general del modal */
+.modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+}
 .modal-contenido {
   background: white;
   border-radius: 16px;
   padding: 2rem;
-  max-width: 400px;
+  max-width: 360px;
   margin: auto;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
 }
 
+/* Título */
 .titulo-modal {
   font-size: 1.25rem;
   font-weight: 700;
-  margin-bottom: 1.5rem;
   color: #0f172a;
+  margin-bottom: 1.5rem;
 }
 
+/* Ítems de subcategoría */
 .subcategoria-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #f8fafc;
-  padding: 1rem 1.25rem;
+  padding: 0.9rem 1.2rem;
   border-radius: 12px;
+  background: #f9fafb;
   font-size: 1rem;
-  font-weight: 500;
-  margin-bottom: 0.75rem;
-  border: 1px solid #e2e8f0;
+  color: #0f172a;
   cursor: pointer;
-  transition: background 0.2s ease, box-shadow 0.2s ease;
+  transition: background 0.2s, box-shadow 0.2s;
+  margin-bottom: 0.75rem;
+  border: 1px solid transparent;
 }
 
 .subcategoria-item:hover {
   background: #eef2ff;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  border-color: #c7d2fe;
 }
 
+/* Botones al pie */
 .botones-subcategorias {
   display: flex;
-  gap: 1rem;
+  justify-content: space-between;
   margin-top: 2rem;
+  gap: 1rem;
 }
 
 .botones-subcategorias button {
   flex: 1;
-  padding: 0.75rem 1.25rem;
-  border: 1px solid #e2e8f0;
+  padding: 0.75rem 1rem;
+  background: #e5e7eb;
+  border: none;
   border-radius: 12px;
-  background: white;
-  font-weight: 500;
+  font-weight: 600;
+  color: #1e293b;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background 0.2s;
 }
 
 .botones-subcategorias button:hover {
-  background: #f1f5f9;
+  background: #d1d5db;
 }
 
 
