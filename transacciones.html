@@ -171,51 +171,73 @@
       border-radius: 16px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.05);
     }
+    .bloque-indicador {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-right: 2rem;
+}
+
+.borde-derecho {
+  border-right: 1px solid #e2e8f0;
+}
+
+.bloque-indicador:last-child {
+  padding-right: 0;
+}
+
+.icono-svg-resumen img {
+  width: 40px;
+  height: 40px;
+}
+
+.texto-indicador .label {
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.texto-indicador .valor {
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: #0f172a;
+}
+
   </style>
 </head>
 <body>
   <div class="contenido-transacciones">
     <!-- 1. Resumen principal + Calendario -->
-    <section class="bloque-superior">
-  <div class="tarjetas-resumen">
-    <div class="tarjeta resumen-ingreso">
-      <div class="icono">
-        <img src="https://cadamenudo.github.io/UI-UX/assets/icons/ingreso.png" alt="Ingreso" />
-      </div>
-      <div class="info">
-        <span class="label">Ingresos</span>
-        <span class="valor">$3,000.00</span>
-      </div>
+<div class="resumen-unificado">
+  <div class="bloque-indicador borde-derecho">
+    <div class="icono-svg-resumen i-ingreso">
+      <img src="https://cadamenudo.github.io/UI-UX/assets/icons/ingreso.png" alt="Ingresos"/>
     </div>
-    <div class="tarjeta resumen-gasto">
-      <div class="icono">
-        <img src="https://cadamenudo.github.io/UI-UX/assets/icons/gastos.png" alt="Gastos" />
-      </div>
-      <div class="info">
-        <span class="label">Gastos</span>
-        <span class="valor">$1,200.00</span>
-      </div>
-    </div>
-    <div class="tarjeta resumen-ahorro">
-      <div class="icono">
-        <img src="https://cadamenudo.github.io/UI-UX/assets/icons/ahorro.png" alt="Ahorro" />
-      </div>
-      <div class="info">
-        <span class="label">Ahorro</span>
-        <span class="valor">$50.00</span>
-      </div>
+    <div class="texto-indicador">
+      <span class="label">Ingresos</span>
+      <span class="valor">$3,000.00</span>
     </div>
   </div>
 
-  <div class="calendario-box">
-    <span class="titulo">Seleccione un rango deseado <span style="color:#94a3b8;">i</span></span>
-    <div class="fila-fechas">
-      <input type="text" id="desde" placeholder="Desde" />
-      <input type="text" id="hasta" placeholder="Hasta" />
-      <button class="boton-periodo">Buscar</button>
+  <div class="bloque-indicador borde-derecho">
+    <div class="icono-svg-resumen i-gasto">
+      <img src="https://cadamenudo.github.io/UI-UX/assets/icons/gastos.png" alt="Gastos"/>
+    </div>
+    <div class="texto-indicador">
+      <span class="label">Gastos</span>
+      <span class="valor">$1,200.00</span>
     </div>
   </div>
-</section>
+
+  <div class="bloque-indicador">
+    <div class="icono-svg-resumen i-ahorro">
+      <img src="https://cadamenudo.github.io/UI-UX/assets/icons/ahorro.png" alt="Ahorro"/>
+    </div>
+    <div class="texto-indicador">
+      <span class="label">Ahorro</span>
+      <span class="valor">$50.00</span>
+    </div>
+  </div>
+</div>
 
 
     <!-- 2. Navegador, Resumen y Gráfico de Dona -->
