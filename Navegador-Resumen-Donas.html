@@ -230,6 +230,39 @@
   font-size: 1.5rem;
   font-weight: 700;
 }
+    .modal-nueva {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.4); /* fondo oscuro */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-nueva.oculto {
+  display: none;
+}
+
+.contenido-modal {
+  background: white;
+  border-radius: 16px;
+  width: 640px;
+  max-width: 90vw;
+  height: 90vh;
+  overflow: hidden;
+  box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+}
+
+.contenido-modal iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
 
   </style>
 </head>
@@ -329,6 +362,14 @@
     </div>
   </div>
 </div>
+
+  <!-- Modal de Nueva Transacción -->
+<div id="modalNueva" class="modal-nueva oculto">
+  <div class="contenido-modal" id="contenidoModalNueva">
+    <iframe src="https://cadamenudo.github.io/UI-UX/nueva-transaccion.html" frameborder="0"></iframe>
+  </div>
+</div>
+
 </body>
   
   <!-- Chart.js -->
