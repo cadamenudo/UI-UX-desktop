@@ -695,6 +695,22 @@ document.addEventListener("click", function (e) {
     cerrarModal(); // tu función existente para cerrar
   }
 });
+  <script>
+  const btnNuevaTransaccion = document.getElementById("btnNuevaTransaccion");
+  const modalNueva = document.getElementById("modalNueva");
+  const contenidoModal = document.getElementById("contenidoModalNueva");
+
+  btnNuevaTransaccion.addEventListener("click", () => {
+    modalNueva.classList.remove("oculto");
+  });
+
+  window.addEventListener("click", (e) => {
+    if (!contenidoModal.contains(e.target) && !btnNuevaTransaccion.contains(e.target)) {
+      modalNueva.classList.add("oculto");
+    }
+  });
+</script>
+
 </script>
 
 </body>
