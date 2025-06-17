@@ -297,6 +297,12 @@
   <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+  // Declaración única
+  const charts = {
+    graficoIngresos: null,
+    graficoAhorros: null
+  };
+
   // INICIO - GRAFICO INGRESOS
   const dataValoresIngresos = [14000, 3500, 2100];
   const totalIngresos = dataValoresIngresos.reduce((a, b) => a + b, 0);
@@ -316,44 +322,42 @@
     }
   };
 
-  const charts = {
-    graficoIngresos: new Chart(document.getElementById('graficoIngresos'), {
-      type: 'doughnut',
-      data: {
-        labels: ['Sueldo', 'Freelance', 'Otros'],
-        datasets: [{
-          data: dataValoresIngresos,
-          backgroundColor: ['#7D4AEA', '#9E75F0', '#C3B4FB'],
-          borderWidth: 0
-        }]
-      },
-      options: {
-        responsive: true,
-        cutout: '65%',
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            backgroundColor: "#FFFFFF",
-            titleColor: "#1e293b",
-            bodyColor: "#1e293b",
-            borderColor: "#E2E8F0",
-            borderWidth: 1,
-            padding: 12,
-            callbacks: {
-              label: function(context) {
-                const valor = context.raw;
-                const porcentaje = ((valor / totalIngresos) * 100).toFixed(1);
-                return `${context.label}: $${valor.toLocaleString("en-US")} (${porcentaje}%)`;
-              }
+  charts.graficoIngresos = new Chart(document.getElementById('graficoIngresos'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Sueldo', 'Freelance', 'Otros'],
+      datasets: [{
+        data: dataValoresIngresos,
+        backgroundColor: ['#7D4AEA', '#9E75F0', '#C3B4FB'],
+        borderWidth: 0
+      }]
+    },
+    options: {
+      responsive: true,
+      cutout: '65%',
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: "#FFFFFF",
+          titleColor: "#1e293b",
+          bodyColor: "#1e293b",
+          borderColor: "#E2E8F0",
+          borderWidth: 1,
+          padding: 12,
+          callbacks: {
+            label: function(context) {
+              const valor = context.raw;
+              const porcentaje = ((valor / totalIngresos) * 100).toFixed(1);
+              return `${context.label}: $${valor.toLocaleString("en-US")} (${porcentaje}%)`;
             }
           }
         }
-      },
-      plugins: [centroDonaIngresos]
-    })
-  };
+      }
+    },
+    plugins: [centroDonaIngresos]
+  });
 
-  // INICIO - GRAFICO GASTOS CON SUBCATEGORIAS
+  // INICIO - GRAFICO GASTOS
   const categorias = {
     general: {
       labels: ["Alimentación", "Transporte", "Hogar", "Deudas"],
@@ -407,9 +411,7 @@
         responsive: true,
         cutout: "70%",
         plugins: {
-          legend: {
-            display: false
-          },
+          legend: { display: false },
           tooltip: {
             backgroundColor: "#FFFFFF",
             titleColor: "#0f172a",
@@ -434,7 +436,6 @@
           const { width, height } = chart;
           const ctx = chart.ctx;
           ctx.restore();
-          const total = chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
 
@@ -451,6 +452,7 @@
             ctx.fillStyle = '#0f172a';
             ctx.fillText(`$${total.toLocaleString("en-US")}`, width / 2, height / 2);
           }
+
           ctx.save();
         }
       }]
@@ -467,78 +469,76 @@
     document.getElementById("modalCategorias").style.display = "none";
   }
 
-  // Mostrar resumen y dona activa
-
+  // CAMBIAR TABS
   function cambiarTab(tabId, boton) {
-  document.querySelectorAll('.bloque-tab').forEach(el => el.classList.add('oculto'));
-  document.getElementById(`resumen-${tabId}`).classList.remove('oculto');
-  document.getElementById(`dona-${tabId}`).classList.remove('oculto');
-  document.querySelectorAll('.contenedor-tabs button').forEach(b => b.classList.remove('activo'));
-  boton.classList.add('activo');
+    document.querySelectorAll('.bloque-tab').forEach(el => el.classList.add('oculto'));
+    document.getElementById(`resumen-${tabId}`).classList.remove('oculto');
+    document.getElementById(`dona-${tabId}`).classList.remove('oculto');
+    document.querySelectorAll('.contenedor-tabs button').forEach(b => b.classList.remove('activo'));
+    boton.classList.add('activo');
 
-  if (tabId === "gastos") {
-    setTimeout(() => renderChart("general"), 10); // delay mínimo
-  }
-}
-
-  // INICIO - GRAFICO AHORRO
-  const dataValores = [700, 400, 300];
-  const etiquetas = ["Emergencia", "Retiro", "Vacaciones"];
-  const colores = ["#34D399", "#6EE7B7", "#A7F3D0"];
-  const total = dataValores.reduce((a, b) => a + b, 0);
-
-  const centroDona = {
-    id: 'centroTexto',
-    beforeDraw(chart) {
-      const { width, height } = chart;
-      const ctx = chart.ctx;
-      ctx.restore();
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.font = '700 32px "Greycliff CF", sans-serif';
-      ctx.fillStyle = '#0f172a';
-      ctx.fillText(`$${total.toLocaleString("en-US")}`, width / 2, height / 2);
-      ctx.save();
+    if (tabId === "gastos") {
+      setTimeout(() => renderChart("general"), 10);
     }
-  };
 
-  const ctx = document.getElementById("graficoAhorros").getContext("2d");
+    if (tabId === "ahorro" && !charts.graficoAhorros) {
+      const dataValores = [700, 400, 300];
+      const etiquetas = ["Emergencia", "Retiro", "Vacaciones"];
+      const colores = ["#34D399", "#6EE7B7", "#A7F3D0"];
+      const total = dataValores.reduce((a, b) => a + b, 0);
 
-  new Chart(ctx, {
-    type: "doughnut",
-    data: {
-      labels: etiquetas,
-      datasets: [{
-        data: dataValores,
-        backgroundColor: colores,
-        borderWidth: 0
-      }]
-    },
-    options: {
-      responsive: true,
-      cutout: "70%",
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: "#FFFFFF",
-          titleColor: "#0f172a",
-          bodyColor: "#0f172a",
-          borderColor: "#E5E7EB",
-          borderWidth: 1,
-          padding: 12,
-          cornerRadius: 10,
-          callbacks: {
-            label: function(context) {
-              const valor = context.raw;
-              const porcentaje = ((valor / total) * 100).toFixed(1);
-              return `${context.label}: $${valor.toLocaleString("en-US")} (${porcentaje}%)`;
+      const ctx = document.getElementById("graficoAhorros").getContext("2d");
+
+      charts.graficoAhorros = new Chart(ctx, {
+        type: "doughnut",
+        data: {
+          labels: etiquetas,
+          datasets: [{
+            data: dataValores,
+            backgroundColor: colores,
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          cutout: "70%",
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: "#FFFFFF",
+              titleColor: "#0f172a",
+              bodyColor: "#0f172a",
+              borderColor: "#E5E7EB",
+              borderWidth: 1,
+              padding: 12,
+              cornerRadius: 10,
+              callbacks: {
+                label: function(context) {
+                  const valor = context.raw;
+                  const porcentaje = ((valor / total) * 100).toFixed(1);
+                  return `${context.label}: $${valor.toLocaleString("en-US")} (${porcentaje}%)`;
+                }
+              }
             }
           }
-        }
-      }
-    },
-    plugins: [centroDona]
-  });
+        },
+        plugins: [{
+          id: 'centroTexto',
+          beforeDraw(chart) {
+            const { width, height } = chart;
+            const ctx = chart.ctx;
+            ctx.restore();
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.font = '700 32px "Greycliff CF", sans-serif';
+            ctx.fillStyle = '#0f172a';
+            ctx.fillText(`$${total.toLocaleString("en-US")}`, width / 2, height / 2);
+            ctx.save();
+          }
+        }]
+      });
+    }
+  }
 </script>
 
 </body>
