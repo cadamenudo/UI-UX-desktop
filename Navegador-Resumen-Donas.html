@@ -118,12 +118,43 @@
   height: auto;
   margin: 0 auto;
 }
+    .seccion-layout {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.columna-izquierda {
+  flex: 1.6;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.columna-derecha {
+  flex: 1;
+}
+
+.cabecera-transacciones h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.cabecera-transacciones {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
   </style>
 </head>
 <body>
 
-  <div class="cabecera-transacciones">
-  <h2>Lista de Transacciones</h2>
+<!-- CABECERA -->
+<div class="cabecera-transacciones">
+  <h2 class="titulo-transacciones">Lista de Transacciones</h2>
 
   <div class="contenedor-tabs">
     <button class="activo" onclick="cambiarTab('ingresos', this)">
@@ -136,9 +167,11 @@
       <span class="punto p-ahorro"></span> Ahorro
     </button>
   </div>
+</div>
 
-  <div class="seccion-contenido">
-    <!-- RESUMEN -->
+<div class="seccion-layout">
+  <!-- COLUMNA IZQUIERDA -->
+  <div class="columna-izquierda">
     <div class="bloque-resumen">
       <div id="resumen-ingresos" class="bloque-tab">
         <h3>Resumen</h3>
@@ -159,9 +192,11 @@
         <div class="fila fila-total"><span>Ahorro total en el periodo</span><strong>$900.00</strong></div>
       </div>
     </div>
+  </div>
 
-<!-- GRAFICO DONA -->
-<div class="bloque-dona">
+  <!-- COLUMNA DERECHA -->
+  <div class="columna-derecha">
+    <div class="bloque-dona">
   
   <!-- TAB INGRESOS -->
   <div id="dona-ingresos" class="bloque-tab">
@@ -184,7 +219,7 @@
     <canvas id="graficoAhorros"></canvas>
   </div>
 </div>
-
+</div>
   
   <!-- Modal de Subcategorías -->
   <div class="modal" id="modalCategorias">
