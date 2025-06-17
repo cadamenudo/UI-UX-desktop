@@ -111,6 +111,11 @@
   margin-top: 1rem;
 }
 
+    #graficoGastos {
+  width: 220px;
+  height: 220px;
+  max-width: 100%;
+}
   </style>
 </head>
 <body>
@@ -152,31 +157,58 @@
       </div>
     </div>
 
-    <!-- GRAFICO DONA -->
-    <div class="bloque-dona">
-      <div id="dona-ingresos" class="bloque-tab">
-        <h2>Ingresos Totales</h2>
-        <canvas id="graficoIngresos" width="300" height="300"></canvas>
+<!-- GRAFICO DONA -->
+<div class="bloque-dona">
+  <!-- TAB INGRESOS -->
+  <div id="dona-ingresos" class="bloque-tab">
+    <h2>Ingresos Totales</h2>
+    <canvas id="graficoIngresos" width="300" height="300"></canvas>
+  </div>
+
+  <!-- TAB GASTOS -->
+  <div id="dona-gastos" class="bloque-tab oculto">
+    <div class="contenedor-dona">
+      <div class="header-dona">
+        <h2>Gastos Totales</h2>
+        <button class="ver-detalle" onclick="abrirModal()">Ver detalle</button>
       </div>
-      <div id="dona-gastos" class="bloque-tab oculto">
-        <h3 style="text-align:center;">Gastos Totales</h3>
-        <canvas id="graficoGastos"></canvas>
-      </div>
-      <div id="dona-ahorro" class="bloque-tab oculto">
-        <h3 style="text-align:center;">Ahorro Total</h3>
-        <canvas id="graficoAhorros"></canvas>
-      </div>
+      <canvas id="graficoGastos" width="300" height="300"></canvas>
     </div>
   </div>
 
+  <!-- TAB AHORRO -->
+  <div id="dona-ahorro" class="bloque-tab oculto">
+    <h3 style="text-align:center;">Ahorro Total</h3>
+    <canvas id="graficoAhorros"></canvas>
+  </div>
+</div>
+
+  
+  <!-- Modal de Subcategorías -->
+  <div class="modal" id="modalCategorias">
+    <div class="modal-contenido">
+      <h3>Ver subcategorías</h3>
+      <div class="categoria-item"><button onclick="renderChart('alimentacion')">Alimentación <span>$600</span></button></div>
+      <div class="categoria-item"><button onclick="renderChart('transporte')">Transporte <span>$300</span></button></div>
+      <div class="categoria-item"><button onclick="renderChart('hogar')">Hogar <span>$400</span></button></div>
+      <div class="categoria-item"><button onclick="renderChart('deudas')">Deudas <span>$500</span></button></div>
+      <div class="cerrar-modal">
+        <button onclick="renderChart('general')">← Volver</button>
+        <button onclick="cerrarModal()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</body>
+  
   <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+  // INICIO - GRAFICO INGRESOS
   const dataValoresIngresos = [14000, 3500, 2100];
   const totalIngresos = dataValoresIngresos.reduce((a, b) => a + b, 0);
 
-  const centroDona = {
-    id: 'centroTexto',
+  const centroDonaIngresos = {
+    id: 'centroTextoIngresos',
     beforeDraw(chart) {
       const { width, height } = chart;
       const ctx = chart.ctx;
@@ -223,47 +255,154 @@
           }
         }
       },
-      plugins: [centroDona]
-    }),
-
-    graficoGastos: new Chart(document.getElementById('graficoGastos'), {
-      type: 'doughnut',
-      data: {
-        labels: ['Casa', 'Comida', 'Transporte'],
-        datasets: [{
-          data: [800, 500, 685],
-          backgroundColor: ['#BDBDBD', '#D6D6D6', '#ECECEC']
-        }]
-      },
-      options: {
-        cutout: '70%',
-        plugins: { legend: { display: false } }
-      }
-    }),
-
-    graficoAhorros: new Chart(document.getElementById('graficoAhorros'), {
-      type: 'doughnut',
-      data: {
-        labels: ['Cuenta ahorro', 'Fondo emergencia', 'Inversión'],
-        datasets: [{
-          data: [400, 250, 250],
-          backgroundColor: ['#E8C239', '#F1D96D', '#FCF5D0']
-        }]
-      },
-      options: {
-        cutout: '70%',
-        plugins: { legend: { display: false } }
-      }
+      plugins: [centroDonaIngresos]
     })
   };
 
+  // INICIO - GRAFICO GASTOS CON SUBCATEGORIAS
+  const categorias = {
+    general: {
+      labels: ["Alimentación", "Transporte", "Hogar", "Deudas"],
+      data: [600, 300, 400, 500],
+      colors: ["#F472B6", "#FBBF24", "#60A5FA", "#A78BFA"]
+    },
+    alimentacion: {
+      labels: ["Supermercado", "Restaurantes", "Café"],
+      data: [350, 180, 70],
+      colors: ["#FDA4AF", "#F9A8D4", "#FBCFE8"]
+    },
+    transporte: {
+      labels: ["Gasolina", "Uber", "Seguro Auto"],
+      data: [120, 100, 80],
+      colors: ["#FCD34D", "#FDE68A", "#FEF9C3"]
+    },
+    hogar: {
+      labels: ["Alquiler", "Electricidad", "Internet"],
+      data: [300, 70, 30],
+      colors: ["#93C5FD", "#BFDBFE", "#DBEAFE"]
+    },
+    deudas: {
+      labels: ["Préstamo Estudiantil", "Tarjeta Crédito", "Préstamo Auto"],
+      data: [200, 180, 120],
+      colors: ["#DDD6FE", "#C4B5FD", "#A78BFA"]
+    }
+  };
+
+  const ctxGastos = document.getElementById("graficoGastos").getContext("2d");
+  let chartGastos;
+  let tipoActivo = "general";
+
+  function renderChart(tipo) {
+    const { labels, data, colors } = categorias[tipo];
+    const total = data.reduce((a, b) => a + b, 0);
+    tipoActivo = tipo;
+
+    if (chartGastos) chartGastos.destroy();
+
+    chartGastos = new Chart(ctxGastos, {
+      type: "doughnut",
+      data: {
+        labels: labels,
+        datasets: [{
+          data: data,
+          backgroundColor: colors,
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        cutout: "70%",
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            backgroundColor: "#FFFFFF",
+            titleColor: "#0f172a",
+            bodyColor: "#0f172a",
+            borderColor: "#E5E7EB",
+            borderWidth: 1,
+            padding: 12,
+            cornerRadius: 10,
+            callbacks: {
+              label: function(context) {
+                const valor = context.raw;
+                const porcentaje = ((valor / total) * 100).toFixed(1);
+                return `${context.label}: $${valor.toLocaleString("en-US")} (${porcentaje}%)`;
+              }
+            }
+          }
+        }
+      },
+      plugins: [{
+        id: 'centroTexto',
+        beforeDraw(chart) {
+          const { width, height } = chart;
+          const ctx = chart.ctx;
+          ctx.restore();
+          const total = chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+
+          if (tipoActivo !== 'general') {
+            const nombre = tipoActivo.charAt(0).toUpperCase() + tipoActivo.slice(1);
+            ctx.font = '600 16px "Greycliff CF", sans-serif';
+            ctx.fillStyle = '#64748B';
+            ctx.fillText(nombre, width / 2, height / 2 - 18);
+            ctx.font = '700 32px "Greycliff CF", sans-serif';
+            ctx.fillStyle = '#0f172a';
+            ctx.fillText(`$${total.toLocaleString("en-US")}`, width / 2, height / 2 + 12);
+          } else {
+            ctx.font = '700 32px "Greycliff CF", sans-serif';
+            ctx.fillStyle = '#0f172a';
+            ctx.fillText(`$${total.toLocaleString("en-US")}`, width / 2, height / 2);
+          }
+          ctx.save();
+        }
+      }]
+    });
+
+    cerrarModal();
+  }
+
+  function abrirModal() {
+    document.getElementById("modalCategorias").style.display = "flex";
+  }
+
+  function cerrarModal() {
+    document.getElementById("modalCategorias").style.display = "none";
+  }
+
+  // Mostrar resumen y dona activa
   function cambiarTab(tabId, boton) {
     document.querySelectorAll('.bloque-tab').forEach(el => el.classList.add('oculto'));
     document.getElementById(`resumen-${tabId}`).classList.remove('oculto');
     document.getElementById(`dona-${tabId}`).classList.remove('oculto');
     document.querySelectorAll('.contenedor-tabs button').forEach(b => b.classList.remove('activo'));
     boton.classList.add('activo');
+
+    if (tabId === "gastos") renderChart("general");
   }
+
+  // Iniciar gastos al cargar
+  renderChart("general");
+
+  // Gráfico ahorros clásico
+  charts.graficoAhorros = new Chart(document.getElementById('graficoAhorros'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Cuenta ahorro', 'Fondo emergencia', 'Inversión'],
+      datasets: [{
+        data: [400, 250, 250],
+        backgroundColor: ['#E8C239', '#F1D96D', '#FCF5D0']
+      }]
+    },
+    options: {
+      cutout: '70%',
+      plugins: { legend: { display: false } }
+    }
+  });
 </script>
+
 </body>
 </html>
