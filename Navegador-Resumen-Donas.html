@@ -240,7 +240,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 999;
+  z-index: 9999;
 }
 
 .modal-nueva.oculto {
@@ -249,18 +249,23 @@
 
 .contenido-modal {
   background: white;
-  border-radius: 16px;
-  width: 640px;
+  border-radius: 20px;
+  width: 480px;
   max-width: 90vw;
   height: 90vh;
   overflow: hidden;
   box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
 }
 
 .contenido-modal iframe {
   width: 100%;
-  height: 100%;
+  height: 640px; 
   border: none;
+  display: block;
+  max-height: 90vh; 
 }
 .modal-contenido {
   background: white;
@@ -708,6 +713,7 @@ document.addEventListener("click", function (e) {
       modalNueva.classList.add("oculto");
     }
   });
+  </script>
 </script>
 </body>
 </html>
