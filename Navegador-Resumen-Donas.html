@@ -373,18 +373,18 @@
   }
 
   // Mostrar resumen y dona activa
+
   function cambiarTab(tabId, boton) {
-    document.querySelectorAll('.bloque-tab').forEach(el => el.classList.add('oculto'));
-    document.getElementById(`resumen-${tabId}`).classList.remove('oculto');
-    document.getElementById(`dona-${tabId}`).classList.remove('oculto');
-    document.querySelectorAll('.contenedor-tabs button').forEach(b => b.classList.remove('activo'));
-    boton.classList.add('activo');
+  document.querySelectorAll('.bloque-tab').forEach(el => el.classList.add('oculto'));
+  document.getElementById(`resumen-${tabId}`).classList.remove('oculto');
+  document.getElementById(`dona-${tabId}`).classList.remove('oculto');
+  document.querySelectorAll('.contenedor-tabs button').forEach(b => b.classList.remove('activo'));
+  boton.classList.add('activo');
 
-    if (tabId === "gastos") renderChart("general");
+  if (tabId === "gastos") {
+    setTimeout(() => renderChart("general"), 10); // delay mínimo
   }
-
-  // Iniciar gastos al cargar
-  renderChart("general");
+}
 
   // Gráfico ahorros clásico
   charts.graficoAhorros = new Chart(document.getElementById('graficoAhorros'), {
