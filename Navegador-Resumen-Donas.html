@@ -167,25 +167,25 @@
 </head>
 <body>
 
-<!-- TITULO Y TABS + RESUMEN -->
-<div class="seccion-layout">
-  <div class="columna-izquierda">
-
- <!-- TÍTULO -->
+<!-- TÍTULO -->
 <h2 class="titulo-transacciones">Lista de Transacciones</h2>
-    
-    <!--TABS -->
-      <div class="contenedor-tabs">
-        <button class="activo" onclick="cambiarTab('ingresos', this)">
-          <span class="punto p-ingresos"></span> Ingresos
-        </button>
-        <button onclick="cambiarTab('gastos', this)">
-          <span class="punto p-gastos"></span> Gastos
-        </button>
-        <button onclick="cambiarTab('ahorro', this)">
-          <span class="punto p-ahorro"></span> Ahorro
-        </button>
-      </div>
+
+<!-- BLOQUE DE DOS COLUMNAS: tabs + resumen (izquierda) y dona (derecha) -->
+<div class="seccion-layout">
+  <!-- COLUMNA IZQUIERDA: TABS + RESUMEN -->
+  <div class="columna-izquierda">
+    <!-- TABS -->
+    <div class="contenedor-tabs">
+      <button class="activo" onclick="cambiarTab('ingresos', this)">
+        <span class="punto p-ingresos"></span> Ingresos
+      </button>
+      <button onclick="cambiarTab('gastos', this)">
+        <span class="punto p-gastos"></span> Gastos
+      </button>
+      <button onclick="cambiarTab('ahorro', this)">
+        <span class="punto p-ahorro"></span> Ahorro
+      </button>
+    </div>
 
     <!-- BLOQUE RESUMEN -->
     <div class="bloque-resumen">
@@ -212,47 +212,33 @@
     </div>
   </div>
 
+  <!-- COLUMNA DERECHA: DONA -->
   <div class="columna-derecha">
     <!-- GRAFICO DONA -->
     <div class="bloque-dona">
-  
-  <!-- TAB INGRESOS -->
-  <div id="dona-ingresos" class="bloque-tab">
-    <h2>Ingresos Totales</h2>
-    <canvas id="graficoIngresos" width="300" height="300"></canvas>
-  </div>
-
-  <!-- TAB GASTOS -->
-  <div id="dona-gastos" class="bloque-tab oculto">
-      <div class="header-dona">
-        <h2>Gastos Totales</h2>
-        <button class="ver-detalle" onclick="abrirModal()">Ver detalle</button>
+      <!-- TAB INGRESOS -->
+      <div id="dona-ingresos" class="bloque-tab">
+        <h2>Ingresos Totales</h2>
+        <canvas id="graficoIngresos" width="300" height="300"></canvas>
       </div>
-      <canvas id="graficoGastos" width="300" height="300"></canvas>
-    </div>
 
-  <!-- TAB AHORRO -->
-  <div id="dona-ahorro" class="bloque-tab oculto">
-    <h3 style="text-align:center;">Ahorro Total</h3>
-    <canvas id="graficoAhorros"></canvas>
-  </div>
-</div>
-</div>
-</div>
-  <!-- Modal de Subcategorías -->
-  <div class="modal" id="modalCategorias">
-    <div class="modal-contenido">
-      <h3>Ver subcategorías</h3>
-      <div class="categoria-item"><button onclick="renderChart('alimentacion')">Alimentación <span>$600</span></button></div>
-      <div class="categoria-item"><button onclick="renderChart('transporte')">Transporte <span>$300</span></button></div>
-      <div class="categoria-item"><button onclick="renderChart('hogar')">Hogar <span>$400</span></button></div>
-      <div class="categoria-item"><button onclick="renderChart('deudas')">Deudas <span>$500</span></button></div>
-      <div class="cerrar-modal">
-        <button onclick="renderChart('general')">← Volver</button>
-        <button onclick="cerrarModal()">Cerrar</button>
+      <!-- TAB GASTOS -->
+      <div id="dona-gastos" class="bloque-tab oculto">
+        <div class="header-dona">
+          <h2>Gastos Totales</h2>
+          <button class="ver-detalle" onclick="abrirModal()">Ver detalle</button>
+        </div>
+        <canvas id="graficoGastos" width="300" height="300"></canvas>
+      </div>
+
+      <!-- TAB AHORRO -->
+      <div id="dona-ahorro" class="bloque-tab oculto">
+        <h3 style="text-align:center;">Ahorro Total</h3>
+        <canvas id="graficoAhorros"></canvas>
       </div>
     </div>
   </div>
+</div>
 </body>
   
   <!-- Chart.js -->
