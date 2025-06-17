@@ -3,8 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pantalla de Transacciones | Cada Menudo</title>
+  <title>Transacciones | Cada Menudo</title>
+
+  <!-- Tipografía personalizada -->
   <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX/css-fonts.css"/>
+
+  <!-- Flatpickr para calendario -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+  <!-- Chart.js para las donas -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <style>
     body {
       font-family: 'Greycliff CF', sans-serif;
@@ -30,18 +39,76 @@
       gap: 2rem;
     }
 
-    .resumen-principal {
+    .resumen-unificado {
       display: flex;
       gap: 1.5rem;
+      background: white;
+      border-radius: 16px;
+      padding: 1.5rem;
       flex: 1;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
     }
 
-    .filtro-fechas {
+    .bloque-indicador {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .icono-svg-resumen img {
+      width: 36px;
+      height: 36px;
+    }
+
+    .texto-indicador {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .texto-indicador .label {
+      font-size: 0.85rem;
+      color: #64748B;
+    }
+
+    .texto-indicador .valor {
+      font-size: 1.1rem;
+      font-weight: bold;
+    }
+
+    .calendario-box {
       min-width: 300px;
       background: white;
       border-radius: 16px;
       padding: 1.5rem;
       box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+
+    .calendario-box .titulo {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    .fila-fechas {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .fila-fechas input {
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid #CBD5E1;
+    }
+
+    .boton-periodo {
+      margin-top: 0.5rem;
+      padding: 8px 12px;
+      border-radius: 8px;
+      background: #3956E8;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
     }
 
     /* --- BLOQUE INTERMEDIO --- */
@@ -110,11 +177,43 @@
   <div class="contenido-transacciones">
     <!-- 1. Resumen principal + Calendario -->
     <section class="bloque-superior">
-      <div class="resumen-principal" id="bloqueResumenPrincipal">
-        <!-- Aquí van las tarjetas de ingreso, gasto, ahorro -->
+      <div class="resumen-unificado">
+        <div class="bloque-indicador">
+          <div class="icono-svg-resumen i-ingreso">
+            <img src="https://cadamenudo.github.io/UI-UX/assets/icons/ingreso.png" alt="Ingresos"/>
+          </div>
+          <div class="texto-indicador">
+            <span class="label">Ingresos</span>
+            <span class="valor">$3,000.00</span>
+          </div>
+        </div>
+        <div class="bloque-indicador">
+          <div class="icono-svg-resumen i-gasto">
+            <img src="https://cadamenudo.github.io/UI-UX/assets/icons/gastos.png" alt="Gastos"/>
+          </div>
+          <div class="texto-indicador">
+            <span class="label">Gastos</span>
+            <span class="valor">$1,200.00</span>
+          </div>
+        </div>
+        <div class="bloque-indicador">
+          <div class="icono-svg-resumen i-ahorro">
+            <img src="https://cadamenudo.github.io/UI-UX/assets/icons/ahorro.png" alt="Ahorros"/>
+          </div>
+          <div class="texto-indicador">
+            <span class="label">Ahorro</span>
+            <span class="valor">$450.00</span>
+          </div>
+        </div>
       </div>
-      <div class="filtro-fechas" id="bloqueCalendario">
-        <!-- Aquí va el calendario con campos desde/hasta y botón -->
+
+      <div class="calendario-box">
+        <div class="titulo">Seleccione un rango deseado</div>
+        <div class="fila-fechas">
+          <input type="text" id="desde" placeholder="Desde">
+          <input type="text" id="hasta" placeholder="Hasta">
+          <button class="boton-periodo">Buscar</button>
+        </div>
       </div>
     </section>
 
@@ -128,18 +227,26 @@
 
       <div class="contenido-resumen-dona">
         <div class="resumen-transacciones" id="resumenTransacciones">
-          <!-- Resumen de transacciones: último, por registrar, total -->
+          <!-- Aquí irá el resumen dinámico según categoría -->
         </div>
         <div class="dona-transacciones" id="donaTransacciones">
-          <!-- Gráfico tipo dona -->
+          <!-- Aquí irá la dona (usa tu lógica y script existente) -->
         </div>
       </div>
     </section>
 
     <!-- 3. Lista de transacciones -->
     <section class="bloque-lista-transacciones" id="listaTransacciones">
-      <!-- Lista dinámica según selección -->
+      <!-- Aquí se cargan dinámicamente los ítems -->
     </section>
   </div>
+
+  <!-- Flatpickr -->
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script>
+    flatpickr("#desde", { dateFormat: "d/m/Y" });
+    flatpickr("#hasta", { dateFormat: "d/m/Y" });
+  </script>
 </body>
 </html>
+
