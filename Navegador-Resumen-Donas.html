@@ -275,7 +275,7 @@
       <!-- TAB AHORRO -->
       <div id="dona-ahorro" class="bloque-tab oculto">
         <h3 style="text-align:center;">Ahorro Total</h3>
-        <canvas id="graficoAhorros"></canvas>
+        <canvas id="graficoAhorros"> width="300" height="300"></canvas>
       </div>
     </div>
   </div>
@@ -469,20 +469,63 @@
   }
 }
 
-  // Gráfico ahorros clásico
-  charts.graficoAhorros = new Chart(document.getElementById('graficoAhorros'), {
-    type: 'doughnut',
+  // INICIO - GRAFICO AHORRO
+  const dataValores = [700, 400, 300];
+  const etiquetas = ["Emergencia", "Retiro", "Vacaciones"];
+  const colores = ["#34D399", "#6EE7B7", "#A7F3D0"];
+  const total = dataValores.reduce((a, b) => a + b, 0);
+
+  const centroDona = {
+    id: 'centroTexto',
+    beforeDraw(chart) {
+      const { width, height } = chart;
+      const ctx = chart.ctx;
+      ctx.restore();
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.font = '700 32px "Greycliff CF", sans-serif';
+      ctx.fillStyle = '#0f172a';
+      ctx.fillText(`$${total.toLocaleString("en-US")}`, width / 2, height / 2);
+      ctx.save();
+    }
+  };
+
+  const ctx = document.getElementById("graficoAhorros").getContext("2d");
+
+  new Chart(ctx, {
+    type: "doughnut",
     data: {
-      labels: ['Cuenta ahorro', 'Fondo emergencia', 'Inversión'],
+      labels: etiquetas,
       datasets: [{
-        data: [400, 250, 250],
-        backgroundColor: ['#E8C239', '#F1D96D', '#FCF5D0']
+        data: dataValores,
+        backgroundColor: colores,
+        borderWidth: 0
       }]
     },
     options: {
-      cutout: '70%',
-      plugins: { legend: { display: false } }
-    }
+      responsive: true,
+      cutout: "70%",
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: "#FFFFFF",
+          titleColor: "#0f172a",
+          bodyColor: "#0f172a",
+          borderColor: "#E5E7EB",
+          borderWidth: 1,
+          padding: 12,
+          cornerRadius: 10,
+          callbacks: {
+            label: function(context) {
+              const valor = context.raw;
+              const porcentaje = ((valor / total) * 100).toFixed(1);
+              return `${context.label}: $${valor.toLocaleString("en-US")} (${porcentaje}%)`;
+            }
+          }
+        }
+      }
+    },
+    plugins: [centroDona]
   });
 </script>
 
