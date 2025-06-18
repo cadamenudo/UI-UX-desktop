@@ -25,31 +25,6 @@
       margin-top: 2rem;
     }
 
-.hidden {
-  display: none;
-}
-.modal-transaccion {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.4);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-}
-.contenido-modal {
-  background: white;
-  border-radius: 16px;
-  padding: 2rem;
-  max-width: 600px;
-  width: 100%;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: 0 0 16px rgba(0,0,0,0.1);
-}
   </style>
 </head>
 <body>
@@ -113,60 +88,6 @@
       inicializarAcordeones();
     });
   });
-
-  // ✅ Función para abrir modal editar (fuera del DOMContentLoaded)
-function mostrarModalEditar() {
-  const modal = document.getElementById('modalEditar');
-  const contenido = document.getElementById('contenidoEditar');
-
-  contenido.innerHTML = '<p style="color: #64748B;">Cargando formulario...</p>';
-  modal.classList.remove('hidden');
-
-  fetch("https://cadamenudo.github.io/UI-UX/editar-transaccion.html")
-    .then(res => {
-      if (!res.ok) throw new Error("Error al cargar el formulario");
-      return res.text();
-    })
-    .then(html => {
-      contenido.innerHTML = html;
-    })
-    .catch(err => {
-      contenido.innerHTML = `<p style="color: red;">No se pudo cargar el formulario. Intenta más tarde.</p>`;
-    });
-}
-
-document.addEventListener('click', (e) => {
-  if (e.target.classList.contains('editar')) {
-    mostrarModalEditar();
-  }
-
-  if (e.target.classList.contains('cerrar-modal')) {
-    document.getElementById('modalEditar').classList.add('hidden');
-  }
-
-  if (e.target.id === 'modalEditar') {
-    document.getElementById('modalEditar').classList.add('hidden');
-  }
-});
-  
-  // ✅ Delegación global para detectar clics en botones "Editar"
-
-  document.addEventListener('click', (e) => {
-  // Botón "Editar"
-  if (e.target.classList.contains('editar')) {
-    mostrarModalEditar();
-  }
-
-  // Botón "Cerrar" dentro del contenido
-  if (e.target.classList.contains('cerrar-modal')) {
-    document.getElementById('modalEditar').classList.add('hidden');
-  }
-
-  // Clic fuera del contenido del modal (en el overlay)
-  if (e.target.id === 'modalEditar') {
-    e.target.classList.add('hidden');
-  }
-});
 
 </script>
 
