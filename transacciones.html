@@ -78,7 +78,14 @@
 
   // 👉 Este bloque es solo para cargar bloques
   window.addEventListener("DOMContentLoaded", () => {
-    cargarBloque("bloqueResumen", "https://cadamenudo.github.io/UI-UX-desktop/resumen-principal-calendario.html");
+    
+    cargarBloque("bloqueResumen", "https://cadamenudo.github.io/UI-UX-desktop/resumen-principal-calendario.html", () => {
+  flatpickr("#calendario", {
+    mode: "range",
+    dateFormat: "d-m-Y",
+    locale: "es"
+  });
+});
 
     cargarBloque("bloqueNavegador", "https://cadamenudo.github.io/UI-UX-desktop/Navegador-Resumen-Donas.html", () => {
       activarModalNuevaTransaccion();
