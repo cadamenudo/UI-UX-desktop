@@ -187,14 +187,6 @@ renderChart("general");
 window.renderChart = renderChart;
 
 // ========== GRAFICO DONA AHORRO ==========
-function dibujarDonaAhorro() {
-  const dataValores = [700, 400, 300];
-  const etiquetas = ["Emergencia", "Retiro", "Vacaciones"];
-  const colores = ["#34D399", "#6EE7B7", "#A7F3D0"];
-  const total = dataValores.reduce((a, b) => a + b, 0);
-  const canvasAhorros = document.getElementById("graficoAhorros");
-  if (!canvasAhorros) return;
-
   const ctx = canvasAhorros.getContext("2d");
   charts.graficoAhorros = new Chart(ctx, {
     type: "doughnut",
@@ -206,6 +198,13 @@ function dibujarDonaAhorro() {
         borderWidth: 0
       }]
     },
+        function dibujarDonaAhorro() {
+  const dataValores = [700, 400, 300];
+  const etiquetas = ["Emergencia", "Retiro", "Vacaciones"];
+  const colores = ["#34D399", "#6EE7B7", "#A7F3D0"];
+  const total = dataValores.reduce((a, b) => a + b, 0);
+  const canvasAhorros = document.getElementById("graficoAhorros");
+  if (!canvasAhorros) return;
     options: {
       responsive: true,
       cutout: "70%",
