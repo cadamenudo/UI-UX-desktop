@@ -230,7 +230,7 @@ function dibujarDonaAhorro() {
       }
     },
     plugins: [{
-      id: 'centroTexto',
+      id: 'centroTextoAhorro',
       beforeDraw(chart) {
         const { width, height } = chart;
         const ctx = chart.ctx;
@@ -246,6 +246,9 @@ function dibujarDonaAhorro() {
   });
 }
 
+window.dibujarDonaAhorro = dibujarDonaAhorro;
+
+
 // ========== CAMBIAR TABS ==========
 function cambiarTab(tabId, boton) {
   document.querySelectorAll('.bloque-tab').forEach(el => el.classList.add('oculto'));
@@ -259,21 +262,26 @@ function cambiarTab(tabId, boton) {
 }
 window.cambiarTab = cambiarTab;
 
-// ========== MODAL NUEVA TRANSACCION ==========
-const btnNuevaTransaccion = document.getElementById("btnNuevaTransaccion");
-const modalNueva = document.getElementById("modalNueva");
-const contenidoModal = document.getElementById("contenidoModalNueva");
+// ========== MODAL NUEVA TRANSACCIÓN ==========
+function activarModalNuevaTransaccion() {
+  const btnNuevaTransaccion = document.getElementById("btnNuevaTransaccion");
+  const modalNueva = document.getElementById("modalNueva");
+  const contenidoModal = document.getElementById("contenidoModalNueva");
 
-if (btnNuevaTransaccion && modalNueva && contenidoModal) {
+  if (!btnNuevaTransaccion || !modalNueva || !contenidoModal) return;
+
   btnNuevaTransaccion.addEventListener("click", () => {
     modalNueva.classList.remove("oculto");
   });
+
   window.addEventListener("click", (e) => {
     if (!contenidoModal.contains(e.target) && !btnNuevaTransaccion.contains(e.target)) {
       modalNueva.classList.add("oculto");
     }
   });
 }
+
+window.activarModalNuevaTransaccion = activarModalNuevaTransaccion;
 
 // ========== CATEGORIAS Y DETALLES ==========
 document.querySelectorAll('.categoria').forEach(categoria => {
