@@ -1,0 +1,111 @@
+    body {
+      margin: 0;
+      padding: 2rem;
+      background: #FAFBFF;
+      font-family: 'Arial', sans-serif;
+    }
+
+    .contenido-tablero {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+    }
+
+    .header-grid {
+      display: flex;
+      gap: 2rem;
+      justify-content: space-between;
+      align-items: stretch;
+      flex-wrap: nowrap;
+    }
+
+    .resumen-unificado {
+      flex: 2;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      padding: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-sizing: border-box;
+    }
+    
+    .calendario-box {
+      flex: 1; /* 👈 asegúrate de que esto esté presente */
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      padding: 1.5rem;
+      box-sizing: border-box;
+    }
+
+    .bloque-indicador {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      border-right: 1px solid #f1f5f9;
+      min-width: 0;
+    }
+
+    .bloque-indicador:last-child {
+      border-right: none;
+    }
+
+    .icono-svg-resumen img {
+      width: 52px;
+      height: 52px;
+    }
+
+    .texto-indicador {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .texto-indicador .label {
+      font-size: 0.9rem;
+      color: #64748B;
+    }
+
+    .texto-indicador .valor {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    .calendario-box .titulo {
+      font-weight: 600;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      color: #334155;
+    }
+
+    .fila-fechas {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .fila-fechas input[type="text"] {
+      padding: 0.5rem 0.75rem;
+      border: 1px solid #CBD5E1;
+      border-radius: 8px;
+      flex: 1;
+    }
+
+    .fila-fechas button {
+      padding: 0.5rem 1rem;
+      background: #7459D9;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .fila-fechas button:hover {
+      background: #5b45b3;
+    }
