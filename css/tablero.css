@@ -36,10 +36,11 @@
 }
 
 .resumen-unificado {
-  height: 95px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex: 1;
+   gap: 2rem;
 }
 
 
