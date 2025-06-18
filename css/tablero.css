@@ -16,15 +16,17 @@
   gap: 3rem;
   box-sizing: border-box;
 }
-    .header-grid {
-      display: flex;
-      gap: 2rem;
-      justify-content: space-between;
-       flex-wrap: wrap; /* Permite que baje solo si es necesario */
-    }
 
-    .resumen-unificado, .calendario-box {
-  flex: 1 1 0; /* crece, se reduce, base automática */
+.header-grid {
+  display: flex;
+  gap: 2rem;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.resumen-unificado,
+.calendario-box {
+  flex: 1 1 0;
   min-width: 320px;
   background: white;
   border-radius: 16px;
@@ -34,14 +36,12 @@
 }
 
 .resumen-unificado {
-  flex: 1;
-  min-width: 300px;
   height: 95px;
-  padding: 1.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+
 
     .bloque-indicador {
       flex: 1;
