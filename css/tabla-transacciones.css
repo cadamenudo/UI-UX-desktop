@@ -128,3 +128,6 @@ h5 span:nth-child(2) {
     .contenido-transacciones {
       display: none;
     }
+.oculto {
+  display: none !important;
+}
