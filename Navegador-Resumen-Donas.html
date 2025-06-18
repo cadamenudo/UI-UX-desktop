@@ -484,7 +484,6 @@ window.cerrarModal = cerrarModal;
 
 <!-- RESTO DEL SCRIPT -->
 <script>
-window.addEventListener("DOMContentLoaded", () => {
   const charts = {
     graficoIngresos: null,
     graficoAhorros: null
@@ -735,8 +734,11 @@ window.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("click", function (e) {
     const modal = document.getElementById("modalCategorias");
     const contenido = document.querySelector(".modal-contenido");
-    if (!modal.classList.contains('oculto') && !contenido.contains(e.target)) {
-      cerrarModal();
+  
+    if (modal && contenido) {
+      if (!modal.classList.contains('oculto') && !contenido.contains(e.target)) {
+        cerrarModal();
+      }
     }
   });
 
