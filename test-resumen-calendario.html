@@ -33,21 +33,25 @@
       flex-wrap: nowrap;
     }
 
-    .resumen-unificado,
+    .resumen-unificado {
+      flex: 2;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      padding: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-sizing: border-box;
+    }
+    
     .calendario-box {
-      flex: 1;
-      min-width: 0;
+      flex: 1; /* 👈 asegúrate de que esto esté presente */
       background: white;
       border-radius: 16px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.05);
       padding: 1.5rem;
       box-sizing: border-box;
-    }
-
-    .resumen-unificado {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
     }
 
     .bloque-indicador {
