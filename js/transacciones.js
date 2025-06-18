@@ -257,6 +257,7 @@ function cambiarTab(tabId, boton) {
   document.getElementById(`dona-${tabId}`)?.classList.remove('oculto');
   document.querySelectorAll('.contenedor-tabs button').forEach(b => b.classList.remove('activo'));
   boton.classList.add('activo');
+  document.getElementById(`tabla-${tabId}`)?.classList.remove('oculto');
 
   if (tabId === "gastos") setTimeout(() => renderChart("general"), 10);
   if (tabId === "ahorro" && !charts.graficoAhorros) dibujarDonaAhorro();
