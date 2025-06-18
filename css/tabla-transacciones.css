@@ -112,6 +112,14 @@ h5:hover::after {
     .bloque-categoria.abierto .contenido-transacciones {
       display: block;
     }
+      .bloque-categoria .contenido-transacciones {
+        display: none;
+      }
+      
+      .bloque-categoria.abierto .contenido-transacciones {
+        display: block;
+      }
+
     .tarjeta-transaccion {
       background: #fff;
       border-top: 1px solid #f0f0f0;
