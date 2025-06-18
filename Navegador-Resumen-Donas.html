@@ -475,6 +475,10 @@ function abrirModal() {
 function cerrarModal() {
   document.getElementById("modalCategorias").classList.add("oculto");
 }
+
+// ✅ Esto expone las funciones globalmente para que onclick="abrirModal()" funcione
+window.abrirModal = abrirModal;
+window.cerrarModal = cerrarModal;
 </script>
 
 <!-- RESTO DEL SCRIPT -->
