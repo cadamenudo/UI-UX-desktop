@@ -24,6 +24,28 @@
     #bloqueTablaTransacciones {
       margin-top: 2rem;
     }
+    .hidden {
+  display: none;
+}
+.modal-transaccion {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+.contenido-modal {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 600px;
+  width: 100%;
+}
   </style>
 </head>
 <body>
@@ -36,6 +58,13 @@
 
   <!-- 🔷 BLOQUE 3: Tabla de Transacciones -->
   <div id="bloqueTablaTransacciones" class="bloque-cargado"></div>
+
+  <!-- Modal de edición de transacción -->
+<div id="modalEditar" class="modal-transaccion hidden">
+  <div class="contenido-modal" id="contenidoEditar">
+    <!-- Aquí se cargará editar-transaccion.html -->
+  </div>
+</div>
 
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -68,6 +97,7 @@
     });
   }
 
+  // 👉 Este bloque es solo para cargar bloques
   window.addEventListener("DOMContentLoaded", () => {
     cargarBloque("bloqueResumen", "https://cadamenudo.github.io/UI-UX-desktop/resumen-principal-calendario.html");
 
@@ -79,7 +109,32 @@
       inicializarAcordeones();
     });
   });
+
+  // ✅ Función para abrir modal editar (fuera del DOMContentLoaded)
+  function mostrarModalEditar() {
+    const modal = document.getElementById('modalEditar');
+    const contenido = document.getElementById('contenidoEditar');
+
+    fetch("https://cadamenudo.github.io/UI-UX/editar-transaccion.html")
+      .then(res => res.text())
+      .then(html => {
+        contenido.innerHTML = html;
+        modal.classList.remove('hidden');
+      });
+  }
+
+  // ✅ Delegación global para detectar clics en botones "Editar"
+  document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('editar')) {
+      mostrarModalEditar();
+    }
+
+    if (e.target.classList.contains('cerrar-modal')) {
+      document.getElementById('modalEditar').classList.add('hidden');
+    }
+  });
 </script>
+
   
   <!-- Script JS centralizado con toda la lógica -->
   <script src="https://cadamenudo.github.io/UI-UX-desktop/js/transacciones.js"></script>
