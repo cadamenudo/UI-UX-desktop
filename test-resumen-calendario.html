@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Resumen + Calendario</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- Flatpickr -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 2rem;
+      background: #FAFBFF;
+      font-family: 'Arial', sans-serif;
+    }
+
+    .contenido-tablero {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+    }
+
+    .header-grid {
+      display: flex;
+      gap: 2rem;
+      justify-content: space-between;
+      align-items: stretch;
+      flex-wrap: nowrap;
+    }
+
+    .resumen-unificado,
+    .calendario-box {
+      flex: 1;
+      min-width: 0;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      padding: 1.5rem;
+      box-sizing: border-box;
+    }
+
+    .resumen-unificado {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .bloque-indicador {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      border-right: 1px solid #f1f5f9;
+      min-width: 0;
+    }
+
+    .bloque-indicador:last-child {
+      border-right: none;
+    }
+
+    .bloque-indicador .label {
+      font-size: 0.9rem;
+      color: #64748B;
+    }
+
+    .bloque-indicador .valor {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    .calendario-box .titulo {
+      font-weight: 600;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      color: #334155;
+    }
+
+    .fila-fechas {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .fila-fechas input[type="text"] {
+      padding: 0.5rem 0.75rem;
+      border: 1px solid #CBD5E1;
+      border-radius: 8px;
+      flex: 1;
+    }
+
+    .fila-fechas button {
+      padding: 0.5rem 1rem;
+      background: #7459D9;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .fila-fechas button:hover {
+      background: #5b45b3;
+    }
+  </style>
+</head>
+<body>
+
+<div class="contenido-tablero">
+  <div class="header-grid">
+    <!-- Resumen -->
+    <div class="resumen-unificado">
+      <div class="bloque-indicador">
+        <div class="label">Ingresos</div>
+        <div class="valor">$3,000.00</div>
+      </div>
+      <div class="bloque-indicador">
+        <div class="label">Gastos</div>
+        <div class="valor">$1,200.00</div>
+      </div>
+      <div class="bloque-indicador">
+        <div class="label">Ahorro</div>
+        <div class="valor">$450.00</div>
+      </div>
+    </div>
+
+    <!-- Calendario -->
+    <div class="calendario-box">
+      <div class="titulo">Seleccione un rango deseado</div>
+      <div class="fila-fechas">
+        <input type="text" id="desde" placeholder="Desde" />
+        <input type="text" id="hasta" placeholder="Hasta" />
+        <button>Buscar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  flatpickr("#desde", { dateFormat: "d/m/Y" });
+  flatpickr("#hasta", { dateFormat: "d/m/Y" });
+</script>
+
+</body>
+</html>
