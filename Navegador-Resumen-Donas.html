@@ -455,6 +455,22 @@
 <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+  <!-- FUNCIONES VISIBLES GLOBALMENTE -->
+<script>
+window.addEventListener("DOMContentLoaded", () => {
+function abrirModal() {
+  document.getElementById("modalCategorias").classList.remove("oculto");
+}
+
+function cerrarModal() {
+  document.getElementById("modalCategorias").classList.add("oculto");
+}
+  // ✅ Esto expone las funciones globalmente para que onclick="abrirModal()" funcione
+  window.abrirModal = abrirModal;
+  window.cerrarModal = cerrarModal;
+});
+</script>
+
 </script>
 <!-- RESTO DEL SCRIPT -->
 <script>
