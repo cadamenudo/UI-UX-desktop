@@ -470,11 +470,11 @@
 <script>
 window.addEventListener("DOMContentLoaded", () => {
 function abrirModal() {
-  document.getElementById("modalCategorias").classList.remove("oculto");
+  document.getElementById("modalCategorias").style.display = "flex";
 }
 
 function cerrarModal() {
-  document.getElementById("modalCategorias").classList.add("oculto");
+ document.getElementById("modalCategorias").style.display = "none";
 }
 
 // ✅ Esto expone las funciones globalmente para que onclick="abrirModal()" funcione
