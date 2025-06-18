@@ -30,6 +30,23 @@
       padding: 32px 48px;
     }
 
+    .seccion-resumen {
+  margin-bottom: 2.5rem;
+}
+
+.seccion-donas {
+  margin-top: 1rem;
+}
+
+.titulo-seccion {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  margin-top: 0; /* evitar espacio doble si está dentro de otra caja */
+  color: #0f172a;
+}
+
+
     #bloqueTablaTransacciones {
       margin-top: 2rem;
     }
@@ -38,14 +55,22 @@
 </head>
 <body>
 
-  <!-- 🔷 BLOQUE 1: Resumen + Calendario -->
+<!-- 🔷 BLOQUE 1: Resumen + Calendario -->
+<section class="seccion-resumen">
   <div id="bloqueResumen" class="bloque-cargado"></div>
+</section>
 
-  <!-- 🔷 BLOQUE 2: Navegador + Resumen + Donas -->
+<!-- 🔷 BLOQUE 2: Navegador + Donas -->
+<section class="seccion-donas">
+  <h2 class="titulo-seccion">Lista de Transacciones</h2>
   <div id="bloqueNavegador" class="bloque-cargado"></div>
+</section>
 
-  <!-- 🔷 BLOQUE 3: Tabla de Transacciones -->
+<!-- 🔷 BLOQUE 3: Tabla de Transacciones -->
+<section class="seccion-tabla">
   <div id="bloqueTablaTransacciones" class="bloque-cargado"></div>
+</section>
+
 
   <!-- Modal de edición de transacción -->
 <div id="modalEditar" class="modal-transaccion hidden">
