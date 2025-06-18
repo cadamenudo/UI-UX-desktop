@@ -111,17 +111,19 @@
   });
 
   // ✅ Función para abrir modal editar (fuera del DOMContentLoaded)
-  function mostrarModalEditar() {
-    const modal = document.getElementById('modalEditar');
-    const contenido = document.getElementById('contenidoEditar');
+function mostrarModalEditar() {
+  const modal = document.getElementById('modalEditar');
+  const contenido = document.getElementById('contenidoEditar');
 
-    fetch("https://cadamenudo.github.io/UI-UX/editar-transaccion.html")
-      .then(res => res.text())
-      .then(html => {
-        contenido.innerHTML = html;
-        modal.classList.remove('hidden');
-      });
-  }
+  // 👇 carga temporal para probar
+  contenido.innerHTML = `
+    <h2>Editar transacción</h2>
+    <p>Este es un contenido de prueba.</p>
+    <button class="cerrar-modal">Cerrar</button>
+  `;
+
+  modal.classList.remove('hidden');
+}
 
   // ✅ Delegación global para detectar clics en botones "Editar"
 
