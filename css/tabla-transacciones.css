@@ -13,6 +13,31 @@ body {
 h5 span:nth-child(2) {
   font-family: Arial, sans-serif !important;
 }
+h5 {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 4px;
+  margin-bottom: 8px;
+}
+
+h5::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 0%;
+  background-color: #cbd5e1; /* gris claro */
+  transition: width 0.3s ease;
+  border-radius: 1px;
+}
+
+h5:hover::after {
+  width: 100%;
+}
     .encabezado {
       display: flex;
       justify-content: space-between;
@@ -131,3 +156,4 @@ h5 span:nth-child(2) {
 .oculto {
   display: none !important;
 }
+
