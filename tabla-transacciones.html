@@ -176,20 +176,19 @@
 </body>
   <script>
 document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.categoria').forEach(categoria => {
-    const bloques = categoria.querySelectorAll('.bloque-categoria');
+  document.querySelectorAll('.bloque-tab').forEach(tab => {
+    const bloques = tab.querySelectorAll('.bloque-categoria');
     bloques.forEach(bloque => {
       const header = bloque.querySelector('h5');
       header.addEventListener('click', () => {
         bloques.forEach(b => {
           if (b !== bloque) b.classList.remove('abierto');
         });
-        bloque.classList.toggle('abierto'); // ahora alterna (abre/cierra)
+        bloque.classList.toggle('abierto');
       });
     });
   });
 });
-
   </script>
 </body>
 </html>
