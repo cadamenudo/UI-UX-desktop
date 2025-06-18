@@ -40,14 +40,30 @@
 
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
-  <!-- Script para cargar los bloques HTML externos -->
+  <!-- Script central con toda la lógica -->
+  <script src="https://cadamenudo.github.io/UI-UX-desktop/js/transacciones.js"></script>
+
+  <!-- Script para cargar los bloques HTML y ejecutar sus scripts embebidos -->
   <script>
     async function cargarBloque(id, url) {
       const contenedor = document.getElementById(id);
       const respuesta = await fetch(url);
       const html = await respuesta.text();
       contenedor.innerHTML = html;
+
+      // Ejecutar scripts embebidos
+      const scripts = contenedor.querySelectorAll("script");
+      scripts.forEach(oldScript => {
+        const newScript = document.createElement("script");
+        if (oldScript.src) {
+          newScript.src = oldScript.src;
+        } else {
+          newScript.textContent = oldScript.textContent;
+        }
+        document.body.appendChild(newScript);
+      });
     }
 
     window.addEventListener("DOMContentLoaded", () => {
@@ -57,9 +73,5 @@
     });
   </script>
 
-  <!-- Script JS centralizado con toda la lógica -->
-  <script src="https://cadamenudo.github.io/UI-UX-desktop/js/transacciones.js"></script>
-
 </body>
 </html>
-
