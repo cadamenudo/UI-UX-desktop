@@ -61,7 +61,7 @@
 
   <!-- Modal de edición de transacción -->
 <div id="modalEditar" class="modal-transaccion hidden">
-  <div class="contenido-modal" id="contenidoEditar">
+  <div class="contenido-modal" id="contenidoEditar" onclick="event.stopPropagation()">
     <!-- Aquí se cargará editar-transaccion.html -->
   </div>
 </div>
@@ -124,15 +124,24 @@
   }
 
   // ✅ Delegación global para detectar clics en botones "Editar"
-  document.addEventListener('click', (e) => {
-    if (e.target.classList.contains('editar')) {
-      mostrarModalEditar();
-    }
 
-    if (e.target.classList.contains('cerrar-modal')) {
-      document.getElementById('modalEditar').classList.add('hidden');
-    }
-  });
+  document.addEventListener('click', (e) => {
+  // Botón "Editar"
+  if (e.target.classList.contains('editar')) {
+    mostrarModalEditar();
+  }
+
+  // Botón "Cerrar" dentro del contenido
+  if (e.target.classList.contains('cerrar-modal')) {
+    document.getElementById('modalEditar').classList.add('hidden');
+  }
+
+  // Clic fuera del contenido del modal (en el overlay)
+  if (e.target.id === 'modalEditar') {
+    e.target.classList.add('hidden');
+  }
+});
+
 </script>
 
   
