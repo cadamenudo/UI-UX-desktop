@@ -44,24 +44,41 @@
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
   <!-- Script para cargar los bloques HTML externos con callback -->
-  <script>
-    async function cargarBloque(id, url, callback) {
-      const contenedor = document.getElementById(id);
-      const respuesta = await fetch(url);
-      const html = await respuesta.text();
-      contenedor.innerHTML = html;
-      if (callback) callback();
-    }
+<script>
+  async function cargarBloque(id, url, callback) {
+    const contenedor = document.getElementById(id);
+    const respuesta = await fetch(url);
+    const html = await respuesta.text();
+    contenedor.innerHTML = html;
+    if (callback) callback();
+  }
 
-    window.addEventListener("DOMContentLoaded", () => {
-      cargarBloque("bloqueResumen", "https://cadamenudo.github.io/UI-UX-desktop/resumen-principal-calendario.html");
-      cargarBloque("bloqueNavegador", "https://cadamenudo.github.io/UI-UX-desktop/Navegador-Resumen-Donas.html", () => {
+  function inicializarAcordeones() {
+    document.querySelectorAll('.bloque-tab').forEach(tab => {
+      const bloques = tab.querySelectorAll('.bloque-categoria');
+      bloques.forEach(bloque => {
+        const header = bloque.querySelector('h5');
+        header.addEventListener('click', () => {
+          bloques.forEach(b => {
+            if (b !== bloque) b.classList.remove('abierto');
+          });
+          bloque.classList.toggle('abierto');
+        });
+      });
+    });
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    cargarBloque("bloqueResumen", "https://cadamenudo.github.io/UI-UX-desktop/resumen-principal-calendario.html");
+
+    cargarBloque("bloqueNavegador", "https://cadamenudo.github.io/UI-UX-desktop/Navegador-Resumen-Donas.html", () => {
       activarModalNuevaTransaccion();
-      });
-      cargarBloque("bloqueTablaTransacciones", "https://cadamenudo.github.io/UI-UX-desktop/tabla-transacciones.html", () => {
-        inicializarAcordeones();
-      });
+    });
 
+    cargarBloque("bloqueTablaTransacciones", "https://cadamenudo.github.io/UI-UX-desktop/tabla-transacciones.html", () => {
+      inicializarAcordeones();
+    });
+  });
 </script>
   
   <!-- Script JS centralizado con toda la lógica -->
