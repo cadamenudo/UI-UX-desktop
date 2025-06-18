@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+men<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX/css-fonts.css"/>
 
   <!-- CSS principal del tablero -->
-  <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX-desktop/css/tablero.css" />
+  <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX-desktop/css/resumen-calendario.css" />
     <!-- Flatpickr (calendario) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
@@ -14,52 +14,60 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <div class="contenido-tablero">
-    <div class="bloque-flexible">
-      <div class="resumen-unificado">
-        <div class="bloque-indicador">
-          <div class="icono-svg-resumen i-ingreso">
-             <img src="https://cadamenudo.github.io/UI-UX/assets/icons/ingreso.png" alt="Ingresos"/>
-          </div>
-          <div class="texto-indicador">
-            <span class="label">Ingresos</span>
-            <span class="valor">$3,000.00</span>
-          </div>
+
+<div class="contenido-tablero">
+  <div class="header-grid">
+
+    <!-- 🟢 Resumen -->
+    <div class="resumen-unificado">
+      <div class="bloque-indicador">
+        <div class="icono-svg-resumen i-ingreso">
+          <img src="https://cadamenudo.github.io/UI-UX/assets/icons/ingreso.png" alt="Ingresos" />
         </div>
-        <div class="bloque-indicador">
-          <div class="icono-svg-resumen i-gasto">
-            <img src="https://cadamenudo.github.io/UI-UX/assets/icons/gastos.png" alt="Gastos"/>
-            </div>
-          <div class="texto-indicador">
-            <span class="label">Gastos</span>
-            <span class="valor">$1,200.00</span>
-          </div>
-        </div>
-        <div class="bloque-indicador">
-          <div class="icono-svg-resumen i-ahorro">
-            <img src="https://cadamenudo.github.io/UI-UX/assets/icons/ahorro.png" alt="Ahorros"/>
-            </div>
-          <div class="texto-indicador">
-            <span class="label">Ahorro</span>
-            <span class="valor">$450.00</span>
-          </div>
+        <div class="texto-indicador">
+          <span class="label">Ingresos</span>
+          <span class="valor">$3,000.00</span>
         </div>
       </div>
 
-      <div class="calendario-box">
-        <div class="titulo">Seleccione un rango deseado</div>
-        <div class="fila-fechas">
-          <input type="text" id="desde" placeholder="Desde">
-          <input type="text" id="hasta" placeholder="Hasta">
-          <button class="boton-periodo">Buscar</button>
+      <div class="bloque-indicador">
+        <div class="icono-svg-resumen i-gasto">
+          <img src="https://cadamenudo.github.io/UI-UX/assets/icons/gastos.png" alt="Gastos" />
+        </div>
+        <div class="texto-indicador">
+          <span class="label">Gastos</span>
+          <span class="valor">$1,200.00</span>
+        </div>
+      </div>
+
+      <div class="bloque-indicador">
+        <div class="icono-svg-resumen i-ahorro">
+          <img src="https://cadamenudo.github.io/UI-UX/assets/icons/ahorro.png" alt="Ahorros" />
+        </div>
+        <div class="texto-indicador">
+          <span class="label">Ahorro</span>
+          <span class="valor">$450.00</span>
         </div>
       </div>
     </div>
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-      
+
+    <!-- 📅 Calendario -->
+    <div class="calendario-box">
+      <div class="titulo">Seleccione un rango deseado</div>
+      <div class="fila-fechas">
+        <input type="text" id="desde" placeholder="Desde" />
+        <input type="text" id="hasta" placeholder="Hasta" />
+        <button>Buscar</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 <script>
   flatpickr("#desde", { dateFormat: "d/m/Y" });
   flatpickr("#hasta", { dateFormat: "d/m/Y" });
 </script>
+
 </body>
 </html>
