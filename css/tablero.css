@@ -20,13 +20,18 @@
       display: flex;
       gap: 2rem;
       justify-content: space-between;
+       flex-wrap: wrap; /* Permite que baje solo si es necesario */
     }
 
     .resumen-unificado, .calendario-box {
-      background: white;
-      border-radius: 16px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-    }
+  flex: 1 1 0; /* crece, se reduce, base automática */
+  min-width: 320px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  padding: 1.5rem;
+  box-sizing: border-box;
+}
 
 .resumen-unificado {
   flex: 1;
