@@ -2,16 +2,18 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Transacciones | Cada Menudo</title>
 
-  <!-- Tipografía personalizada -->
+  <!-- Tipografía -->
   <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX/css-fonts.css"/>
 
-  <!-- Flatpickr para calendario -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <!-- CSS de cada bloque -->
+  <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX-desktop/css/resumen-principal-calendario.css" />
+  <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX-desktop/css/Navegador-Resumen-Donas.css" />
+  <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX-desktop/css/grafico-donas.css" />
+  <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX-desktop/css/tabla-transacciones.css" />
 
-  <!-- Chart.js para las donas -->
+  <!-- Chart.js (solo si donas lo requieren) -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
@@ -20,471 +22,40 @@
       background: #FAFBFF;
       margin: 0;
       padding: 0;
-      color: #0f172a;
     }
 
-    .contenido-transacciones {
-      padding: 100px 32px 0 272px;
-      display: flex;
-      flex-direction: column;
-      gap: 2.5rem;
-      max-width: 1440px;
-      margin: 0 auto;
+    main {
+      padding: 32px 48px;
     }
-
-    /* --- BLOQUE SUPERIOR --- */
-    .bloque-superior {
-      display: flex;
-      justify-content: space-between;
-      gap: 2rem;
-    }
-
-    .resumen-unificado {
-      display: flex;
-      gap: 1.5rem;
-      background: white;
-      border-radius: 16px;
-      padding: 1.5rem;
-      flex: 1;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-    }
-
-    .bloque-indicador {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .icono-svg-resumen img {
-      width: 36px;
-      height: 36px;
-    }
-
-    .texto-indicador {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .texto-indicador .label {
-      font-size: 0.85rem;
-      color: #64748B;
-    }
-
-    .texto-indicador .valor {
-      font-size: 1.1rem;
-      font-weight: bold;
-    }
-
-    .calendario-box {
-      min-width: 300px;
-      background: white;
-      border-radius: 16px;
-      padding: 1.5rem;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-    }
-
-    .calendario-box .titulo {
-      font-weight: bold;
-      margin-bottom: 0.5rem;
-    }
-
-    .fila-fechas {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .fila-fechas input {
-      padding: 8px 12px;
-      border-radius: 8px;
-      border: 1px solid #CBD5E1;
-    }
-
-    .boton-periodo {
-      margin-top: 0.5rem;
-      padding: 8px 12px;
-      border-radius: 8px;
-      background: #3956E8;
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    /* --- BLOQUE INTERMEDIO --- */
-    .bloque-intermedio {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-
-    .tabs-transacciones {
-      display: flex;
-      gap: 2rem;
-      font-weight: 600;
-    }
-
-    .tabs-transacciones .tab {
-      background: none;
-      border: none;
-      font-size: 1rem;
-      color: #64748B;
-      padding-bottom: 6px;
-      cursor: pointer;
-      position: relative;
-    }
-
-    .tabs-transacciones .tab.activo {
-      color: #3956E8;
-    }
-
-    .tabs-transacciones .tab.activo::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 2px;
-      background: #3956E8;
-      border-radius: 1px;
-    }
-
-    .contenido-resumen-dona {
-      display: flex;
-      justify-content: space-between;
-      gap: 2rem;
-    }
-
-    .resumen-transacciones,
-    .dona-transacciones {
-      background: white;
-      border-radius: 16px;
-      padding: 1.5rem;
-      flex: 1;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-    }
-
-    /* --- BLOQUE LISTA --- */
-    .bloque-lista-transacciones {
-      background: white;
-      padding: 1.5rem;
-      border-radius: 16px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-    }
-    .bloque-indicador {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding-right: 2rem;
-}
-
-.borde-derecho {
-  border-right: 1px solid #e2e8f0;
-}
-
-.bloque-indicador:last-child {
-  padding-right: 0;
-}
-
-.icono-svg-resumen img {
-  width: 40px;
-  height: 40px;
-}
-
-.texto-indicador .label {
-  font-size: 0.85rem;
-  color: #94a3b8;
-}
-
-.texto-indicador .valor {
-  font-weight: 700;
-  font-size: 1.25rem;
-  color: #0f172a;
-}
-.simbolo {
-  font-weight: normal;
-  font-family: Arial, sans-serif;
-  margin-right: 2px;
-}
-
-.monto {
-  font-weight: bold;
-  font-size: 1rem;
-  white-space: nowrap;
-}
-
-.subcategoria {
-  color: #64748b;
-  font-size: 0.8rem;
-}
-
-.fecha {
-  font-size: 0.85rem;
-  color: #64748b;
-}
   </style>
 </head>
 <body>
-   <!-- 2. Resumen principal y calendario -->
-<section class="bloque-superior-horizontal">
-  <div class="resumen-vertical">
-    <div class="item-resumen">
-      <div class="icono-circular i-ingreso">
-        <img src="https://cadamenudo.github.io/UI-UX/assets/icons/ingreso.png" alt="Ingresos" />
-      </div>
-      <div class="texto-resumen">
-        <span class="label">Ingresos</span>
-        <span class="valor">$3,000.00</span>
-      </div>
-    </div>
 
-    <div class="item-resumen">
-      <div class="icono-circular i-gasto">
-        <img src="https://cadamenudo.github.io/UI-UX/assets/icons/gastos.png" alt="Gastos" />
-      </div>
-      <div class="texto-resumen">
-        <span class="label">Gastos</span>
-        <span class="valor">$1,200.00</span>
-      </div>
-    </div>
+  <main>
+    <div id="bloqueResumenCalendario"></div>
+    <div id="bloqueNavegadorResumenDonas"></div>
+    <div id="bloqueTablaTransacciones"></div>
+  </main>
 
-    <div class="item-resumen">
-      <div class="icono-circular i-ahorro">
-        <img src="https://cadamenudo.github.io/UI-UX/assets/icons/ahorro.png" alt="Ahorro" />
-      </div>
-      <div class="texto-resumen">
-        <span class="label">Ahorro</span>
-        <span class="valor">$50.00</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="calendario-box">
-    <span class="titulo">Seleccione un rango deseado <span style="color:#94a3b8;">i</span></span>
-    <input type="text" id="desde" placeholder="Desde" />
-    <input type="text" id="hasta" placeholder="Hasta" />
-    <button class="boton-periodo">Buscar</button>
-  </div>
-</section>
-
-    <!-- 2. Navegador, Resumen y Gráfico de Dona -->
-    <section class="bloque-intermedio">
-      <div class="tabs-transacciones">
-        <button class="tab activo" data-tab="ingresos">Ingresos</button>
-        <button class="tab" data-tab="gastos">Gastos</button>
-        <button class="tab" data-tab="ahorro">Ahorro</button>
-      </div>
-
-      <div class="contenido-resumen-dona">
-        <div class="resumen-transacciones" id="resumenTransacciones">
-          <!-- Aquí irá el resumen dinámico según categoría -->
-        </div>
-        <div class="dona-transacciones" id="donaTransacciones">
-          <!-- Aquí irá la dona (usa tu lógica y script existente) -->
-        </div>
-      </div>
-    </section>
-
-<section class="bloque-lista-transacciones">
-  <h4 style="margin-bottom: 1rem;">Lista de Transacciones</h4>
-
-  <!-- Ingresos -->
-<div id="ingresos" class="categoria activa">
-  <div class="bloque-categoria">
-    <h5><span>Sueldo</span><span><span class="simbolo">$</span>2,400.00</span></h5>
-    <div class="contenido-transacciones">
-      <div class="tarjeta-transaccion">
-        <div class="col-1">
-          <span class="monto"><span class="simbolo">$</span>1,200.00</span>
-          <span class="subcategoria">Sueldo</span>
-        </div>
-        <div class="col-2">
-          <span class="fecha">12 mayo 2025</span>
-          <span class="fuente">Banco BCP</span>
-        </div>
-        <div class="col-3">
-          <span class="editar">Editar</span>
-        </div>
-      </div>
-      <div class="tarjeta-transaccion">
-        <div class="col-1">
-          <span class="monto"><span class="simbolo">$</span>1,200.00</span>
-          <span class="subcategoria">Sueldo</span>
-        </div>
-        <div class="col-2">
-          <span class="fecha">12 mayo 2025</span>
-          <span class="fuente">Banco BCP</span>
-        </div>
-        <div class="col-3">
-          <span class="editar">Editar</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-  <!-- GASTOS -->
-  
-  <div id="gastos" class="categoria">
-  <div class="bloque-categoria">
-    <h5><span>Cuidado Personal</span><span><span class="simbolo">$</span>135.00</span></h5>
-    <div class="contenido-transacciones">
-      <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>45.00</span><span class="subcategoria">Peluquería</span></div><div class="col-2"><span class="fecha">03 mayo 2025</span><span class="fuente">Efectivo</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-      <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>50.00</span><span class="subcategoria">Spa</span></div><div class="col-2"><span class="fecha">07 mayo 2025</span><span class="fuente">Tarjeta</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-      <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>40.00</span><span class="subcategoria">Productos</span></div><div class="col-2"><span class="fecha">10 mayo 2025</span><span class="fuente">Amazon</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-    </div>
-  </div>
-
-  <div class="bloque-categoria">
-    <h5><span>Alimentación</span><span><span class="simbolo">$</span>130.00</span></h5>
-    <div class="contenido-transacciones">
-      <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>60.00</span><span class="subcategoria">Supermercado</span></div><div class="col-2"><span class="fecha">02 mayo 2025</span><span class="fuente">Tarjeta</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-      <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>40.00</span><span class="subcategoria">Restaurante</span></div><div class="col-2"><span class="fecha">05 mayo 2025</span><span class="fuente">Efectivo</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-      <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>30.00</span><span class="subcategoria">Delivery</span></div><div class="col-2"><span class="fecha">08 mayo 2025</span><span class="fuente">App</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-    </div>
-  </div>
-
-  <div class="bloque-categoria">
-    <h5><span>Casa</span><span><span class="simbolo">$</span>1,260.00</span></h5>
-    <div class="contenido-transacciones">
-      <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>1,000.00</span><span class="subcategoria">Alquiler</span></div><div class="col-2"><span class="fecha">01 mayo 2025</span><span class="fuente">Transferencia</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-      <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>150.00</span><span class="subcategoria">Electricidad</span></div><div class="col-2"><span class="fecha">03 mayo 2025</span><span class="fuente">Débito automático</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-      <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>110.00</span><span class="subcategoria">Agua y gas</span></div><div class="col-2"><span class="fecha">04 mayo 2025</span><span class="fuente">Tarjeta</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-    </div>
-    </div>
-<div class="bloque-categoria"><h5><span>Entretenimiento</span><span><span class="simbolo">$</span>210.00</span></h5>
-  <div class="contenido-transacciones">
-    <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>50.00</span><span class="subcategoria">Cine</span></div><div class="col-2"><span class="fecha">06 mayo 2025</span><span class="fuente">Tarjeta</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-    <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>100.00</span><span class="subcategoria">Concierto</span></div><div class="col-2"><span class="fecha">09 mayo 2025</span><span class="fuente">Efectivo</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-    <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>60.00</span><span class="subcategoria">Streaming</span></div><div class="col-2"><span class="fecha">10 mayo 2025</span><span class="fuente">Netflix</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-  </div>
-</div>
-<div class="bloque-categoria">
-  <h5><span>Impuestos</span><span><span class="simbolo">$</span>360.00</span></h5>
-  <div class="contenido-transacciones">
-    <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>120.00</span><span class="subcategoria">Propiedad</span></div><div class="col-2"><span class="fecha">05 mayo 2025</span><span class="fuente">Estado</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-    <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>120.00</span><span class="subcategoria">Ingresos</span></div><div class="col-2"><span class="fecha">12 mayo 2025</span><span class="fuente">IRS</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-    <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>120.00</span><span class="subcategoria">Otros</span></div><div class="col-2"><span class="fecha">20 mayo 2025</span><span class="fuente">Municipal</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-  </div>
-</div>
-
-<div class="bloque-categoria">
-  <h5><span>Ropa</span><span><span class="simbolo">$</span>180.00</span></h5>
-  <div class="contenido-transacciones">
-    <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>60.00</span><span class="subcategoria">Camisa</span></div><div class="col-2"><span class="fecha">02 mayo 2025</span><span class="fuente">Zara</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-    <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>70.00</span><span class="subcategoria">Pantalón</span></div><div class="col-2"><span class="fecha">06 mayo 2025</span><span class="fuente">Uniqlo</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-    <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>50.00</span><span class="subcategoria">Zapatos</span></div><div class="col-2"><span class="fecha">09 mayo 2025</span><span class="fuente">Footlocker</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-  </div>
-</div>
-
-<div class="bloque-categoria">
-  <h5><span>Seguro</span><span><span class="simbolo">$</span>300.00</span></h5>
-  <div class="contenido-transacciones">
-    <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>100.00</span><span class="subcategoria">Salud</span></div><div class="col-2"><span class="fecha">01 mayo 2025</span><span class="fuente">BlueCross</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-    <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>100.00</span><span class="subcategoria">Auto</span></div><div class="col-2"><span class="fecha">10 mayo 2025</span><span class="fuente">GEICO</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-    <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>100.00</span><span class="subcategoria">Vida</span></div><div class="col-2"><span class="fecha">15 mayo 2025</span><span class="fuente">StateFarm</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-  </div>
-</div>
-
-<div class="bloque-categoria">
-  <h5><span>Servicio de deuda</span><span><span class="simbolo">$</span>900.00</span></h5>
-  <div class="contenido-transacciones">
-    <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>300.00</span><span class="subcategoria">Préstamo estudiantil</span></div><div class="col-2"><span class="fecha">03 mayo 2025</span><span class="fuente">Nelnet</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-    <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>300.00</span><span class="subcategoria">Tarjeta de crédito</span></div><div class="col-2"><span class="fecha">09 mayo 2025</span><span class="fuente">Chase</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-    <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>300.00</span><span class="subcategoria">Préstamo personal</span></div><div class="col-2"><span class="fecha">20 mayo 2025</span><span class="fuente">SoFi</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-  </div>
-</div>
-
-<div class="bloque-categoria">
-  <h5><span>Servicios profesionales</span><span><span class="simbolo">$</span>420.00</span></h5>
-  <div class="contenido-transacciones">
-    <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>150.00</span><span class="subcategoria">Contador</span></div><div class="col-2"><span class="fecha">04 mayo 2025</span><span class="fuente">Firma ABC</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-    <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>120.00</span><span class="subcategoria">Abogado</span></div><div class="col-2"><span class="fecha">08 mayo 2025</span><span class="fuente">LegalPlus</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-    <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>150.00</span><span class="subcategoria">Asesoría</span></div><div class="col-2"><span class="fecha">13 mayo 2025</span><span class="fuente">Coach Pro</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-  </div>
-</div>
-
-<div class="bloque-categoria">
-  <h5><span>Telecomunicaciones</span><span><span class="simbolo">$</span>210.00</span></h5>
-  <div class="contenido-transacciones">
-    <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>70.00</span><span class="subcategoria">Internet</span></div><div class="col-2"><span class="fecha">01 mayo 2025</span><span class="fuente">Xfinity</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-    <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>70.00</span><span class="subcategoria">Teléfono</span></div><div class="col-2"><span class="fecha">05 mayo 2025</span><span class="fuente">T-Mobile</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-    <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>70.00</span><span class="subcategoria">TV</span></div><div class="col-2"><span class="fecha">10 mayo 2025</span><span class="fuente">DirectTV</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-  </div>
-</div>
-
-<div class="bloque-categoria">
-  <h5><span>Transporte</span><span><span class="simbolo">$</span>285.00</span></h5>
-  <div class="contenido-transacciones">
-    <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>95.00</span><span class="subcategoria">Gasolina</span></div><div class="col-2"><span class="fecha">03 mayo 2025</span><span class="fuente">Shell</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-    <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>100.00</span><span class="subcategoria">Mantenimiento</span></div><div class="col-2"><span class="fecha">12 mayo 2025</span><span class="fuente">Taller</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-    <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>90.00</span><span class="subcategoria">Uber</span></div><div class="col-2"><span class="fecha">16 mayo 2025</span><span class="fuente">Uber App</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-  </div>
-</div>
-</div>
-</div>
-
-<!-- AHORRO -->
-
-<div id="ahorro" class="categoria">
-<div class="bloque-categoria"><h5><span>Contribución al retiro</span><span><span class="simbolo">$</span>900.00</span></h5>
-  <div class="contenido-transacciones">
-    <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>300.00</span><span class="subcategoria">401(k)</span></div><div class="col-2"><span class="fecha">01 mayo 2025</span><span class="fuente">Plan empresa</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-    <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>300.00</span><span class="subcategoria">IRA</span></div><div class="col-2"><span class="fecha">08 mayo 2025</span><span class="fuente">Transferencia</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-    <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>300.00</span><span class="subcategoria">Aportación extra</span></div><div class="col-2"><span class="fecha">15 mayo 2025</span><span class="fuente">Tarjeta</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-  </div>
-</div>
-
-<div class="bloque-categoria"><h5><span>Reserva de Emergencia</span><span><span class="simbolo">$</span>750.00</span></h5>
-  <div class="contenido-transacciones">
-    <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>250.00</span><span class="subcategoria">Cuenta online</span></div><div class="col-2"><span class="fecha">03 mayo 2025</span><span class="fuente">Transferencia</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-    <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>250.00</span><span class="subcategoria">App ahorro</span></div><div class="col-2"><span class="fecha">10 mayo 2025</span><span class="fuente">Automático</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-    <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>250.00</span><span class="subcategoria">Extra ingreso</span></div><div class="col-2"><span class="fecha">15 mayo 2025</span><span class="fuente">Efectivo</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-  </div>
-</div>
-
-<div class="bloque-categoria"><h5><span>Cuenta de ahorro</span><span><span class="simbolo">$</span>600.00</span></h5>
-  <div class="contenido-transacciones">
-    <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>200.00</span><span class="subcategoria">Transferencia mensual</span></div><div class="col-2"><span class="fecha">01 mayo 2025</span><span class="fuente">Banco</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-    <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>200.00</span><span class="subcategoria">Rendimiento</span></div><div class="col-2"><span class="fecha">09 mayo 2025</span><span class="fuente">Intereses</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-    <div class="tarjeta-transaccion"><div class="col-1"><span class="monto"><span class="simbolo">$</span>200.00</span><span class="subcategoria">Ingreso adicional</span></div><div class="col-2"><span class="fecha">12 mayo 2025</span><span class="fuente">Trabajo extra</span></div><div class="col-3"><span class="editar">Editar</span></div></div>
-  </div>
-</div>
-
-</div>
-</section>
-
-<script>
-  function cambiarCategoria(id, boton) {
-    document.querySelectorAll('.categoria').forEach(el => el.classList.remove('activa'));
-    document.getElementById(id).classList.add('activa');
-    document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('activo'));
-    boton.classList.add('activo');
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.categoria').forEach(categoria => {
-      const bloques = categoria.querySelectorAll('.bloque-categoria');
-      bloques.forEach(bloque => {
-        const header = bloque.querySelector('h5');
-        header.addEventListener('click', () => {
-          bloques.forEach(b => {
-            if (b !== bloque) b.classList.remove('abierto');
-          });
-          bloque.classList.toggle('abierto');
-        });
-      });
-    });
-  });
-</script>
-
-  <!-- Flatpickr -->
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <!-- Script para cargar los fragmentos HTML -->
   <script>
-    flatpickr("#desde", { dateFormat: "d/m/Y" });
-    flatpickr("#hasta", { dateFormat: "d/m/Y" });
+    async function cargarFragmento(id, url) {
+      try {
+        const res = await fetch(url);
+        const html = await res.text();
+        document.getElementById(id).innerHTML = html;
+      } catch (err) {
+        console.error("Error cargando", url, err);
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      cargarFragmento("bloqueResumenCalendario", "https://cadamenudo.github.io/UI-UX-desktop/resumen-principal-calendario.html");
+      cargarFragmento("bloqueNavegadorResumenDonas", "https://cadamenudo.github.io/UI-UX-desktop/Navegador-Resumen-Donas.html");
+      cargarFragmento("bloqueTablaTransacciones", "https://cadamenudo.github.io/UI-UX-desktop/tabla-transacciones.html");
+    });
   </script>
 </body>
 </html>
+
 
