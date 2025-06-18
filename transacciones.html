@@ -55,12 +55,11 @@
 
     window.addEventListener("DOMContentLoaded", () => {
       cargarBloque("bloqueResumen", "https://cadamenudo.github.io/UI-UX-desktop/resumen-principal-calendario.html");
-      cargarBloque("bloqueNavegador", "https://cadamenudo.github.io/UI-UX-desktop/Navegador-Resumen-Donas.html");
-      cargarBloque("bloqueTablaTransacciones", "https://cadamenudo.github.io/UI-UX-desktop/tabla-transacciones.html", () => {
-        // ✅ Aquí ya existe la función
-        activarModalNuevaTransaccion();
+      cargarBloque("bloqueNavegador", "https://cadamenudo.github.io/UI-UX-desktop/Navegador-Resumen-Donas.html", () => {
+      activarModalNuevaTransaccion();
       });
-    });
+      cargarBloque("bloqueTablaTransacciones", "https://cadamenudo.github.io/UI-UX-desktop/tabla-transacciones.html");
+      });
   </script>
 
   <!-- Script JS centralizado con toda la lógica -->
