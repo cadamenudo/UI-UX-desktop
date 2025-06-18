@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Navegador + Resumen + Donas</title>
+  <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX/css-fonts.css"/>
+  <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX-desktop/css/grafico-donas.css" />
+  <style>
+    body {
+      margin: 0;
+      padding: 2rem;
+      background: #FAFBFF;
+      font-family: 'Greycliff CF', sans-serif;
+      color: #0f172a;
+    }
+
+    .contenedor-tabs {
+      display: flex;
+      gap: 2.5rem;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.50rem;
+      margin-top: 1rem;
+      width: 100%;
+    }
+
+    .contenedor-tabs button {
+      background: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 16px;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #94a3b8;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s ease;
+    }
+
+    .contenedor-tabs button.activo {
+      color: #2f2f2f;
+      border-bottom: 3px solid #7459D9;
+    }
+
+    .contenedor-tabs .punto {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .p-ingresos { background-color: #7459D9; }
+    .p-gastos   { background-color: #BDBDBD; }
+    .p-ahorro   { background-color: #E8C239; }
+
+    .contenedor-boton {
+      display: flex;
+      justify-content: flex-start; 
+      margin-bottom: 0.5rem;
+      margin-top: 1rem;
+}
+    .grupo-tabs {
+  display: flex;
+  gap: 1rem;
+}
+        .boton-nueva {
+      background-color: #594AE2 !important;
+      color: white !important;
+      padding: 0.75rem 1.25rem;
+      border: none;
+      border-radius: 16px;
+      font-weight: 600;
+      border-radius: 999px;
+      font-size: 1rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.3s ease;
+    }
+    
+    .boton-nueva:hover {
+      background-color: #4735b7;
+    }
+    .seccion-contenido {
+      display: flex;
+      gap: 2rem;
+    }
+
+        #graficoDona {
+      max-width: 220px;
+      margin: 0 auto;
+    }
+    .bloque-resumen,
+    .bloque-dona {
+      flex: 1;
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      margin-top: 0;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+    
+    /* Solo aplica centrado a la dona */
+    .bloque-dona {
+      min-height: 320px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .bloque-resumen h3 {
+      margin-top: 0;
+      font-size: 1.5rem;
+    }
+
+.fila {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  margin: 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.fila:last-child {
+  background: #f8fafc;
+  border-radius: 12px;
+  border-bottom: none;
+  margin-top: 1rem;
+}
+.fila-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 12px;
+  border-bottom: none;
+  margin-top: 1rem;
+}
+    .oculto {
+      display: none;
+    }
+    
+#graficoIngresos,
+#graficoGastos,
+#graficoAhorros {
+  max-width: 300px;
+  max-height: 300px;
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+    
+.header-dona {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* alinea arriba */
+  margin-top: 0;
+  margin-bottom: 0.5rem; /* opcional */
+}
+    .ver-detalle {
+  background-color: transparent;
+  border: 2px solid #E2E8F0; /* gris claro */
+  color: #0f172a; /* casi negro */
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.ver-detalle:hover {
+  background-color: #f1f5f9; /* leve hover */
+}
+
+.fila-total {
+  background: #f8fafc;
+  padding: 1rem;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: none;
+  margin-top: 1rem;
+}
+
+    .seccion-layout {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.columna-izquierda {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.columna-derecha {
+  flex: 1;
+}
+
+    .fila-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end; 
+  margin-bottom: 0;     
+}
+
+.cabecera-transacciones h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.cabecera-transacciones {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+    .titulo-transacciones {
+  margin-bottom: 0.75rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+ .modal-nueva {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-nueva.oculto {
+  display: none;
+}
+
+.contenido-modal {
+  background: transparent;
+  border-radius: 16px;
+  padding: 0;
+  border: none;
+  width: auto;
+  height: auto;
+  max-height: 95vh;
+  overflow: visible;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.contenido-modal iframe {
+  width: 400px;
+  height: 650px;
+  border: none;
+  display: block;
+  border-radius: 16px;
+}
+
+    /* Estilo general del modal */
+.modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+}
+.modal-contenido {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 360px;
+  margin: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Título */
+.titulo-modal {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 1.5rem;
+}
+
+/* Ítems de subcategoría */
+.subcategoria-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.9rem 1.2rem;
+  border-radius: 12px;
+  background: #f9fafb;
+  font-size: 1rem;
+  color: #0f172a;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  margin-bottom: 0.75rem;
+  border: 1px solid transparent;
+}
+
+.subcategoria-item:hover {
+  background: #eef2ff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  border-color: #c7d2fe;
+}
+
+/* Botones al pie */
+.botones-subcategorias {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+  gap: 1rem;
+}
+
+.botones-subcategorias button {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  background: #e5e7eb;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  color: #1e293b;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.botones-subcategorias button:hover {
+  background: #d1d5db;
+}
+
+
+  </style>
+</head>
+<body>
+
+<!-- TÍTULO -->
+<h2 class="titulo-transacciones">Lista de Transacciones</h2>
+
+<!-- BLOQUE DE DOS COLUMNAS: tabs + resumen (izquierda) y dona (derecha) -->
+<div class="seccion-layout">
+  
+  <!-- COLUMNA IZQUIERDA: TABS + RESUMEN -->
+  <div class="columna-izquierda">
+    
+<!-- TABS -->
+<div class="fila-tabs">
+  <div class="contenedor-tabs">
+    <div class="grupo-tabs">
+      <button class="activo" onclick="cambiarTab('ingresos', this)">
+        <span class="punto p-ingresos"></span> Ingresos
+      </button>
+      <button onclick="cambiarTab('gastos', this)">
+        <span class="punto p-gastos"></span> Gastos
+      </button>
+      <button onclick="cambiarTab('ahorro', this)">
+        <span class="punto p-ahorro"></span> Ahorro
+      </button>
+    </div>
+    <button id="btnNuevaTransaccion" class="boton-nueva">+ Nueva Transacción</button>
+  </div>
+</div>
+
+<!-- BLOQUE RESUMEN -->
+<div class="bloque-resumen">
+  <div id="resumen-ingresos" class="bloque-tab">
+    <h3>Resumen</h3>
+    <div class="fila"><span>Último Ingreso</span><strong>$1,200.00</strong></div>
+    <div class="fila"><span>Ingreso por registrar</span><strong>$0.00</strong></div>
+    <div class="fila"><span>Ingreso total en el periodo</span><strong>$2,400.00</strong></div>
+  </div>
+
+  <div id="resumen-gastos" class="bloque-tab oculto">
+    <h3>Resumen</h3>
+    <div class="fila"><span>Último Gasto</span><strong>$560.00</strong></div>
+    <div class="fila"><span>Gasto por categorizar</span><strong>$15.00</strong></div>
+    <div class="fila"><span>Gasto total en el periodo</span><strong>$1,985.00</strong></div>
+  </div>
+
+  <div id="resumen-ahorro" class="bloque-tab oculto">
+    <h3>Resumen</h3>
+    <div class="fila"><span>Último Ahorro</span><strong>$300.00</strong></div>
+    <div class="fila"><span>Ahorro automático</span><strong>$250.00</strong></div>
+    <div class="fila"><span>Ahorro total en el periodo</span><strong>$900.00</strong></div>
+  </div>
+</div>
+</div>
+
+  <!-- COLUMNA DERECHA: DONA -->
+  <div class="columna-derecha">
+    <!-- GRAFICO DONA -->
+    <div class="bloque-dona">
+      <!-- TAB INGRESOS -->
+      <div id="dona-ingresos" class="bloque-tab">
+        <h2>Ingresos Totales</h2>
+        <canvas id="graficoIngresos" width="300" height="300"></canvas>
+      </div>
+
+      <!-- TAB GASTOS -->
+      <div id="dona-gastos" class="bloque-tab oculto">
+        <div class="header-dona">
+          <h2>Gastos Totales</h2>
+          <button class="ver-detalle" onclick="abrirModal()">Ver detalle</button>
+        </div>
+        <canvas id="graficoGastos" width="300" height="300"></canvas>
+      </div>
+
+      <!-- TAB AHORRO -->
+      <div id="dona-ahorro" class="bloque-tab oculto">
+        <h2>Ahorro Total</h2>
+        <canvas id="graficoAhorros" width="300" height="300"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- Modal -->
+  <div class="modal oculto" id="modalCategorias">
+    <div class="modal-contenido">
+      <h3>Ver subcategorías</h3>
+      <div class="categoria-item"><button onclick="renderChart('alimentacion')">Alimentación <span>$600</span></button></div>
+      <div class="categoria-item"><button onclick="renderChart('transporte')">Transporte <span>$300</span></button></div>
+      <div class="categoria-item"><button onclick="renderChart('hogar')">Hogar <span>$400</span></button></div>
+      <div class="categoria-item"><button onclick="renderChart('deudas')">Deudas <span>$500</span></button></div>
+      <div class="cerrar-modal">
+        <button onclick="renderChart('general')">← Volver a categorías generales</button>
+        <button onclick="cerrarModal()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+  
+<!-- Modal de Nueva Transacción -->
+<div id="modalNueva" class="modal-nueva oculto">
+  <div class="contenido-modal" id="contenidoModalNueva">
+    <iframe src="https://cadamenudo.github.io/UI-UX/nueva-transaccion.html" frameborder="0"></iframe>
+  </div>
+</div>
+  
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- FUNCIONES VISIBLES GLOBALMENTE -->
+<script>
+window.addEventListener("DOMContentLoaded", () => {
+function abrirModal() {
+  document.getElementById("modalCategorias").classList.remove("oculto");
+}
+
+function cerrarModal() {
+  document.getElementById("modalCategorias").classList.add("oculto");
+}
+  // ✅ Esto expone las funciones globalmente para que onclick="abrirModal()" funcione
+  window.abrirModal = abrirModal;
+  window.cerrarModal = cerrarModal;
+});
+</script>
+
+</script>
+<!-- RESTO DEL SCRIPT -->
+<script>
+window.addEventListener("DOMContentLoaded", () => {
+  const charts = {
+    graficoIngresos: null,
+    graficoAhorros: null
+  };
+
+  // INGRESOS
+  const dataValoresIngresos = [14000, 3500, 2100];
+  const totalIngresos = dataValoresIngresos.reduce((a, b) => a + b, 0);
+
+  const centroDonaIngresos = {
+    id: 'centroTextoIngresos',
+    beforeDraw(chart) {
+      const { width, height } = chart;
+      const ctx = chart.ctx;
+      ctx.restore();
+      ctx.font = '700 24px "Greycliff CF", sans-serif';
+      ctx.fillStyle = '#1e293b';
+      ctx.textBaseline = 'middle';
+      ctx.textAlign = 'center';
+      ctx.fillText(`$${totalIngresos.toLocaleString("en-US")}`, width / 2, height / 2);
+      ctx.save();
+    }
+  };
+
+  const canvasIngresos = document.getElementById('graficoIngresos');
+  if (canvasIngresos) {
+    charts.graficoIngresos = new Chart(canvasIngresos, {
+      type: 'doughnut',
+      data: {
+        labels: ['Sueldo', 'Freelance', 'Otros'],
+        datasets: [{
+          data: dataValoresIngresos,
+          backgroundColor: ['#7D4AEA', '#9E75F0', '#C3B4FB'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        cutout: '65%',
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: "#FFFFFF",
+            titleColor: "#1e293b",
+            bodyColor: "#1e293b",
+            borderColor: "#E2E8F0",
+            borderWidth: 1,
+            padding: 12,
+            callbacks: {
+              label: function(context) {
+                const valor = context.raw;
+                const porcentaje = ((valor / totalIngresos) * 100).toFixed(1);
+                return `${context.label}: $${valor.toLocaleString("en-US")} (${porcentaje}%)`;
+              }
+            }
+          }
+        }
+      },
+      plugins: [centroDonaIngresos]
+    });
+  }
+
+  // GASTOS
+    const categorias = {
+      general: {
+        labels: ["Alimentación", "Transporte", "Hogar", "Deudas"],
+        data: [600, 300, 400, 500],
+        colors: ["#F472B6", "#FBBF24", "#60A5FA", "#A78BFA"]
+      },
+      alimentacion: {
+        labels: ["Supermercado", "Restaurantes", "Café"],
+        data: [350, 180, 70],
+        colors: ["#FDA4AF", "#F9A8D4", "#FBCFE8"]
+      },
+      transporte: {
+        labels: ["Gasolina", "Uber", "Seguro Auto"],
+        data: [120, 100, 80],
+        colors: ["#FCD34D", "#FDE68A", "#FEF9C3"]
+      },
+      hogar: {
+        labels: ["Alquiler", "Electricidad", "Internet"],
+        data: [300, 70, 30],
+        colors: ["#93C5FD", "#BFDBFE", "#DBEAFE"]
+      },
+      deudas: {
+        labels: ["Préstamo Estudiantil", "Tarjeta Crédito", "Préstamo Auto"],
+        data: [200, 180, 120],
+        colors: ["#DDD6FE", "#C4B5FD", "#A78BFA"]
+      }
+    };
+
+    const ctx = document.getElementById("graficoGastos").getContext("2d");
+    let chart;
+    let tipoActivo = "general";
+
+    function renderChart(tipo) {
+      const { labels, data, colors } = categorias[tipo];
+      const total = data.reduce((a, b) => a + b, 0);
+      tipoActivo = tipo;
+
+      if (chart) chart.destroy();
+
+      chart = new Chart(ctx, {
+        type: "doughnut",
+        data: {
+          labels: labels,
+          datasets: [{
+            data: data,
+            backgroundColor: colors,
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          cutout: "70%",
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              backgroundColor: "#FFFFFF",
+              titleColor: "#0f172a",
+              bodyColor: "#0f172a",
+              borderColor: "#E5E7EB",
+              borderWidth: 1,
+              padding: 12,
+              cornerRadius: 10,
+              callbacks: {
+                label: function(context) {
+                  const valor = context.raw;
+                  const porcentaje = ((valor / total) * 100).toFixed(1);
+                  return `${context.label}: $${valor.toLocaleString("en-US")} (${porcentaje}%)`;
+                }
+              }
+            }
+          }
+        },
+        plugins: [{
+          id: 'centroTexto',
+          beforeDraw(chart) {
+            const { width, height } = chart;
+            const ctx = chart.ctx;
+            ctx.restore();
+            const total = chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            if (tipoActivo !== 'general') {
+              const nombre = tipoActivo.charAt(0).toUpperCase() + tipoActivo.slice(1);
+              ctx.font = '600 16px "Greycliff CF", sans-serif';
+              ctx.fillStyle = '#64748B';
+              ctx.fillText(nombre, width / 2, height / 2 - 18);
+              ctx.font = '700 32px "Greycliff CF", sans-serif';
+              ctx.fillStyle = '#0f172a';
+              ctx.fillText(`$${total.toLocaleString("en-US")}`, width / 2, height / 2 + 12);
+            } else {
+              ctx.font = '700 32px "Greycliff CF", sans-serif';
+              ctx.fillStyle = '#0f172a';
+              ctx.fillText(`$${total.toLocaleString("en-US")}`, width / 2, height / 2);
+            }
+
+            ctx.save();
+          }
+        }]
+      });
+
+      cerrarModal();
+    }
+
+    // Inicia con vista general
+    renderChart("general");
+
+  // AHORRO
+  function dibujarDonaAhorro() {
+    const dataValores = [700, 400, 300];
+    const etiquetas = ["Emergencia", "Retiro", "Vacaciones"];
+    const colores = ["#34D399", "#6EE7B7", "#A7F3D0"];
+    const total = dataValores.reduce((a, b) => a + b, 0);
+
+    const canvasAhorros = document.getElementById("graficoAhorros");
+    if (!canvasAhorros) return;
+
+    const ctx = canvasAhorros.getContext("2d");
+
+    charts.graficoAhorros = new Chart(ctx, {
+      type: "doughnut",
+      data: {
+        labels: etiquetas,
+        datasets: [{
+          data: dataValores,
+          backgroundColor: colores,
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        cutout: "70%",
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: "#FFFFFF",
+            titleColor: "#0f172a",
+            bodyColor: "#0f172a",
+            borderColor: "#E5E7EB",
+            borderWidth: 1,
+            padding: 12,
+            cornerRadius: 10,
+            callbacks: {
+              label: function(context) {
+                const valor = context.raw;
+                const porcentaje = ((valor / total) * 100).toFixed(1);
+                return `${context.label}: $${valor.toLocaleString("en-US")} (${porcentaje}%)`;
+              }
+            }
+          }
+        }
+      },
+      plugins: [{
+        id: 'centroTexto',
+        beforeDraw(chart) {
+          const { width, height } = chart;
+          const ctx = chart.ctx;
+          ctx.restore();
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.font = '700 32px "Greycliff CF", sans-serif';
+          ctx.fillStyle = '#0f172a';
+          ctx.fillText(`$${total.toLocaleString("en-US")}`, width / 2, height / 2);
+          ctx.save();
+        }
+      }]
+    });
+  }
+
+  // CAMBIAR TABS
+  function cambiarTab(tabId, boton) {
+    document.querySelectorAll('.bloque-tab').forEach(el => el.classList.add('oculto'));
+    document.getElementById(`resumen-${tabId}`).classList.remove('oculto');
+    document.getElementById(`dona-${tabId}`).classList.remove('oculto');
+    document.querySelectorAll('.contenedor-tabs button').forEach(b => b.classList.remove('activo'));
+    boton.classList.add('activo');
+
+    if (tabId === "gastos") {
+      setTimeout(() => renderChart("general"), 10);
+    }
+
+    if (tabId === "ahorro" && !charts.graficoAhorros) {
+      dibujarDonaAhorro();
+    }
+  }
+
+  // CIERRE DE MODAL DE SUBCATEGORÍAS CUANDO SE HACE CLIC FUERA
+  document.addEventListener("click", function (e) {
+    const modal = document.getElementById("modalCategorias");
+    const contenido = document.querySelector(".modal-contenido");
+  
+    if (modal && contenido) {
+      if (!modal.classList.contains('oculto') && !contenido.contains(e.target)) {
+        cerrarModal();
+      }
+    }
+  });
+
+  // MODAL NUEVA TRANSACCIÓN
+  const btnNuevaTransaccion = document.getElementById("btnNuevaTransaccion");
+  const modalNueva = document.getElementById("modalNueva");
+  const contenidoModal = document.getElementById("contenidoModalNueva");
+
+  if (btnNuevaTransaccion && modalNueva && contenidoModal) {
+    btnNuevaTransaccion.addEventListener("click", () => {
+      modalNueva.classList.remove("oculto");
+    });
+
+    window.addEventListener("click", (e) => {
+      if (!contenidoModal.contains(e.target) && !btnNuevaTransaccion.contains(e.target)) {
+        modalNueva.classList.add("oculto");
+      }
+    });
+  }
+
+  // EXPONER FUNCIONES
+  window.cambiarTab = cambiarTab;
+  window.renderChart = renderChart;
+});
+</script>
+</body>
+</html>
