@@ -2,65 +2,64 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Transacciones | Cada Menudo</title>
+  <title>Transacciones | CadaMenudo</title>
 
-  <!-- Tipografía -->
-  <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX/css-fonts.css"/>
-
-  <!-- CSS de cada bloque -->
+  <!-- Fuentes y estilos globales -->
+  <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX/css-fonts.css" />
   <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX-desktop/css/resumen-principal-calendario.css" />
   <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX-desktop/css/Navegador-Resumen-Donas.css" />
-  <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX-desktop/css/grafico-donas.css" />
   <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX-desktop/css/tabla-transacciones.css" />
 
-  <!-- Chart.js (solo si donas lo requieren) -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
   <style>
-    body {
-      font-family: 'Greycliff CF', sans-serif;
-      background: #FAFBFF;
-      margin: 0;
-      padding: 0;
+    /* Márgenes entre secciones */
+    .bloque-cargado + .bloque-cargado {
+      margin-top: 3rem;
     }
-
-    main {
-      padding: 32px 48px;
-    }
-
-    #bloqueTablaTransacciones {
-  margin-top: 2rem; /* o 32px */
-}
-
   </style>
 </head>
 <body>
 
-  <main>
-    <div id="bloqueResumenCalendario"></div>
-    <div id="bloqueNavegadorResumenDonas"></div>
-    <div id="bloqueTablaTransacciones"></div>
-  </main>
+  <!-- 🔷 BLOQUE 1: Resumen + Calendario -->
+  <div id="bloqueResumen" class="bloque-cargado"></div>
 
-  <!-- Script para cargar los fragmentos HTML -->
+  <!-- 🔷 BLOQUE 2: Navegador + Resumen + Donas -->
+  <div id="bloqueNavegador" class="bloque-cargado"></div>
+
+  <!-- 🔷 BLOQUE 3: Tabla de Transacciones -->
+  <div id="bloqueTablaTransacciones" class="bloque-cargado"></div>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Script principal (puedes también separarlo en archivo .js si lo deseas) -->
   <script>
-    async function cargarFragmento(id, url) {
-      try {
-        const res = await fetch(url);
-        const html = await res.text();
-        document.getElementById(id).innerHTML = html;
-      } catch (err) {
-        console.error("Error cargando", url, err);
-      }
+    // Función para cargar contenido parcial
+    async function cargarBloque(id, url) {
+      const contenedor = document.getElementById(id);
+      const respuesta = await fetch(url);
+      const html = await respuesta.text();
+      contenedor.innerHTML = html;
+
+      // Ejecuta scripts embebidos manualmente
+      const scripts = contenedor.querySelectorAll("script");
+      scripts.forEach(oldScript => {
+        const newScript = document.createElement("script");
+        if (oldScript.src) {
+          newScript.src = oldScript.src;
+        } else {
+          newScript.textContent = oldScript.textContent;
+        }
+        document.body.appendChild(newScript);
+      });
     }
 
+    // Cargar todos los bloques
     window.addEventListener("DOMContentLoaded", () => {
-      cargarFragmento("bloqueResumenCalendario", "https://cadamenudo.github.io/UI-UX-desktop/resumen-principal-calendario.html");
-      cargarFragmento("bloqueNavegadorResumenDonas", "https://cadamenudo.github.io/UI-UX-desktop/Navegador-Resumen-Donas.html");
-      cargarFragmento("bloqueTablaTransacciones", "https://cadamenudo.github.io/UI-UX-desktop/tabla-transacciones.html");
+      cargarBloque("bloqueResumen", "https://cadamenudo.github.io/UI-UX-desktop/resumen-principal-calendario.html");
+      cargarBloque("bloqueNavegador", "https://cadamenudo.github.io/UI-UX-desktop/Navegador-Resumen-Donas.html");
+      cargarBloque("bloqueTablaTransacciones", "https://cadamenudo.github.io/UI-UX-desktop/tabla-transacciones.html");
     });
   </script>
+
 </body>
 </html>
-
-
