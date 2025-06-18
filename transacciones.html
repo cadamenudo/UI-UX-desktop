@@ -24,7 +24,8 @@
     #bloqueTablaTransacciones {
       margin-top: 2rem;
     }
-    .hidden {
+
+.hidden {
   display: none;
 }
 .modal-transaccion {
@@ -45,6 +46,9 @@
   padding: 2rem;
   max-width: 600px;
   width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 0 16px rgba(0,0,0,0.1);
 }
   </style>
 </head>
@@ -62,7 +66,7 @@
   <!-- Modal de edición de transacción -->
 <div id="modalEditar" class="modal-transaccion hidden">
   <div class="contenido-modal" id="contenidoEditar" onclick="event.stopPropagation()">
-    <!-- Aquí se cargará editar-transaccion.html -->
+    <!-- Aquí se carga el contenido -->
   </div>
 </div>
 
@@ -115,16 +119,36 @@ function mostrarModalEditar() {
   const modal = document.getElementById('modalEditar');
   const contenido = document.getElementById('contenidoEditar');
 
-  // 👇 carga temporal para probar
-  contenido.innerHTML = `
-    <h2>Editar transacción</h2>
-    <p>Este es un contenido de prueba.</p>
-    <button class="cerrar-modal">Cerrar</button>
-  `;
-
+  contenido.innerHTML = '<p style="color: #64748B;">Cargando formulario...</p>';
   modal.classList.remove('hidden');
+
+  fetch("https://cadamenudo.github.io/UI-UX/editar-transaccion.html")
+    .then(res => {
+      if (!res.ok) throw new Error("Error al cargar el formulario");
+      return res.text();
+    })
+    .then(html => {
+      contenido.innerHTML = html;
+    })
+    .catch(err => {
+      contenido.innerHTML = `<p style="color: red;">No se pudo cargar el formulario. Intenta más tarde.</p>`;
+    });
 }
 
+document.addEventListener('click', (e) => {
+  if (e.target.classList.contains('editar')) {
+    mostrarModalEditar();
+  }
+
+  if (e.target.classList.contains('cerrar-modal')) {
+    document.getElementById('modalEditar').classList.add('hidden');
+  }
+
+  if (e.target.id === 'modalEditar') {
+    document.getElementById('modalEditar').classList.add('hidden');
+  }
+});
+  
   // ✅ Delegación global para detectar clics en botones "Editar"
 
   document.addEventListener('click', (e) => {
