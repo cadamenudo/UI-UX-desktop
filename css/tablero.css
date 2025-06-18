@@ -21,13 +21,13 @@
   display: flex;
   gap: 2rem;
   justify-content: space-between;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .resumen-unificado,
 .calendario-box {
-  flex: 1 1 0;
-  min-width: 320px;
+  flex: 1;
+  min-width: 0px;
   background: white;
   border-radius: 16px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.05);
