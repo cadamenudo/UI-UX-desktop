@@ -19,23 +19,29 @@ const charts = {
 };
 
 const dataValoresIngresos = [14000, 3500, 2100];
-const totalIngresos = dataValoresIngresos.reduce((a, b) => a + b, 0);
+
 const centroDonaIngresos = {
   id: 'centroTextoIngresos',
   beforeDraw(chart) {
     const { width, height } = chart;
     const ctx = chart.ctx;
+    const total = dataValoresIngresos.reduce((a, b) => a + b, 0);
     ctx.restore();
     ctx.font = '700 24px "Greycliff CF", sans-serif';
     ctx.fillStyle = '#1e293b';
     ctx.textBaseline = 'middle';
     ctx.textAlign = 'center';
-    ctx.fillText(`$${totalIngresos.toLocaleString("en-US")}`, width / 2, height / 2);
+    ctx.fillText(`$${total.toLocaleString("en-US")}`, width / 2, height / 2);
     ctx.save();
   }
 };
-const canvasIngresos = document.getElementById('graficoIngresos');
-if (canvasIngresos) {
+
+function dibujarDonaIngresos() {
+  const canvasIngresos = document.getElementById('graficoIngresos');
+  if (!canvasIngresos) return;
+
+  const totalIngresos = dataValoresIngresos.reduce((a, b) => a + b, 0);
+
   charts.graficoIngresos = new Chart(canvasIngresos, {
     type: 'doughnut',
     data: {
@@ -71,6 +77,8 @@ if (canvasIngresos) {
     plugins: [centroDonaIngresos]
   });
 }
+
+window.dibujarDonaIngresos = dibujarDonaIngresos;
 
 // ========== GRAFICO DONA GASTOS ==========
 const categorias = {
