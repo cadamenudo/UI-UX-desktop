@@ -175,24 +175,9 @@
 </div>
 </body>
   <script>
-  function cambiarCategoria(id, boton) {
-    document.querySelectorAll('.categoria').forEach(el => el.classList.remove('activa'));
-    document.getElementById(id).classList.add('activa');
-    document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('activo'));
-    boton.classList.add('activo');
-  }
-
-  function toggleDetalles(element) {
-    const detalles = element.nextElementSibling;
-    if (detalles.style.display === 'block') {
-      detalles.style.display = 'none';
-    } else {
-      detalles.style.display = 'block';
-    }
-  }
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.categoria').forEach(categoria => {
-    const bloques = categoria.querySelectorAll('.bloque-categoria');
+    const bloques = categoria.querySelectorAll('.bloque-tab');
     bloques.forEach(bloque => {
       const header = bloque.querySelector('h5');
       header.addEventListener('click', () => {
