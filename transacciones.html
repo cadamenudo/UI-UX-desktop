@@ -21,9 +21,10 @@
     main {
       padding: 32px 48px;
     }
+
     #bloqueTablaTransacciones {
-  margin-top: 2rem; /* o 32px */
-}
+      margin-top: 2rem;
+    }
   </style>
 </head>
 <body>
@@ -40,29 +41,15 @@
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <!-- Script principal (puedes también separarlo en archivo .js si lo deseas) -->
+  <!-- Script para cargar los bloques HTML externos -->
   <script>
-    // Función para cargar contenido parcial
     async function cargarBloque(id, url) {
       const contenedor = document.getElementById(id);
       const respuesta = await fetch(url);
       const html = await respuesta.text();
       contenedor.innerHTML = html;
-
-      // Ejecuta scripts embebidos manualmente
-      const scripts = contenedor.querySelectorAll("script");
-      scripts.forEach(oldScript => {
-        const newScript = document.createElement("script");
-        if (oldScript.src) {
-          newScript.src = oldScript.src;
-        } else {
-          newScript.textContent = oldScript.textContent;
-        }
-        document.body.appendChild(newScript);
-      });
     }
 
-    // Cargar todos los bloques
     window.addEventListener("DOMContentLoaded", () => {
       cargarBloque("bloqueResumen", "https://cadamenudo.github.io/UI-UX-desktop/resumen-principal-calendario.html");
       cargarBloque("bloqueNavegador", "https://cadamenudo.github.io/UI-UX-desktop/Navegador-Resumen-Donas.html");
@@ -70,5 +57,9 @@
     });
   </script>
 
+  <!-- Script JS centralizado con toda la lógica -->
+  <script src="https://cadamenudo.github.io/UI-UX-desktop/js/transacciones.js"></script>
+
 </body>
 </html>
+
