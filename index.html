@@ -48,6 +48,7 @@
       color:#fff;
     }
     header *{ color:#fff !important; }
+    /* deja tu tamaño; si quieres menor, cambia aquí */
     header .logo img{height:100px}
 
     /* ===== SIDEBAR con grid y logout abajo ===== */
@@ -130,7 +131,7 @@
       margin-top:var(--header-h);
       padding:24px;
       display:grid;
-      grid-template-columns:1fr 340px;
+      grid-template-columns:1fr 340px; /* izquierda | derecha */
       gap:20px;
     }
 
@@ -173,6 +174,24 @@
 
     .reminder{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;padding:10px;border:1px solid var(--border);border-radius:12px;background:#fff}
     .icon-btn{width:30px;height:30px;border-radius:8px;border:1px solid var(--border);background:#fff;display:grid;place-items:center;cursor:pointer}
+
+    /* ===== CALENDARIO ===== */
+    .calendar.card{ padding:16px 16px 10px; }
+    .cal-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+    .cal-title{ font-weight:900; font-size:18px; letter-spacing:.2px }
+    .cal-nav{ display:flex; gap:8px }
+    .cal-btn{ border:1px solid var(--border); background:#fff; border-radius:10px; padding:6px 10px; cursor:pointer; }
+    .cal-grid{ display:grid; grid-template-columns:repeat(7,1fr); gap:6px; user-select:none; }
+    .cal-weekday{ text-transform:uppercase; font-size:11px; color:#64748B; text-align:center; padding:6px 0; }
+    .cal-cell{ background:#fff; border:1px solid var(--border); border-radius:12px; min-height:86px; padding:8px; display:flex; flex-direction:column; gap:6px; }
+    .cal-cell.out{ opacity:.45 }
+    .cal-cell .date{ font-weight:800; color:#0F172A }
+    .cal-cell.today{ outline:2px solid rgba(89,74,226,.35) }
+    .badges{ display:flex; flex-wrap:wrap; gap:6px; margin-top:auto }
+    .badge-pill{ font-size:11px; line-height:1; padding:6px 8px; border-radius:999px; background:rgba(89,74,226,.12); color:#3b33a6; border:1px solid rgba(89,74,226,.18); font-weight:700; max-width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .badge-pill.income{ background:rgba(34,197,94,.12); color:#166534; border-color:rgba(34,197,94,.18) }
+    .badge-pill.expense{ background:rgba(239,68,68,.12); color:#7f1d1d; border-color:rgba(239,68,68,.18) }
+    .badge-pill.save{ background:rgba(232,194,57,.15); color:#6b5300; border-color:rgba(232,194,57,.25) }
 
     @media(max-width:1200px){
       main{grid-template-columns:1fr}
@@ -246,6 +265,274 @@
   </aside>
 
   <!-- ===== MAIN ===== -->
-  <!-- (resto del contenido igual que tu versión anterior) -->
+  <main>
+    <!-- Columna izquierda (KPIs + Calendario + Gráficas) -->
+    <section>
+      <!-- KPIs -->
+      <div class="kpis">
+        <div class="card kpi">
+          <div class="dot income">+$</div>
+          <div>
+            <div class="label">Ingresos</div>
+            <div class="value" id="kpiIngresos">$3,000</div>
+          </div>
+        </div>
+        <div class="card kpi">
+          <div class="dot expense">–$</div>
+          <div>
+            <div class="label">Gastos</div>
+            <div class="value" id="kpiGastos">$1,200</div>
+          </div>
+        </div>
+        <div class="card kpi">
+          <div class="dot saving">💰</div>
+          <div>
+            <div class="label">Ahorro</div>
+            <div class="value" id="kpiAhorro">$50</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CALENDARIO -->
+      <div class="card calendar" style="margin-top:18px">
+        <div class="cal-head">
+          <div class="cal-title" id="calTitle">Calendario</div>
+          <div class="cal-nav">
+            <button class="cal-btn" id="calPrev">◀</button>
+            <button class="cal-btn" id="calToday">Hoy</button>
+            <button class="cal-btn" id="calNext">▶</button>
+          </div>
+        </div>
+
+        <div class="cal-grid" id="calWeekdays">
+          <div class="cal-weekday">lun</div>
+          <div class="cal-weekday">mar</div>
+          <div class="cal-weekday">mié</div>
+          <div class="cal-weekday">jue</div>
+          <div class="cal-weekday">vie</div>
+          <div class="cal-weekday">sáb</div>
+          <div class="cal-weekday">dom</div>
+        </div>
+
+        <div class="cal-grid" id="calGrid" style="margin-top:6px"></div>
+      </div>
+
+      <!-- Gráficas -->
+      <div class="grid-2" style="margin-top:18px">
+        <div class="card">
+          <div class="chart-title">Meta para el año</div>
+          <canvas id="barGoal"></canvas>
+        </div>
+        <div class="card">
+          <div class="chart-title">Ingresos vs Gastos</div>
+          <canvas id="lineIG"></canvas>
+        </div>
+      </div>
+
+      <div class="grid-2-2" style="margin-top:18px">
+        <div class="card">
+          <div class="chart-title">Ingresos Totales</div>
+          <div class="donut-center">
+            <canvas id="donutIncome"></canvas>
+            <div class="center" id="centerIncome">$19,600</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="chart-title">Gastos Totales</div>
+          <div class="donut-center">
+            <canvas id="donutExpense"></canvas>
+            <div class="center" id="centerExpense">$1,800</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Columna derecha (listas) -->
+    <aside>
+      <div class="card">
+        <div class="chart-title">Últimas Transacciones</div>
+        <div class="tabs" style="margin-top:8px">
+          <button class="tab active" data-tab="ingresos">Ingresos</button>
+          <button class="tab" data-tab="gastos">Gastos</button>
+          <button class="tab" data-tab="ahorro">Ahorro</button>
+        </div>
+        <div id="txList" class="transactions"></div>
+      </div>
+
+      <div class="card" style="margin-top:18px">
+        <div class="chart-title">Resumen de Gastos</div>
+        <div class="list-slim" id="resumenGastos" style="margin-top:8px"></div>
+      </div>
+
+      <div class="card" style="margin-top:18px">
+        <div class="chart-title">Recordatorios</div>
+        <div class="list-slim" id="reminders" style="margin-top:8px"></div>
+      </div>
+    </aside>
+  </main>
+
+  <script>
+    // ===== Datos demo =====
+    const demo={
+      ingresosKPI:3000,gastosKPI:1200,ahorroKPI:50,
+      goal:{meta:6000,acumulado:3800},
+      meses:['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],
+      ingresosMes:[3200,3600,4100,3800,4200,4500,5200,4900,4700,4800,5000,5100],
+      gastosMes:[2900,3300,3800,3600,3900,4100,4900,4700,4500,4700,4800,4950],
+      ingresosTotales:19600,gastosTotales:1800,
+      incomeParts:[45,25,15,15],expenseParts:[40,22,18,20],
+      tx:[
+        {tipo:'ingresos',cat:'Salario',monto:1500,fecha:'2025-10-01'},
+        {tipo:'ingresos',cat:'Freelance',monto:600,fecha:'2025-10-03'},
+        {tipo:'gastos',cat:'Casa',monto:-850,fecha:'2025-10-04'},
+        {tipo:'ahorro',cat:'Aporte Fondo',monto:50,fecha:'2025-10-05'}
+      ],
+      resumenGastos:[['Casa',1210],['Alimentación',190],['Impuestos',104]],
+      reminders:[
+        {text:'Pagar AMEX',meta:'Hoy',done:false},
+        {text:'Auto ahorro',meta:'Viernes',done:true}
+      ]
+    };
+
+    const fmt=v=>v.toLocaleString('en-US',{style:'currency',currency:'USD'});
+    const $=s=>document.querySelector(s);
+    const el=(t,c,h)=>{const n=document.createElement(t);if(c)n.className=c;if(h!==undefined)n.innerHTML=h;return n;};
+
+    // KPIs
+    $('#kpiIngresos').textContent=fmt(demo.ingresosKPI);
+    $('#kpiGastos').textContent=fmt(demo.gastosKPI);
+    $('#kpiAhorro').textContent=fmt(demo.ahorroKPI);
+
+    // ===== Charts =====
+    Chart.defaults.font.family='"Greycliff CF",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif';
+    Chart.defaults.color='#334155';
+
+    new Chart($('#barGoal'),{
+      type:'bar',
+      data:{
+        labels:['Meta','Acumulado'],
+        datasets:[{ data:[demo.goal.meta,demo.goal.acumulado], backgroundColor:['#DDE2FF','#F7E8B4'], borderRadius:14, borderSkipped:false }]
+      },
+      options:{ plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmt(c.parsed.y)}}}, scales:{y:{beginAtZero:true,ticks:{callback:v=>fmt(v)}}}}
+    });
+
+    (()=>{
+      const ctx=$('#lineIG').getContext('2d');
+      const g1=ctx.createLinearGradient(0,0,0,220); g1.addColorStop(0,'rgba(57,86,232,.35)'); g1.addColorStop(1,'rgba(57,86,232,0)');
+      const g2=ctx.createLinearGradient(0,0,0,220); g2.addColorStop(0,'rgba(228,77,121,.30)'); g2.addColorStop(1,'rgba(228,77,121,0)');
+      new Chart(ctx,{ type:'line',
+        data:{ labels:demo.meses,
+          datasets:[
+            {label:'Ingresos',data:demo.ingresosMes,tension:.35,fill:true,borderColor:'#3956E8',backgroundColor:g1,borderWidth:3,pointRadius:0},
+            {label:'Gastos',data:demo.gastosMes,tension:.35,fill:true,borderColor:'#e44d79',backgroundColor:g2,borderWidth:3,pointRadius:0},
+          ]},
+        options:{ plugins:{legend:{position:'bottom'},tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${fmt(c.parsed.y)}`}}}, scales:{y:{ticks:{callback:v=>fmt(v)}}}}
+      );
+    })();
+
+    new Chart($('#donutIncome'),{
+      type:'doughnut',
+      data:{ labels:['Salario','Freelance','Intereses','Otros'],
+        datasets:[{data:demo.incomeParts,borderWidth:0,hoverOffset:6,backgroundColor:['#3956E8','#7459D9','#A28AF4','#C7BEFF']}]},
+      options:{cutout:'72%',plugins:{legend:{position:'bottom'}}}
+    });
+
+    new Chart($('#donutExpense'),{
+      type:'doughnut',
+      data:{ labels:['Casa','Comida','Transporte','Otros'],
+        datasets:[{data:demo.expenseParts,borderWidth:0,hoverOffset:6,backgroundColor:['#e44d79','#FF8FAF','#FFC2D4','#FFE0EA']}]},
+      options:{cutout:'72%',plugins:{legend:{position:'bottom'}}}
+    });
+
+    $('#centerIncome').textContent=fmt(demo.ingresosTotales);
+    $('#centerExpense').textContent=fmt(demo.gastosTotales);
+
+    // ===== Listas derecha =====
+    function renderTx(tab='ingresos'){
+      const w=$('#txList'); w.innerHTML='';
+      demo.tx.filter(t=>t.tipo===tab).forEach(t=>{
+        const row=el('div','tx');
+        row.append(el('div','',`<strong>${t.cat}</strong><br><small style="color:#64748B">${t.fecha}</small>`));
+        const m=el('div','amount '+(t.monto<0?'negative':'positive'),fmt(t.monto));
+        row.append(m); w.append(row);
+      });
+    }
+    renderTx('ingresos');
+    document.querySelectorAll('.tab').forEach(b=>{
+      b.addEventListener('click',()=>{ document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); b.classList.add('active'); renderTx(b.dataset.tab); });
+    });
+
+    demo.resumenGastos.forEach(([n,v])=>{ const r=el('div','row'); r.append(el('div','',n)); r.append(el('div','',fmt(v))); $('#resumenGastos').append(r); });
+
+    function paintReminders(){
+      const host=$('#reminders'); host.innerHTML='';
+      demo.reminders.forEach((r,i)=>{
+        const row=el('div','reminder');
+        row.append(el('div','',`<strong>${r.text}</strong><br><small style="color:#64748B">${r.meta}</small>`));
+        const st=el('div','',r.done?'<span style="color:#22C55E;font-weight:800">✔</span>':'<span style="color:#64748B">Pendiente</span>');
+        const del=el('button','icon-btn','🗑'); del.addEventListener('click',()=>{ demo.reminders.splice(i,1); paintReminders(); });
+        row.append(st,del); host.append(row);
+      });
+    }
+    paintReminders();
+
+    // ===== Calendario =====
+    const calendarEvents = [
+      { date: '2025-10-01', label: 'Salario +$1,500', type:'income' },
+      { date: '2025-10-03', label: 'Freelance +$600', type:'income' },
+      { date: '2025-10-03', label: 'Alimentación -$120', type:'expense' },
+      { date: '2025-10-04', label: 'Casa -$850', type:'expense' },
+      { date: '2025-10-05', label: 'Ahorro +$50', type:'save' }
+    ];
+    // añade también las transacciones demo al calendario
+    calendarEvents.push(...demo.tx.map(t=>({
+      date:t.fecha,
+      label:`${t.cat} ${t.monto<0?'-':'+'}${Math.abs(t.monto)}`,
+      type:t.monto<0?'expense':(t.tipo==='ahorro'?'save':'income')
+    })));
+
+    const pad = n => String(n).padStart(2,'0');
+    const ymd = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+    let calRef = new Date();
+    function renderCalendar(){
+      const year=calRef.getFullYear(), month=calRef.getMonth();
+      const first=new Date(year,month,1);
+      let start=new Date(first);
+      const day=(start.getDay()+6)%7; // lunes=0
+      start.setDate(start.getDate()-day);
+
+      document.getElementById('calTitle').textContent =
+        new Intl.DateTimeFormat('es-ES',{month:'long',year:'numeric'}).format(first);
+
+      const grid=document.getElementById('calGrid'); grid.innerHTML='';
+      for(let i=0;i<42;i++){
+        const d=new Date(start); d.setDate(start.getDate()+i);
+        const cell=document.createElement('div');
+        cell.className='cal-cell'+(d.getMonth()!==month?' out':'');
+        if(ymd(d)===ymd(new Date())) cell.classList.add('today');
+
+        const top=document.createElement('div'); top.className='date'; top.textContent=d.getDate();
+        const badges=document.createElement('div'); badges.className='badges';
+
+        calendarEvents.filter(e=>e.date===ymd(d)).slice(0,3).forEach(e=>{
+          const pill=document.createElement('div');
+          pill.className='badge-pill '+(e.type||'');
+          pill.textContent=e.label;
+          pill.title=e.label;
+          badges.appendChild(pill);
+        });
+
+        cell.appendChild(top); cell.appendChild(badges); grid.appendChild(cell);
+      }
+    }
+    document.getElementById('calPrev').addEventListener('click',()=>{ calRef.setMonth(calRef.getMonth()-1); renderCalendar(); });
+    document.getElementById('calNext').addEventListener('click',()=>{ calRef.setMonth(calRef.getMonth()+1); renderCalendar(); });
+    document.getElementById('calToday').addEventListener('click',()=>{ calRef=new Date(); renderCalendar(); });
+    renderCalendar();
+
+    // Nav activo por hash
+    function markActive(){ document.querySelectorAll('.nav a').forEach(a=>a.classList.toggle('active', a.getAttribute('href')===location.hash)); }
+    window.addEventListener('hashchange', markActive); markActive();
+  </script>
 </body>
 </html>
