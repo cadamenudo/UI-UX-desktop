@@ -196,6 +196,54 @@
     @media(max-width:1200px){
       main{grid-template-columns:1fr}
     }
+/* === FILA SUPERIOR (KPIs + Calendario) === */
+.row-top {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr; /* proporción 60/40 */
+  gap: 18px;
+  align-items: stretch;
+}
+
+/* Card contenedora de los tres KPIs */
+.card.kpi-wrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 340px; /* igual que calendario */
+}
+
+.card.kpi-wrap .kpis {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.card.kpi {
+  background: #f9f9ff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: none;
+  text-align: left;
+}
+
+/* Calendario a la derecha */
+.card.calendar {
+  height: 340px; /* altura fija alineada con los KPIs */
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.cal-grid {
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.cal-cell {
+  min-height: 68px; /* celdas un poco más compactas */
+}
+
+
   </style>
 </head>
 <body>
@@ -268,54 +316,61 @@
   <main>
     <!-- Columna izquierda (KPIs + Calendario + Gráficas) -->
     <section>
-      <!-- KPIs -->
-      <div class="kpis">
-        <div class="card kpi">
-          <div class="dot income">+$</div>
-          <div>
-            <div class="label">Ingresos</div>
-            <div class="value" id="kpiIngresos">$3,000</div>
-          </div>
-        </div>
-        <div class="card kpi">
-          <div class="dot expense">–$</div>
-          <div>
-            <div class="label">Gastos</div>
-            <div class="value" id="kpiGastos">$1,200</div>
-          </div>
-        </div>
-        <div class="card kpi">
-          <div class="dot saving">💰</div>
-          <div>
-            <div class="label">Ahorro</div>
-            <div class="value" id="kpiAhorro">$50</div>
-          </div>
+<!-- FILA SUPERIOR: KPIs (izq) + Calendario (der) -->
+<div class="row-top">
+  <!-- KPIs agrupados -->
+  <div class="card kpi-wrap">
+    <div class="kpis">
+      <div class="card kpi">
+        <div class="dot income">+$</div>
+        <div>
+          <div class="label">Ingresos</div>
+          <div class="value" id="kpiIngresos">$3,000</div>
         </div>
       </div>
-
-      <!-- CALENDARIO -->
-      <div class="card calendar" style="margin-top:18px">
-        <div class="cal-head">
-          <div class="cal-title" id="calTitle">Calendario</div>
-          <div class="cal-nav">
-            <button class="cal-btn" id="calPrev">◀</button>
-            <button class="cal-btn" id="calToday">Hoy</button>
-            <button class="cal-btn" id="calNext">▶</button>
-          </div>
+      <div class="card kpi">
+        <div class="dot expense">–$</div>
+        <div>
+          <div class="label">Gastos</div>
+          <div class="value" id="kpiGastos">$1,200</div>
         </div>
-
-        <div class="cal-grid" id="calWeekdays">
-          <div class="cal-weekday">lun</div>
-          <div class="cal-weekday">mar</div>
-          <div class="cal-weekday">mié</div>
-          <div class="cal-weekday">jue</div>
-          <div class="cal-weekday">vie</div>
-          <div class="cal-weekday">sáb</div>
-          <div class="cal-weekday">dom</div>
-        </div>
-
-        <div class="cal-grid" id="calGrid" style="margin-top:6px"></div>
       </div>
+      <div class="card kpi">
+        <div class="dot saving">💰</div>
+        <div>
+          <div class="label">Ahorro</div>
+          <div class="value" id="kpiAhorro">$50</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Calendario -->
+  <div class="card calendar">
+    <div class="cal-head">
+      <div class="cal-title" id="calTitle">Calendario</div>
+      <div class="cal-nav">
+        <button class="cal-btn" id="calPrev">◀</button>
+        <button class="cal-btn" id="calToday">Hoy</button>
+        <button class="cal-btn" id="calNext">▶</button>
+      </div>
+    </div>
+
+    <div class="cal-grid" id="calWeekdays">
+      <div class="cal-weekday">lun</div>
+      <div class="cal-weekday">mar</div>
+      <div class="cal-weekday">mié</div>
+      <div class="cal-weekday">jue</div>
+      <div class="cal-weekday">vie</div>
+      <div class="cal-weekday">sáb</div>
+      <div class="cal-weekday">dom</div>
+    </div>
+
+    <div class="cal-grid" id="calGrid" style="margin-top:6px"></div>
+  </div>
+</div>
+
+
 
       <!-- Gráficas -->
       <div class="grid-2" style="margin-top:18px">
