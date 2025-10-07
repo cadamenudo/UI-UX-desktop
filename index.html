@@ -196,53 +196,62 @@
     @media(max-width:1200px){
       main{grid-template-columns:1fr}
     }
-/* === FILA SUPERIOR (KPIs + Calendario) === */
+/* === FILA SUPERIOR (KPIs + Calendario compactos) === */
 .row-top {
   display: grid;
-  grid-template-columns: 1.6fr 1fr; /* proporción 60/40 */
+  grid-template-columns: 1.4fr 1fr; /* un poco más angosto */
   gap: 18px;
-  align-items: stretch;
+  align-items: start;
 }
 
-/* Card contenedora de los tres KPIs */
+/* Contenedor de KPIs */
 .card.kpi-wrap {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  height: 340px; /* igual que calendario */
+  height: auto;
+  padding: 20px 28px;
 }
 
 .card.kpi-wrap .kpis {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
 }
 
+/* Tarjetas KPI individuales más angostas */
 .card.kpi {
+  flex: 1;
+  min-width: 180px;
+  max-width: 220px;
   background: #f9f9ff;
   border: 1px solid var(--border);
   border-radius: 16px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
   box-shadow: none;
-  text-align: left;
 }
 
-/* Calendario a la derecha */
+/* Icono KPI */
+.dot {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-weight: 900;
+}
+
+/* Calendario ajustado */
 .card.calendar {
-  height: 340px; /* altura fija alineada con los KPIs */
-  overflow: hidden;
+  height: 340px;
   display: flex;
   flex-direction: column;
+  padding: 16px 20px;
 }
-
-.cal-grid {
-  flex-grow: 1;
-  overflow-y: auto;
-}
-
-.cal-cell {
-  min-height: 68px; /* celdas un poco más compactas */
-}
-
 
   </style>
 </head>
