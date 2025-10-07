@@ -36,37 +36,45 @@
       color:var(--text);
     }
 
-    /* ===== HEADER (puedes reemplazar por el tuyo) ===== */
+    /* ===== HEADER (color #594AE2 y texto blanco) ===== */
     header{
       position:fixed; top:0; left:0; right:0;
       height:var(--header-h);
       background:#594AE2;
-      border-bottom:1px solid var(--border);
+      border:none;                               /* ← quitamos borde */
       z-index:100;
       display:flex; align-items:center; justify-content:space-between;
       padding:0 20px;
-      box-shadow:0 2px 6px rgba(0,0,0,0.04);
+      box-shadow:0 2px 6px rgba(0,0,0,0.15);
+      color:#fff;
     }
-    header .logo{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--primary)}
+    header *{ color:#fff !important; }
+    header .logo{display:flex;align-items:center;gap:10px;font-weight:800}
     header img{height:28px}
 
-    /* ===== SIDEBAR con íconos PNG ===== */
+    /* ===== SIDEBAR con logout al fondo ===== */
     .sidebar{
       position:fixed; top:var(--header-h); left:0;
       width:var(--sidebar-w); bottom:0;
       background:#fff;
       border-right:1px solid var(--border);
-      overflow:auto;
-      padding:14px;
+      display:grid;                              /* ← grid layout */
+      grid-template-rows: auto 1fr auto;         /* brand | contenido scroll | logout */
+      overflow:hidden;                           /* scroll solo en el área central */
       z-index:90;
     }
-    .sidebar .brand{
+    .brand{
       display:flex;align-items:center;gap:10px;
-      padding-bottom:12px;border-bottom:1px solid var(--border);margin-bottom:10px;
+      padding:12px; border-bottom:1px solid var(--border);
     }
-    .sidebar .brand img{width:32px;height:32px;border-radius:8px}
-    .sidebar .brand .name{font-weight:800;font-size:18px}
+    .brand img{width:32px;height:32px;border-radius:8px}
+    .brand .name{font-weight:800;font-size:18px}
     .sidebar small{color:var(--gray)}
+
+    .sidebar-content{
+      overflow-y:auto;                           /* ← scroll aquí */
+      padding:12px;
+    }
 
     .section-title{
       font-size:12px;color:var(--gray);
@@ -87,7 +95,16 @@
       font-weight:700;
     }
     .nav a img.icon{width:22px;height:22px;object-fit:contain}
-    .footer-exit{margin-top:auto;padding:8px 4px}
+
+    .footer-exit{
+      border-top:1px solid var(--border);
+      padding:10px 12px;
+    }
+    .footer-exit a{
+      display:flex;align-items:center;gap:12px;
+      color:#64748B;text-decoration:none;font-weight:700;padding:8px 0;
+    }
+    .footer-exit a:hover{ color:var(--primary); }
 
     /* ===== MAIN LAYOUT ===== */
     main{
@@ -124,7 +141,7 @@
     .donut-center .center{position:absolute;inset:0;display:grid;place-items:center;font-weight:900;font-size:28px;pointer-events:none}
 
     .tabs{display:flex;gap:8px;margin-bottom:10px}
-    .tab{border:1px solid var(--border);padding:8px 12px;border-radius:10px;background:#fff;color:var(--gray);cursor:pointer}
+    .tab{border:1px solid var(--border);padding:8px 12px;border-radius:10px;background:#fff;color:#64748B;cursor:pointer}
     .tab.active{background:rgba(57,86,232,.08);color:var(--primary);border-color:rgba(57,86,232,.2);font-weight:800}
 
     .transactions{display:flex;flex-direction:column;gap:10px}
@@ -146,16 +163,17 @@
 </head>
 <body>
 
-  <!-- ===== HEADER (placeholder) ===== -->
+  <!-- ===== HEADER ===== -->
   <header>
     <div class="logo">
       <img src="https://cadamenudo.github.io/UI-UX/assets/logo/cada menudo logo WHITE.png" alt="logo">
     </div>
-    <div><strong style="color:#64748B">Header Placeholder</strong></div>
+    <div><strong>Header Placeholder</strong></div>
   </header>
 
-  <!-- ===== SIDEBAR con íconos PNG ===== -->
+  <!-- ===== SIDEBAR ===== -->
   <aside class="sidebar">
+    <!-- Top fijo -->
     <div class="brand">
       <img src="https://cadamenudo.github.io/UI-UX/assets/icons/blue%20png/nueva-suma.png" alt="Nueva Transacción">
       <div>
@@ -163,43 +181,47 @@
       </div>
     </div>
 
-    <div class="section-title">Menú</div>
-    <nav class="nav">
-      <a class="active" href="#tablero">
-        <img class="icon" src="https://cadamenudo.github.io/UI-UX/assets/icons/blue%20png/home_blue.png" alt="Tablero"> Tablero
-      </a>
-      <a href="#transacciones">
-        <img class="icon" src="https://cadamenudo.github.io/UI-UX/assets/icons/blue%20png/transacciones_blue.png" alt="Transacciones"> Transacciones
-      </a>
-      <a href="#educacion">
-        <img class="icon" src="https://cadamenudo.github.io/UI-UX/assets/icons/blue%20png/apprender.png" alt="Educación"> Educación
-      </a>
-    </nav>
+    <!-- Contenido scroll -->
+    <div class="sidebar-content">
+      <div class="section-title">Menú</div>
+      <nav class="nav">
+        <a class="active" href="#tablero">
+          <img class="icon" src="https://cadamenudo.github.io/UI-UX/assets/icons/blue%20png/home_blue.png" alt="Tablero"> Tablero
+        </a>
+        <a href="#transacciones">
+          <img class="icon" src="https://cadamenudo.github.io/UI-UX/assets/icons/blue%20png/transacciones_blue.png" alt="Transacciones"> Transacciones
+        </a>
+        <a href="#educacion">
+          <img class="icon" src="https://cadamenudo.github.io/UI-UX/assets/icons/blue%20png/apprender.png" alt="Educación"> Educación
+        </a>
+      </nav>
 
-    <div class="section-title">Configuración</div>
-    <nav class="nav">
-      <a href="#metas">
-        <img class="icon" src="https://cadamenudo.github.io/UI-UX/assets/icons/blue%20png/metas_blue.png" alt="Metas"> Metas
-      </a>
-      <a href="#categorias">
-        <img class="icon" src="https://cadamenudo.github.io/UI-UX/assets/icons/blue%20png/categorias.png" alt="Categorías"> Categorías
-      </a>
-      <a href="#conexion">
-        <img class="icon" src="https://cadamenudo.github.io/UI-UX/assets/icons/blue%20png/conexion.png" alt="Conexión"> Conexión
-      </a>
-      <a href="#recurrencias">
-        <img class="icon" src="https://cadamenudo.github.io/UI-UX/assets/icons/blue%20png/recurrencias.png" alt="Recurrencias"> Recurrencias
-      </a>
-      <a href="#suscripcion">
-        <img class="icon" src="https://cadamenudo.github.io/UI-UX/assets/icons/blue%20png/suscripcion.png" alt="Suscripción"> Suscripción
-      </a>
-      <a href="#moneda">
-        <img class="icon" src="https://cadamenudo.github.io/UI-UX/assets/icons/blue%20png/moneda.png" alt="Moneda"> Moneda
-      </a>
-    </nav>
+      <div class="section-title">Configuración</div>
+      <nav class="nav">
+        <a href="#metas">
+          <img class="icon" src="https://cadamenudo.github.io/UI-UX/assets/icons/blue%20png/metas_blue.png" alt="Metas"> Metas
+        </a>
+        <a href="#categorias">
+          <img class="icon" src="https://cadamenudo.github.io/UI-UX/assets/icons/blue%20png/categorias.png" alt="Categorías"> Categorías
+        </a>
+        <a href="#conexion">
+          <img class="icon" src="https://cadamenudo.github.io/UI-UX/assets/icons/blue%20png/conexion.png" alt="Conexión"> Conexión
+        </a>
+        <a href="#recurrencias">
+          <img class="icon" src="https://cadamenudo.github.io/UI-UX/assets/icons/blue%20png/recurrencias.png" alt="Recurrencias"> Recurrencias
+        </a>
+        <a href="#suscripcion">
+          <img class="icon" src="https://cadamenudo.github.io/UI-UX/assets/icons/blue%20png/suscripcion.png" alt="Suscripción"> Suscripción
+        </a>
+        <a href="#moneda">
+          <img class="icon" src="https://cadamenudo.github.io/UI-UX/assets/icons/blue%20png/moneda.png" alt="Moneda"> Moneda
+        </a>
+      </nav>
+    </div>
 
+    <!-- Logout pegado abajo -->
     <div class="footer-exit">
-      <a href="#salir" class="nav a">
+      <a href="#salir">
         <img class="icon" src="https://cadamenudo.github.io/UI-UX/assets/icons/blue%20png/salir.png" alt="Salir"> Salir
       </a>
     </div>
