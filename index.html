@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Cada Menudo – Tablero</title>
+
+  <!-- Fuente Greycliff CF (proporcionada por ustedes) -->
+  <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX/css-fonts.css"/>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <style>
+    :root{
+      --primary:#3956E8;
+      --secondary:#7459D9;
+      --yellow:#E8C239;
+      --gray:#64748B;
+      --muted:#EEF0F6;
+      --bg:#F7F8FC;
+      --card:#FFFFFF;
+      --text:#0F172A;
+      --border:#E5E7EB;
+      --success:#22C55E;
+      --danger:#EF4444;
+      --shadow: 0 6px 18px rgba(17,24,39,.06);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;background:linear-gradient(0deg,#7b5cf0 0,#7b5cf0 8px,transparent 8px),var(--bg);
+      color:var(--text);font-family:"Greycliff CF",system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,sans-serif;
+    }
+    /* Layout */
+    .app{
+      display:grid;grid-template-columns:280px 1fr;gap:22px;
+      max-width:1400px;margin:24px auto;padding:0 18px 24px;
+    }
+    .sidebar{
+      background:var(--card);border-radius:24px;box-shadow:var(--shadow);padding:14px 12px;position:sticky;top:18px;height:calc(100dvh - 48px);overflow:auto;
+    }
+    .main{
+      display:grid;grid-template-rows:auto 1fr;gap:18px;min-width:0;
+    }
+    /* Sidebar header */
+    .brand{
+      display:flex;align-items:center;gap:10px;padding:10px 12px 14px 12px;border-bottom:1px solid var(--border);margin-bottom:8px;
+    }
+    .logo{
+      width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--primary),var(--secondary));
+      display:grid;place-items:center;color:#fff;font-weight:900;
+      box-shadow:0 6px 16px rgba(57,86,232,.35);
+    }
+    .brand .name{font-weight:800;letter-spacing:.2px}
+    .brand small{display:block;font-size:12px;color:var(--gray);margin-top:2px}
+    /* Sidebar Nav */
+    .section-title{
+      font-size:12px;color:var(--gray);text-transform:uppercase;letter-spacing:.12em;margin:14px 12px 8px;
+    }
+    .nav{display:flex;flex-direction:column;gap:6px;padding:0 6px}
+    .nav a{
+      display:flex;align-items:center;gap:10px;padding:12px 12px;border-radius:12px;text-decoration:none;color:var(--text);
+      transition:transform .05s ease, background .2s ease, color .2s ease;
+    }
+    .nav a:hover{background:var(--muted)}
+    .nav a.active{
+      background:rgba(57,86,232,.08);color:var(--primary);font-weight:700;outline:1px solid rgba(57,86,232,.15)
+    }
+    .ico{
+      width:22px;height:22px;border-radius:50%;display:grid;place-items:center;
+      background:linear-gradient(135deg,rgba(57,86,232,.18),rgba(116,89,217,.18));color:var(--primary);font-size:13px;font-weight:900;
+    }
+    .footer-exit{margin-top:auto;padding:8px 6px}
+    /* Topbar */
+    .topbar{
+      background:var(--card);border-radius:24px;box-shadow:var(--shadow);padding:14px 16px;
+      display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;
+    }
+    .topbar .left{display:flex;align-items:center;gap:10px}
+    .btn{
+      border:0;background:var(--primary);color:#fff;padding:12px 14px;border-radius:14px;font-weight:800;
+      box-shadow:0 6px 16px rgba(57,86,232,.25);cursor:pointer;transition:transform .04s ease, box-shadow .2s ease;
+    }
+    .btn.secondary{background:var(--secondary);box-shadow:0 6px 16px rgba(116,89,217,.25)}
+    .btn:active{transform:translateY(1px)}
+    .search{
+      display:flex;gap:8px;align-items:center;background:var(--bg);padding:8px;border-radius:14px;border:1px solid var(--border)
+    }
+    .search input{
+      appearance:none;border:1px solid var(--border);background:#fff;border-radius:12px;padding:10px 10px;width:150px;font:inherit
+    }
+    .avatar{
+      display:flex;align-items:center;gap:10px;padding:6px 8px;background:#fff;border-radius:20px;border:1px solid var(--border)
+    }
+    .avatar img{width:28px;height:28px;border-radius:50%}
+    /* Content Grid */
+    .content{
+      display:grid;
+      grid-template-columns:1fr 360px;
+      gap:18px;
+      min-height:0;
+    }
+    .left-col{
+      display:grid;gap:18px;min-width:0;
+      grid-template-rows:auto auto 1fr;
+    }
+    /* KPI cards */
+    .kpis{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:18px;
+    }
+    .card{
+      background:var(--card);border-radius:24px;box-shadow:var(--shadow);padding:18px;
+    }
+    .kpi{
+      display:flex;align-items:center;gap:14px;
+    }
+    .kpi .dot{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;color:#fff;font-weight:900}
+    .kpi .label{font-size:14px;color:var(--gray);margin-bottom:6px}
+    .kpi .value{font-size:22px;font-weight:900;letter-spacing:.3px}
+    .dot.income{background:linear-gradient(135deg,var(--primary),#7a93ff)}
+    .dot.expense{background:linear-gradient(135deg,#e44d79,#ff7b9f)}
+    .dot.saving{background:linear-gradient(135deg,var(--yellow),#ffd977);color:#222}
+    /* Charts row */
+    .grid-2{
+      display:grid;grid-template-columns:1fr 1.4fr;gap:18px;min-width:0;
+    }
+    .chart-wrap header{
+      display:flex;align-items:center;justify-content:space-between;margin-bottom:12px
+    }
+    .chart-title{font-weight:800}
+    .badge{font-size:12px;color:var(--gray);display:flex;align-items:center;gap:6px}
+    .info{width:18px;height:18px;border-radius:50%;display:grid;place-items:center;background:var(--muted);color:#445; font-weight:800}
+    canvas{width:100% !important;height:auto !important}
+    /* Donuts row */
+    .grid-2-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .donut-center{
+      position:relative;max-width:420px;margin:auto
+    }
+    .donut-center .center{
+      position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;font-weight:900;font-size:28px
+    }
+    .btn-link{
+      border:0;background:transparent;color:var(--secondary);font-weight:800;cursor:pointer
+    }
+    /* Right column */
+    .right-col{display:grid;gap:18px;min-width:0}
+    .tabs{display:flex;gap:8px;margin-bottom:10px}
+    .tab{border:1px solid var(--border);padding:8px 12px;border-radius:12px;background:#fff;color:var(--gray);cursor:pointer}
+    .tab.active{background:rgba(57,86,232,.08);color:var(--primary);border-color:rgba(57,86,232,.2);font-weight:800}
+    .transactions{display:flex;flex-direction:column;gap:10px}
+    .tx{
+      display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:10px 12px;border:1px solid var(--border);border-radius:14px;background:#fff
+    }
+    .tx .cat{font-weight:800}
+    .tx .amount{font-weight:900}
+    .tx .amount.negative{color:#e11d48}
+    .tx .amount.positive{color:#0ea5e9}
+    .list-slim{display:flex;flex-direction:column;gap:10px}
+    .list-slim .row{display:grid;grid-template-columns:1fr auto;gap:8px;padding:8px 4px;border-bottom:1px dashed var(--border)}
+    .list-slim .row:last-child{border-bottom:0}
+    /* Reminders */
+    .reminder{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;padding:10px;border:1px solid var(--border);border-radius:12px;background:#fff}
+    .reminder small{color:var(--gray)}
+    .icon-btn{
+      width:32px;height:32px;border-radius:9px;border:1px solid var(--border);background:#fff;display:grid;place-items:center;cursor:pointer
+    }
+    /* Responsive tweaks */
+    @media (max-width:1200px){
+      .content{grid-template-columns:1fr}
+      .right-col{grid-row:3}
+    }
+    @media (max-width:920px){
+      .app{grid-template-columns:1fr}
+      .sidebar{position:static;height:auto}
+      .kpis{grid-template-columns:1fr}
+      .grid-2{grid-template-columns:1fr}
+      .grid-2-2{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo">₵</div>
+        <div>
+          <div class="name">Cada Menudo</div>
+          <small>Panel principal</small>
+        </div>
+      </div>
+
+      <div class="section-title">Menú</div>
+      <nav class="nav">
+        <a class="active"><span class="ico">🏠</span> Tablero</a>
+        <a><span class="ico">🧾</span> Transacciones</a>
+        <a><span class="ico">🎓</span> Educación</a>
+      </nav>
+
+      <div class="section-title">Configuración</div>
+      <nav class="nav">
+        <a><span class="ico">🎯</span> Metas</a>
+        <a><span class="ico">🗂</span> Categorías</a>
+        <a><span class="ico">🔗</span> Conexión</a>
+        <a><span class="ico">🔁</span> Recurrencias</a>
+        <a><span class="ico">💳</span> Suscripción</a>
+        <a><span class="ico">💱</span> Moneda</a>
+      </nav>
+
+      <div class="footer-exit">
+        <a class="nav a" style="display:flex;align-items:center;gap:10px"><span class="ico">🚪</span> Salir</a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <!-- Topbar -->
+      <div class="topbar">
+        <div class="left">
+          <button class="btn" id="btnNuevaTx">+ Nueva Transacción</button>
+        </div>
+
+        <div class="search">
+          <span style="font-weight:800;color:var(--gray)">Seleccione un rango:</span>
+          <input type="date" id="desde">
+          <input type="date" id="hasta">
+          <button class="btn secondary" id="btnBuscar">Buscar</button>
+        </div>
+
+        <div class="avatar">
+          <img alt="avatar" src="https://i.pravatar.cc/100?img=5"/>
+          <strong>Xavier Serbia</strong>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="content">
+        <!-- Left column -->
+        <div class="left-col">
+          <!-- KPIs -->
+          <div class="kpis">
+            <div class="card kpi">
+              <div class="dot income">+$</div>
+              <div>
+                <div class="label">Ingresos</div>
+                <div class="value" id="kpiIngresos">$3,000.00</div>
+              </div>
+            </div>
+            <div class="card kpi">
+              <div class="dot expense">–$</div>
+              <div>
+                <div class="label">Gastos</div>
+                <div class="value" id="kpiGastos">$1,200.00</div>
+              </div>
+            </div>
+            <div class="card kpi">
+              <div class="dot saving">💰</div>
+              <div>
+                <div class="label">Ahorro</div>
+                <div class="value" id="kpiAhorro">$50.00</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Charts row -->
+          <div class="grid-2">
+            <div class="card chart-wrap">
+              <header>
+                <div class="chart-title">Meta para el año</div>
+                <div class="badge"><span class="info">i</span> Meta vs Acumulado</div>
+              </header>
+              <canvas id="barGoal"></canvas>
+            </div>
+
+            <div class="card chart-wrap">
+              <header>
+                <div class="chart-title">Ingresos vs Gastos</div>
+                <div class="badge"><span class="info">i</span> 12 meses</div>
+              </header>
+              <canvas id="lineIG"></canvas>
+            </div>
+          </div>
+
+          <!-- Donuts row -->
+          <div class="grid-2-2">
+            <div class="card">
+              <header style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+                <div class="chart-title">Ingresos Totales</div>
+              </header>
+              <div class="donut-center">
+                <canvas id="donutIncome"></canvas>
+                <div class="center" id="centerIncome">$19,600</div>
+              </div>
+            </div>
+
+            <div class="card">
+              <header style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+                <div class="chart-title">Gastos Totales</div>
+                <button class="btn-link" id="btnVerDetalle">Ver detalle</button>
+              </header>
+              <div class="donut-center">
+                <canvas id="donutExpense"></canvas>
+                <div class="center" id="centerExpense">$1,800</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right column -->
+        <div class="right-col">
+          <div class="card">
+            <header style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+              <div class="chart-title">Últimas Transacciones</div>
+              <button class="btn" style="padding:8px 12px;border-radius:10px" id="btnNuevaTxMini">+ Nueva</button>
+            </header>
+
+            <div class="tabs">
+              <button class="tab active" data-tab="ingresos">Ingresos</button>
+              <button class="tab" data-tab="gastos">Gastos</button>
+              <button class="tab" data-tab="ahorro">Ahorro</button>
+            </div>
+
+            <div class="transactions" id="txList"></div>
+          </div>
+
+          <div class="card">
+            <div class="chart-title" style="margin-bottom:6px">Resumen de Gastos</div>
+            <div class="list-slim" id="resumenGastos"></div>
+          </div>
+
+          <div class="card">
+            <header style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+              <div class="chart-title">Recordatorios</div>
+              <button class="btn-link" id="btnAddReminder">+ Nuevo</button>
+            </header>
+            <div class="list-slim" id="reminders"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // ====== Datos demo (puedes reemplazar por tus arrays reales) ======
+    const demo = {
+      ingresosKPI: 3000,
+      gastosKPI: 1200,
+      ahorroKPI: 50,
+      goal:{ meta: 6000, acumulado: 3800 },
+      meses:['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],
+      ingresosMes:[3200,3600,4100,3800,4200,4500,5200,4900,4700,4800,5000,5100],
+      gastosMes:[2900,3300,3800,3600,3900,4100,4900,4700,4500,4700,4800,4950],
+      ingresosTotales:19600,
+      gastosTotales:1800,
+      incomeParts:[45,25,15,15], // sueldos, freel, intereses, otros
+      expenseParts:[40,22,18,20], // casa, comida, transporte, otros
+      tx:[
+        {id:1,tipo:'ingresos',cat:'Salario',monto:1500,fecha:'2025-10-01'},
+        {id:2,tipo:'ingresos',cat:'Freelance',monto:600,fecha:'2025-10-03'},
+        {id:3,tipo:'gastos',cat:'Alimentación',monto:-120,fecha:'2025-10-03'},
+        {id:4,tipo:'gastos',cat:'Casa',monto:-850,fecha:'2025-10-04'},
+        {id:5,tipo:'ahorro',cat:'Aporte Fondo',monto:50,fecha:'2025-10-05'},
+        {id:6,tipo:'gastos',cat:'Entretenimiento',monto:-25,fecha:'2025-10-06'}
+      ],
+      resumenGastos:[
+        ['Cuidado Personal', 55.00],
+        ['Alimentación', 190.00],
+        ['Casa', 1210.00],
+        ['Entretenimiento', 120.00],
+        ['Impuestos', 104.00]
+      ],
+      reminders:[
+        {text:'Pagar AMEX', meta:'Hoy', done:false},
+        {text:'SMS meeting', meta:'Mañana', done:false},
+        {text:'Savings auto-saving', meta:'Viernes', done:true}
+      ]
+    };
+
+    // ====== Utilidades ======
+    const fmt = v => v.toLocaleString('en-US',{style:'currency',currency:'USD'});
+    const $ = sel => document.querySelector(sel);
+    const el = (tag, cls, html) => { const n=document.createElement(tag); if(cls) n.className=cls; if(html!==undefined) n.innerHTML=html; return n; };
+
+    // ====== Pinta KPIs ======
+    $('#kpiIngresos').textContent = fmt(demo.ingresosKPI);
+    $('#kpiGastos').textContent   = fmt(demo.gastosKPI);
+    $('#kpiAhorro').textContent   = fmt(demo.ahorroKPI);
+
+    // ====== Charts (tema) ======
+    Chart.defaults.font.family = '"Greycliff CF", system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Arial, sans-serif';
+    Chart.defaults.color = '#334155';
+    const grad = (ctx, c1, c2) => { const g=ctx.createLinearGradient(0,0,0,220); g.addColorStop(0,c1); g.addColorStop(1,c2); return g; };
+
+    // Goal (bar)
+    (()=>{
+      const ctx = document.getElementById('barGoal').getContext('2d');
+      new Chart(ctx,{
+        type:'bar',
+        data:{
+          labels:['Meta','Acumulado'],
+          datasets:[{
+            data:[demo.goal.meta, demo.goal.acumulado],
+            backgroundColor:[ '#DDE2FF', '#F7E8B4' ],
+            borderRadius:14,
+            borderSkipped:false
+          }]
+        },
+        options:{
+          plugins:{legend:{display:false}, tooltip:{callbacks:{label:c=>fmt(c.parsed.y)}}},
+          scales:{y:{beginAtZero:true,ticks:{callback:v=>fmt(v)}}}
+        }
+      });
+    })();
+
+    // Ingresos vs Gastos (line)
+    (()=>{
+      const ctx = document.getElementById('lineIG').getContext('2d');
+      const gradient1 = ctx.createLinearGradient(0,0,0,220); gradient1.addColorStop(0,'rgba(57,86,232,.35)'); gradient1.addColorStop(1,'rgba(57,86,232,0)');
+      const gradient2 = ctx.createLinearGradient(0,0,0,220); gradient2.addColorStop(0,'rgba(228,77,121,.30)'); gradient2.addColorStop(1,'rgba(228,77,121,0)');
+      new Chart(ctx,{
+        type:'line',
+        data:{
+          labels:demo.meses,
+          datasets:[
+            {label:'Ingresos', data:demo.ingresosMes, tension:.35, fill:true, borderColor:'#3956E8', backgroundColor:gradient1, borderWidth:3, pointRadius:0},
+            {label:'Gastos',   data:demo.gastosMes,   tension:.35, fill:true, borderColor:'#e44d79', backgroundColor:gradient2, borderWidth:3, pointRadius:0},
+          ]
+        },
+        options:{
+          plugins:{legend:{position:'bottom'}, tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${fmt(c.parsed.y)}`}}},
+          scales:{y:{ticks:{callback:v=>fmt(v)}}}
+        }
+      });
+    })();
+
+    // Donut ingresos
+    (()=>{
+      const ctx = document.getElementById('donutIncome').getContext('2d');
+      new Chart(ctx,{
+        type:'doughnut',
+        data:{
+          labels:['Salario','Freelance','Intereses','Otros'],
+          datasets:[{
+            data:demo.incomeParts,
+            borderWidth:0,
+            hoverOffset:6,
+            backgroundColor:['#3956E8','#7459D9','#A28AF4','#C7BEFF']
+          }]
+        },
+        options:{
+          cutout:'72%',
+          plugins:{legend:{position:'bottom'}}
+        }
+      });
+    })();
+
+    // Donut gastos
+    (()=>{
+      const ctx = document.getElementById('donutExpense').getContext('2d');
+      new Chart(ctx,{
+        type:'doughnut',
+        data:{
+          labels:['Casa','Comida','Transporte','Otros'],
+          datasets:[{
+            data:demo.expenseParts,
+            borderWidth:0,
+            hoverOffset:6,
+            backgroundColor:['#e44d79','#FF8FAF','#FFC2D4','#FFE0EA']
+          }]
+        },
+        options:{
+          cutout:'72%',
+          plugins:{legend:{position:'bottom'}}
+        }
+      });
+    })();
+
+    // Centros de donas
+    $('#centerIncome').textContent = fmt(demo.ingresosTotales);
+    $('#centerExpense').textContent = fmt(demo.gastosTotales);
+
+    // ====== Listas right column ======
+    function renderTx(tab='ingresos'){
+      const wrap = $('#txList'); wrap.innerHTML='';
+      demo.tx.filter(t=>t.tipo===tab).forEach(t=>{
+        const row = el('div','tx');
+        row.append(el('div','',`<div class="cat">${t.cat}</div><small style="color:var(--gray)">${t.fecha}</small>`));
+        const amount = el('div','amount '+(t.monto<0?'negative':'positive'), fmt(t.monto));
+        row.append(amount);
+        wrap.append(row);
+      });
+    }
+    renderTx('ingresos');
+
+    // Tabs
+    document.querySelectorAll('.tab').forEach(b=>{
+      b.addEventListener('click',()=>{
+        document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+        b.classList.add('active');
+        renderTx(b.dataset.tab);
+      });
+    });
+
+    // Resumen de gastos
+    (()=>{
+      const host = $('#resumenGastos');
+      demo.resumenGastos.forEach(([n,v])=>{
+        const r = el('div','row'); r.append(el('div','',n)); r.append(el('div','',fmt(v))); host.append(r);
+      });
+    })();
+
+    // Recordatorios
+    function paintReminders(){
+      const host = $('#reminders'); host.innerHTML='';
+      demo.reminders.forEach((r,i)=>{
+        const row = el('div','reminder');
+        row.append(el('div','',`<strong>${r.text}</strong><br><small>${r.meta}</small>`));
+        const st = el('div','', r.done ? '<span style="color:var(--success);font-weight:800">✔</span>' : '<span style="color:var(--gray)">Pendiente</span>');
+        const btn = el('button','icon-btn','🗑');
+        btn.addEventListener('click',()=>{ demo.reminders.splice(i,1); paintReminders(); });
+        row.append(st,btn);
+        host.append(row);
+      });
+    }
+    paintReminders();
+
+    // ====== Interacciones demo ======
+    document.getElementById('btnBuscar').addEventListener('click',()=>{
+      const d = $('#desde').value || '—';
+      const h = $('#hasta').value || '—';
+      alert(`Filtrar por rango\nDesde: ${d}\nHasta: ${h}\n(Conecta aquí tu lógica de filtro)`);
+    });
+    document.getElementById('btnNuevaTx').addEventListener('click',()=>alert('Abrir modal de Nueva Transacción'));
+    document.getElementById('btnNuevaTxMini').addEventListener('click',()=>alert('Abrir modal de Nueva Transacción'));
+    document.getElementById('btnVerDetalle').addEventListener('click',()=>alert('Abrir detalle de subcategorías (dona anidada)'));
+    document.getElementById('btnAddReminder').addEventListener('click',()=>{
+      const t = prompt('Recordatorio'); if(!t) return;
+      demo.reminders.unshift({text:t, meta:'(sin fecha)', done:false});
+      paintReminders();
+    });
+  </script>
+</body>
+</html>
