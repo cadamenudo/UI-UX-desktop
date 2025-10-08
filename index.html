@@ -131,27 +131,35 @@
     .reminder{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;padding:10px;border:1px solid var(--border);border-radius:12px;background:#fff}
     .icon-btn{width:30px;height:30px;border-radius:8px;border:1px solid var(--border);background:#fff;display:grid;place-items:center;cursor:pointer}
 
-    /* ===== Overrides para alinear Resumen + Calendario como cards ===== */
-    .contenido-tablero{ margin:0 0 18px 0; } /* separación con las gráficas */
-    .header-grid{
-      display:grid;
-      grid-template-columns:1.6fr 1fr; /* resumen más ancho */
-      gap:18px;                        /* mismo gap que las otras grids */
-      align-items:stretch;
-      background:transparent;
-      padding:0;
-      border:0;
-      box-shadow:none;
-    }
+/* Fila Resumen + Calendario ocupando el mismo ancho que las cards */
+.contenido-tablero{
+  width: 100%;
+  margin: 0 0 18px 0;   /* mismo espacio vertical que las cards */
+  padding: 0;           /* sin padding extra */
+}
 
-    /* ambos bloques heredan estilo de .card */
-    .resumen-unificado.card,
-    .calendario-box.card{
-      padding:16px 20px;
-      min-height:92px;
-      display:flex;
-      align-items:center;
-    }
+.header-grid{
+  display: grid;
+  /* más ancho para ambos y sin “shrink”: ocupan todo el carril del main */
+  grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr);
+  gap: 18px;            /* igual que .grid-2/.grid-2-2 */
+  align-items: stretch;
+  background: transparent;
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+}
+
+/* asegúrate que las cards llenen su celda */
+.resumen-unificado.card,
+.calendario-box.card{
+  width: 100%;
+  padding: 16px 20px;
+  min-height: 92px;
+  display: flex;
+  align-items: center;
+}
+
 
     /* contenido del resumen */
     .resumen-unificado{ gap:16px; justify-content:space-between }
