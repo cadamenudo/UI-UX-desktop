@@ -85,7 +85,7 @@
   }
 
   .section-title{
-    font-size:16px;color:var(--gray);
+    font-size:12px;color:var(--gray);
     text-transform:uppercase;letter-spacing:.1em;
     margin:14px 8px 8px;
   }
@@ -240,41 +240,6 @@
   .cal-cell.range-end::before{ inset:0 0 0 50%; }
   .cal-cell.range-single::before{ display:none; }
 
-  /* === MODAL Calendario === */
-.modal-backdrop{
-  position:fixed; inset:0; background:rgba(15,23,42,.35);
-  display:none; align-items:center; justify-content:center; z-index:999;
-}
-.modal-backdrop.open{ display:flex; }
-
-.modal{
-  width:min(980px,92vw); max-height:86vh; background:#fff;
-  border-radius:20px; box-shadow:0 20px 60px rgba(2,6,23,.25);
-  display:flex; flex-direction:column; overflow:hidden;
-}
-.modal-header{
-  display:flex; align-items:center; justify-content:space-between;
-  gap:10px; padding:14px 16px; border-bottom:1px solid var(--border);
-}
-.modal-body{ padding:16px; overflow:auto; }
-
-/* toolbar “Desde / Hasta / Buscar” en la card */
-.range-toolbar{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
-.range-toolbar input{
-  height:36px; border:1px solid var(--border); border-radius:10px; padding:0 10px;
-  background:#fff; font-weight:700; color:#0F172A; outline:none; min-width:140px;
-}
-.range-toolbar button{
-  height:36px; border-radius:10px; border:1px solid var(--border);
-  background:#fff; cursor:pointer; padding:0 12px;
-}
-.range-toolbar .primary{ background:#594AE2; color:#fff; border-color:#594AE2; }
-
-/* usa el calendario existente dentro del modal, no en la card */
-.card.calendar #calWeekdays,
-.card.calendar #calGrid{ display:none; }
-
-
   @media(max-width:1200px){ main{grid-template-columns:1fr} }
 </style>
 
@@ -361,45 +326,31 @@
         </div>
 
         <!-- Calendario con rango -->
-<div class="card calendar">
-  <div class="cal-head">
-    <div class="cal-title">Calendario</div>
-    <div class="range-toolbar">
-      <input id="desdeInput" type="text" placeholder="Desde" readonly>
-      <input id="hastaInput" type="text" placeholder="Hasta" readonly>
-      <button id="abrirCalendario">📅 Elegir</button>
-      <button id="buscarRango" class="primary">Buscar</button>
-      <button id="limpiarRango">Limpiar</button>
-    </div>
-  </div>
-  <!-- (no mostramos el grid aquí para no romper layout) -->
-</div>
+        <div class="card calendar">
+          <div class="cal-head">
+            <div class="cal-title" id="calTitle">Calendario</div>
+            <div class="cal-tools">
+              <span class="cal-range" id="calRangeText">Rango: —</span>
+              <button class="cal-clear" id="calClear">Limpiar</button>
+              <button class="cal-btn" id="calPrev">◀</button>
+              <button class="cal-btn" id="calToday">Hoy</button>
+              <button class="cal-btn" id="calNext">▶</button>
+            </div>
+          </div>
 
-<!-- ===== MODAL con el calendario real ===== -->
-<div class="modal-backdrop" id="calModal">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="calModalTitle">
-    <div class="modal-header">
-      <strong id="calModalTitle">Seleccionar rango</strong>
-      <div class="cal-tools">
-        <span class="cal-range" id="calRangeText">Rango: —</span>
-        <button class="cal-clear" id="calClear">Limpiar</button>
-        <button class="cal-btn" id="calPrev">◀</button>
-        <button class="cal-btn" id="calToday">Hoy</button>
-        <button class="cal-btn" id="calNext">▶</button>
-        <button class="cal-btn" id="aplicarRango" style="background:#594AE2;color:#fff;border-color:#594AE2">Aplicar</button>
-        <button class="cal-btn" id="cerrarModal">Cerrar</button>
-      </div>
-    </div>
-    <div class="modal-body">
-      <div class="cal-grid" id="calWeekdays">
-        <div class="cal-weekday">lun</div><div class="cal-weekday">mar</div><div class="cal-weekday">mié</div>
-        <div class="cal-weekday">jue</div><div class="cal-weekday">vie</div><div class="cal-weekday">sáb</div><div class="cal-weekday">dom</div>
-      </div>
-      <div class="cal-grid" id="calGrid" style="margin-top:6px"></div>
-    </div>
-  </div>
-</div>
+          <div class="cal-grid" id="calWeekdays">
+            <div class="cal-weekday">lun</div>
+            <div class="cal-weekday">mar</div>
+            <div class="cal-weekday">mié</div>
+            <div class="cal-weekday">jue</div>
+            <div class="cal-weekday">vie</div>
+            <div class="cal-weekday">sáb</div>
+            <div class="cal-weekday">dom</div>
+          </div>
 
+          <div class="cal-grid" id="calGrid" style="margin-top:6px"></div>
+        </div>
+      </div>
 
       <!-- Gráficas -->
       <div class="grid-2" style="margin-top:18px">
@@ -744,48 +695,6 @@
   // Nav activo por hash
   function markActive(){ document.querySelectorAll('.nav a').forEach(a=>a.classList.toggle('active', a.getAttribute('href')===location.hash)); }
   window.addEventListener('hashchange', markActive); markActive();
-
-  // ===== Modal calendario =====
-const calModal = document.getElementById('calModal');
-const abrirCalendarioBtn = document.getElementById('abrirCalendario');
-const cerrarModalBtn = document.getElementById('cerrarModal');
-const aplicarRangoBtn = document.getElementById('aplicarRango');
-const limpiarRangoBtnCard = document.getElementById('limpiarRango');
-const desdeInput = document.getElementById('desdeInput');
-const hastaInput = document.getElementById('hastaInput');
-const buscarRangoBtn = document.getElementById('buscarRango');
-
-function openCalModal(){ calModal.classList.add('open'); }
-function closeCalModal(){ calModal.classList.remove('open'); }
-
-// abrir modal al tocar inputs o botón
-[abrirCalendarioBtn, desdeInput, hastaInput].forEach(el=>{
-  el.addEventListener('click', openCalModal);
-});
-
-// cerrar modal
-cerrarModalBtn.addEventListener('click', closeCalModal);
-
-// limpiar desde la card
-limpiarRangoBtnCard.addEventListener('click', ()=>{
-  rangeStart=null; rangeEnd=null;
-  desdeInput.value=''; hastaInput.value='';
-  updateRangeText(); renderCalendar(); refreshFromRange?.();
-});
-
-// aplicar: copia rango a inputs y cierra
-aplicarRangoBtn.addEventListener('click', ()=>{
-  if(rangeStart) desdeInput.value = formatES(rangeStart); else desdeInput.value='';
-  if(rangeEnd)   hastaInput.value = formatES(rangeEnd);   else hastaInput.value='';
-  closeCalModal();
-});
-
-// buscar: filtra dashboard con el rango actual
-buscarRangoBtn.addEventListener('click', ()=>{
-  // si tienes la función refreshFromRange (de mi update anterior):
-  if (typeof refreshFromRange === 'function') refreshFromRange();
-});
-
 </script>
 
 </body>
