@@ -8,241 +8,143 @@
   <!-- Fuente Greycliff CF -->
   <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX/css-fonts.css"/>
 
-  <!-- Chart.js -->
+  <!-- CSS del bloque Resumen + Calendario -->
+  <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX-desktop/css/resumen-calendario.css" />
+
+  <!-- Flatpickr (calendario) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+  <!-- Chart.js (ya lo usas para las gráficas del tablero) -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
-<style>
-  :root{
-    --sidebar-w: 280px;
-    --header-h: 64px;
-    --primary:#3956E8;
-    --secondary:#7459D9;
-    --yellow:#E8C239;
-    --gray:#64748B;
-    --muted:#EEF0F6;
-    --bg:#F7F8FC;
-    --card:#FFFFFF;
-    --text:#0F172A;
-    --border:#E5E7EB;
-    --shadow:0 6px 18px rgba(17,24,39,.06);
-    --top-row-h: 180px; /* altura igual para KPIs y calendario */
-  }
+  <style>
+    :root{
+      --sidebar-w: 280px;
+      --header-h: 64px;
+      --primary:#3956E8;
+      --secondary:#7459D9;
+      --yellow:#E8C239;
+      --gray:#64748B;
+      --muted:#EEF0F6;
+      --bg:#F7F8FC;
+      --card:#FFFFFF;
+      --text:#0F172A;
+      --border:#E5E7EB;
+      --shadow:0 6px 18px rgba(17,24,39,.06);
+    }
 
-  *{box-sizing:border-box}
-  body{
-    margin:0;
-    background:var(--bg);
-    font-family:"Greycliff CF", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-    color:var(--text);
-  }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      background:var(--bg);
+      font-family:"Greycliff CF", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+    }
 
-  /* ===== HEADER ===== */
-  header{
-    position:fixed; top:0; left:0; right:0;
-    height:var(--header-h);
-    background:#594AE2;
-    border:none;
-    z-index:100;
-    display:flex; align-items:center; justify-content:space-between;
-    padding:0 20px;
-    box-shadow:0 2px 6px rgba(0,0,0,0.15);
-    color:#fff;
-  }
-  header *{ color:#fff !important; }
-  header .logo img{height:100px}
+    /* ===== HEADER ===== */
+    header{
+      position:fixed; top:0; left:0; right:0;
+      height:var(--header-h);
+      background:#594AE2;
+      border:none;
+      z-index:100;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:0 20px;
+      box-shadow:0 2px 6px rgba(0,0,0,0.15);
+      color:#fff;
+    }
+    header *{ color:#fff !important; }
+    header .logo img{height:100px}
 
-  /* ===== SIDEBAR con grid y logout abajo ===== */
-  .sidebar{
-    position:fixed; top:var(--header-h); left:0;
-    width:var(--sidebar-w); bottom:0;
-    background:#fff;
-    border-right:1px solid var(--border);
-    display:grid;
-    grid-template-rows:auto 1fr auto;
-    overflow:hidden;
-    z-index:90;
-  }
+    /* ===== SIDEBAR ===== */
+    .sidebar{
+      position:fixed; top:var(--header-h); left:0;
+      width:var(--sidebar-w); bottom:0;
+      background:#fff;
+      border-right:1px solid var(--border);
+      display:grid;
+      grid-template-rows:auto 1fr auto;
+      overflow:hidden;
+      z-index:90;
+    }
 
-  .brand{
-    display:flex;align-items:center;gap:10px;
-    padding:16px 12px;
-    border-bottom:1px solid var(--border);
-  }
-  .brand img{
-    width:48px;height:48px;
-    border-radius:12px;
-    object-fit:contain;
-  }
-  .brand .name{
-    font-size:22px;
-    font-weight:900;
-    letter-spacing:.2px;
-  }
+    .brand{
+      display:flex;align-items:center;gap:10px;
+      padding:16px 12px;
+      border-bottom:1px solid var(--border);
+    }
+    .brand img{ width:48px;height:48px;border-radius:12px;object-fit:contain }
+    .brand .name{ font-size:22px;font-weight:900;letter-spacing:.2px }
 
-  .sidebar-content{
-    overflow-y:auto;
-    padding:12px;
-  }
+    .sidebar-content{ overflow-y:auto; padding:12px }
+    .section-title{
+      font-size:12px;color:var(--gray);
+      text-transform:uppercase;letter-spacing:.1em;
+      margin:14px 8px 8px;
+    }
+    .nav{display:flex;flex-direction:column;gap:6px;padding:0 4px}
+    .nav a{
+      display:flex;align-items:center;gap:12px;
+      padding:10px 12px;border-radius:12px;
+      text-decoration:none;color:var(--text);
+      transition:background .2s ease,color .2s ease;
+      font-size:16px;
+      font-weight:600;
+    }
+    .nav a:hover{background:var(--muted)}
+    .nav a.active{ background:rgba(57,86,232,.1); color:var(--primary); font-weight:700 }
+    .nav a img.icon{width:22px;height:22px;object-fit:contain}
 
-  .section-title{
-    font-size:12px;color:var(--gray);
-    text-transform:uppercase;letter-spacing:.1em;
-    margin:14px 8px 8px;
-  }
-  .nav{display:flex;flex-direction:column;gap:6px;padding:0 4px}
-  .nav a{
-    display:flex;align-items:center;gap:12px;
-    padding:10px 12px;border-radius:12px;
-    text-decoration:none;color:var(--text);
-    transition:background .2s ease,color .2s ease;
-  }
-  .nav a:hover{background:var(--muted)}
-  .nav a.active{
-    background:rgba(57,86,232,.1);
-    color:var(--primary);
-    font-weight:700;
-  }
-  .nav a img.icon{width:22px;height:22px;object-fit:contain}
+    .footer-exit{ border-top:1px solid var(--border); padding:10px 12px }
+    .footer-exit .icon{ width:22px; height:22px; object-fit:contain; flex:0 0 22px; display:block }
+    .footer-exit a{
+      display:flex;align-items:center;gap:12px;
+      padding:10px 12px;border-radius:12px;
+      color:#64748B;font-weight:700;text-decoration:none;
+    }
+    .footer-exit a:hover{background:#EEF0F6; color:#3956E8;}
 
-  .footer-exit{
-    border-top:1px solid var(--border);
-    padding:10px 12px;
-  }
-  .footer-exit .icon{
-    width:22px !important;
-    height:22px !important;
-    object-fit:contain !important;
-    flex:0 0 22px !important;
-    display:block;
-  }
-  .footer-exit a{
-    display:flex;align-items:center;gap:12px;
-    padding:10px 12px;
-    border-radius:12px;
-    color:#64748B;
-    font-weight:700;
-    text-decoration:none;
-  }
-  .footer-exit a:hover{background:#EEF0F6; color:#3956E8;}
+    /* ===== MAIN LAYOUT ===== */
+    main{
+      margin-left:var(--sidebar-w);
+      margin-top:var(--header-h);
+      padding:24px;
+      display:grid;
+      grid-template-columns:1fr 340px; /* izquierda | derecha */
+      gap:20px;
+    }
 
-  /* ===== MAIN LAYOUT ===== */
-  main{
-    margin-left:var(--sidebar-w);
-    margin-top:var(--header-h);
-    padding:24px;
-    display:grid;
-    grid-template-columns:1fr 340px; /* izquierda | derecha */
-    gap:20px;
-  }
+    .card{
+      background:#fff;
+      border-radius:20px;
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
 
-  .card{
-    background:#fff;
-    border-radius:20px;
-    box-shadow:var(--shadow);
-    padding:18px;
-  }
+    .grid-2{display:grid;grid-template-columns:1fr 1.4fr;gap:18px}
+    canvas{width:100%!important;height:auto!important}
+    .chart-title{font-weight:800}
 
-  .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-  .kpi{display:flex;align-items:center;gap:14px}
-  .dot{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;color:#fff;font-weight:900}
-  .dot.income{background:linear-gradient(135deg,var(--primary),#7a93ff)}
-  .dot.expense{background:linear-gradient(135deg,#e44d79,#ff7b9f)}
-  .dot.saving{background:linear-gradient(135deg,var(--yellow),#ffd977);color:#222}
-  .label{font-size:14px;color:var(--gray)}
-  .value{font-size:22px;font-weight:900}
+    .grid-2-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .donut-center{position:relative;max-width:420px;margin:auto}
+    .donut-center .center{position:absolute;inset:0;display:grid;place-items:center;font-weight:900;font-size:28px;pointer-events:none}
 
-  .grid-2{display:grid;grid-template-columns:1fr 1.4fr;gap:18px}
-  canvas{width:100%!important;height:auto!important}
-  .chart-title{font-weight:800}
+    .tabs{display:flex;gap:8px;margin-bottom:10px}
+    .tab{border:1px solid var(--border);padding:8px 12px;border-radius:10px;background:#fff;color:#64748B;cursor:pointer}
+    .tab.active{background:rgba(57,86,232,.08);color:var(--primary);border-color:rgba(57,86,232,.2);font-weight:800}
 
-  .grid-2-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-  .donut-center{position:relative;max-width:420px;margin:auto}
-  .donut-center .center{position:absolute;inset:0;display:grid;place-items:center;font-weight:900;font-size:28px;pointer-events:none}
+    .transactions{display:flex;flex-direction:column;gap:10px}
+    .tx{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:10px 12px;border:1px solid var(--border);border-radius:14px;background:#fff}
+    .tx .amount.positive{color:#22C55E}
+    .tx .amount.negative{color:#EF4444}
 
-  .tabs{display:flex;gap:8px;margin-bottom:10px}
-  .tab{border:1px solid var(--border);padding:8px 12px;border-radius:10px;background:#fff;color:#64748B;cursor:pointer}
-  .tab.active{background:rgba(57,86,232,.08);color:var(--primary);border-color:rgba(57,86,232,.2);font-weight:800}
+    .list-slim{display:flex;flex-direction:column;gap:10px}
+    .list-slim .row{display:grid;grid-template-columns:1fr auto;gap:8px;padding:8px 4px;border-bottom:1px dashed var(--border)}
+    .list-slim .row:last-child{border-bottom:0}
 
-  .transactions{display:flex;flex-direction:column;gap:10px}
-  .tx{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:10px 12px;border:1px solid var(--border);border-radius:14px;background:#fff}
-  .tx .amount.positive{color:#22C55E}
-  .tx .amount.negative{color:#EF4444}
-
-  .list-slim{display:flex;flex-direction:column;gap:10px}
-  .list-slim .row{display:grid;grid-template-columns:1fr auto;gap:8px;padding:8px 4px;border-bottom:1px dashed var(--border)}
-  .list-slim .row:last-child{border-bottom:0}
-
-  .reminder{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;padding:10px;border:1px solid var(--border);border-radius:12px;background:#fff}
-  .icon-btn{width:30px;height:30px;border-radius:8px;border:1px solid var(--border);background:#fff;display:grid;place-items:center;cursor:pointer}
-
-  /* ===== CALENDARIO ===== */
-  .calendar.card{ padding:16px 16px 10px; }
-  .cal-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
-  .cal-title{ font-weight:900; font-size:18px; letter-spacing:.2px }
-  .cal-nav{ display:flex; gap:8px }
-  .cal-btn{ border:1px solid var(--border); background:#fff; border-radius:10px; padding:6px 10px; cursor:pointer; }
-  .cal-grid{ display:grid; grid-template-columns:repeat(7,1fr); gap:6px; user-select:none; }
-  .cal-weekday{ text-transform:uppercase; font-size:11px; color:#64748B; text-align:center; padding:6px 0; }
-  .cal-cell{ background:#fff; border:1px solid var(--border); border-radius:12px; min-height:86px; padding:8px; display:flex; flex-direction:column; gap:6px; position:relative; cursor:pointer; }
-  .cal-cell.out{ opacity:.45 }
-  .cal-cell .date{ font-weight:800; color:#0F172A }
-  .cal-cell.today{ outline:2px solid rgba(89,74,226,.35) }
-  .badges{ display:flex; flex-wrap:wrap; gap:6px; margin-top:auto }
-  .badge-pill{ font-size:11px; line-height:1; padding:6px 8px; border-radius:999px; background:rgba(89,74,226,.12); color:#3b33a6; border:1px solid rgba(89,74,226,.18); font-weight:700; max-width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .badge-pill.income{ background:rgba(34,197,94,.12); color:#166534; border-color:rgba(34,197,94,.18) }
-  .badge-pill.expense{ background:rgba(239,68,68,.12); color:#7f1d1d; border-color:rgba(239,68,68,.18) }
-  .badge-pill.save{ background:rgba(232,194,57,.15); color:#6b5300; border-color:rgba(232,194,57,.25) }
-
-  /* FILA SUPERIOR (KPIs + Calendario compactos) */
-  .row-top { display:grid; grid-template-columns: 1.4fr 1fr; gap:18px; align-items:start; }
-
-  /* KPIs con altura compartida */
-  .card.kpi-wrap {
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    padding:20px 28px;
-    min-height: var(--top-row-h);
-  }
-  .card.kpi-wrap .kpis { display:flex; justify-content:space-between; gap:16px; }
-  .card.kpi {
-    flex:1;
-    min-width:180px;
-    max-width:220px;
-    background:#f9f9ff;
-    border:1px solid var(--border);
-    border-radius:16px;
-    padding:16px 20px;
-    display:flex;
-    align-items:center;
-    gap:14px;
-    box-shadow:none;
-  }
-
-  /* Calendario con altura igual a KPIs */
-  .card.calendar{
-    min-height: var(--top-row-h);
-    height:auto;
-    display:flex;
-    flex-direction:column;
-    padding:16px 20px;
-  }
-  .cal-grid{ flex:1; overflow-y:auto; }
-  .cal-cell{ min-height:68px; }
-
-  /* ====== Rango de fechas ====== */
-  .cal-tools{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
-  .cal-range{ font-size:12px; color:#0F172A; background:#F3F4FF; border:1px solid rgba(89,74,226,.25); border-radius:10px; padding:6px 10px; font-weight:700; }
-  .cal-clear{ border:1px solid var(--border); background:#fff; border-radius:10px; padding:6px 10px; cursor:pointer; }
-  .cal-cell.in-range{ background:rgba(89,74,226,.08); border-color:rgba(89,74,226,.25); }
-  .cal-cell.range-start, .cal-cell.range-end{ outline:2px solid #594AE2; background:rgba(89,74,226,.12); }
-  .cal-cell.range-start::before, .cal-cell.range-end::before{ content:""; position:absolute; inset:0 50% 0 0; background:rgba(89,74,226,.08); z-index:0; }
-  .cal-cell.range-end::before{ inset:0 0 0 50%; }
-  .cal-cell.range-single::before{ display:none; }
-
-  @media(max-width:1200px){ main{grid-template-columns:1fr} }
-</style>
-
+    .reminder{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;padding:10px;border:1px solid var(--border);border-radius:12px;background:#fff}
+    .icon-btn{width:30px;height:30px;border-radius:8px;border:1px solid var(--border);background:#fff;display:grid;place-items:center;cursor:pointer}
+  </style>
 </head>
 <body>
 
@@ -296,61 +198,57 @@
   <!-- ===== MAIN ===== -->
   <main>
     <section>
-      <!-- FILA SUPERIOR: KPIs + Calendario -->
-      <div class="row-top">
-        <!-- KPIs agrupados -->
-        <div class="card kpi-wrap">
-          <div class="kpis">
-            <div class="card kpi">
-              <div class="dot income">+$</div>
-              <div>
-                <div class="label">Ingresos</div>
-                <div class="value" id="kpiIngresos">$3,000</div>
+
+      <!-- ======= Resumen + Calendario (tu bloque) ======= -->
+      <div class="contenido-tablero">
+        <div class="header-grid">
+
+          <!-- 🟢 Resumen -->
+          <div class="resumen-unificado">
+            <div class="bloque-indicador">
+              <div class="icono-svg-resumen i-ingreso">
+                <img src="https://cadamenudo.github.io/UI-UX/assets/icons/ingreso.png" alt="Ingresos" />
+              </div>
+              <div class="texto-indicador">
+                <span class="label">Ingresos</span>
+                <span class="valor">$3,000.00</span>
               </div>
             </div>
-            <div class="card kpi">
-              <div class="dot expense">–$</div>
-              <div>
-                <div class="label">Gastos</div>
-                <div class="value" id="kpiGastos">$1,200</div>
+
+            <div class="bloque-indicador">
+              <div class="icono-svg-resumen i-gasto">
+                <img src="https://cadamenudo.github.io/UI-UX/assets/icons/gastos.png" alt="Gastos" />
+              </div>
+              <div class="texto-indicador">
+                <span class="label">Gastos</span>
+                <span class="valor">$1,200.00</span>
               </div>
             </div>
-            <div class="card kpi">
-              <div class="dot saving">💰</div>
-              <div>
-                <div class="label">Ahorro</div>
-                <div class="value" id="kpiAhorro">$50</div>
+
+            <div class="bloque-indicador">
+              <div class="icono-svg-resumen i-ahorro">
+                <img src="https://cadamenudo.github.io/UI-UX/assets/icons/ahorro.png" alt="Ahorros" />
+              </div>
+              <div class="texto-indicador">
+                <span class="label">Ahorro</span>
+                <span class="valor">$450.00</span>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- Calendario con rango -->
-        <div class="card calendar">
-          <div class="cal-head">
-            <div class="cal-title" id="calTitle">Calendario</div>
-            <div class="cal-tools">
-              <span class="cal-range" id="calRangeText">Rango: —</span>
-              <button class="cal-clear" id="calClear">Limpiar</button>
-              <button class="cal-btn" id="calPrev">◀</button>
-              <button class="cal-btn" id="calToday">Hoy</button>
-              <button class="cal-btn" id="calNext">▶</button>
+          <!-- 📅 Calendario -->
+          <div class="calendario-box">
+            <div class="titulo">Seleccione un rango deseado</div>
+            <div class="fila-fechas">
+              <input type="text" id="desde" placeholder="Desde" />
+              <input type="text" id="hasta" placeholder="Hasta" />
+              <button id="btnBuscarRango">Buscar</button>
             </div>
           </div>
 
-          <div class="cal-grid" id="calWeekdays">
-            <div class="cal-weekday">lun</div>
-            <div class="cal-weekday">mar</div>
-            <div class="cal-weekday">mié</div>
-            <div class="cal-weekday">jue</div>
-            <div class="cal-weekday">vie</div>
-            <div class="cal-weekday">sáb</div>
-            <div class="cal-weekday">dom</div>
-          </div>
-
-          <div class="cal-grid" id="calGrid" style="margin-top:6px"></div>
         </div>
       </div>
+      <!-- ======= /Resumen + Calendario ======= -->
 
       <!-- Gráficas -->
       <div class="grid-2" style="margin-top:18px">
@@ -405,297 +303,138 @@
       </div>
     </aside>
   </main>
-<script>
-  // ===== Datos demo =====
-  const demo={
-    ingresosKPI:3000,gastosKPI:1200,ahorroKPI:50,
-    goal:{meta:6000,acumulado:3800},
-    meses:['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],
-    ingresosMes:[3200,3600,4100,3800,4200,4500,5200,4900,4700,4800,5000,5100],
-    gastosMes:[2900,3300,3800,3600,3900,4100,4900,4700,4500,4700,4800,4950],
-    ingresosTotales:19600,gastosTotales:1800,
-    incomeParts:[45,25,15,15],expenseParts:[40,22,18,20],
-    tx:[
-      {tipo:'ingresos',cat:'Salario',monto:1500,fecha:'2025-10-01'},
-      {tipo:'ingresos',cat:'Freelance',monto:600,fecha:'2025-10-03'},
-      {tipo:'gastos',cat:'Casa',monto:-850,fecha:'2025-10-04'},
-      {tipo:'ahorro',cat:'Aporte Fondo',monto:50,fecha:'2025-10-05'},
-      {tipo:'gastos',cat:'Comida',monto:-120,fecha:'2025-10-06'}
-    ],
-    resumenGastos:[['Casa',1210],['Alimentación',190],['Impuestos',104]],
-    reminders:[
-      {text:'Pagar AMEX',meta:'Hoy',done:false},
-      {text:'Auto ahorro',meta:'Viernes',done:true}
-    ]
-  };
 
-  // ===== Helpers =====
-  const fmt=v=>v.toLocaleString('en-US',{style:'currency',currency:'USD'});
-  const $=s=>document.querySelector(s);
-  const el=(t,c,h)=>{const n=document.createElement(t);if(c)n.className=c;if(h!==undefined)n.innerHTML=h;return n;};
-  const pad = n => String(n).padStart(2,'0');
-  const ymd = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
-  const toStartOfDay = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
-  const isSameDay = (a,b) => a && b && a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate();
+  <!-- Flatpickr -->
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
-  // ===== KPIs (iniciales) =====
-  $('#kpiIngresos').textContent=fmt(demo.ingresosKPI);
-  $('#kpiGastos').textContent=fmt(demo.gastosKPI);
-  $('#kpiAhorro').textContent=fmt(demo.ahorroKPI);
+  <script>
+    // ===== Datos demo =====
+    const demo={
+      ingresosKPI:3000,gastosKPI:1200,ahorroKPI:50,
+      goal:{meta:6000,acumulado:3800},
+      meses:['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],
+      ingresosMes:[3200,3600,4100,3800,4200,4500,5200,4900,4700,4800,5000,5100],
+      gastosMes:[2900,3300,3800,3600,3900,4100,4900,4700,4500,4700,4800,4950],
+      ingresosTotales:19600,gastosTotales:1800,
+      incomeParts:[45,25,15,15],expenseParts:[40,22,18,20],
+      tx:[
+        {tipo:'ingresos',cat:'Salario',monto:1500,fecha:'2025-10-01'},
+        {tipo:'ingresos',cat:'Freelance',monto:600,fecha:'2025-10-03'},
+        {tipo:'gastos',cat:'Casa',monto:-850,fecha:'2025-10-04'},
+        {tipo:'ahorro',cat:'Aporte Fondo',monto:50,fecha:'2025-10-05'},
+        {tipo:'gastos',cat:'Comida',monto:-120,fecha:'2025-10-06'}
+      ],
+      resumenGastos:[['Casa',1210],['Alimentación',190],['Impuestos',104]],
+      reminders:[
+        {text:'Pagar AMEX',meta:'Hoy',done:false},
+        {text:'Auto ahorro',meta:'Viernes',done:true}
+      ]
+    };
 
-  // ===== Charts (instancias para poder actualizar) =====
-  Chart.defaults.font.family='"Greycliff CF",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif';
-  Chart.defaults.color='#334155';
+    // ===== Helpers =====
+    const fmt=v=>v.toLocaleString('en-US',{style:'currency',currency:'USD'});
+    const $=s=>document.querySelector(s);
+    const el=(t,c,h)=>{const n=document.createElement(t);if(c)n.className=c;if(h!==undefined)n.innerHTML=h;return n;};
 
-  const barGoalChart = new Chart($('#barGoal'),{
-    type:'bar',
-    data:{ labels:['Meta','Acumulado'],
-      datasets:[{ data:[demo.goal.meta,demo.goal.acumulado], backgroundColor:['#DDE2FF','#F7E8B4'], borderRadius:14, borderSkipped:false }]},
-    options:{ plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmt(c.parsed.y)}}}, scales:{y:{beginAtZero:true,ticks:{callback:v=>fmt(v)}}}}
-  });
+    // ===== Charts =====
+    Chart.defaults.font.family='"Greycliff CF",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif';
+    Chart.defaults.color='#334155';
 
-  const lineCtx=$('#lineIG').getContext('2d');
-  const g1=lineCtx.createLinearGradient(0,0,0,220); g1.addColorStop(0,'rgba(57,86,232,.35)'); g1.addColorStop(1,'rgba(57,86,232,0)');
-  const g2=lineCtx.createLinearGradient(0,0,0,220); g2.addColorStop(0,'rgba(228,77,121,.30)'); g2.addColorStop(1,'rgba(228,77,121,0)');
-  const lineChart = new Chart(lineCtx,{ type:'line',
-    data:{ labels:demo.meses,
-      datasets:[
-        {label:'Ingresos',data:demo.ingresosMes,tension:.35,fill:true,borderColor:'#3956E8',backgroundColor:g1,borderWidth:3,pointRadius:0},
-        {label:'Gastos',data:demo.gastosMes,tension:.35,fill:true,borderColor:'#e44d79',backgroundColor:g2,borderWidth:3,pointRadius:0},
-      ]},
-    options:{ plugins:{legend:{position:'bottom'},tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${fmt(c.parsed.y)}`}}}, scales:{y:{ticks:{callback:v=>fmt(v)}}}}
-  });
-
-  const donutIncomeChart = new Chart($('#donutIncome'),{
-    type:'doughnut',
-    data:{ labels:['Salario','Freelance','Intereses','Otros'],
-      datasets:[{data:demo.incomeParts,borderWidth:0,hoverOffset:6,backgroundColor:['#3956E8','#7459D9','#A28AF4','#C7BEFF']}]},
-    options:{cutout:'72%',plugins:{legend:{position:'bottom'}}}
-  });
-
-  const donutExpenseChart = new Chart($('#donutExpense'),{
-    type:'doughnut',
-    data:{ labels:['Casa','Comida','Transporte','Otros'],
-      datasets:[{data:demo.expenseParts,borderWidth:0,hoverOffset:6,backgroundColor:['#e44d79','#FF8FAF','#FFC2D4','#FFE0EA']}]},
-    options:{cutout:'72%',plugins:{legend:{position:'bottom'}}}
-  });
-
-  // Totales en el centro de las donas
-  if ($('#centerIncome')) $('#centerIncome').textContent=fmt(demo.ingresosTotales);
-  if ($('#centerExpense')) $('#centerExpense').textContent=fmt(demo.gastosTotales);
-
-  // ===== Listas derecha =====
-  function renderTx(tab='ingresos', inRange=()=>true){
-    const w=$('#txList'); if(!w) return;
-    w.innerHTML='';
-    demo.tx.filter(t=>t.tipo===tab && inRange(t.fecha)).forEach(t=>{
-      const row=el('div','tx');
-      row.append(el('div','',`<strong>${t.cat}</strong><br><small style="color:#64748B">${t.fecha}</small>`));
-      const m=el('div','amount '+(t.monto<0?'negative':'positive'),fmt(t.monto));
-      row.append(m); w.append(row);
-    });
-  }
-  renderTx('ingresos');
-
-  document.querySelectorAll('.tab').forEach(b=>{
-    b.addEventListener('click',()=>{
-      document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-      b.classList.add('active');
-      renderTx(b.dataset.tab, currentInRange);
-    });
-  });
-
-  // Resumen de gastos (estático de ejemplo)
-  demo.resumenGastos.forEach(([n,v])=>{ const r=el('div','row'); r.append(el('div','',n)); r.append(el('div','',fmt(v))); $('#resumenGastos').append(r); });
-
-  function paintReminders(){
-    const host=$('#reminders'); if(!host) return; host.innerHTML='';
-    demo.reminders.forEach((r,i)=>{
-      const row=el('div','reminder');
-      row.append(el('div','',`<strong>${r.text}</strong><br><small style="color:#64748B">${r.meta}</small>`));
-      const st=el('div','',r.done?'<span style="color:#22C55E;font-weight:800">✔</span>':'<span style="color:#64748B">Pendiente</span>');
-      const del=el('button','icon-btn','🗑'); del.addEventListener('click',()=>{ demo.reminders.splice(i,1); paintReminders(); });
-      row.append(st,del); host.append(row);
-    });
-  }
-  paintReminders();
-
-  // ===== Calendario con selección de rango =====
-  const calendarEvents = [
-    { date: '2025-10-01', label: 'Salario +$1,500', type:'income' },
-    { date: '2025-10-03', label: 'Freelance +$600', type:'income' },
-    { date: '2025-10-03', label: 'Alimentación -$120', type:'expense' },
-    { date: '2025-10-04', label: 'Casa -$850', type:'expense' },
-    { date: '2025-10-05', label: 'Ahorro +$50', type:'save' }
-  ];
-  calendarEvents.push(...demo.tx.map(t=>({
-    date:t.fecha,
-    label:`${t.cat} ${t.monto<0?'-':'+'}${Math.abs(t.monto)}`,
-    type:t.monto<0?'expense':(t.tipo==='ahorro'?'save':'income')
-  })));
-
-  let calRef = new Date();
-  let rangeStart = null;
-  let rangeEnd = null;
-  const rangeTxt = document.getElementById('calRangeText');
-
-  function formatES(d){ return new Intl.DateTimeFormat('es-ES',{day:'2-digit',month:'short'}).format(d).replace('.',''); }
-
-  function updateRangeText(){
-    if(rangeStart && rangeEnd){ rangeTxt.textContent = `Rango: ${formatES(rangeStart)} — ${formatES(rangeEnd)}`; }
-    else if(rangeStart){ rangeTxt.textContent = `Rango: ${formatES(rangeStart)} — …`; }
-    else{ rangeTxt.textContent = 'Rango: —'; }
-  }
-
-  // helper: función inRange actual
-  function currentInRange(dateStr){
-    if(!rangeStart && !rangeEnd) return true;
-    const d = toStartOfDay(new Date(dateStr));
-    const a = rangeStart ? toStartOfDay(rangeStart) : null;
-    const b = rangeEnd   ? toStartOfDay(rangeEnd)   : null;
-    if(a && b) return d>=a && d<=b;
-    if(a && !b) return isSameDay(d,a); // solo un día
-    return true;
-  }
-
-  // Recalcular KPIs y donas según rango
-  function refreshFromRange(){
-    // KPIs desde transacciones del rango
-    const txR = demo.tx.filter(t=>currentInRange(t.fecha));
-    let ingresos=0, gastos=0, ahorro=0;
-    const incByCat=new Map(), expByCat=new Map();
-
-    txR.forEach(t=>{
-      if(t.tipo==='ingresos'){ ingresos += t.monto; incByCat.set(t.cat,(incByCat.get(t.cat)||0)+t.monto); }
-      else if(t.tipo==='gastos'){ gastos += Math.abs(t.monto); expByCat.set(t.cat,(expByCat.get(t.cat)||0)+Math.abs(t.monto)); }
-      else if(t.tipo==='ahorro'){ ahorro += t.monto; }
+    new Chart($('#barGoal'),{
+      type:'bar',
+      data:{ labels:['Meta','Acumulado'],
+        datasets:[{ data:[demo.goal.meta,demo.goal.acumulado], backgroundColor:['#DDE2FF','#F7E8B4'], borderRadius:14, borderSkipped:false }]},
+      options:{ plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmt(c.parsed.y)}}}, scales:{y:{beginAtZero:true,ticks:{callback:v=>fmt(v)}}}}
     });
 
-    // KPIs (si no hay rango -> valores demo)
-    if(rangeStart || rangeEnd){
-      $('#kpiIngresos').textContent=fmt(ingresos);
-      $('#kpiGastos').textContent=fmt(gastos);
-      $('#kpiAhorro').textContent=fmt(ahorro);
-      if ($('#centerIncome')) $('#centerIncome').textContent = fmt(ingresos);
-      if ($('#centerExpense')) $('#centerExpense').textContent = fmt(gastos);
-    }else{
-      $('#kpiIngresos').textContent=fmt(demo.ingresosKPI);
-      $('#kpiGastos').textContent=fmt(demo.gastosKPI);
-      $('#kpiAhorro').textContent=fmt(demo.ahorroKPI);
-      if ($('#centerIncome')) $('#centerIncome').textContent = fmt(demo.ingresosTotales);
-      if ($('#centerExpense')) $('#centerExpense').textContent = fmt(demo.gastosTotales);
-    }
-
-    // Donas actualizadas con distribución del rango (si hay datos)
-    if((rangeStart||rangeEnd) && (incByCat.size>0 || expByCat.size>0)){
-      // ingresos
-      if(incByCat.size>0){
-        donutIncomeChart.data.labels = [...incByCat.keys()];
-        donutIncomeChart.data.datasets[0].data = [...incByCat.values()];
-      }else{
-        donutIncomeChart.data.labels = ['Sin datos'];
-        donutIncomeChart.data.datasets[0].data = [1];
-      }
-      // gastos
-      if(expByCat.size>0){
-        donutExpenseChart.data.labels = [...expByCat.keys()];
-        donutExpenseChart.data.datasets[0].data = [...expByCat.values()];
-      }else{
-        donutExpenseChart.data.labels = ['Sin datos'];
-        donutExpenseChart.data.datasets[0].data = [1];
-      }
-      donutIncomeChart.update();
-      donutExpenseChart.update();
-    }else{
-      // volver a configuración por defecto
-      donutIncomeChart.data.labels=['Salario','Freelance','Intereses','Otros'];
-      donutIncomeChart.data.datasets[0].data=demo.incomeParts;
-      donutExpenseChart.data.labels=['Casa','Comida','Transporte','Otros'];
-      donutExpenseChart.data.datasets[0].data=demo.expenseParts;
-      donutIncomeChart.update();
-      donutExpenseChart.update();
-    }
-
-    // Transacciones de la pestaña activa
-    const activeTab = document.querySelector('.tab.active')?.dataset.tab || 'ingresos';
-    renderTx(activeTab, currentInRange);
-  }
-
-  function renderCalendar(){
-    const first=new Date(calRef.getFullYear(),calRef.getMonth(),1);
-    let start=new Date(first);
-    const day=(start.getDay()+6)%7; // lunes=0
-    start.setDate(start.getDate()-day);
-
-    document.getElementById('calTitle').textContent =
-      new Intl.DateTimeFormat('es-ES',{month:'long',year:'numeric'}).format(first);
-
-    const grid=document.getElementById('calGrid'); grid.innerHTML='';
-    for(let i=0;i<42;i++){
-      const d=new Date(start); d.setDate(start.getDate()+i);
-      const d0 = toStartOfDay(d);
-
-      const cell=document.createElement('div');
-      cell.className='cal-cell'+(d.getMonth()!==calRef.getMonth()?' out':'');
-      if(ymd(d)===ymd(new Date())) cell.classList.add('today');
-
-      // marca rango
-      if(rangeStart && !rangeEnd && isSameDay(d0, rangeStart)){
-        cell.classList.add('range-start','range-single');
-      }
-      if(rangeStart && rangeEnd){
-        const a=+toStartOfDay(rangeStart), b=+toStartOfDay(rangeEnd), x=+d0;
-        if(x>a && x<b) cell.classList.add('in-range');
-        if(isSameDay(d0,rangeStart)) cell.classList.add('range-start');
-        if(isSameDay(d0,rangeEnd))   cell.classList.add('range-end');
-        if(isSameDay(d0,rangeStart) && isSameDay(d0,rangeEnd)) cell.classList.add('range-single');
-      }
-
-      const top=document.createElement('div'); top.className='date'; top.textContent=d.getDate();
-      const badges=document.createElement('div'); badges.className='badges';
-
-      calendarEvents.filter(e=>e.date===ymd(d)).slice(0,3).forEach(e=>{
-        const pill=document.createElement('div');
-        pill.className='badge-pill '+(e.type||'');
-        pill.textContent=e.label; pill.title=e.label;
-        badges.appendChild(pill);
+    (()=>{
+      const ctx=$('#lineIG').getContext('2d');
+      const g1=ctx.createLinearGradient(0,0,0,220); g1.addColorStop(0,'rgba(57,86,232,.35)'); g1.addColorStop(1,'rgba(57,86,232,0)');
+      const g2=ctx.createLinearGradient(0,0,0,220); g2.addColorStop(0,'rgba(228,77,121,.30)'); g2.addColorStop(1,'rgba(228,77,121,0)');
+      new Chart(ctx,{ type:'line',
+        data:{ labels:demo.meses,
+          datasets:[
+            {label:'Ingresos',data:demo.ingresosMes,tension:.35,fill:true,borderColor:'#3956E8',backgroundColor:g1,borderWidth:3,pointRadius:0},
+            {label:'Gastos',data:demo.gastosMes,tension:.35,fill:true,borderColor:'#e44d79',backgroundColor:g2,borderWidth:3,pointRadius:0},
+          ]},
+        options:{ plugins:{legend:{position:'bottom'},tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${fmt(c.parsed.y)}`}}}, scales:{y:{ticks:{callback:v=>fmt(v)}}}}
       });
+    })();
 
-      // click para seleccionar rango
-      cell.addEventListener('click', ()=>{
-        const clicked = toStartOfDay(d);
-        if(!rangeStart){ rangeStart = clicked; rangeEnd=null; }
-        else if(rangeStart && !rangeEnd){
-          if(clicked < rangeStart){ rangeEnd = rangeStart; rangeStart = clicked; }
-          else { rangeEnd = clicked; }
-        }else{
-          rangeStart = clicked; rangeEnd=null;
-        }
-        updateRangeText();
-        renderCalendar();
-        refreshFromRange();
+    new Chart($('#donutIncome'),{
+      type:'doughnut',
+      data:{ labels:['Salario','Freelance','Intereses','Otros'],
+        datasets:[{data:demo.incomeParts,borderWidth:0,hoverOffset:6,backgroundColor:['#3956E8','#7459D9','#A28AF4','#C7BEFF']}]},
+      options:{cutout:'72%',plugins:{legend:{position:'bottom'}}}
+    });
+
+    new Chart($('#donutExpense'),{
+      type:'doughnut',
+      data:{ labels:['Casa','Comida','Transporte','Otros'],
+        datasets:[{data:demo.expenseParts,borderWidth:0,hoverOffset:6,backgroundColor:['#e44d79','#FF8FAF','#FFC2D4','#FFE0EA']}]},
+      options:{cutout:'72%',plugins:{legend:{position:'bottom'}}}
+    });
+
+    // Totales en el centro de las donas
+    if ($('#centerIncome')) $('#centerIncome').textContent=fmt(demo.ingresosTotales);
+    if ($('#centerExpense')) $('#centerExpense').textContent=fmt(demo.gastosTotales);
+
+    // ===== Listas derecha =====
+    function renderTx(tab='ingresos'){
+      const w=$('#txList'); if(!w) return;
+      w.innerHTML='';
+      demo.tx.filter(t=>t.tipo===tab).forEach(t=>{
+        const row=el('div','tx');
+        row.append(el('div','',`<strong>${t.cat}</strong><br><small style="color:#64748B">${t.fecha}</small>`));
+        const m=el('div','amount '+(t.monto<0?'negative':'positive'),fmt(t.monto));
+        row.append(m); w.append(row);
       });
-
-      cell.appendChild(top); cell.appendChild(badges); grid.appendChild(cell);
     }
-    updateRangeText();
-  }
+    renderTx('ingresos');
 
-  document.getElementById('calPrev').addEventListener('click',()=>{ calRef.setMonth(calRef.getMonth()-1); renderCalendar(); });
-  document.getElementById('calNext').addEventListener('click',()=>{ calRef.setMonth(calRef.getMonth()+1); renderCalendar(); });
-  document.getElementById('calToday').addEventListener('click',()=>{ calRef=new Date(); renderCalendar(); });
+    document.querySelectorAll('.tab').forEach(b=>{
+      b.addEventListener('click',()=>{
+        document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+        b.classList.add('active');
+        renderTx(b.dataset.tab);
+      });
+    });
 
-  document.getElementById('calClear').addEventListener('click',()=>{
-    rangeStart=null; rangeEnd=null; updateRangeText(); renderCalendar(); refreshFromRange();
-  });
+    // Resumen de gastos
+    demo.resumenGastos.forEach(([n,v])=>{
+      const r=el('div','row');
+      r.append(el('div','',n));
+      r.append(el('div','',fmt(v)));
+      $('#resumenGastos').append(r);
+    });
 
-  // Primera renderización
-  renderCalendar();
+    // Recordatorios
+    (function paintReminders(){
+      const host=$('#reminders'); if(!host) return; host.innerHTML='';
+      demo.reminders.forEach((r,i)=>{
+        const row=el('div','reminder');
+        row.append(el('div','',`<strong>${r.text}</strong><br><small style="color:#64748B">${r.meta}</small>`));
+        const st=el('div','',r.done?'<span style="color:#22C55E;font-weight:800">✔</span>':'<span style="color:#64748B">Pendiente</span>');
+        const del=el('button','icon-btn','🗑'); del.addEventListener('click',()=>{ demo.reminders.splice(i,1); paintReminders(); });
+        row.append(st,del); host.append(row);
+      });
+    })();
 
-  // Nav activo por hash
-  function markActive(){ document.querySelectorAll('.nav a').forEach(a=>a.classList.toggle('active', a.getAttribute('href')===location.hash)); }
-  window.addEventListener('hashchange', markActive); markActive();
-</script>
+    // ===== Flatpickr (Desde/Hasta) =====
+    const fpDesde = flatpickr("#desde", { dateFormat: "d/m/Y" });
+    const fpHasta = flatpickr("#hasta", { dateFormat: "d/m/Y" });
+    document.getElementById('btnBuscarRango').addEventListener('click', ()=>{
+      const d = fpDesde.selectedDates[0];
+      const h = fpHasta.selectedDates[0];
+      // Aquí puedes conectar el filtrado del tablero con ese rango
+      // Ej.: console.log('Rango:', d, h);
+    });
+
+    // Nav activo por hash
+    function markActive(){ document.querySelectorAll('.nav a').forEach(a=>a.classList.toggle('active', a.getAttribute('href')===location.hash)); }
+    window.addEventListener('hashchange', markActive); markActive();
+  </script>
 
 </body>
 </html>
+
