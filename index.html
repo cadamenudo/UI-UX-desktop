@@ -131,64 +131,94 @@
     .reminder{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;padding:10px;border:1px solid var(--border);border-radius:12px;background:#fff}
     .icon-btn{width:30px;height:30px;border-radius:8px;border:1px solid var(--border);background:#fff;display:grid;place-items:center;cursor:pointer}
 
-/* Fila Resumen + Calendario ocupando el mismo ancho que las cards */
+/* === BLOQUE RESUMEN + CALENDARIO === */
 .contenido-tablero{
   width: 100%;
-  margin: 0 0 18px 0;   /* mismo espacio vertical que las cards */
-  padding: 0;           /* sin padding extra */
+  margin: 0 0 18px 0;
 }
 
 .header-grid{
   display: grid;
-  /* más ancho para ambos y sin “shrink”: ocupan todo el carril del main */
-  grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr);
-  gap: 18px;            /* igual que .grid-2/.grid-2-2 */
+  /* Expande más ambos para llenar todo el ancho */
+  grid-template-columns: 2.4fr 1.1fr;
+  gap: 18px;
   align-items: stretch;
+  width: 100%;
   background: transparent;
   padding: 0;
   border: 0;
   box-shadow: none;
 }
 
-/* asegúrate que las cards llenen su celda */
+/* Ambos como cards */
 .resumen-unificado.card,
 .calendario-box.card{
   width: 100%;
   padding: 16px 20px;
-  min-height: 92px;
+  min-height: 100px;
   display: flex;
   align-items: center;
 }
 
+/* Contenido interno del resumen */
+.resumen-unificado{
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+}
 
-    /* contenido del resumen */
-    .resumen-unificado{ gap:16px; justify-content:space-between }
-    .resumen-unificado .bloque-indicador{
-      flex:1;
-      display:flex; align-items:center; gap:12px;
-      background:#F7F7FF;
-      border:1px solid var(--border);
-      border-radius:14px;
-      padding:12px 16px;
-    }
+.resumen-unificado .bloque-indicador{
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #F7F7FF;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px 16px;
+}
 
-    /* calendario compacto */
-    .calendario-box{ flex-direction:column; gap:10px }
-    .calendario-box .titulo{ font-weight:700; font-size:14px; margin-bottom:2px }
-    .calendario-box .fila-fechas{ display:flex; gap:10px }
-    .calendario-box input{
-      flex:1; border:1px solid var(--border); border-radius:10px; padding:8px 10px;
-      font-family:"Greycliff CF";
-    }
-    .calendario-box button{
-      background:#594AE2; color:#fff; border:0; border-radius:10px; padding:8px 14px;
-      font-weight:700; cursor:pointer;
-    }
-    .calendario-box button:hover{ filter:brightness(.95) }
+/* Calendario compacto */
+.calendario-box{
+  flex-direction: column;
+  gap: 10px;
+}
+.calendario-box .titulo{
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+.calendario-box .fila-fechas{
+  display: flex;
+  gap: 10px;
+}
+.calendario-box input{
+  flex: 1;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-family: "Greycliff CF";
+}
+.calendario-box button{
+  background: #594AE2;
+  color: #fff;
+  border: 0;
+  border-radius: 10px;
+  padding: 8px 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.calendario-box button:hover{
+  filter: brightness(.95);
+}
 
-    @media (max-width:1200px){
-      .header-grid{ grid-template-columns:1fr }
-    }
+/* Responsive */
+@media (max-width: 1200px){
+  .header-grid{
+    grid-template-columns: 1fr;
+  }
+}
+
   </style>
 </head>
 <body>
