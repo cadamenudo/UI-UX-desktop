@@ -405,217 +405,297 @@
       </div>
     </aside>
   </main>
+<script>
+  // ===== Datos demo =====
+  const demo={
+    ingresosKPI:3000,gastosKPI:1200,ahorroKPI:50,
+    goal:{meta:6000,acumulado:3800},
+    meses:['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],
+    ingresosMes:[3200,3600,4100,3800,4200,4500,5200,4900,4700,4800,5000,5100],
+    gastosMes:[2900,3300,3800,3600,3900,4100,4900,4700,4500,4700,4800,4950],
+    ingresosTotales:19600,gastosTotales:1800,
+    incomeParts:[45,25,15,15],expenseParts:[40,22,18,20],
+    tx:[
+      {tipo:'ingresos',cat:'Salario',monto:1500,fecha:'2025-10-01'},
+      {tipo:'ingresos',cat:'Freelance',monto:600,fecha:'2025-10-03'},
+      {tipo:'gastos',cat:'Casa',monto:-850,fecha:'2025-10-04'},
+      {tipo:'ahorro',cat:'Aporte Fondo',monto:50,fecha:'2025-10-05'},
+      {tipo:'gastos',cat:'Comida',monto:-120,fecha:'2025-10-06'}
+    ],
+    resumenGastos:[['Casa',1210],['Alimentación',190],['Impuestos',104]],
+    reminders:[
+      {text:'Pagar AMEX',meta:'Hoy',done:false},
+      {text:'Auto ahorro',meta:'Viernes',done:true}
+    ]
+  };
 
-  <script>
-    // ===== Datos demo =====
-    const demo={
-      ingresosKPI:3000,gastosKPI:1200,ahorroKPI:50,
-      goal:{meta:6000,acumulado:3800},
-      meses:['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],
-      ingresosMes:[3200,3600,4100,3800,4200,4500,5200,4900,4700,4800,5000,5100],
-      gastosMes:[2900,3300,3800,3600,3900,4100,4900,4700,4500,4700,4800,4950],
-      ingresosTotales:19600,gastosTotales:1800,
-      incomeParts:[45,25,15,15],expenseParts:[40,22,18,20],
-      tx:[
-        {tipo:'ingresos',cat:'Salario',monto:1500,fecha:'2025-10-01'},
-        {tipo:'ingresos',cat:'Freelance',monto:600,fecha:'2025-10-03'},
-        {tipo:'gastos',cat:'Casa',monto:-850,fecha:'2025-10-04'},
-        {tipo:'ahorro',cat:'Aporte Fondo',monto:50,fecha:'2025-10-05'}
-      ],
-      resumenGastos:[['Casa',1210],['Alimentación',190],['Impuestos',104]],
-      reminders:[
-        {text:'Pagar AMEX',meta:'Hoy',done:false},
-        {text:'Auto ahorro',meta:'Viernes',done:true}
-      ]
-    };
+  // ===== Helpers =====
+  const fmt=v=>v.toLocaleString('en-US',{style:'currency',currency:'USD'});
+  const $=s=>document.querySelector(s);
+  const el=(t,c,h)=>{const n=document.createElement(t);if(c)n.className=c;if(h!==undefined)n.innerHTML=h;return n;};
+  const pad = n => String(n).padStart(2,'0');
+  const ymd = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+  const toStartOfDay = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const isSameDay = (a,b) => a && b && a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate();
 
-    const fmt=v=>v.toLocaleString('en-US',{style:'currency',currency:'USD'});
-    const $=s=>document.querySelector(s);
-    const el=(t,c,h)=>{const n=document.createElement(t);if(c)n.className=c;if(h!==undefined)n.innerHTML=h;return n;};
+  // ===== KPIs (iniciales) =====
+  $('#kpiIngresos').textContent=fmt(demo.ingresosKPI);
+  $('#kpiGastos').textContent=fmt(demo.gastosKPI);
+  $('#kpiAhorro').textContent=fmt(demo.ahorroKPI);
 
-    // KPIs
-    $('#kpiIngresos').textContent=fmt(demo.ingresosKPI);
-    $('#kpiGastos').textContent=fmt(demo.gastosKPI);
-    $('#kpiAhorro').textContent=fmt(demo.ahorroKPI);
+  // ===== Charts (instancias para poder actualizar) =====
+  Chart.defaults.font.family='"Greycliff CF",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif';
+  Chart.defaults.color='#334155';
 
-    // ===== Charts =====
-    Chart.defaults.font.family='"Greycliff CF",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif';
-    Chart.defaults.color='#334155';
+  const barGoalChart = new Chart($('#barGoal'),{
+    type:'bar',
+    data:{ labels:['Meta','Acumulado'],
+      datasets:[{ data:[demo.goal.meta,demo.goal.acumulado], backgroundColor:['#DDE2FF','#F7E8B4'], borderRadius:14, borderSkipped:false }]},
+    options:{ plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmt(c.parsed.y)}}}, scales:{y:{beginAtZero:true,ticks:{callback:v=>fmt(v)}}}}
+  });
 
-    new Chart($('#barGoal'),{
-      type:'bar',
-      data:{ labels:['Meta','Acumulado'],
-        datasets:[{ data:[demo.goal.meta,demo.goal.acumulado], backgroundColor:['#DDE2FF','#F7E8B4'], borderRadius:14, borderSkipped:false }]},
-      options:{ plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmt(c.parsed.y)}}}, scales:{y:{beginAtZero:true,ticks:{callback:v=>fmt(v)}}}}
+  const lineCtx=$('#lineIG').getContext('2d');
+  const g1=lineCtx.createLinearGradient(0,0,0,220); g1.addColorStop(0,'rgba(57,86,232,.35)'); g1.addColorStop(1,'rgba(57,86,232,0)');
+  const g2=lineCtx.createLinearGradient(0,0,0,220); g2.addColorStop(0,'rgba(228,77,121,.30)'); g2.addColorStop(1,'rgba(228,77,121,0)');
+  const lineChart = new Chart(lineCtx,{ type:'line',
+    data:{ labels:demo.meses,
+      datasets:[
+        {label:'Ingresos',data:demo.ingresosMes,tension:.35,fill:true,borderColor:'#3956E8',backgroundColor:g1,borderWidth:3,pointRadius:0},
+        {label:'Gastos',data:demo.gastosMes,tension:.35,fill:true,borderColor:'#e44d79',backgroundColor:g2,borderWidth:3,pointRadius:0},
+      ]},
+    options:{ plugins:{legend:{position:'bottom'},tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${fmt(c.parsed.y)}`}}}, scales:{y:{ticks:{callback:v=>fmt(v)}}}}
+  });
+
+  const donutIncomeChart = new Chart($('#donutIncome'),{
+    type:'doughnut',
+    data:{ labels:['Salario','Freelance','Intereses','Otros'],
+      datasets:[{data:demo.incomeParts,borderWidth:0,hoverOffset:6,backgroundColor:['#3956E8','#7459D9','#A28AF4','#C7BEFF']}]},
+    options:{cutout:'72%',plugins:{legend:{position:'bottom'}}}
+  });
+
+  const donutExpenseChart = new Chart($('#donutExpense'),{
+    type:'doughnut',
+    data:{ labels:['Casa','Comida','Transporte','Otros'],
+      datasets:[{data:demo.expenseParts,borderWidth:0,hoverOffset:6,backgroundColor:['#e44d79','#FF8FAF','#FFC2D4','#FFE0EA']}]},
+    options:{cutout:'72%',plugins:{legend:{position:'bottom'}}}
+  });
+
+  // Totales en el centro de las donas
+  if ($('#centerIncome')) $('#centerIncome').textContent=fmt(demo.ingresosTotales);
+  if ($('#centerExpense')) $('#centerExpense').textContent=fmt(demo.gastosTotales);
+
+  // ===== Listas derecha =====
+  function renderTx(tab='ingresos', inRange=()=>true){
+    const w=$('#txList'); if(!w) return;
+    w.innerHTML='';
+    demo.tx.filter(t=>t.tipo===tab && inRange(t.fecha)).forEach(t=>{
+      const row=el('div','tx');
+      row.append(el('div','',`<strong>${t.cat}</strong><br><small style="color:#64748B">${t.fecha}</small>`));
+      const m=el('div','amount '+(t.monto<0?'negative':'positive'),fmt(t.monto));
+      row.append(m); w.append(row);
+    });
+  }
+  renderTx('ingresos');
+
+  document.querySelectorAll('.tab').forEach(b=>{
+    b.addEventListener('click',()=>{
+      document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      renderTx(b.dataset.tab, currentInRange);
+    });
+  });
+
+  // Resumen de gastos (estático de ejemplo)
+  demo.resumenGastos.forEach(([n,v])=>{ const r=el('div','row'); r.append(el('div','',n)); r.append(el('div','',fmt(v))); $('#resumenGastos').append(r); });
+
+  function paintReminders(){
+    const host=$('#reminders'); if(!host) return; host.innerHTML='';
+    demo.reminders.forEach((r,i)=>{
+      const row=el('div','reminder');
+      row.append(el('div','',`<strong>${r.text}</strong><br><small style="color:#64748B">${r.meta}</small>`));
+      const st=el('div','',r.done?'<span style="color:#22C55E;font-weight:800">✔</span>':'<span style="color:#64748B">Pendiente</span>');
+      const del=el('button','icon-btn','🗑'); del.addEventListener('click',()=>{ demo.reminders.splice(i,1); paintReminders(); });
+      row.append(st,del); host.append(row);
+    });
+  }
+  paintReminders();
+
+  // ===== Calendario con selección de rango =====
+  const calendarEvents = [
+    { date: '2025-10-01', label: 'Salario +$1,500', type:'income' },
+    { date: '2025-10-03', label: 'Freelance +$600', type:'income' },
+    { date: '2025-10-03', label: 'Alimentación -$120', type:'expense' },
+    { date: '2025-10-04', label: 'Casa -$850', type:'expense' },
+    { date: '2025-10-05', label: 'Ahorro +$50', type:'save' }
+  ];
+  calendarEvents.push(...demo.tx.map(t=>({
+    date:t.fecha,
+    label:`${t.cat} ${t.monto<0?'-':'+'}${Math.abs(t.monto)}`,
+    type:t.monto<0?'expense':(t.tipo==='ahorro'?'save':'income')
+  })));
+
+  let calRef = new Date();
+  let rangeStart = null;
+  let rangeEnd = null;
+  const rangeTxt = document.getElementById('calRangeText');
+
+  function formatES(d){ return new Intl.DateTimeFormat('es-ES',{day:'2-digit',month:'short'}).format(d).replace('.',''); }
+
+  function updateRangeText(){
+    if(rangeStart && rangeEnd){ rangeTxt.textContent = `Rango: ${formatES(rangeStart)} — ${formatES(rangeEnd)}`; }
+    else if(rangeStart){ rangeTxt.textContent = `Rango: ${formatES(rangeStart)} — …`; }
+    else{ rangeTxt.textContent = 'Rango: —'; }
+  }
+
+  // helper: función inRange actual
+  function currentInRange(dateStr){
+    if(!rangeStart && !rangeEnd) return true;
+    const d = toStartOfDay(new Date(dateStr));
+    const a = rangeStart ? toStartOfDay(rangeStart) : null;
+    const b = rangeEnd   ? toStartOfDay(rangeEnd)   : null;
+    if(a && b) return d>=a && d<=b;
+    if(a && !b) return isSameDay(d,a); // solo un día
+    return true;
+  }
+
+  // Recalcular KPIs y donas según rango
+  function refreshFromRange(){
+    // KPIs desde transacciones del rango
+    const txR = demo.tx.filter(t=>currentInRange(t.fecha));
+    let ingresos=0, gastos=0, ahorro=0;
+    const incByCat=new Map(), expByCat=new Map();
+
+    txR.forEach(t=>{
+      if(t.tipo==='ingresos'){ ingresos += t.monto; incByCat.set(t.cat,(incByCat.get(t.cat)||0)+t.monto); }
+      else if(t.tipo==='gastos'){ gastos += Math.abs(t.monto); expByCat.set(t.cat,(expByCat.get(t.cat)||0)+Math.abs(t.monto)); }
+      else if(t.tipo==='ahorro'){ ahorro += t.monto; }
     });
 
-    (()=>{
-      const ctx=$('#lineIG').getContext('2d');
-      const g1=ctx.createLinearGradient(0,0,0,220); g1.addColorStop(0,'rgba(57,86,232,.35)'); g1.addColorStop(1,'rgba(57,86,232,0)');
-      const g2=ctx.createLinearGradient(0,0,0,220); g2.addColorStop(0,'rgba(228,77,121,.30)'); g2.addColorStop(1,'rgba(228,77,121,0)');
-      new Chart(ctx,{ type:'line',
-        data:{ labels:demo.meses,
-          datasets:[
-            {label:'Ingresos',data:demo.ingresosMes,tension:.35,fill:true,borderColor:'#3956E8',backgroundColor:g1,borderWidth:3,pointRadius:0},
-            {label:'Gastos',data:demo.gastosMes,tension:.35,fill:true,borderColor:'#e44d79',backgroundColor:g2,borderWidth:3,pointRadius:0},
-          ]},
-        options:{ plugins:{legend:{position:'bottom'},tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${fmt(c.parsed.y)}`}}}, scales:{y:{ticks:{callback:v=>fmt(v)}}}}
-      );
-    })();
-
-    new Chart($('#donutIncome'),{
-      type:'doughnut',
-      data:{ labels:['Salario','Freelance','Intereses','Otros'],
-        datasets:[{data:demo.incomeParts,borderWidth:0,hoverOffset:6,backgroundColor:['#3956E8','#7459D9','#A28AF4','#C7BEFF']}]},
-      options:{cutout:'72%',plugins:{legend:{position:'bottom'}}}
-    });
-
-    new Chart($('#donutExpense'),{
-      type:'doughnut',
-      data:{ labels:['Casa','Comida','Transporte','Otros'],
-        datasets:[{data:demo.expenseParts,borderWidth:0,hoverOffset:6,backgroundColor:['#e44d79','#FF8FAF','#FFC2D4','#FFE0EA']}]},
-      options:{cutout:'72%',plugins:{legend:{position:'bottom'}}}
-    });
-
-    $('#centerIncome').textContent=fmt(demo.ingresosTotales);
-    $('#centerExpense').textContent=fmt(demo.gastosTotales);
-
-    // ===== Listas derecha =====
-    function renderTx(tab='ingresos'){
-      const w=$('#txList'); w.innerHTML='';
-      demo.tx.filter(t=>t.tipo===tab).forEach(t=>{
-        const row=el('div','tx');
-        row.append(el('div','',`<strong>${t.cat}</strong><br><small style="color:#64748B">${t.fecha}</small>`));
-        const m=el('div','amount '+(t.monto<0?'negative':'positive'),fmt(t.monto));
-        row.append(m); w.append(row);
-      });
+    // KPIs (si no hay rango -> valores demo)
+    if(rangeStart || rangeEnd){
+      $('#kpiIngresos').textContent=fmt(ingresos);
+      $('#kpiGastos').textContent=fmt(gastos);
+      $('#kpiAhorro').textContent=fmt(ahorro);
+      if ($('#centerIncome')) $('#centerIncome').textContent = fmt(ingresos);
+      if ($('#centerExpense')) $('#centerExpense').textContent = fmt(gastos);
+    }else{
+      $('#kpiIngresos').textContent=fmt(demo.ingresosKPI);
+      $('#kpiGastos').textContent=fmt(demo.gastosKPI);
+      $('#kpiAhorro').textContent=fmt(demo.ahorroKPI);
+      if ($('#centerIncome')) $('#centerIncome').textContent = fmt(demo.ingresosTotales);
+      if ($('#centerExpense')) $('#centerExpense').textContent = fmt(demo.gastosTotales);
     }
-    renderTx('ingresos');
-    document.querySelectorAll('.tab').forEach(b=>{
-      b.addEventListener('click',()=>{ document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); b.classList.add('active'); renderTx(b.dataset.tab); });
-    });
 
-    demo.resumenGastos.forEach(([n,v])=>{ const r=el('div','row'); r.append(el('div','',n)); r.append(el('div','',fmt(v))); $('#resumenGastos').append(r); });
-
-    function paintReminders(){
-      const host=$('#reminders'); host.innerHTML='';
-      demo.reminders.forEach((r,i)=>{
-        const row=el('div','reminder');
-        row.append(el('div','',`<strong>${r.text}</strong><br><small style="color:#64748B">${r.meta}</small>`));
-        const st=el('div','',r.done?'<span style="color:#22C55E;font-weight:800">✔</span>':'<span style="color:#64748B">Pendiente</span>');
-        const del=el('button','icon-btn','🗑'); del.addEventListener('click',()=>{ demo.reminders.splice(i,1); paintReminders(); });
-        row.append(st,del); host.append(row);
-      });
-    }
-    paintReminders();
-
-    // ===== Calendario con selección de rango =====
-    const calendarEvents = [
-      { date: '2025-10-01', label: 'Salario +$1,500', type:'income' },
-      { date: '2025-10-03', label: 'Freelance +$600', type:'income' },
-      { date: '2025-10-03', label: 'Alimentación -$120', type:'expense' },
-      { date: '2025-10-04', label: 'Casa -$850', type:'expense' },
-      { date: '2025-10-05', label: 'Ahorro +$50', type:'save' }
-    ];
-    calendarEvents.push(...demo.tx.map(t=>({
-      date:t.fecha,
-      label:`${t.cat} ${t.monto<0?'-':'+'}${Math.abs(t.monto)}`,
-      type:t.monto<0?'expense':(t.tipo==='ahorro'?'save':'income')
-    })));
-
-    const pad = n => String(n).padStart(2,'0');
-    const ymd = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
-    const toStartOfDay = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
-    const isSameDay = (a,b) => a && b && a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate();
-
-    let calRef = new Date();
-    let rangeStart = null;
-    let rangeEnd = null;
-    const rangeTxt = document.getElementById('calRangeText');
-    document.getElementById('calClear').addEventListener('click',()=>{ rangeStart=null; rangeEnd=null; updateRangeText(); renderCalendar(); });
-
-    function formatES(d){
-      return new Intl.DateTimeFormat('es-ES',{day:'2-digit',month:'short'}).format(d).replace('.','');
-    }
-    function updateRangeText(){
-      if(rangeStart && rangeEnd){
-        rangeTxt.textContent = `Rango: ${formatES(rangeStart)} — ${formatES(rangeEnd)}`;
-      }else if(rangeStart){
-        rangeTxt.textContent = `Rango: ${formatES(rangeStart)} — …`;
+    // Donas actualizadas con distribución del rango (si hay datos)
+    if((rangeStart||rangeEnd) && (incByCat.size>0 || expByCat.size>0)){
+      // ingresos
+      if(incByCat.size>0){
+        donutIncomeChart.data.labels = [...incByCat.keys()];
+        donutIncomeChart.data.datasets[0].data = [...incByCat.values()];
       }else{
-        rangeTxt.textContent = 'Rango: —';
+        donutIncomeChart.data.labels = ['Sin datos'];
+        donutIncomeChart.data.datasets[0].data = [1];
       }
+      // gastos
+      if(expByCat.size>0){
+        donutExpenseChart.data.labels = [...expByCat.keys()];
+        donutExpenseChart.data.datasets[0].data = [...expByCat.values()];
+      }else{
+        donutExpenseChart.data.labels = ['Sin datos'];
+        donutExpenseChart.data.datasets[0].data = [1];
+      }
+      donutIncomeChart.update();
+      donutExpenseChart.update();
+    }else{
+      // volver a configuración por defecto
+      donutIncomeChart.data.labels=['Salario','Freelance','Intereses','Otros'];
+      donutIncomeChart.data.datasets[0].data=demo.incomeParts;
+      donutExpenseChart.data.labels=['Casa','Comida','Transporte','Otros'];
+      donutExpenseChart.data.datasets[0].data=demo.expenseParts;
+      donutIncomeChart.update();
+      donutExpenseChart.update();
     }
 
-    function renderCalendar(){
-      const year=calRef.getFullYear(), month=calRef.getMonth();
-      const first=new Date(year,month,1);
-      let start=new Date(first);
-      const day=(start.getDay()+6)%7; // lunes=0
-      start.setDate(start.getDate()-day);
+    // Transacciones de la pestaña activa
+    const activeTab = document.querySelector('.tab.active')?.dataset.tab || 'ingresos';
+    renderTx(activeTab, currentInRange);
+  }
 
-      document.getElementById('calTitle').textContent =
-        new Intl.DateTimeFormat('es-ES',{month:'long',year:'numeric'}).format(first);
+  function renderCalendar(){
+    const first=new Date(calRef.getFullYear(),calRef.getMonth(),1);
+    let start=new Date(first);
+    const day=(start.getDay()+6)%7; // lunes=0
+    start.setDate(start.getDate()-day);
 
-      const grid=document.getElementById('calGrid'); grid.innerHTML='';
-      for(let i=0;i<42;i++){
-        const d=new Date(start); d.setDate(start.getDate()+i);
-        const d0 = toStartOfDay(d);
+    document.getElementById('calTitle').textContent =
+      new Intl.DateTimeFormat('es-ES',{month:'long',year:'numeric'}).format(first);
 
-        const cell=document.createElement('div');
-        cell.className='cal-cell'+(d.getMonth()!==month?' out':'');
-        if(ymd(d)===ymd(new Date())) cell.classList.add('today');
+    const grid=document.getElementById('calGrid'); grid.innerHTML='';
+    for(let i=0;i<42;i++){
+      const d=new Date(start); d.setDate(start.getDate()+i);
+      const d0 = toStartOfDay(d);
 
-        // marca rango
-        if(rangeStart && !rangeEnd && isSameDay(d0, rangeStart)){
-          cell.classList.add('range-start','range-single');
-        }
-        if(rangeStart && rangeEnd){
-          const a=+toStartOfDay(rangeStart), b=+toStartOfDay(rangeEnd), x=+d0;
-          if(x>a && x<b) cell.classList.add('in-range');
-          if(isSameDay(d0,rangeStart)) cell.classList.add('range-start');
-          if(isSameDay(d0,rangeEnd))   cell.classList.add('range-end');
-          if(isSameDay(d0,rangeStart) && isSameDay(d0,rangeEnd)) cell.classList.add('range-single');
-        }
+      const cell=document.createElement('div');
+      cell.className='cal-cell'+(d.getMonth()!==calRef.getMonth()?' out':'');
+      if(ymd(d)===ymd(new Date())) cell.classList.add('today');
 
-        const top=document.createElement('div'); top.className='date'; top.textContent=d.getDate();
-        const badges=document.createElement('div'); badges.className='badges';
-
-        calendarEvents.filter(e=>e.date===ymd(d)).slice(0,3).forEach(e=>{
-          const pill=document.createElement('div');
-          pill.className='badge-pill '+(e.type||'');
-          pill.textContent=e.label;
-          pill.title=e.label;
-          badges.appendChild(pill);
-        });
-
-        // click para seleccionar rango
-        cell.addEventListener('click', ()=>{
-          const clicked = toStartOfDay(d);
-          if(!rangeStart){
-            rangeStart = clicked; rangeEnd=null;
-          }else if(rangeStart && !rangeEnd){
-            if(clicked < rangeStart){ rangeEnd = rangeStart; rangeStart = clicked; }
-            else { rangeEnd = clicked; }
-          }else{
-            rangeStart = clicked; rangeEnd=null;
-          }
-          updateRangeText();
-          renderCalendar();
-        });
-
-        cell.appendChild(top); cell.appendChild(badges); grid.appendChild(cell);
+      // marca rango
+      if(rangeStart && !rangeEnd && isSameDay(d0, rangeStart)){
+        cell.classList.add('range-start','range-single');
       }
-      updateRangeText();
-    }
-    document.getElementById('calPrev').addEventListener('click',()=>{ calRef.setMonth(calRef.getMonth()-1); renderCalendar(); });
-    document.getElementById('calNext').addEventListener('click',()=>{ calRef.setMonth(calRef.getMonth()+1); renderCalendar(); });
-    document.getElementById('calToday').addEventListener('click',()=>{ calRef=new Date(); renderCalendar(); });
-    renderCalendar();
+      if(rangeStart && rangeEnd){
+        const a=+toStartOfDay(rangeStart), b=+toStartOfDay(rangeEnd), x=+d0;
+        if(x>a && x<b) cell.classList.add('in-range');
+        if(isSameDay(d0,rangeStart)) cell.classList.add('range-start');
+        if(isSameDay(d0,rangeEnd))   cell.classList.add('range-end');
+        if(isSameDay(d0,rangeStart) && isSameDay(d0,rangeEnd)) cell.classList.add('range-single');
+      }
 
-    // Nav activo por hash
-    function markActive(){ document.querySelectorAll('.nav a').forEach(a=>a.classList.toggle('active', a.getAttribute('href')===location.hash)); }
-    window.addEventListener('hashchange', markActive); markActive();
-  </script>
+      const top=document.createElement('div'); top.className='date'; top.textContent=d.getDate();
+      const badges=document.createElement('div'); badges.className='badges';
+
+      calendarEvents.filter(e=>e.date===ymd(d)).slice(0,3).forEach(e=>{
+        const pill=document.createElement('div');
+        pill.className='badge-pill '+(e.type||'');
+        pill.textContent=e.label; pill.title=e.label;
+        badges.appendChild(pill);
+      });
+
+      // click para seleccionar rango
+      cell.addEventListener('click', ()=>{
+        const clicked = toStartOfDay(d);
+        if(!rangeStart){ rangeStart = clicked; rangeEnd=null; }
+        else if(rangeStart && !rangeEnd){
+          if(clicked < rangeStart){ rangeEnd = rangeStart; rangeStart = clicked; }
+          else { rangeEnd = clicked; }
+        }else{
+          rangeStart = clicked; rangeEnd=null;
+        }
+        updateRangeText();
+        renderCalendar();
+        refreshFromRange();
+      });
+
+      cell.appendChild(top); cell.appendChild(badges); grid.appendChild(cell);
+    }
+    updateRangeText();
+  }
+
+  document.getElementById('calPrev').addEventListener('click',()=>{ calRef.setMonth(calRef.getMonth()-1); renderCalendar(); });
+  document.getElementById('calNext').addEventListener('click',()=>{ calRef.setMonth(calRef.getMonth()+1); renderCalendar(); });
+  document.getElementById('calToday').addEventListener('click',()=>{ calRef=new Date(); renderCalendar(); });
+
+  document.getElementById('calClear').addEventListener('click',()=>{
+    rangeStart=null; rangeEnd=null; updateRangeText(); renderCalendar(); refreshFromRange();
+  });
+
+  // Primera renderización
+  renderCalendar();
+
+  // Nav activo por hash
+  function markActive(){ document.querySelectorAll('.nav a').forEach(a=>a.classList.toggle('active', a.getAttribute('href')===location.hash)); }
+  window.addEventListener('hashchange', markActive); markActive();
+</script>
+
 </body>
 </html>
