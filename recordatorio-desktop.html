@@ -5,21 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Lista de Recordatorios – Cada Menudo</title>
 
-<!-- Fuentes de la marca -->
-<link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX/css-fonts.css"/>
+<!-- Fuente Nunito -->
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
 
 <style>
   :root{
     --primary:#3956E8; --secondary:#7459D9; --accent:#E8C239;
     --bg:#F7F8FC; --card:#ffffff; --ink:#0f172a; --muted:#64748B; --line:#e5e7eb;
     --shadow:0 8px 28px rgba(15,23,42,.08);
-    --soft: #FAFBFF;
-    --ok:#10b981; --warn:#f59e0b; --bad:#ef4444;
-    --chip:#f3f6ff;
-    --radius:16px;
+    --soft:#FAFBFF; --ok:#10b981; --radius:16px;
   }
   *{box-sizing:border-box}
-  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Greycliff CF",system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial}
+  html,body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Nunito', system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+  }
   a{color:var(--primary);text-decoration:none}
   a:hover{text-decoration:underline}
   .wrap{max-width:1180px;margin:28px auto;padding:0 20px}
@@ -33,11 +35,12 @@
     box-shadow:var(--shadow);
     display:flex;align-items:center;justify-content:space-between;gap:16px;
   }
-  .title{
-    display:flex;flex-direction:column;gap:6px
-  }
   .title h1{margin:0;font-size:22px;font-weight:800;letter-spacing:.2px}
-  .title .sub{color:var(--muted);font-size:14px}
+  .chip{
+    display:inline-flex;align-items:center;gap:6px;
+    background:#f3f6ff;color:var(--primary);
+    padding:6px 10px;border-radius:999px;border:1px solid #e8edff;font-weight:700;font-size:12px;margin-left:8px
+  }
   .actions{display:flex;gap:10px;align-items:center}
   .btn{
     display:inline-flex;gap:8px;align-items:center;justify-content:center;
@@ -49,22 +52,6 @@
     border-color:transparent;background:var(--primary);color:#fff; box-shadow:0 8px 18px rgba(57,86,232,.25)
   }
   .btn.primary:hover{filter:brightness(.98)}
-  .chip{
-    display:inline-flex;align-items:center;gap:6px;
-    background:var(--chip);color:var(--primary);
-    padding:6px 10px;border-radius:999px;border:1px solid #e8edff;font-weight:700;font-size:12px
-  }
-
-  /* Toolbar (filtros + búsqueda) */
-  .toolbar{
-    margin-top:14px;display:flex;gap:10px;align-items:center;justify-content:space-between;
-  }
-  .filters{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-  .input, select{
-    height:38px;border-radius:12px;border:1px solid var(--line);background:#fff;
-    padding:0 12px;font-size:14px;color:var(--ink)
-  }
-  .input{min-width:260px}
 
   /* Tabla */
   .card{
@@ -83,10 +70,19 @@
   .titleCell{font-weight:700}
   .muted{color:var(--muted)}
   .freq a{font-weight:800}
-  .complete-box{width:18px;height:18px;border:2px solid #cbd5e1;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
-  .complete-box.done{border-color:var(--ok);background:#ecfdf5}
-  .complete-box svg{width:14px;height:14px;opacity:.0;transition:.15s}
-  .complete-box.done svg{opacity:1}
+
+  /* Checkbox cuadrado */
+  .complete-box{
+    width:20px;height:20px;border:2px solid #cbd5e1;border-radius:4px;
+    display:inline-flex;align-items:center;justify-content:center;cursor:pointer;
+    background:#fff;user-select:none;font-size:14px;line-height:1;color:#fff;
+  }
+  .complete-box.done{
+    background:var(--primary);border-color:var(--primary);color:#fff;
+  }
+  .checkmark{opacity:0;transform:scale(.9);transition:.12s}
+  .complete-box.done .checkmark{opacity:1;transform:scale(1)}
+
   .ellipsis{
     width:34px;height:34px;border-radius:10px;border:1px solid var(--line);
     display:flex;align-items:center;justify-content:center;background:#fff;cursor:pointer
@@ -143,11 +139,10 @@
     <div class="header">
       <div class="title">
         <h1>Lista de Recordatorios <span class="chip">Vista general</span></h1>
-        <div class="sub">Acá puedes gestionar tu lista de recordatorios.</div>
+        <!-- Subtítulo removido -->
       </div>
       <div class="actions">
         <button id="btnFilters" class="btn" title="Filtros">
-          <!-- filtro icon -->
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 5h18M6 12h12M10 19h4" stroke="#0f172a" stroke-width="2" stroke-linecap="round"/></svg>
           Filtros
         </button>
@@ -158,25 +153,7 @@
       </div>
     </div>
 
-    <div class="toolbar">
-      <div class="filters">
-        <input id="q" class="input" type="search" placeholder="Buscar por título o descripción…"/>
-        <select id="fRec">
-          <option value="">Todas las recurrencias</option>
-          <option value="once">Una vez</option>
-          <option value="daily">Diaria</option>
-          <option value="weekly">Semanal</option>
-          <option value="monthly">Mensual</option>
-          <option value="yearly">Anual</option>
-        </select>
-        <select id="fComp">
-          <option value="">Completados y pendientes</option>
-          <option value="no">Sólo pendientes</option>
-          <option value="yes">Sólo completados</option>
-        </select>
-      </div>
-      <div class="muted" id="countInfo"></div>
-    </div>
+    <!-- Toolbar de búsqueda/filtros eliminada -->
 
     <div class="card">
       <table>
@@ -189,9 +166,7 @@
             <th style="width:8%;text-align:right;padding-right:14px;">&nbsp;</th>
           </tr>
         </thead>
-        <tbody id="tbody">
-          <!-- rows -->
-        </tbody>
+        <tbody id="tbody"></tbody>
       </table>
       <div class="tableFoot">
         <div class="rows">
@@ -219,7 +194,7 @@
     <button data-act="done"><span>✅</span> Marcar como completado</button>
     <button data-act="edit"><span>✏️</span> Editar</button>
     <button data-act="dup"><span>🧬</span> Duplicar</button>
-    <button data-act="del" style="color:var(--bad)"><span>🗑️</span> Eliminar</button>
+    <button data-act="del" style="color:#ef4444"><span>🗑️</span> Eliminar</button>
   </div>
 
   <!-- Modal -->
@@ -263,9 +238,8 @@
   <div id="toast" class="toast">Guardado</div>
 
 <script>
-/* ---------- Utilidades ---------- */
+/* ---------- Helpers ---------- */
 const $ = (q, el=document) => el.querySelector(q);
-const $$ = (q, el=document) => [...el.querySelectorAll(q)];
 const fmtDate = (iso) => {
   if(!iso) return '—';
   const d = new Date(iso);
@@ -295,17 +269,14 @@ const toast = (msg='Guardado')=>{
 
 /* ---------- Estado ---------- */
 const STORAGE_KEY = 'cm_reminders_v1';
-let state = {
-  q:'', fRec:'', fComp:'', rows:10, page:1,
-  data:[]
-};
+let state = { rows:10, page:1, data:[] };
+
 const saveAll = ()=>localStorage.setItem(STORAGE_KEY, JSON.stringify(state.data));
 const loadAll = ()=>{
   try{
     const s = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
     if(Array.isArray(s)) state.data = s;
   }catch(e){}
-  // seed demo si vacío
   if(state.data.length===0){
     state.data = [
       {id:crypto.randomUUID(), title:'Pagar a Álvaro', when:'2025-11-10T12:00', rec:'once', desc:'Transferencia bancaria', done:false},
@@ -319,27 +290,15 @@ const loadAll = ()=>{
 const tbody = $('#tbody');
 const range = $('#range');
 const pageLabel = $('#pageLabel');
-const countInfo = $('#countInfo');
 
-function applyFilters(){
+function sortedList(){
   let list = [...state.data];
-  // texto
-  if(state.q){
-    const q = state.q.toLowerCase();
-    list = list.filter(r => (r.title||'').toLowerCase().includes(q) || (r.desc||'').toLowerCase().includes(q));
-  }
-  // recurrencia
-  if(state.fRec) list = list.filter(r=>r.rec===state.fRec);
-  // completado
-  if(state.fComp==='yes') list = list.filter(r=>r.done);
-  if(state.fComp==='no') list = list.filter(r=>!r.done);
-  // orden: por fecha siguiente
   list.sort((a,b)=> new Date(nextFrom(a.when,a.rec)) - new Date(nextFrom(b.when,b.rec)));
   return list;
 }
 
 function render(){
-  const all = applyFilters();
+  const all = sortedList();
   const total = all.length;
   const pages = Math.max(1, Math.ceil(total / state.rows));
   if(state.page>pages) state.page = pages;
@@ -349,13 +308,7 @@ function render(){
 
   tbody.innerHTML = current.map(row=>{
     const nextIso = nextFrom(row.when, row.rec);
-    const freqLabel = ({
-      once:'—',
-      daily:'Diaria',
-      weekly:'Semanal',
-      monthly:'Mensual',
-      yearly:'Anual'
-    })[row.rec] || '—';
+    const freqLabel = ({once:'—',daily:'Diaria',weekly:'Semanal',monthly:'Mensual',yearly:'Anual'})[row.rec] || '—';
     const freqHtml = row.rec==='once'
       ? `<div class="muted">${fmtDate(row.when)}</div>`
       : `<div class="freq"><a href="#" data-void="1">${freqLabel}</a><div class="muted">${fmtDate(nextIso)}</div></div>`;
@@ -365,7 +318,7 @@ function render(){
         <td>${freqHtml}</td>
         <td>
           <div class="complete-box ${row.done?'done':''}" role="checkbox" aria-checked="${row.done}">
-            <svg viewBox="0 0 24 24"><path d="M5 12l4 4L19 6" fill="none" stroke="${getComputedStyle(document.documentElement).getPropertyValue('--ok')||'#10b981'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="checkmark">✓</span>
           </div>
         </td>
         <td class="muted">${row.desc?row.desc:'—'}</td>
@@ -376,18 +329,15 @@ function render(){
     `;
   }).join('');
 
-  // info
-  countInfo.textContent = total===1 ? '1 recordatorio' : `${total} recordatorios`;
   const from = total? start+1 : 0;
   const to = Math.min(total, start + current.length);
   range.textContent = `${from}-${to} / ${total}`;
 
-  pageLabel.textContent = `${state.page} / ${pages}`;
-  // botones pager
+  pageLabel.textContent = `${state.page} / ${Math.max(1,Math.ceil(total/state.rows))}`;
   $('#first').disabled = state.page<=1;
   $('#prev').disabled  = state.page<=1;
-  $('#next').disabled  = state.page>=pages;
-  $('#last').disabled  = state.page>=pages;
+  $('#next').disabled  = state.page>=Math.ceil(total/state.rows);
+  $('#last').disabled  = state.page>=Math.ceil(total/state.rows);
 }
 
 /* ---------- Interacción tabla ---------- */
@@ -397,6 +347,7 @@ tbody.addEventListener('click', (e)=>{
   const rowEl = e.target.closest('tr');
   if(!rowEl) return;
   const id = rowEl.dataset.id;
+
   if(e.target.closest('.complete-box')){
     const r = state.data.find(x=>x.id===id);
     r.done = !r.done;
@@ -444,15 +395,10 @@ $('#first').onclick = ()=>{ state.page=1; render(); };
 $('#prev').onclick  = ()=>{ state.page=Math.max(1,state.page-1); render(); };
 $('#next').onclick  = ()=>{ state.page=state.page+1; render(); };
 $('#last').onclick  = ()=>{
-  const total = applyFilters().length;
+  const total = sortedList().length;
   const pages = Math.max(1, Math.ceil(total / state.rows));
   state.page = pages; render();
 };
-
-/* ---------- Filtros ---------- */
-$('#q').addEventListener('input', e=>{ state.q = e.target.value.trim(); state.page=1; render(); });
-$('#fRec').addEventListener('change', e=>{ state.fRec = e.target.value; state.page=1; render(); });
-$('#fComp').addEventListener('change', e=>{ state.fComp = e.target.value; state.page=1; render(); });
 
 /* ---------- Modal CRUD ---------- */
 const modalWrap = $('#modalWrap');
