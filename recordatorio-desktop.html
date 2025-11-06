@@ -5,141 +5,73 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Lista de Recordatorios – Cada Menudo</title>
 
-<!-- Fuente Nunito -->
+<!-- Nunito -->
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
 
 <style>
-  :root{
-    --primary:#3956E8; --secondary:#7459D9; --accent:#E8C239;
-    --bg:#F7F8FC; --card:#ffffff; --ink:#0f172a; --muted:#64748B; --line:#e5e7eb;
-    --shadow:0 8px 28px rgba(15,23,42,.08);
-    --soft:#FAFBFF; --ok:#10b981; --radius:16px;
-  }
-  *{box-sizing:border-box}
-  html,body{
-    margin:0;
-    background:var(--bg);
-    color:var(--ink);
-    font-family:'Nunito', system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
-  }
-  a{color:var(--primary);text-decoration:none}
-  a:hover{text-decoration:underline}
-  .wrap{max-width:1180px;margin:28px auto;padding:0 20px}
-
-  /* Header */
-  .header{
-    background:var(--card);
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    padding:20px 24px;
-    box-shadow:var(--shadow);
-    display:flex;align-items:center;justify-content:space-between;gap:16px;
-  }
-  .title h1{margin:0;font-size:22px;font-weight:800;letter-spacing:.2px}
-  .chip{
-    display:inline-flex;align-items:center;gap:6px;
-    background:#f3f6ff;color:var(--primary);
-    padding:6px 10px;border-radius:999px;border:1px solid #e8edff;font-weight:700;font-size:12px;margin-left:8px
-  }
-  .actions{display:flex;gap:10px;align-items:center}
-  .btn{
-    display:inline-flex;gap:8px;align-items:center;justify-content:center;
-    height:40px;border-radius:12px;border:1px solid var(--line);padding:0 14px;
-    font-weight:700;font-size:14px;background:#fff;color:var(--ink);cursor:pointer
-  }
-  .btn:hover{background:#fafafa}
-  .btn.primary{
-    border-color:transparent;background:var(--primary);color:#fff; box-shadow:0 8px 18px rgba(57,86,232,.25)
-  }
-  .btn.primary:hover{filter:brightness(.98)}
-
-  /* Tabla */
-  .card{
-    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
-    margin-top:16px;box-shadow:var(--shadow);overflow:hidden
-  }
-  table{width:100%;border-collapse:separate;border-spacing:0}
-  thead th{
-    text-align:left;background:var(--soft);color:var(--muted);font-weight:800;
-    font-size:12px;letter-spacing:.5px;text-transform:uppercase;padding:14px 18px;border-bottom:1px solid var(--line)
-  }
-  tbody td{
-    padding:16px 18px;border-bottom:1px solid var(--line);font-size:15px;vertical-align:middle
-  }
-  tbody tr:last-child td{border-bottom:none}
-  .titleCell{font-weight:700}
-  .muted{color:var(--muted)}
-  .freq a{font-weight:800}
-
-  /* Checkbox cuadrado */
-  .complete-box{
-    width:20px;height:20px;border:2px solid #cbd5e1;border-radius:4px;
-    display:inline-flex;align-items:center;justify-content:center;cursor:pointer;
-    background:#fff;user-select:none;font-size:14px;line-height:1;color:#fff;
-  }
-  .complete-box.done{
-    background:var(--primary);border-color:var(--primary);color:#fff;
-  }
-  .checkmark{opacity:0;transform:scale(.9);transition:.12s}
-  .complete-box.done .checkmark{opacity:1;transform:scale(1)}
-
-  .ellipsis{
-    width:34px;height:34px;border-radius:10px;border:1px solid var(--line);
-    display:flex;align-items:center;justify-content:center;background:#fff;cursor:pointer
-  }
-  .menu{
-    position:absolute;z-index:50;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);
-    padding:6px;display:none;min-width:210px
-  }
-  .menu.open{display:block}
-  .menu button{
-    display:flex;gap:10px;align-items:center;width:100%;border:0;background:transparent;
-    padding:10px 10px;border-radius:10px;font-size:14px;cursor:pointer
-  }
-  .menu button:hover{background:#f7f7fb}
-
-  /* Footer tabla */
-  .tableFoot{
-    display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-top:1px solid var(--line);background:#fff
-  }
-  .rows{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:14px}
-  .pager{display:flex;gap:6px}
-  .pbtn{
-    width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer
-  }
-  .pbtn:disabled{opacity:.45;cursor:not-allowed}
-
-  /* Modal */
-  .modal-backdrop{
-    position:fixed;inset:0;background:rgba(2,6,23,.35);display:none;align-items:center;justify-content:center;padding:20px;z-index:100
-  }
-  .modal{background:#fff;border-radius:18px;border:1px solid var(--line);box-shadow:var(--shadow);max-width:640px;width:100%}
-  .modal header{padding:18px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
-  .modal header h3{margin:0;font-size:18px}
-  .modal .content{padding:18px 20px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
-  .modal .content .full{grid-column:1/-1}
-  .modal footer{padding:16px 20px;border-top:1px solid var(--line);display:flex;gap:10px;justify-content:flex-end}
-  .field{display:flex;flex-direction:column;gap:6px}
-  .field label{font-weight:800;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
-  .field input[type="text"], .field input[type="datetime-local"], .field select, .field textarea{
-    border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:14px
-  }
-  textarea{min-height:90px;resize:vertical}
-
-  /* Toast */
-  .toast{
-    position:fixed;right:20px;bottom:20px;background:#111827;color:#fff;padding:10px 12px;border-radius:12px;font-weight:700;opacity:0;transform:translateY(10px);transition:.25s;z-index:200
-  }
-  .toast.show{opacity:1;transform:translateY(0)}
+:root{
+  --primary:#3956E8; --secondary:#7459D9; --accent:#E8C239;
+  --bg:#F7F8FC; --card:#ffffff; --ink:#0f172a; --muted:#64748B; --line:#e5e7eb;
+  --shadow:0 8px 28px rgba(15,23,42,.08); --soft:#FAFBFF; --ok:#10b981; --radius:16px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'Nunito',system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif}
+a{color:var(--primary);text-decoration:none}
+.wrap{max-width:1180px;margin:28px auto;padding:0 20px}
+/* Header */
+.header{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px 24px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:space-between;gap:16px}
+.title h1{margin:0;font-size:22px;font-weight:800;letter-spacing:.2px}
+.chip{display:inline-flex;align-items:center;gap:6px;background:#f3f6ff;color:var(--primary);padding:6px 10px;border-radius:999px;border:1px solid #e8edff;font-weight:700;font-size:12px;margin-left:8px}
+.actions{display:flex;gap:10px;align-items:center}
+.btn{display:inline-flex;gap:8px;align-items:center;justify-content:center;height:40px;border-radius:12px;border:1px solid var(--line);padding:0 14px;font-weight:700;font-size:14px;background:#fff;color:var(--ink);cursor:pointer}
+.btn:hover{background:#fafafa}
+.btn.primary{border-color:transparent;background:var(--primary);color:#fff;box-shadow:0 8px 18px rgba(57,86,232,.25)}
+/* Tabla */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);margin-top:16px;box-shadow:var(--shadow);overflow:hidden}
+table{width:100%;border-collapse:separate;border-spacing:0}
+thead th{text-align:left;background:var(--soft);color:var(--muted);font-weight:700;font-size:12px;letter-spacing:.5px;text-transform:uppercase;padding:14px 18px;border-bottom:1px solid var(--line)}
+tbody td{padding:16px 18px;border-bottom:1px solid var(--line);font-size:15px;vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+.titleCell{font-weight:700}
+.muted{color:var(--muted)}
+.freq a{font-weight:700}
+.complete-box{width:20px;height:20px;border:2px solid #cbd5e1;border-radius:4px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;background:#fff;user-select:none;font-size:14px;line-height:1;color:#fff}
+.complete-box.done{background:var(--primary);border-color:var(--primary);color:#fff}
+.checkmark{opacity:0;transform:scale(.9);transition:.12s}
+.complete-box.done .checkmark{opacity:1;transform:scale(1)}
+.ellipsis{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;background:#fff;cursor:pointer}
+.menu{position:absolute;z-index:50;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:6px;display:none;min-width:210px}
+.menu.open{display:block}
+.menu button{display:flex;gap:10px;align-items:center;width:100%;border:0;background:transparent;padding:10px;border-radius:10px;font-size:14px;cursor:pointer}
+.menu button:hover{background:#f7f7fb}
+/* Footer tabla */
+.tableFoot{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-top:1px solid var(--line);background:#fff}
+.rows{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:14px}
+.pager{display:flex;gap:6px}
+.pbtn{width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.pbtn:disabled{opacity:.45;cursor:not-allowed}
+/* Modal */
+.modal-backdrop{position:fixed;inset:0;background:rgba(2,6,23,.35);display:none;align-items:center;justify-content:center;padding:20px;z-index:100}
+.modal{background:#fff;border-radius:18px;border:1px solid var(--line);box-shadow:var(--shadow);max-width:640px;width:100%}
+.modal header{padding:18px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+.modal header h3{margin:0;font-size:18px}
+.modal .content{padding:18px 20px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.modal .content .full{grid-column:1/-1}
+.modal footer{padding:16px 20px;border-top:1px solid var(--line);display:flex;gap:10px;justify-content:flex-end}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-weight:700;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.field input[type="text"], .field input[type="datetime-local"], .field select, .field textarea{border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:14px}
+textarea{min-height:90px;resize:vertical}
+/* Toast */
+.toast{position:fixed;right:20px;bottom:20px;background:#111827;color:#fff;padding:10px 12px;border-radius:12px;font-weight:700;opacity:0;transform:translateY(10px);transition:.25s;z-index:200}
+.toast.show{opacity:1;transform:translateY(0)}
 </style>
 </head>
 <body>
   <div class="wrap">
-
     <div class="header">
       <div class="title">
         <h1>Lista de Recordatorios <span class="chip">Vista general</span></h1>
-        <!-- Subtítulo removido -->
       </div>
       <div class="actions">
         <button id="btnFilters" class="btn" title="Filtros">
@@ -152,8 +84,6 @@
         </button>
       </div>
     </div>
-
-    <!-- Toolbar de búsqueda/filtros eliminada -->
 
     <div class="card">
       <table>
@@ -171,11 +101,7 @@
       <div class="tableFoot">
         <div class="rows">
           Filas
-          <select id="rows">
-            <option>10</option>
-            <option>25</option>
-            <option>50</option>
-          </select>
+          <select id="rows"><option>10</option><option>25</option><option>50</option></select>
           <span id="range" class="muted"></span>
         </div>
         <div class="pager">
@@ -189,7 +115,7 @@
     </div>
   </div>
 
-  <!-- Context menu -->
+  <!-- Menú contextual -->
   <div id="rowMenu" class="menu">
     <button data-act="done"><span>✅</span> Marcar como completado</button>
     <button data-act="edit"><span>✏️</span> Editar</button>
@@ -238,6 +164,19 @@
   <div id="toast" class="toast">Guardado</div>
 
 <script>
+/* ---------- Polyfill UUID (por si el entorno no lo trae) ---------- */
+(function(){
+  if (!('crypto' in window) || !crypto.randomUUID) {
+    window.crypto = window.crypto || {};
+    crypto.randomUUID = function(){
+      const hex = [...crypto.getRandomValues(new Uint8Array(16))].map(b=>b.toString(16).padStart(2,'0'));
+      hex[6] = (parseInt(hex[6],16) & 0x0f | 0x40).toString(16); // version 4
+      hex[8] = (parseInt(hex[8],16) & 0x3f | 0x80).toString(16); // variant
+      return `${hex.slice(0,4).join('')}-${hex.slice(4,6).join('')}-${hex.slice(6,8).join('')}-${hex.slice(8,10).join('')}-${hex.slice(10,16).join('')}`;
+    };
+  }
+})();
+
 /* ---------- Helpers ---------- */
 const $ = (q, el=document) => el.querySelector(q);
 const fmtDate = (iso) => {
@@ -270,7 +209,6 @@ const toast = (msg='Guardado')=>{
 /* ---------- Estado ---------- */
 const STORAGE_KEY = 'cm_reminders_v1';
 let state = { rows:10, page:1, data:[] };
-
 const saveAll = ()=>localStorage.setItem(STORAGE_KEY, JSON.stringify(state.data));
 const loadAll = ()=>{
   try{
@@ -290,22 +228,16 @@ const loadAll = ()=>{
 const tbody = $('#tbody');
 const range = $('#range');
 const pageLabel = $('#pageLabel');
-
 function sortedList(){
-  let list = [...state.data];
-  list.sort((a,b)=> new Date(nextFrom(a.when,a.rec)) - new Date(nextFrom(b.when,b.rec)));
-  return list;
+  return [...state.data].sort((a,b)=> new Date(nextFrom(a.when,a.rec)) - new Date(nextFrom(b.when,b.rec)));
 }
-
 function render(){
   const all = sortedList();
   const total = all.length;
   const pages = Math.max(1, Math.ceil(total / state.rows));
   if(state.page>pages) state.page = pages;
-
   const start = (state.page-1)*state.rows;
   const current = all.slice(start, start + state.rows);
-
   tbody.innerHTML = current.map(row=>{
     const nextIso = nextFrom(row.when, row.rec);
     const freqLabel = ({once:'—',daily:'Diaria',weekly:'Semanal',monthly:'Mensual',yearly:'Anual'})[row.rec] || '—';
@@ -316,76 +248,49 @@ function render(){
       <tr data-id="${row.id}">
         <td class="titleCell">${row.title}</td>
         <td>${freqHtml}</td>
-        <td>
-          <div class="complete-box ${row.done?'done':''}" role="checkbox" aria-checked="${row.done}">
-            <span class="checkmark">✓</span>
-          </div>
-        </td>
+        <td><div class="complete-box ${row.done?'done':''}" role="checkbox" aria-checked="${row.done}"><span class="checkmark">✓</span></div></td>
         <td class="muted">${row.desc?row.desc:'—'}</td>
-        <td style="text-align:right;">
-          <button class="ellipsis" aria-haspopup="menu" title="Acciones">⋯</button>
-        </td>
-      </tr>
-    `;
+        <td style="text-align:right;"><button class="ellipsis" aria-haspopup="menu" title="Acciones">⋯</button></td>
+      </tr>`;
   }).join('');
-
   const from = total? start+1 : 0;
   const to = Math.min(total, start + current.length);
   range.textContent = `${from}-${to} / ${total}`;
-
   pageLabel.textContent = `${state.page} / ${Math.max(1,Math.ceil(total/state.rows))}`;
-  $('#first').disabled = state.page<=1;
-  $('#prev').disabled  = state.page<=1;
-  $('#next').disabled  = state.page>=Math.ceil(total/state.rows);
-  $('#last').disabled  = state.page>=Math.ceil(total/state.rows);
+  $('#first').disabled = $('#prev').disabled = state.page<=1;
+  $('#next').disabled = $('#last').disabled = state.page>=Math.ceil(total/state.rows);
 }
 
 /* ---------- Interacción tabla ---------- */
 let openMenuFor = null;
-
 tbody.addEventListener('click', (e)=>{
-  const rowEl = e.target.closest('tr');
-  if(!rowEl) return;
+  const rowEl = e.target.closest('tr'); if(!rowEl) return;
   const id = rowEl.dataset.id;
-
   if(e.target.closest('.complete-box')){
     const r = state.data.find(x=>x.id===id);
-    r.done = !r.done;
-    saveAll(); render(); return;
+    r.done = !r.done; saveAll(); render(); return;
   }
   if(e.target.closest('.ellipsis')){
-    const menu = $('#rowMenu');
-    openMenuFor = id;
+    const menu = $('#rowMenu'); openMenuFor = id;
     const rect = e.target.closest('.ellipsis').getBoundingClientRect();
     menu.style.left = `${rect.left - 180 + window.scrollX}px`;
     menu.style.top  = `${rect.bottom + 6 + window.scrollY}px`;
     menu.classList.add('open');
   }
 });
-
 document.addEventListener('click', (e)=>{
   if(!e.target.closest('.ellipsis') && !e.target.closest('#rowMenu')){
     $('#rowMenu').classList.remove('open');
   }
 });
-
 $('#rowMenu').addEventListener('click', (e)=>{
   const btn = e.target.closest('button'); if(!btn) return;
   const act = btn.dataset.act;
-  const r = state.data.find(x=>x.id===openMenuFor);
-  if(!r) return;
+  const r = state.data.find(x=>x.id===openMenuFor); if(!r) return;
   if(act==='done'){ r.done = !r.done; saveAll(); render(); }
   if(act==='edit'){ openModal(r); }
-  if(act==='dup'){
-    state.data.push({...r, id:crypto.randomUUID(), title:`${r.title} (copia)`, done:false});
-    saveAll(); render(); toast('Duplicado');
-  }
-  if(act==='del'){
-    if(confirm('¿Eliminar este recordatorio?')){
-      state.data = state.data.filter(x=>x.id!==r.id);
-      saveAll(); render(); toast('Eliminado');
-    }
-  }
+  if(act==='dup'){ state.data.push({...r, id:crypto.randomUUID(), title:`${r.title} (copia)`, done:false}); saveAll(); render(); toast('Duplicado'); }
+  if(act==='del' && confirm('¿Eliminar este recordatorio?')){ state.data = state.data.filter(x=>x.id!==r.id); saveAll(); render(); toast('Eliminado'); }
   $('#rowMenu').classList.remove('open');
 });
 
@@ -408,7 +313,7 @@ const mRec   = $('#mRec');
 const mDesc  = $('#mDesc');
 let editingId = null;
 
-const openModal = (row=null)=>{
+function openModal(row=null){
   editingId = row? row.id : null;
   $('#modalTitle').textContent = editingId? 'Editar recordatorio' : 'Nuevo recordatorio';
   mTitle.value = row?.title || '';
@@ -416,23 +321,22 @@ const openModal = (row=null)=>{
   mRec.value   = row?.rec || 'once';
   mDesc.value  = row?.desc || '';
   modalWrap.style.display='flex';
-  setTimeout(()=>{ mTitle.focus(); },10);
-};
-const closeModal = ()=>{ modalWrap.style.display='none'; };
+  setTimeout(()=>mTitle.focus(), 50);
+}
+function closeModal(){ modalWrap.style.display='none'; }
 
-$('#btnNew').onclick = ()=>openModal();
-$('#closeModal').onclick = closeModal;
-$('#cancelModal').onclick = closeModal;
+$('#btnNew').addEventListener('click', ()=>openModal());
+$('#closeModal').addEventListener('click', closeModal);
+$('#cancelModal').addEventListener('click', closeModal);
 modalWrap.addEventListener('click', (e)=>{ if(e.target===modalWrap) closeModal(); });
 
-$('#saveModal').onclick = ()=>{
+$('#saveModal').addEventListener('click', ()=>{
   const title = mTitle.value.trim();
   const when  = mWhen.value;
   const rec   = mRec.value;
   const desc  = mDesc.value.trim();
   if(!title){ alert('Escribe un título'); mTitle.focus(); return; }
   if(!when){ alert('Selecciona fecha y hora'); mWhen.focus(); return; }
-
   if(editingId){
     const r = state.data.find(x=>x.id===editingId);
     Object.assign(r, {title, when, rec, desc});
@@ -442,9 +346,9 @@ $('#saveModal').onclick = ()=>{
     toast('Guardado');
   }
   saveAll(); render(); closeModal();
-};
+});
 
-/* ---------- Arranque ---------- */
+/* ---------- Start ---------- */
 loadAll();
 render();
 </script>
