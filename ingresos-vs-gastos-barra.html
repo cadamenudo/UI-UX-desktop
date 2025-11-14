@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ingresos vs Gastos</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Greycliff CF', sans-serif;
+      background: transparent;
+    }
+
+    .bloque-linea {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    }
+
+    canvas {
+      width: 100%;
+      max-height: 280px;
+    }
+
+    /* Título */
+    .titulo-grafico {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+      gap: .5rem;
+    }
+
+    .titulo-grafico h2 {
+      font-size: 1.25rem;
+      margin: 0;
+      color: #0f172a;
+    }
+
+    /* Tooltip “i” */
+    .info-icon {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .circle-i {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      background: #e2e8f0;
+      color: #334155;
+      font-size: 12px;
+      font-weight: bold;
+      text-align: center;
+      line-height: 18px;
+      border-radius: 50%;
+    }
+
+    .info-tooltip {
+      position: absolute;
+      top: 130%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #fff;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 220px;
+      opacity: 0;
+      pointer-events: none;
+      transition: .2s;
+      font-size: .75rem;
+      color: #0f172a;
+    }
+
+    .info-icon:hover .info-tooltip {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  </style>
+</head>
+
+<body>
+<div class="bloque-linea">
+
+  <div class="titulo-grafico">
+    <h2>Ingresos vs Gastos (Año)</h2>
+
+    <span class="info-icon">
+      <span class="circle-i">i</span>
+      <div class="info-tooltip">
+        Comparación directa entre ingresos y gastos anuales.  
+        Si la barra de gastos supera a la de ingresos → déficit.
+      </div>
+    </span>
+  </div>
+
+  <canvas id="barrasHorizontales"></canvas>
+</div>
+
+<script>
+  const ctx = document.getElementById('barrasHorizontales').getContext('2d');
+
+  // Datos del ejemplo (usa los tuyos)
+  const ingresosMensuales = [3200,4100,3700,4600,4200,5000,5400,5000,4800,4600,4900,5100];
+  const gastosMensuales   = [2800,3900,4000,4700,4400,5100,5600,5200,5000,4700,4950,5300];
+
+  const totalIngresos = ingresosMensuales.reduce((a,b)=>a+b,0);
+  const totalGastos   = gastosMensuales.reduce((a,b)=>a+b,0);
+
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Ingresos','Gastos'],
+      datasets: [{
+        label: 'Monto',
+        data: [totalIngresos, totalGastos],
+        backgroundColor: [
+          '#3956E8', // azul Cada Menudo
+          totalGastos > totalIngresos ? '#EF4444' : '#64748B'
+        ],
+        borderRadius: 10,
+        barThickness: 40
+      }]
+    },
+    options: {
+      indexAxis: 'y', // ← HORIZONTAL
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#ffffff',
+          titleColor: '#64748B',
+          bodyColor: '#0f172a',
+          borderColor: '#e2e7eb',
+          borderWidth: 1,
+          padding: 10,
+          callbacks: {
+            label: (context) => {
+              const v = context.raw.toLocaleString()
+              return `$${v}`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { display: false },
+          ticks: { color: '#64748B' }
+        },
+        y: {
+          grid: { display: false },
+          ticks: { color: '#0f172a' }
+        }
+      }
+    }
+  });
+</script>
+
+</body>
+</html>
