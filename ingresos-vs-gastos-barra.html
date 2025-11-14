@@ -5,18 +5,18 @@
   <title>Ingresos vs Gastos</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <!-- Tipografía Cada Menudo -->
-  <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX/css-fonts.css"/>
+  <!-- Tipografía Nunito -->
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     :root{
-      --primary:#3956E8;
-      --secondary:#7459D9;
-      --accent:#E8C239;
+      --azul-ingresos:#4338CA;   /* azul fuerte */
+      --morado-gastos:#8B5CF6;   /* morado medio */
+      --morado-suave:#C4B5FD;    /* morado claro */
       --ink:#0F172A;
       --muted:#64748B;
-      --border:#E5E7EB;
       --bg:#FFFFFF;
+      --border:#E5E7EB;
     }
 
     body {
@@ -79,7 +79,7 @@
       padding: 10px;
       border-radius: 8px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      width: 220px;
+      width: 230px;
       opacity: 0;
       pointer-events: none;
       transition: .2s;
@@ -103,8 +103,8 @@
     <span class="info-icon">
       <span class="circle-i">i</span>
       <div class="info-tooltip">
-        Comparación directa entre ingresos y gastos anuales.<br>
-        Si la barra de gastos supera a la de ingresos, indica déficit.
+        Comparación directa entre ingresos y gastos durante el periodo.<br>
+        Idealmente la barra azul (ingresos) debe ser mayor a la morada (gastos).
       </div>
     </span>
   </div>
@@ -115,14 +115,12 @@
 <script>
   const ctx = document.getElementById('barrasHorizontales').getContext('2d');
 
-  // Datos del ejemplo (los reemplazas por los que vienen de tu app)
+  // Datos de ejemplo: reemplaza por los que vengan de tu app
   const ingresosMensuales = [3200,4100,3700,4600,4200,5000,5400,5000,4800,4600,4900,5100];
   const gastosMensuales   = [2800,3900,4000,4700,4400,5100,5600,5200,5000,4700,4950,5300];
 
   const totalIngresos = ingresosMensuales.reduce((a,b)=>a+b,0);
   const totalGastos   = gastosMensuales.reduce((a,b)=>a+b,0);
-
-  const colorGastos = totalGastos > totalIngresos ? '#EF4444' : '#64748B';
 
   new Chart(ctx, {
     type: 'bar',
@@ -131,13 +129,15 @@
       datasets: [{
         label: 'Monto',
         data: [totalIngresos, totalGastos],
-        backgroundColor: ['#3956E8', colorGastos],
-        borderRadius: 10,
-        barThickness: 42
+        backgroundColor: ['#4338CA', '#8B5CF6'], // azul y morado
+        borderColor: ['#4338CA', '#8B5CF6'],
+        borderWidth: 2,
+        borderRadius: 12,
+        barThickness: 44
       }]
     },
     options: {
-      indexAxis: 'y', // ← hace las barras horizontales
+      indexAxis: 'y', // barras horizontales
       responsive: true,
       plugins: {
         legend: { display: false },
@@ -150,8 +150,8 @@
           padding: 10,
           callbacks: {
             label: (context) => {
-              const valor = context.raw.toLocaleString();
-              return `$${valor}`;
+              const valor = context.raw || 0;
+              return `$${valor.toLocaleString()}`;
             }
           }
         }
@@ -163,7 +163,7 @@
         },
         y: {
           grid: { display: false },
-          ticks: { color: '#0F172A' }
+          ticks: { color: '#4338CA' } // etiqueta en azul como el ejemplo
         }
       }
     }
