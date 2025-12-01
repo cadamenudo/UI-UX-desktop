@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Activa tu cuenta – Cada Menudo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin:0; padding:0; background-color:#f5f5f7;">
+  <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color:#f5f5f7; padding:32px 0;">
+    <tr>
+      <td align="center">
+        <!-- Contenedor principal -->
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="max-width:600px; background-color:#ffffff; border-radius:24px; overflow:hidden; box-shadow:0 12px 30px rgba(0,0,0,0.04); font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color:#111827;">
+          <!-- Header con logo -->
+          <tr>
+            <td align="center" style="padding:24px 24px 8px;">
+              <!-- Si usas imagen de logo, reemplaza este texto por <img> -->
+              <img src="https://cadamenudo.github.io/UI-UX/logo-cadamenudo-email.png" alt="Cada Menudo" style="max-width:160px; height:auto; display:block;">
+            </td>
+          </tr>
+
+          <!-- Línea divisoria suave -->
+          <tr>
+            <td style="padding:0 32px;">
+              <hr style="border:none; border-top:1px solid #e5e7eb; margin:0;">
+            </td>
+          </tr>
+
+          <!-- Contenido -->
+          <tr>
+            <td style="padding:32px;">
+              <p style="margin:0 0 8px; font-size:14px; letter-spacing:.04em; text-transform:uppercase; color:#9ca3af;">
+                Bienvenido
+              </p>
+
+              <h1 style="margin:0 0 16px; font-size:24px; line-height:1.3; font-weight:600; color:#111827;">
+                Hola {{var:name}},
+              </h1>
+
+              <p style="margin:0 0 16px; font-size:16px; line-height:1.6; color:#4b5563;">
+                Gracias por unirte a <strong>Cada Menudo</strong>. Ya casi estás listo para tener tu dinero claro, en un solo lugar.
+              </p>
+
+              <p style="margin:0 0 12px; font-size:15px; line-height:1.6; color:#4b5563;">
+                Para empezar, solo necesitas activar tu cuenta:
+              </p>
+
+              <!-- Código de activación en estilo “pill” -->
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:0 0 20px;">
+                <tr>
+                  <td style="font-size:13px; text-transform:uppercase; letter-spacing:.08em; color:#9ca3af; padding-bottom:4px;">
+                    Código de activación
+                  </td>
+                </tr>
+                <tr>
+                  <td style="background-color:#f3f4f6; border-radius:999px; padding:10px 18px; font-size:15px; letter-spacing:.1em; font-weight:600; text-align:center; color:#111827;">
+                    {{var:code}}
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Botón principal -->
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="left" style="margin:0 0 24px;">
+                <tr>
+                  <td align="center" bgcolor="#3956E8" style="border-radius:999px;">
+                    <a href="{{var:activationUrl}}"
+                       style="display:inline-block; padding:12px 32px; font-size:15px; font-weight:600; line-height:1.4; color:#ffffff; text-decoration:none;">
+                      Activar cuenta
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="clear:both; margin:0 0 8px; font-size:13px; line-height:1.6; color:#9ca3af;">
+                También puedes copiar el código y usarlo directamente en la app.
+              </p>
+
+              <!-- Bloque “qué puedes hacer” -->
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-top:24px; background-color:#f9fafb; border-radius:16px;">
+                <tr>
+                  <td style="padding:16px 18px;">
+                    <p style="margin:0 0 8px; font-size:13px; text-transform:uppercase; letter-spacing:.08em; color:#9ca3af;">
+                      Con Cada Menudo podrás
+                    </p>
+                    <ul style="margin:0; padding-left:18px; font-size:14px; line-height:1.7; color:#4b5563;">
+                      <li>Ver en un solo lugar todo lo que entra y sale.</li>
+                      <li>Descubrir en qué gastas sin darte cuenta.</li>
+                      <li>Crear metas de ahorro simples y accionables.</li>
+                    </ul>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding:16px 32px 28px; background-color:#f9fafb; font-size:11px; line-height:1.6; color:#9ca3af; text-align:center;">
+              <p style="margin:0 0 4px;">
+                Recibes este correo porque creaste una cuenta en <strong>Cada Menudo</strong>.
+              </p>
+              <p style="margin:0;">
+                Si prefieres no recibir este tipo de correos, puedes darte de baja
+                <a href="{{var:unsubscribeUrl}}" style="color:#3956E8; text-decoration:underline;">aquí</a>.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
