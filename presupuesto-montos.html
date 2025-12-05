@@ -140,99 +140,6 @@
       font-weight: 700;
     }
 
-    .cm-card-subtitle {
-      font-size: 0.85rem;
-      color: var(--cm-muted);
-      margin-top: 2px;
-    }
-
-    /* Ingreso disponible */
-    .cm-income-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      align-items: center;
-      margin-top: 12px;
-    }
-
-    .cm-input-group {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      font-size: 0.85rem;
-      color: var(--cm-muted);
-    }
-
-    .cm-input-group label {
-      font-weight: 600;
-      color: var(--cm-text);
-    }
-
-    .cm-input-money {
-      border-radius: 999px;
-      border: 1px solid var(--cm-border);
-      background: #fff;
-      padding: 8px 12px;
-      font-size: 0.95rem;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      min-width: 220px;
-    }
-
-    .cm-input-money span {
-      color: var(--cm-muted);
-      font-weight: 600;
-    }
-
-    .cm-input-money input {
-      border: none;
-      outline: none;
-      width: 100%;
-      font-family: inherit;
-      font-size: 0.95rem;
-      background: transparent;
-    }
-
-    .cm-helper-text {
-      font-size: 0.8rem;
-      color: var(--cm-muted);
-      margin-top: 2px;
-    }
-
-    /* KPIs */
-    .cm-kpi-row {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-      margin-top: 14px;
-    }
-
-    .cm-kpi-card {
-      background: #f9fafb;
-      border-radius: 14px;
-      padding: 12px 14px;
-      border: 1px solid #e5e7eb;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .cm-kpi-label {
-      font-size: 0.8rem;
-      color: var(--cm-muted);
-    }
-
-    .cm-kpi-value {
-      font-size: 1.3rem;
-      font-weight: 800;
-    }
-
-    .cm-kpi-sub {
-      font-size: 0.8rem;
-      color: var(--cm-muted);
-    }
-
     /* Layout central */
     .cm-main-row {
       display: grid;
@@ -243,16 +150,25 @@
 
     /* Secciones tabla */
     .cm-section-title {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       font-weight: 700;
-      margin: 10px 0 4px;
+      color: var(--cm-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .cm-section-row td {
+      background: #f9fafb;
+      border-bottom: none;
+      padding-top: 10px;
+      padding-bottom: 4px;
     }
 
     .cm-table-wrapper {
       border-radius: 12px;
       border: 1px solid var(--cm-border);
       overflow: auto;
-      max-height: 420px;
+      max-height: 460px;
     }
 
     table {
@@ -309,11 +225,6 @@
       font-size: 0.85rem;
       background: transparent;
       font-family: inherit;
-    }
-
-    .cm-cell-note {
-      font-size: 0.75rem;
-      color: var(--cm-muted);
     }
 
     /* Panel derecho */
@@ -433,17 +344,11 @@
       .cm-main-row {
         grid-template-columns: minmax(0, 1fr);
       }
-      .cm-kpi-row {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
     }
 
     @media (max-width: 768px) {
       .cm-page {
         padding: 16px;
-      }
-      .cm-kpi-row {
-        grid-template-columns: minmax(0, 1fr);
       }
     }
   </style>
@@ -455,7 +360,7 @@
       <div class="cm-page-title">
         <span class="cm-breadcrumb">Tablero / Presupuesto</span>
         <h1>Montos del presupuesto</h1>
-        <p class="cm-page-subtitle">Asigna cuánto va a cada grupo.</p>
+        <p class="cm-page-subtitle">Ingresos, gastos y ahorros elegidos.</p>
       </div>
 
       <div class="cm-page-controls">
@@ -468,54 +373,6 @@
         </div>
       </div>
     </header>
-
-    <!-- Card ingreso disponible + KPIs -->
-    <section class="cm-card">
-      <div class="cm-card-header">
-        <div>
-          <div class="cm-card-title">Ingreso disponible</div>
-          <div class="cm-card-subtitle">Tope para gastos + ahorro.</div>
-        </div>
-      </div>
-
-      <div class="cm-income-row">
-        <div class="cm-input-group">
-          <label for="ingresoDisponible">Monto</label>
-          <div class="cm-input-money">
-            <span>$</span>
-            <input
-              id="ingresoDisponible"
-              type="number"
-              min="0"
-              step="0.01"
-              placeholder="Ej. 3,500"
-              oninput="recalcularPresupuesto()"
-            />
-          </div>
-          <span class="cm-helper-text">Puedes cambiarlo cuando quieras.</span>
-        </div>
-      </div>
-
-      <div class="cm-kpi-row">
-        <article class="cm-kpi-card">
-          <span class="cm-kpi-label">Gasto + ahorro</span>
-          <div class="cm-kpi-value" id="kpiPresupuestoAsignado">$0.00</div>
-          <div class="cm-kpi-sub">Total asignado abajo.</div>
-        </article>
-
-        <article class="cm-kpi-card">
-          <span class="cm-kpi-label">Restante</span>
-          <div class="cm-kpi-value" id="kpiRestante">$0.00</div>
-          <div class="cm-kpi-sub" id="kpiRestanteEstado">Sin datos.</div>
-        </article>
-
-        <article class="cm-kpi-card">
-          <span class="cm-kpi-label">% del ingreso</span>
-          <div class="cm-kpi-value" id="kpiPorcentaje">0%</div>
-          <div class="cm-kpi-sub">Sobre ingreso disponible.</div>
-        </article>
-      </div>
-    </section>
 
     <!-- Layout principal -->
     <section class="cm-main-row">
@@ -533,7 +390,6 @@
               <tr>
                 <th>Nombre</th>
                 <th>Presupuesto</th>
-                <th>Nota</th>
               </tr>
             </thead>
             <tbody id="tbodyIngresos">
@@ -584,7 +440,8 @@
   </main>
 
   <script>
-    // Ejemplo de grupos (luego se pueden conectar con "elegidos")
+    // Aquí después se pueden inyectar las categorías "elegidas" desde la primera página.
+    // Por ahora dejo ejemplos básicos.
     const ingresos = [
       { nombre: 'Ingreso principal' },
       { nombre: 'Ingreso variable' },
@@ -649,18 +506,8 @@
       wrapperMonto.appendChild(input);
       tdMonto.appendChild(wrapperMonto);
 
-      const tdNota = document.createElement('td');
-      tdNota.className = 'cm-cell-note';
-      tdNota.textContent =
-        grupo === 'ingreso'
-          ? 'Origen del dinero.'
-          : grupo === 'gasto'
-          ? 'Parte del gasto.'
-          : 'Parte del ahorro.';
-
       tr.appendChild(tdNombre);
       tr.appendChild(tdMonto);
-      tr.appendChild(tdNota);
 
       tbody.appendChild(tr);
     }
@@ -670,32 +517,34 @@
       const tbodyGastos = document.getElementById('tbodyGastos');
       const tbodyAhorros = document.getElementById('tbodyAhorros');
 
-      // Etiquetas de sección (simple fila visual)
+      // Fila título Ingresos
       const filaTituloIng = document.createElement('tr');
+      filaTituloIng.className = 'cm-section-row';
       const celIng = document.createElement('td');
-      celIng.colSpan = 3;
+      celIng.colSpan = 2;
       celIng.innerHTML = '<span class="cm-section-title">Ingresos elegidos</span>';
       filaTituloIng.appendChild(celIng);
       tbodyIngresos.appendChild(filaTituloIng);
-
       ingresos.forEach(i => crearFila(i.nombre, 'ingreso', tbodyIngresos));
 
+      // Fila título Gastos
       const filaTituloGas = document.createElement('tr');
+      filaTituloGas.className = 'cm-section-row';
       const celGas = document.createElement('td');
-      celGas.colSpan = 3;
+      celGas.colSpan = 2;
       celGas.innerHTML = '<span class="cm-section-title">Gastos elegidos</span>';
       filaTituloGas.appendChild(celGas);
       tbodyGastos.appendChild(filaTituloGas);
-
       gastos.forEach(g => crearFila(g.nombre, 'gasto', tbodyGastos));
 
+      // Fila título Ahorros
       const filaTituloAho = document.createElement('tr');
+      filaTituloAho.className = 'cm-section-row';
       const celAho = document.createElement('td');
-      celAho.colSpan = 3;
+      celAho.colSpan = 2;
       celAho.innerHTML = '<span class="cm-section-title">Ahorros elegidos</span>';
       filaTituloAho.appendChild(celAho);
       tbodyAhorros.appendChild(filaTituloAho);
-
       ahorros.forEach(a => crearFila(a.nombre, 'ahorro', tbodyAhorros));
     }
 
@@ -715,7 +564,6 @@
         return;
       }
 
-      // Conic gradient
       let actual = 0;
       const partes = [];
       const leyendaHtml = [];
@@ -739,7 +587,6 @@
     }
 
     function recalcularPresupuesto() {
-      const ingresoDisponible = parseFloat(document.getElementById('ingresoDisponible').value) || 0;
       const inputs = document.querySelectorAll('.cm-input-table-money input');
 
       let totalIngreso = 0;
@@ -761,30 +608,10 @@
       });
 
       const totalUso = totalGasto + totalAhorro;
-      const restante = ingresoDisponible - totalUso;
-      const porcentaje = ingresoDisponible > 0 ? (totalUso / ingresoDisponible) * 100 : 0;
-
-      // KPIs
-      document.getElementById('kpiPresupuestoAsignado').textContent = formatearMoneda(totalUso);
-      document.getElementById('kpiRestante').textContent = formatearMoneda(restante);
-      document.getElementById('kpiPorcentaje').textContent = `${porcentaje.toFixed(0)}%`;
-
-      const kpiRestanteEstado = document.getElementById('kpiRestanteEstado');
-      if (!ingresoDisponible && totalUso === 0) {
-        kpiRestanteEstado.textContent = 'Sin datos.';
-      } else if (!ingresoDisponible && totalUso > 0) {
-        kpiRestanteEstado.textContent = 'Falta ingreso.';
-      } else if (restante > 0) {
-        kpiRestanteEstado.textContent = 'Tienes margen.';
-      } else if (Math.abs(restante) < 1) {
-        kpiRestanteEstado.textContent = 'Justo al límite.';
-      } else {
-        kpiRestanteEstado.textContent = 'Te pasaste.';
-      }
+      const balance = totalIngreso - totalUso;
 
       // Totales panel derecho
       const listaTotales = document.getElementById('listaTotales');
-      const balance = totalIngreso - totalUso;
       listaTotales.innerHTML = `
         <li>Ingresos: <strong>${formatearMoneda(totalIngreso)}</strong></li>
         <li>Gastos: <strong>${formatearMoneda(totalGasto)}</strong></li>
@@ -792,7 +619,7 @@
         <li>Balance: <strong>${formatearMoneda(balance)}</strong></li>
       `;
 
-      // Dona
+      // Dona gastos
       actualizarDonaGastos(gastosPorCategoria);
     }
 
