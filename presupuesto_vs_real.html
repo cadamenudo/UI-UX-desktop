@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Presupuesto vs Gasto real – Cada Menudo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Nunito -->
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root {
+      --cm-primary: #3956e8;
+      --cm-secondary: #7459d9;
+      --cm-bg: #f5f6ff;
+      --cm-card-bg: #ffffff;
+      --cm-text: #0f172a;
+      --cm-muted: #64748b;
+      --cm-border: #e5e7eb;
+      --cm-success-bg: #ecfdf3;
+      --cm-success-text: #15803d;
+      --cm-warning-bg: #fef9c3;
+      --cm-warning-text: #92400e;
+      --cm-danger-bg: #fef2f2;
+      --cm-danger-text: #b91c1c;
+      --radius-card: 16px;
+      --shadow-soft: 0 10px 30px rgba(15, 23, 42, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Nunito", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--cm-bg);
+      color: var(--cm-text);
+    }
+
+    /* Contenedor principal (área de contenido a la derecha del sidebar) */
+    .cm-page {
+      padding: 24px 32px 32px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Header / título */
+    .cm-page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .cm-page-title {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .cm-breadcrumb {
+      font-size: 0.8rem;
+      color: var(--cm-muted);
+    }
+
+    .cm-page-title h1 {
+      font-size: 1.6rem;
+      font-weight: 800;
+    }
+
+    .cm-page-controls {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .cm-select,
+    .cm-toggle {
+      border-radius: 999px;
+      border: 1px solid var(--cm-border);
+      background: #fff;
+      font-size: 0.9rem;
+      padding: 6px 12px;
+      color: var(--cm-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    .cm-toggle span {
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+
+    .cm-toggle span.active {
+      background: rgba(57, 86, 232, 0.08);
+      color: var(--cm-primary);
+      font-weight: 600;
+    }
+
+    /* Banner estado general */
+    .cm-banner {
+      margin-top: 8px;
+      margin-bottom: 20px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      box-shadow: var(--shadow-soft);
+      background: var(--cm-success-bg);
+      color: var(--cm-success-text);
+      font-size: 0.95rem;
+    }
+
+    .cm-banner strong {
+      font-weight: 800;
+    }
+
+    .cm-banner span.cm-banner-secondary {
+      color: var(--cm-muted);
+    }
+
+    /* KPIs */
+    .cm-kpi-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .cm-kpi-card {
+      background: var(--cm-card-bg);
+      border-radius: var(--radius-card);
+      padding: 16px 18px;
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .cm-kpi-label {
+      font-size: 0.85rem;
+      color: var(--cm-muted);
+    }
+
+    .cm-kpi-value {
+      font-size: 1.5rem;
+      font-weight: 800;
+    }
+
+    .cm-kpi-sub {
+      font-size: 0.85rem;
+      color: var(--cm-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .cm-chip-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+    }
+
+    .cm-chip-status.green {
+      background: rgba(34, 197, 94, 0.08);
+      color: #15803d;
+    }
+
+    .cm-chip-status.yellow {
+      background: rgba(234, 179, 8, 0.08);
+      color: #92400e;
+    }
+
+    .cm-chip-status.red {
+      background: rgba(239, 68, 68, 0.08);
+      color: #b91c1c;
+    }
+
+    /* Zona central: gráfico + lista */
+    .cm-main-row {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1.4fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .cm-card {
+      background: var(--cm-card-bg);
+      border-radius: var(--radius-card);
+      padding: 16px 18px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .cm-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .cm-card-header h2 {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .cm-filter-chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .cm-chip {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--cm-border);
+      font-size: 0.75rem;
+      color: var(--cm-muted);
+      cursor: pointer;
+      background: #fff;
+    }
+
+    .cm-chip.active {
+      border-color: var(--cm-primary);
+      color: var(--cm-primary);
+      background: rgba(57, 86, 232, 0.06);
+      font-weight: 600;
+    }
+
+    /* Placeholder gráfico */
+    .cm-chart-placeholder {
+      border-radius: 12px;
+      border: 1px dashed #d4d4d8;
+      background: #f9fafb;
+      min-height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      color: var(--cm-muted);
+      text-align: center;
+      padding: 16px;
+    }
+
+    /* Lista de categorías / alertas */
+    .cm-category-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 6px;
+      margin-bottom: 12px;
+    }
+
+    .cm-category-item {
+      border-radius: 10px;
+      border: 1px solid var(--cm-border);
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .cm-category-top {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+    }
+
+    .cm-category-name {
+      font-weight: 600;
+    }
+
+    .cm-category-amounts {
+      color: var(--cm-muted);
+      font-size: 0.8rem;
+    }
+
+    .cm-category-bar {
+      position: relative;
+      height: 6px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      overflow: hidden;
+    }
+
+    .cm-category-bar-fill {
+      position: absolute;
+      inset: 0;
+      width: 70%;
+      background: linear-gradient(90deg, var(--cm-primary), var(--cm-secondary));
+    }
+
+    .cm-alerts {
+      border-top: 1px dashed var(--cm-border);
+      padding-top: 8px;
+      margin-top: 8px;
+      font-size: 0.8rem;
+      color: var(--cm-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    /* Tabla detallada */
+    .cm-table-card {
+      background: var(--cm-card-bg);
+      border-radius: var(--radius-card);
+      padding: 16px 18px 12px;
+      box-shadow: var(--shadow-soft);
+      margin-bottom: 20px;
+    }
+
+    .cm-table-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .cm-table-card-header h2 {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .cm-table-actions {
+      font-size: 0.8rem;
+      color: var(--cm-primary);
+      cursor: pointer;
+    }
+
+    .cm-table-wrapper {
+      border-radius: 12px;
+      border: 1px solid var(--cm-border);
+      overflow: auto;
+      max-height: 320px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    thead {
+      background: #f4f4ff;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    th, td {
+      padding: 8px 10px;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+      white-space: nowrap;
+    }
+
+    th {
+      font-weight: 700;
+      color: var(--cm-muted);
+      font-size: 0.8rem;
+    }
+
+    tbody tr:nth-child(even) {
+      background: #fafafa;
+    }
+
+    .cm-badge {
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+    }
+
+    .cm-badge.green {
+      background: rgba(34, 197, 94, 0.08);
+      color: #15803d;
+    }
+
+    .cm-badge.yellow {
+      background: rgba(234, 179, 8, 0.08);
+      color: #92400e;
+    }
+
+    .cm-badge.red {
+      background: rgba(239, 68, 68, 0.08);
+      color: #b91c1c;
+    }
+
+    /* Coach Xai card */
+    .cm-coach-card {
+      background: var(--cm-card-bg);
+      border-radius: var(--radius-card);
+      padding: 16px 18px 18px;
+      box-shadow: var(--shadow-soft);
+      font-size: 0.9rem;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .cm-coach-title {
+      font-weight: 700;
+    }
+
+    .cm-coach-list {
+      margin-left: 18px;
+      font-size: 0.85rem;
+      color: var(--cm-muted);
+    }
+
+    /* Responsivo básico para reducir columnas si se estrecha */
+    @media (max-width: 1024px) {
+      .cm-main-row {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .cm-kpi-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 768px) {
+      .cm-page {
+        padding: 16px;
+      }
+      .cm-kpi-row {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .cm-page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+      .cm-page-controls {
+        align-self: stretch;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="cm-page">
+    <!-- Header -->
+    <header class="cm-page-header">
+      <div class="cm-page-title">
+        <span class="cm-breadcrumb">Tablero / Presupuesto</span>
+        <h1>Presupuesto vs Gasto real</h1>
+      </div>
+
+      <div class="cm-page-controls">
+        <div class="cm-toggle">
+          <span class="active">Mes</span>
+          <span>Año</span>
+        </div>
+        <div class="cm-select">Enero 2025 ⌄</div>
+        <div class="cm-select">Todas las cuentas ⌄</div>
+      </div>
+    </header>
+
+    <!-- Banner estado general -->
+    <section class="cm-banner">
+      <div>
+        <strong>SUPER:</strong> Estás usando el <strong>82% de tu presupuesto del mes.</strong>
+      </div>
+      <span class="cm-banner-secondary">
+        Te quedan <strong>$350</strong> para gastar sin salirte del plan.
+      </span>
+    </section>
+
+    <!-- KPIs -->
+    <section class="cm-kpi-row">
+      <article class="cm-kpi-card">
+        <span class="cm-kpi-label">Presupuesto del mes</span>
+        <div class="cm-kpi-value">$4,000.00</div>
+        <div class="cm-kpi-sub">Monto total que planeaste gastar.</div>
+      </article>
+
+      <article class="cm-kpi-card">
+        <span class="cm-kpi-label">Gastado hasta hoy</span>
+        <div class="cm-kpi-value">$3,650.00</div>
+        <div class="cm-kpi-sub">Suma de tus gastos reales en este período.</div>
+      </article>
+
+      <article class="cm-kpi-card">
+        <span class="cm-kpi-label">Diferencia</span>
+        <div class="cm-kpi-value">$350.00</div>
+        <div class="cm-kpi-sub">
+          <span class="cm-chip-status green">Dentro del presupuesto (82%)</span>
+        </div>
+      </article>
+    </section>
+
+    <!-- Zona central -->
+    <section class="cm-main-row">
+      <!-- Gráfico -->
+      <article class="cm-card">
+        <header class="cm-card-header">
+          <h2>Presupuesto por categoría</h2>
+          <div class="cm-filter-chips">
+            <button class="cm-chip active">Todas</button>
+            <button class="cm-chip">Esenciales</button>
+            <button class="cm-chip">Opcionales</button>
+          </div>
+        </header>
+
+        <div class="cm-chart-placeholder">
+          Aquí va el gráfico de barras horizontales<br/>
+          (Presupuesto vs Gasto real por categoría)
+        </div>
+      </article>
+
+      <!-- Categorías con más desvío -->
+      <article class="cm-card">
+        <header class="cm-card-header">
+          <h2>Categorías con más desvío</h2>
+        </header>
+
+        <div class="cm-category-list">
+          <div class="cm-category-item">
+            <div class="cm-category-top">
+              <span class="cm-category-name">Alimentación</span>
+              <span class="cm-category-amounts">$450 / $510</span>
+            </div>
+            <div class="cm-category-bar">
+              <div class="cm-category-bar-fill" style="width: 113%;"></div>
+            </div>
+            <div class="cm-category-top" style="margin-top:4px;">
+              <span class="cm-badge red">113% del presupuesto</span>
+            </div>
+          </div>
+
+          <div class="cm-category-item">
+            <div class="cm-category-top">
+              <span class="cm-category-name">Vivienda</span>
+              <span class="cm-category-amounts">$900 / $890</span>
+            </div>
+            <div class="cm-category-bar">
+              <div class="cm-category-bar-fill" style="width: 98%;"></div>
+            </div>
+            <div class="cm-category-top" style="margin-top:4px;">
+              <span class="cm-badge yellow">98% del presupuesto</span>
+            </div>
+          </div>
+
+          <div class="cm-category-item">
+            <div class="cm-category-top">
+              <span class="cm-category-name">Transporte</span>
+              <span class="cm-category-amounts">$120 / $95</span>
+            </div>
+            <div class="cm-category-bar">
+              <div class="cm-category-bar-fill" style="width: 79%;"></div>
+            </div>
+            <div class="cm-category-top" style="margin-top:4px;">
+              <span class="cm-badge green">79% del presupuesto</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cm-alerts">
+          <span>🍽 Alimentación está 13% sobre el presupuesto.</span>
+          <span>🚗 Transporte tiene margen que podrías dirigir a ahorro.</span>
+        </div>
+      </article>
+    </section>
+
+    <!-- Tabla detallada -->
+    <section class="cm-table-card">
+      <header class="cm-table-card-header">
+        <h2>Detalle por categoría</h2>
+        <div class="cm-table-actions">Editar presupuesto ⟶</div>
+      </header>
+
+      <div class="cm-table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Categoría</th>
+              <th>Presupuesto</th>
+              <th>Gasto real</th>
+              <th>Diferencia</th>
+              <th>% usado</th>
+              <th>Tipo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Vivienda</td>
+              <td>$900.00</td>
+              <td>$890.00</td>
+              <td>-$10.00</td>
+              <td>98% 🟡</td>
+              <td><span class="cm-badge yellow">Esencial</span></td>
+            </tr>
+            <tr>
+              <td>Alimentación</td>
+              <td>$450.00</td>
+              <td>$510.00</td>
+              <td>+$60.00</td>
+              <td>113% 🔴</td>
+              <td><span class="cm-badge red">Esencial</span></td>
+            </tr>
+            <tr>
+              <td>Transporte</td>
+              <td>$120.00</td>
+              <td>$95.00</td>
+              <td>-$25.00</td>
+              <td>79% 🟢</td>
+              <td><span class="cm-badge green">Esencial</span></td>
+            </tr>
+            <tr>
+              <td>Ocio</td>
+              <td>$150.00</td>
+              <td>$80.00</td>
+              <td>-$70.00</td>
+              <td>53% 🟢</td>
+              <td><span class="cm-badge green">Opcional</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Coach Xai -->
+    <section class="cm-coach-card">
+      <div class="cm-coach-title">🧠 Coach Xai</div>
+      <p>
+        Mi gente, estás muy bien en vivienda y transporte. La categoría que más te está
+        sacando del presupuesto es <strong>Alimentación (113%)</strong>.
+      </p>
+      <ul class="cm-coach-list">
+        <li>Considera reducir pedidos a domicilio esta semana.</li>
+        <li>Si este nivel de gasto es “normal” para ti, ajusta tu presupuesto el próximo mes
+          para que refleje mejor tu realidad.</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>
