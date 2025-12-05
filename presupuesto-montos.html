@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Asignar montos de presupuesto – Cada Menudo</title>
+  <title>Presupuesto – Montos seleccionados</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Nunito -->
@@ -17,12 +17,6 @@
       --cm-text: #0f172a;
       --cm-muted: #64748b;
       --cm-border: #e5e7eb;
-      --cm-success-bg: #ecfdf3;
-      --cm-success-text: #15803d;
-      --cm-warning-bg: #fef9c3;
-      --cm-warning-text: #92400e;
-      --cm-danger-bg: #fef2f2;
-      --cm-danger-text: #b91c1c;
       --radius-card: 16px;
       --shadow-soft: 0 10px 30px rgba(15, 23, 42, 0.06);
     }
@@ -72,10 +66,9 @@
     }
 
     .cm-page-subtitle {
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       color: var(--cm-muted);
       margin-top: 4px;
-      max-width: 520px;
     }
 
     .cm-page-controls {
@@ -204,12 +197,7 @@
     .cm-helper-text {
       font-size: 0.8rem;
       color: var(--cm-muted);
-      margin-top: 6px;
-    }
-
-    .cm-highlight {
-      color: var(--cm-primary);
-      font-weight: 600;
+      margin-top: 2px;
     }
 
     /* KPIs */
@@ -243,33 +231,6 @@
     .cm-kpi-sub {
       font-size: 0.8rem;
       color: var(--cm-muted);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .cm-chip-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 3px 10px;
-      border-radius: 999px;
-      font-size: 0.75rem;
-    }
-
-    .cm-chip-status.green {
-      background: rgba(34, 197, 94, 0.08);
-      color: #15803d;
-    }
-
-    .cm-chip-status.yellow {
-      background: rgba(234, 179, 8, 0.08);
-      color: #92400e;
-    }
-
-    .cm-chip-status.red {
-      background: rgba(239, 68, 68, 0.08);
-      color: #b91c1c;
     }
 
     /* Layout central */
@@ -280,12 +241,18 @@
       margin-top: 8px;
     }
 
-    /* Tabla de montos */
+    /* Secciones tabla */
+    .cm-section-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin: 10px 0 4px;
+    }
+
     .cm-table-wrapper {
       border-radius: 12px;
       border: 1px solid var(--cm-border);
       overflow: auto;
-      max-height: 430px;
+      max-height: 420px;
     }
 
     table {
@@ -302,7 +269,7 @@
     }
 
     th, td {
-      padding: 8px 10px;
+      padding: 7px 9px;
       text-align: left;
       border-bottom: 1px solid #e5e7eb;
       white-space: nowrap;
@@ -316,27 +283,6 @@
 
     tbody tr:nth-child(even) {
       background: #fafafa;
-    }
-
-    .cm-cell-type {
-      font-size: 0.75rem;
-      padding: 3px 8px;
-      border-radius: 999px;
-    }
-
-    .cm-cell-type.esencial {
-      background: #ecfdf3;
-      color: #15803d;
-    }
-
-    .cm-cell-type.opcional {
-      background: #f3e8ff;
-      color: #6b21a8;
-    }
-
-    .cm-cell-type.ahorro {
-      background: #eff6ff;
-      color: #1d4ed8;
     }
 
     .cm-input-table-money {
@@ -392,34 +338,70 @@
     }
 
     .cm-side-list {
-      margin-left: 18px;
+      margin-left: 16px;
       margin-top: 4px;
       color: var(--cm-muted);
     }
 
-    .cm-coach-card {
-      background: var(--cm-card-bg);
-      border-radius: var(--radius-card);
-      padding: 14px 16px 16px;
-      box-shadow: var(--shadow-soft);
-      font-size: 0.9rem;
+    .cm-totals-list li {
+      margin-bottom: 2px;
+    }
+
+    /* Dona gastos */
+    .cm-donut-wrapper {
       display: flex;
-      flex-direction: column;
-      gap: 6px;
+      gap: 12px;
+      align-items: center;
+      justify-content: flex-start;
       margin-top: 6px;
     }
 
-    .cm-coach-title {
+    .cm-donut {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: #e5e7eb;
+      position: relative;
+    }
+
+    .cm-donut::after {
+      content: "";
+      position: absolute;
+      inset: 24%;
+      background: #f9fafb;
+      border-radius: 50%;
+    }
+
+    .cm-donut-center {
+      position: absolute;
+      inset: 36%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
       font-weight: 700;
+      color: var(--cm-text);
+      text-align: center;
+      z-index: 1;
     }
 
-    .cm-coach-list {
-      margin-left: 18px;
-      font-size: 0.85rem;
+    .cm-donut-legend {
+      font-size: 0.75rem;
       color: var(--cm-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
     }
 
-    /* Botón continuar */
+    .cm-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      display: inline-block;
+      margin-right: 6px;
+    }
+
+    /* Botón guardar */
     .cm-actions-row {
       margin-top: 18px;
       display: flex;
@@ -472,11 +454,8 @@
     <header class="cm-page-header">
       <div class="cm-page-title">
         <span class="cm-breadcrumb">Tablero / Presupuesto</span>
-        <h1>Asignar montos a tu presupuesto</h1>
-        <p class="cm-page-subtitle">
-          Aquí decides cuánto quieres asignar a cada categoría. A medida que escribes, te mostramos
-          cuánto llevas presupuestado y cuánto te queda disponible.
-        </p>
+        <h1>Montos del presupuesto</h1>
+        <p class="cm-page-subtitle">Asigna cuánto va a cada grupo.</p>
       </div>
 
       <div class="cm-page-controls">
@@ -494,16 +473,14 @@
     <section class="cm-card">
       <div class="cm-card-header">
         <div>
-          <div class="cm-card-title">1. Ingreso disponible para este periodo</div>
-          <div class="cm-card-subtitle">
-            Idealmente, este es tu ingreso neto menos ahorro obligatorio y pagos fijos que no quieres tocar.
-          </div>
+          <div class="cm-card-title">Ingreso disponible</div>
+          <div class="cm-card-subtitle">Tope para gastos + ahorro.</div>
         </div>
       </div>
 
       <div class="cm-income-row">
         <div class="cm-input-group">
-          <label for="ingresoDisponible">Ingreso disponible para presupuestar</label>
+          <label for="ingresoDisponible">Monto</label>
           <div class="cm-input-money">
             <span>$</span>
             <input
@@ -515,37 +492,27 @@
               oninput="recalcularPresupuesto()"
             />
           </div>
-          <span class="cm-helper-text">
-            Puedes ajustar este número cuando quieras. <span class="cm-highlight">Coach Xai</span> usará este monto como tope.
-          </span>
+          <span class="cm-helper-text">Puedes cambiarlo cuando quieras.</span>
         </div>
       </div>
 
       <div class="cm-kpi-row">
         <article class="cm-kpi-card">
-          <span class="cm-kpi-label">Presupuesto asignado</span>
+          <span class="cm-kpi-label">Gasto + ahorro</span>
           <div class="cm-kpi-value" id="kpiPresupuestoAsignado">$0.00</div>
-          <div class="cm-kpi-sub">
-            Suma de todos los montos que ingresas abajo.
-          </div>
+          <div class="cm-kpi-sub">Total asignado abajo.</div>
         </article>
 
         <article class="cm-kpi-card">
-          <span class="cm-kpi-label">Restante disponible</span>
+          <span class="cm-kpi-label">Restante</span>
           <div class="cm-kpi-value" id="kpiRestante">$0.00</div>
-          <div class="cm-kpi-sub" id="kpiRestanteEstado">
-            Aún no has asignado presupuesto.
-          </div>
+          <div class="cm-kpi-sub" id="kpiRestanteEstado">Sin datos.</div>
         </article>
 
         <article class="cm-kpi-card">
-          <span class="cm-kpi-label">% del ingreso asignado</span>
+          <span class="cm-kpi-label">% del ingreso</span>
           <div class="cm-kpi-value" id="kpiPorcentaje">0%</div>
-          <div class="cm-kpi-sub">
-            <span class="cm-chip-status green" id="chipEstado">
-              Dentro de un rango saludable
-            </span>
-          </div>
+          <div class="cm-kpi-sub">Sobre ingreso disponible.</div>
         </article>
       </div>
     </section>
@@ -556,10 +523,7 @@
       <article class="cm-card">
         <header class="cm-card-header">
           <div>
-            <div class="cm-card-title">2. Montos por categoría</div>
-            <div class="cm-card-subtitle">
-              Empieza por las categorías esenciales y luego completa las opcionales y ahorro.
-            </div>
+            <div class="cm-card-title">Montos por grupo</div>
           </div>
         </header>
 
@@ -567,56 +531,51 @@
           <table>
             <thead>
               <tr>
-                <th>Categoría</th>
-                <th>Tipo</th>
+                <th>Nombre</th>
                 <th>Presupuesto</th>
-                <th>Comentario</th>
+                <th>Nota</th>
               </tr>
             </thead>
-            <tbody id="tablaCategorias">
-              <!-- Se llena por JS -->
+            <tbody id="tbodyIngresos">
+              <!-- Ingresos -->
+            </tbody>
+            <tbody id="tbodyGastos">
+              <!-- Gastos -->
+            </tbody>
+            <tbody id="tbodyAhorros">
+              <!-- Ahorros -->
             </tbody>
           </table>
         </div>
       </article>
 
-      <!-- Panel lateral / Coach -->
+      <!-- Panel derecho -->
       <aside class="cm-side-panel">
         <div class="cm-side-box">
-          <h3>Tips rápidos</h3>
-          <ul class="cm-side-list">
-            <li>Empieza por vivienda, alimentación, salud y transporte.</li>
-            <li>Luego asigna a ocio, extras y metas de ahorro.</li>
-            <li>Si el total pasa tu ingreso disponible, ajusta hasta que el restante vuelva a positivo.</li>
+          <h3>Totales</h3>
+          <ul class="cm-side-list cm-totals-list" id="listaTotales">
+            <li>Ingresos: <strong>$0.00</strong></li>
+            <li>Gastos: <strong>$0.00</strong></li>
+            <li>Ahorro: <strong>$0.00</strong></li>
+            <li>Balance: <strong>$0.00</strong></li>
           </ul>
         </div>
 
         <div class="cm-side-box">
-          <h3>Resumen por tipo</h3>
-          <p class="cm-cell-note">
-            (Ejemplo visual – valores se basan en tu tabla)
-          </p>
-          <ul class="cm-side-list" id="resumenPorTipo">
-            <li>Esenciales: <strong>$0.00</strong></li>
-            <li>Opcionales: <strong>$0.00</strong></li>
-            <li>Ahorro: <strong>$0.00</strong></li>
-          </ul>
+          <h3>Gastos por categoría</h3>
+          <div class="cm-donut-wrapper">
+            <div class="cm-donut" id="donutGastos">
+              <div class="cm-donut-center" id="donutCentro">$0</div>
+            </div>
+            <div class="cm-donut-legend" id="legendGastos">
+              Sin datos.
+            </div>
+          </div>
         </div>
-
-        <section class="cm-coach-card">
-          <div class="cm-coach-title">🧠 Coach Xai</div>
-          <p id="coachMensaje">
-            Mi gente, mientras escribes los montos, voy chequeando si tu presupuesto se mantiene dentro de tu ingreso disponible.
-          </p>
-          <ul class="cm-coach-list">
-            <li>Si el restante se pone en rojo, piensa qué categoría puedes bajar un poco.</li>
-            <li>Si te sobra mucho, considera aumentar ahorro o adelantar pagos de deuda.</li>
-          </ul>
-        </section>
       </aside>
     </section>
 
-    <!-- Botón continuar -->
+    <!-- Botón -->
     <div class="cm-actions-row">
       <button class="cm-btn-primary" type="button">
         Guardar presupuesto
@@ -625,161 +584,218 @@
   </main>
 
   <script>
-    // Categorías de ejemplo para esta pantalla.
-    // Más adelante, esto se puede conectar con lo que el usuario activó en la página anterior.
-    const categoriasPresupuesto = [
-      { nombre: 'Vivienda', tipo: 'esencial' },
-      { nombre: 'Alimentación', tipo: 'esencial' },
-      { nombre: 'Transporte', tipo: 'esencial' },
-      { nombre: 'Salud', tipo: 'esencial' },
-      { nombre: 'Deuda', tipo: 'esencial' },
-      { nombre: 'Servicios (teléfono, internet)', tipo: 'esencial' },
-      { nombre: 'Entretenimiento', tipo: 'opcional' },
-      { nombre: 'Comidas fuera', tipo: 'opcional' },
-      { nombre: 'Compras personales', tipo: 'opcional' },
-      { nombre: 'Vacaciones', tipo: 'opcional' },
-      { nombre: 'Ahorro emergencia', tipo: 'ahorro' },
-      { nombre: 'Ahorro metas específicas', tipo: 'ahorro' },
-      { nombre: 'Inversión / retiro', tipo: 'ahorro' }
+    // Ejemplo de grupos (luego se pueden conectar con "elegidos")
+    const ingresos = [
+      { nombre: 'Ingreso principal' },
+      { nombre: 'Ingreso variable' },
+      { nombre: 'Otros ingresos' }
     ];
 
-    const tablaCategorias = document.getElementById('tablaCategorias');
+    const gastos = [
+      { nombre: 'Vivienda' },
+      { nombre: 'Alimentación' },
+      { nombre: 'Transporte' },
+      { nombre: 'Salud' },
+      { nombre: 'Deuda' },
+      { nombre: 'Servicios' },
+      { nombre: 'Ocio' },
+      { nombre: 'Comidas fuera' },
+      { nombre: 'Compras' },
+      { nombre: 'Otros gastos' }
+    ];
+
+    const ahorros = [
+      { nombre: 'Emergencia' },
+      { nombre: 'Metas' },
+      { nombre: 'Inversión / retiro' }
+    ];
+
+    const coloresGastos = [
+      '#3956E8',
+      '#7459D9',
+      '#E8C239',
+      '#22C55E',
+      '#F97316',
+      '#EC4899',
+      '#0EA5E9',
+      '#A855F7'
+    ];
 
     function formatearMoneda(valor) {
       const n = Number(valor) || 0;
       return n.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
     }
 
-    // Rellena la tabla con inputs
+    function crearFila(nombre, grupo, tbody) {
+      const tr = document.createElement('tr');
+
+      const tdNombre = document.createElement('td');
+      tdNombre.textContent = nombre;
+
+      const tdMonto = document.createElement('td');
+      const wrapperMonto = document.createElement('div');
+      wrapperMonto.className = 'cm-input-table-money';
+      const simbolo = document.createElement('span');
+      simbolo.textContent = '$';
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.min = '0';
+      input.step = '0.01';
+      input.placeholder = '0.00';
+      input.dataset.grupo = grupo;
+      input.dataset.categoria = nombre;
+      input.oninput = recalcularPresupuesto;
+      wrapperMonto.appendChild(simbolo);
+      wrapperMonto.appendChild(input);
+      tdMonto.appendChild(wrapperMonto);
+
+      const tdNota = document.createElement('td');
+      tdNota.className = 'cm-cell-note';
+      tdNota.textContent =
+        grupo === 'ingreso'
+          ? 'Origen del dinero.'
+          : grupo === 'gasto'
+          ? 'Parte del gasto.'
+          : 'Parte del ahorro.';
+
+      tr.appendChild(tdNombre);
+      tr.appendChild(tdMonto);
+      tr.appendChild(tdNota);
+
+      tbody.appendChild(tr);
+    }
+
     function inicializarTabla() {
-      categoriasPresupuesto.forEach((cat, index) => {
-        const tr = document.createElement('tr');
+      const tbodyIngresos = document.getElementById('tbodyIngresos');
+      const tbodyGastos = document.getElementById('tbodyGastos');
+      const tbodyAhorros = document.getElementById('tbodyAhorros');
 
-        const tdNombre = document.createElement('td');
-        tdNombre.textContent = cat.nombre;
+      // Etiquetas de sección (simple fila visual)
+      const filaTituloIng = document.createElement('tr');
+      const celIng = document.createElement('td');
+      celIng.colSpan = 3;
+      celIng.innerHTML = '<span class="cm-section-title">Ingresos elegidos</span>';
+      filaTituloIng.appendChild(celIng);
+      tbodyIngresos.appendChild(filaTituloIng);
 
-        const tdTipo = document.createElement('td');
-        const spanTipo = document.createElement('span');
-        spanTipo.classList.add('cm-cell-type', cat.tipo);
-        spanTipo.textContent =
-          cat.tipo === 'esencial'
-            ? 'Esencial'
-            : cat.tipo === 'opcional'
-            ? 'Opcional'
-            : 'Ahorro';
-        tdTipo.appendChild(spanTipo);
+      ingresos.forEach(i => crearFila(i.nombre, 'ingreso', tbodyIngresos));
 
-        const tdMonto = document.createElement('td');
-        const wrapperMonto = document.createElement('div');
-        wrapperMonto.className = 'cm-input-table-money';
-        const simbolo = document.createElement('span');
-        simbolo.textContent = '$';
-        const input = document.createElement('input');
-        input.type = 'number';
-        input.min = '0';
-        input.step = '0.01';
-        input.placeholder = '0.00';
-        input.dataset.tipo = cat.tipo;
-        input.dataset.index = index;
-        input.oninput = recalcularPresupuesto;
-        wrapperMonto.appendChild(simbolo);
-        wrapperMonto.appendChild(input);
-        tdMonto.appendChild(wrapperMonto);
+      const filaTituloGas = document.createElement('tr');
+      const celGas = document.createElement('td');
+      celGas.colSpan = 3;
+      celGas.innerHTML = '<span class="cm-section-title">Gastos elegidos</span>';
+      filaTituloGas.appendChild(celGas);
+      tbodyGastos.appendChild(filaTituloGas);
 
-        const tdNota = document.createElement('td');
-        tdNota.className = 'cm-cell-note';
-        tdNota.textContent =
-          cat.tipo === 'ahorro'
-            ? 'Buen lugar para priorizar si te sobra.'
-            : cat.tipo === 'opcional'
-            ? 'Espacio flexible si necesitas recortar.'
-            : 'Intenta mantenerlo estable.';
+      gastos.forEach(g => crearFila(g.nombre, 'gasto', tbodyGastos));
 
-        tr.appendChild(tdNombre);
-        tr.appendChild(tdTipo);
-        tr.appendChild(tdMonto);
-        tr.appendChild(tdNota);
+      const filaTituloAho = document.createElement('tr');
+      const celAho = document.createElement('td');
+      celAho.colSpan = 3;
+      celAho.innerHTML = '<span class="cm-section-title">Ahorros elegidos</span>';
+      filaTituloAho.appendChild(celAho);
+      tbodyAhorros.appendChild(filaTituloAho);
 
-        tablaCategorias.appendChild(tr);
+      ahorros.forEach(a => crearFila(a.nombre, 'ahorro', tbodyAhorros));
+    }
+
+    function actualizarDonaGastos(mapaGastos) {
+      const donut = document.getElementById('donutGastos');
+      const centro = document.getElementById('donutCentro');
+      const legend = document.getElementById('legendGastos');
+
+      const entradas = Object.entries(mapaGastos).filter(([_, v]) => v > 0);
+      const total = entradas.reduce((acc, [, v]) => acc + v, 0);
+
+      centro.textContent = total > 0 ? formatearMoneda(total) : '$0';
+
+      if (total === 0 || entradas.length === 0) {
+        donut.style.background = '#e5e7eb';
+        legend.textContent = 'Sin datos.';
+        return;
+      }
+
+      // Conic gradient
+      let actual = 0;
+      const partes = [];
+      const leyendaHtml = [];
+
+      entradas.forEach(([nombre, valor], idx) => {
+        const color = coloresGastos[idx % coloresGastos.length];
+        const grados = (valor / total) * 360;
+        const inicio = actual;
+        const fin = actual + grados;
+        partes.push(`${color} ${inicio}deg ${fin}deg`);
+        actual = fin;
+
+        const porcentaje = ((valor / total) * 100).toFixed(0);
+        leyendaHtml.push(
+          `<div><span class="cm-dot" style="background:${color}"></span>${nombre} – ${porcentaje}%</div>`
+        );
       });
+
+      donut.style.background = `conic-gradient(${partes.join(',')})`;
+      legend.innerHTML = leyendaHtml.join('');
     }
 
     function recalcularPresupuesto() {
-      const ingresoInput = document.getElementById('ingresoDisponible');
-      const ingreso = parseFloat(ingresoInput.value) || 0;
+      const ingresoDisponible = parseFloat(document.getElementById('ingresoDisponible').value) || 0;
+      const inputs = document.querySelectorAll('.cm-input-table-money input');
 
-      const inputs = tablaCategorias.querySelectorAll('input[type="number"]');
-      let total = 0;
-      let totalEsencial = 0;
-      let totalOpcional = 0;
+      let totalIngreso = 0;
+      let totalGasto = 0;
       let totalAhorro = 0;
+      const gastosPorCategoria = {};
 
       inputs.forEach(input => {
         const val = parseFloat(input.value) || 0;
-        total += val;
-        const tipo = input.dataset.tipo;
-        if (tipo === 'esencial') totalEsencial += val;
-        if (tipo === 'opcional') totalOpcional += val;
-        if (tipo === 'ahorro') totalAhorro += val;
+        const grupo = input.dataset.grupo;
+        const categoria = input.dataset.categoria;
+
+        if (grupo === 'ingreso') totalIngreso += val;
+        if (grupo === 'gasto') {
+          totalGasto += val;
+          gastosPorCategoria[categoria] = (gastosPorCategoria[categoria] || 0) + val;
+        }
+        if (grupo === 'ahorro') totalAhorro += val;
       });
 
-      const restante = ingreso - total;
-      const porcentaje = ingreso > 0 ? (total / ingreso) * 100 : 0;
+      const totalUso = totalGasto + totalAhorro;
+      const restante = ingresoDisponible - totalUso;
+      const porcentaje = ingresoDisponible > 0 ? (totalUso / ingresoDisponible) * 100 : 0;
 
-      // Actualiza KPIs
-      document.getElementById('kpiPresupuestoAsignado').textContent = formatearMoneda(total);
+      // KPIs
+      document.getElementById('kpiPresupuestoAsignado').textContent = formatearMoneda(totalUso);
       document.getElementById('kpiRestante').textContent = formatearMoneda(restante);
       document.getElementById('kpiPorcentaje').textContent = `${porcentaje.toFixed(0)}%`;
 
       const kpiRestanteEstado = document.getElementById('kpiRestanteEstado');
-      const chipEstado = document.getElementById('chipEstado');
-      const coachMensaje = document.getElementById('coachMensaje');
-
-      // Reset clases
-      chipEstado.classList.remove('green', 'yellow', 'red');
-
-      if (!ingreso) {
-        kpiRestanteEstado.textContent = 'Ingresa primero tu ingreso disponible.';
-        chipEstado.classList.add('yellow');
-        chipEstado.textContent = 'Falta ingreso disponible';
-        coachMensaje.textContent =
-          'Mi gente, escribe arriba tu ingreso disponible para que podamos ver si tu presupuesto hace sentido.';
-      } else if (total === 0) {
-        kpiRestanteEstado.textContent = 'Aún no has asignado presupuesto.';
-        chipEstado.classList.add('green');
-        chipEstado.textContent = 'Listo para empezar';
-        coachMensaje.textContent =
-          'Empieza por vivienda, alimentación y transporte. Luego seguimos con ocio y ahorro.';
-      } else if (restante > 0 && porcentaje <= 100) {
-        kpiRestanteEstado.textContent = 'Te queda espacio para seguir asignando presupuesto.';
-        chipEstado.classList.add('green');
-        chipEstado.textContent = 'Dentro del presupuesto';
-        coachMensaje.textContent =
-          'Vas bien. Si te queda bastante restante, considera aumentar tu ahorro o adelantar pagos de deuda.';
-      } else if (restante === 0 || Math.abs(restante) < 1) {
-        kpiRestanteEstado.textContent = 'Has asignado exactamente el 100% de tu ingreso disponible.';
-        chipEstado.classList.add('yellow');
-        chipEstado.textContent = 'Presupuesto al límite';
-        coachMensaje.textContent =
-          'Estás al 100%. Si tu vida real suele tener imprevistos, podrías dejar un pequeño margen sin asignar.';
-      } else if (restante < 0) {
-        kpiRestanteEstado.textContent = 'Tu presupuesto supera tu ingreso disponible. Ajusta algunas categorías.';
-        chipEstado.classList.add('red');
-        chipEstado.textContent = 'Te pasaste del presupuesto';
-        coachMensaje.textContent =
-          'Mi gente, ahora sí nos pasamos. Mira primero las categorías opcionales y baja un poco hasta que el restante vuelva a verde.';
+      if (!ingresoDisponible && totalUso === 0) {
+        kpiRestanteEstado.textContent = 'Sin datos.';
+      } else if (!ingresoDisponible && totalUso > 0) {
+        kpiRestanteEstado.textContent = 'Falta ingreso.';
+      } else if (restante > 0) {
+        kpiRestanteEstado.textContent = 'Tienes margen.';
+      } else if (Math.abs(restante) < 1) {
+        kpiRestanteEstado.textContent = 'Justo al límite.';
+      } else {
+        kpiRestanteEstado.textContent = 'Te pasaste.';
       }
 
-      // Resumen por tipo
-      const resumenPorTipo = document.getElementById('resumenPorTipo');
-      resumenPorTipo.innerHTML = `
-        <li>Esenciales: <strong>${formatearMoneda(totalEsencial)}</strong></li>
-        <li>Opcionales: <strong>${formatearMoneda(totalOpcional)}</strong></li>
+      // Totales panel derecho
+      const listaTotales = document.getElementById('listaTotales');
+      const balance = totalIngreso - totalUso;
+      listaTotales.innerHTML = `
+        <li>Ingresos: <strong>${formatearMoneda(totalIngreso)}</strong></li>
+        <li>Gastos: <strong>${formatearMoneda(totalGasto)}</strong></li>
         <li>Ahorro: <strong>${formatearMoneda(totalAhorro)}</strong></li>
+        <li>Balance: <strong>${formatearMoneda(balance)}</strong></li>
       `;
+
+      // Dona
+      actualizarDonaGastos(gastosPorCategoria);
     }
 
-    // Init
     document.addEventListener('DOMContentLoaded', () => {
       inicializarTabla();
       recalcularPresupuesto();
