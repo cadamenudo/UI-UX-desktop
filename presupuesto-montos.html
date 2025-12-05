@@ -34,7 +34,7 @@
     }
 
     .cm-page {
-      padding: 24px 32px 32px;
+      padding: 24px 32px 24px;
       max-width: 1200px;
       margin: 0 auto;
     }
@@ -237,39 +237,54 @@
     .cm-side-box {
       background: #f9fafb;
       border-radius: 14px;
-      padding: 12px 14px;
+      padding: 14px 16px;
       border: 1px solid #e5e7eb;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
     }
 
     .cm-side-box h3 {
-      margin-bottom: 6px;
-      font-size: 0.9rem;
-      font-weight: 700;
+      margin-bottom: 8px;
+      font-size: 1.05rem;
+      font-weight: 800;
     }
 
     .cm-side-list {
-      margin-left: 16px;
+      margin-left: 0;
       margin-top: 4px;
+      list-style: none;
       color: var(--cm-muted);
     }
 
     .cm-totals-list li {
-      margin-bottom: 2px;
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+    }
+
+    .cm-total-label {
+      color: var(--cm-muted);
+    }
+
+    .cm-total-value {
+      font-weight: 800;
+      font-size: 1rem;
+      color: var(--cm-text);
     }
 
     /* Dona gastos */
     .cm-donut-wrapper {
       display: flex;
-      gap: 12px;
+      gap: 14px;
       align-items: center;
       justify-content: flex-start;
       margin-top: 6px;
     }
 
     .cm-donut {
-      width: 120px;
-      height: 120px;
+      width: 140px;
+      height: 140px;
       border-radius: 50%;
       background: #e5e7eb;
       position: relative;
@@ -285,19 +300,20 @@
 
     .cm-donut-center {
       position: absolute;
-      inset: 36%;
+      inset: 32%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.75rem;
-      font-weight: 700;
+      font-size: 0.85rem;
+      font-weight: 800;
       color: var(--cm-text);
       text-align: center;
       z-index: 1;
+      padding: 4px;
     }
 
     .cm-donut-legend {
-      font-size: 0.75rem;
+      font-size: 0.8rem;
       color: var(--cm-muted);
       display: flex;
       flex-direction: column;
@@ -314,7 +330,7 @@
 
     /* Botón guardar */
     .cm-actions-row {
-      margin-top: 18px;
+      margin-top: 10px; /* ⬆️ botón más cerca del contenido */
       display: flex;
       justify-content: flex-end;
     }
@@ -410,10 +426,22 @@
         <div class="cm-side-box">
           <h3>Totales</h3>
           <ul class="cm-side-list cm-totals-list" id="listaTotales">
-            <li>Ingresos: <strong>$0.00</strong></li>
-            <li>Gastos: <strong>$0.00</strong></li>
-            <li>Ahorro: <strong>$0.00</strong></li>
-            <li>Balance: <strong>$0.00</strong></li>
+            <li>
+              <span class="cm-total-label">Ingresos</span>
+              <span class="cm-total-value">$0.00</span>
+            </li>
+            <li>
+              <span class="cm-total-label">Gastos</span>
+              <span class="cm-total-value">$0.00</span>
+            </li>
+            <li>
+              <span class="cm-total-label">Ahorro</span>
+              <span class="cm-total-value">$0.00</span>
+            </li>
+            <li>
+              <span class="cm-total-label">Balance</span>
+              <span class="cm-total-value">$0.00</span>
+            </li>
           </ul>
         </div>
 
@@ -440,8 +468,7 @@
   </main>
 
   <script>
-    // Aquí después se pueden inyectar las categorías "elegidas" desde la primera página.
-    // Por ahora dejo ejemplos básicos.
+    // Ejemplo de grupos (luego se conectan con la página inicial)
     const ingresos = [
       { nombre: 'Ingreso principal' },
       { nombre: 'Ingreso variable' },
@@ -613,10 +640,10 @@
       // Totales panel derecho
       const listaTotales = document.getElementById('listaTotales');
       listaTotales.innerHTML = `
-        <li>Ingresos: <strong>${formatearMoneda(totalIngreso)}</strong></li>
-        <li>Gastos: <strong>${formatearMoneda(totalGasto)}</strong></li>
-        <li>Ahorro: <strong>${formatearMoneda(totalAhorro)}</strong></li>
-        <li>Balance: <strong>${formatearMoneda(balance)}</strong></li>
+        <li><span class="cm-total-label">Ingresos</span><span class="cm-total-value">${formatearMoneda(totalIngreso)}</span></li>
+        <li><span class="cm-total-label">Gastos</span><span class="cm-total-value">${formatearMoneda(totalGasto)}</span></li>
+        <li><span class="cm-total-label">Ahorro</span><span class="cm-total-value">${formatearMoneda(totalAhorro)}</span></li>
+        <li><span class="cm-total-label">Balance</span><span class="cm-total-value">${formatearMoneda(balance)}</span></li>
       `;
 
       // Dona gastos
