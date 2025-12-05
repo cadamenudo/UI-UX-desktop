@@ -189,57 +189,6 @@
       color: var(--cm-muted);
     }
 
-    /* Resumen simple */
-    .cm-summary {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 12px;
-    }
-
-    .cm-summary-item {
-      border-radius: 12px;
-      border: 1px solid var(--cm-border);
-      padding: 10px 12px;
-      font-size: 0.85rem;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      background: #f9fafb;
-    }
-
-    .cm-summary-label {
-      color: var(--cm-muted);
-    }
-
-    .cm-summary-value {
-      font-weight: 700;
-      font-size: 1rem;
-    }
-
-    /* Coach */
-    .cm-coach-card {
-      background: var(--cm-card-bg);
-      border-radius: var(--radius-card);
-      padding: 16px 18px 18px;
-      box-shadow: var(--shadow-soft);
-      font-size: 0.9rem;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      margin-top: 4px;
-    }
-
-    .cm-coach-title {
-      font-weight: 700;
-    }
-
-    .cm-coach-list {
-      margin-left: 18px;
-      font-size: 0.85rem;
-      color: var(--cm-muted);
-    }
-
     /* Botón principal */
     .cm-actions-row {
       margin-top: 18px;
@@ -571,9 +520,6 @@
         justify-content: flex-start;
         flex-wrap: wrap;
       }
-      .cm-summary {
-        grid-template-columns: minmax(0, 1fr);
-      }
     }
   </style>
 </head>
@@ -583,9 +529,9 @@
     <header class="cm-page-header">
       <div class="cm-page-title">
         <span class="cm-breadcrumb">Tablero / Presupuesto</span>
-        <h1>Configurar tu presupuesto</h1>
+        <h1>Configurar presupuesto</h1>
         <p class="cm-page-subtitle">
-          Primero define si tu presupuesto será <strong>mensual</strong> o <strong>anual</strong> y qué periodo quieres trabajar.
+          Elige si será <strong>mensual</strong> o <strong>anual</strong> y el periodo.
         </p>
       </div>
     </header>
@@ -596,14 +542,13 @@
         <div>
           <div class="cm-card-title">1. Tipo de presupuesto</div>
           <div class="cm-card-subtitle">
-            Puedes trabajar mes a mes o planificar el año completo.
+            Mensual o anual para este periodo.
           </div>
         </div>
       </div>
 
       <div class="cm-type-row">
         <div class="cm-segment">
-          <!-- Más adelante será un toggle real con JS -->
           <button class="active" type="button">Mensual</button>
           <button type="button">Anual</button>
         </div>
@@ -614,18 +559,17 @@
       </div>
 
       <p class="cm-helper-text">
-        Si eliges <span class="cm-highlight">mensual</span>, el presupuesto se aplicará solo al mes seleccionado.
-        Más adelante podrás copiarlo o ajustarlo para otros meses.
+        Si eliges <span class="cm-highlight">mensual</span>, aplica solo al mes seleccionado.
       </p>
     </section>
 
-    <!-- 2. Seleccionar categorías (TU COMPONENTE) -->
+    <!-- 2. Seleccionar categorías -->
     <section class="cm-card">
       <div class="cm-card-header">
         <div>
-          <div class="cm-card-title">2. Selecciona las categorías que quieres presupuestar</div>
+          <div class="cm-card-title">2. Categorías del presupuesto</div>
           <div class="cm-card-subtitle">
-            Activa solo las categorías que realmente quieres controlar este periodo.
+            Activa solo lo que usarás este periodo.
           </div>
         </div>
       </div>
@@ -888,56 +832,14 @@
       </div>
 
       <p class="cm-helper-text">
-        Consejo: empezar con pocas categorías hace el primer presupuesto mucho más manejable.
+        Tip: empieza con pocas categorías.
       </p>
-    </section>
-
-    <!-- 3. Resumen simple -->
-    <section class="cm-card">
-      <div class="cm-card-header">
-        <div>
-          <div class="cm-card-title">3. Resumen del periodo</div>
-          <div class="cm-card-subtitle">
-            Una vista rápida antes de pasar a asignar montos por categoría.
-          </div>
-        </div>
-      </div>
-
-      <div class="cm-summary">
-        <div class="cm-summary-item">
-          <span class="cm-summary-label">Tipo de presupuesto</span>
-          <span class="cm-summary-value">Mensual</span>
-        </div>
-        <div class="cm-summary-item">
-          <span class="cm-summary-label">Periodo</span>
-          <span class="cm-summary-value">Enero 2025</span>
-        </div>
-        <div class="cm-summary-item">
-          <span class="cm-summary-label">Categorías activas</span>
-          <span class="cm-summary-value">12</span>
-          <span class="cm-summary-label">(dato de ejemplo / futuro)</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- Coach Xai -->
-    <section class="cm-coach-card">
-      <div class="cm-coach-title">🧠 Coach Xai</div>
-      <p>
-        Mi gente, este primer paso es solo para decidir
-        <strong>cómo quieres organizar tu presupuesto</strong>.
-      </p>
-      <ul class="cm-coach-list">
-        <li>Si estás empezando, te sugiero trabajar <strong>mensual</strong>.</li>
-        <li>Activa solo las categorías que realmente usas. Menos ruido, más claridad.</li>
-        <li>Después de esto, pasamos a asignar montos a cada categoría.</li>
-      </ul>
     </section>
 
     <!-- Botón continuar -->
     <div class="cm-actions-row">
       <button class="cm-btn-primary" type="button">
-        Continuar a asignar montos
+        Ir a montos
       </button>
     </div>
   </main>
@@ -964,15 +866,12 @@
     // --- Configuración al cargar ---
 
     document.addEventListener('DOMContentLoaded', () => {
-      // Cierra todos los bloques al iniciar
       document.querySelectorAll('.bloque-sector').forEach(b => b.classList.remove('abierto'));
 
-      // Carga categorías de gastos predefinidas
       Object.entries(categoriasGastos).forEach(([categoria, subcategorias]) => {
         agregarCategoria(categoria, subcategorias, false);
       });
 
-      // Carga categorías de ahorro predefinidas
       Object.entries(categoriasAhorro).forEach(([categoria, subcategorias]) => {
         agregarCategoriaAhorro(categoria, subcategorias, false);
       });
@@ -1101,7 +1000,6 @@
     }
 
     function anadirCategoria() {
-      // evitar múltiples inputs abiertos
       if (contenedor.querySelector('input.editable-input')) return;
 
       const input = document.createElement('input');
@@ -1468,4 +1366,5 @@
   </script>
 </body>
 </html>
+
 
