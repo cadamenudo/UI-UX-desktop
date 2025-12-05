@@ -425,24 +425,6 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
-
-    @media (max-width: 768px) {
-      .cm-page {
-        padding: 16px;
-      }
-      .cm-kpi-row {
-        grid-template-columns: minmax(0, 1fr);
-      }
-      .cm-page-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
-      }
-      .cm-page-controls {
-        align-self: stretch;
-        justify-content: flex-start;
-        flex-wrap: wrap;
-      }
       .cm-btn-adjust {
   border-radius: 999px;
   border: 1px solid var(--cm-primary);
@@ -461,6 +443,23 @@
 .cm-btn-adjust:hover {
   background: rgba(57, 86, 232, 0.06);
 }
+    @media (max-width: 768px) {
+      .cm-page {
+        padding: 16px;
+      }
+      .cm-kpi-row {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .cm-page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+      .cm-page-controls {
+        align-self: stretch;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+      }
 
     }
   </style>
