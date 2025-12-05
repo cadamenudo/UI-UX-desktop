@@ -1,0 +1,1614 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Presupuesto – Flujo completo Cada Menudo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Nunito -->
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+
+  <!-- Chart.js para dona y barras -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    :root {
+      --cm-primary: #3956e8;
+      --cm-secondary: #7459d9;
+      --cm-bg: #f5f6ff;
+      --cm-card-bg: #ffffff;
+      --cm-text: #0f172a;
+      --cm-muted: #64748b;
+      --cm-border: #e5e7eb;
+      --radius-card: 16px;
+      --shadow-soft: 0 10px 30px rgba(15, 23, 42, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Nunito", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--cm-bg);
+      color: var(--cm-text);
+    }
+
+    .cm-page {
+      padding: 24px 32px 32px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .cm-page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .cm-page-title {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .cm-breadcrumb {
+      font-size: 0.8rem;
+      color: var(--cm-muted);
+    }
+
+    .cm-page-title h1 {
+      font-size: 1.7rem;
+      font-weight: 800;
+    }
+
+    .cm-page-subtitle {
+      font-size: 0.9rem;
+      color: var(--cm-muted);
+    }
+
+    /* Navegador de pasos */
+    .cm-budget-nav {
+      display: flex;
+      gap: 20px;
+      margin: 18px 0 16px;
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 8px;
+    }
+
+    .cm-budget-nav .nav-item {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #64748b;
+      text-decoration: none;
+      padding-bottom: 6px;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+    }
+
+    .cm-budget-nav .nav-item.active {
+      color: #3956e8;
+      border-bottom-color: #3956e8;
+    }
+
+    /* Card base */
+    .cm-card {
+      background: var(--cm-card-bg);
+      border-radius: var(--radius-card);
+      padding: 18px 20px;
+      box-shadow: var(--shadow-soft);
+      margin-bottom: 18px;
+    }
+
+    .cm-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .cm-card-title {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .cm-card-subtitle {
+      font-size: 0.85rem;
+      color: var(--cm-muted);
+      margin-top: 2px;
+    }
+
+    /* Toggle tipo presupuesto */
+    .cm-segment {
+      display: inline-flex;
+      padding: 3px;
+      border-radius: 999px;
+      background: #eef2ff;
+      gap: 4px;
+      margin-top: 10px;
+    }
+
+    .cm-segment button {
+      border: none;
+      background: transparent;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      color: var(--cm-muted);
+      cursor: pointer;
+    }
+
+    .cm-segment button.active {
+      background: #ffffff;
+      color: var(--cm-primary);
+      font-weight: 700;
+      box-shadow: 0 2px 6px rgba(148, 163, 184, 0.4);
+    }
+
+    .cm-type-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .cm-select-inline {
+      border-radius: 999px;
+      border: 1px solid var(--cm-border);
+      background: #fff;
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      color: var(--cm-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      min-width: 140px;
+    }
+
+    select.cm-select-inline {
+      padding-right: 32px;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: linear-gradient(45deg, transparent 50%, #9ca3af 50%),
+                        linear-gradient(135deg, #9ca3af 50%, transparent 50%);
+      background-position: calc(100% - 14px) 50%, calc(100% - 9px) 50%;
+      background-size: 5px 5px, 5px 5px;
+      background-repeat: no-repeat;
+    }
+
+    .cm-helper-text {
+      font-size: 0.8rem;
+      color: var(--cm-muted);
+      margin-top: 6px;
+    }
+
+    /* Botones primarios */
+    .cm-actions-row {
+      margin-top: 16px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .cm-btn-primary {
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, var(--cm-primary), var(--cm-secondary));
+      color: #ffffff;
+      font-size: 0.95rem;
+      padding: 9px 22px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(55, 65, 81, 0.25);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cm-btn-primary:hover {
+      opacity: 0.95;
+      transform: translateY(-1px);
+    }
+
+    /* Secciones de vista */
+    .view {
+      display: none;
+    }
+    .view.active {
+      display: block;
+    }
+
+    /* ========== ESTILO CATEGORÍAS ========== */
+    .seccion-categorias {
+      margin-top: 0.5rem;
+    }
+
+    .titulo-categorias {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #111827;
+      margin: 0.5rem 0 1rem 0;
+      padding-left: 0.25rem;
+    }
+
+    .bloque-sector {
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+      margin: 0 auto 1.2rem;
+      max-width: 100%;
+    }
+
+    .encabezado {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 0.75rem;
+      font-size: 1.05rem;
+      font-weight: bold;
+      padding: 1.1rem 1rem;
+      cursor: pointer;
+    }
+
+    .icono-ingresos,
+    .icono-gastos,
+    .icono-ahorro {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-size: 32px;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    .icono-ingresos {
+      background-color: #F4F2FF;
+      background-image: url('https://cadamenudo.github.io/UI-UX/assets/icons/ingreso.png');
+    }
+
+    .icono-gastos {
+      background-color: #F3F4F6;
+      background-image: url('https://cadamenudo.github.io/UI-UX/assets/icons/gastos.png');
+    }
+
+    .icono-ahorro {
+      background-color: #FCFAEA;
+      background-image: url('https://cadamenudo.github.io/UI-UX/assets/icons/ahorro.png');
+    }
+
+    .contenido-bloque {
+      display: none;
+      padding: 1rem 1.5rem 1.3rem;
+    }
+
+    .bloque-sector.abierto .contenido-bloque {
+      display: block;
+    }
+
+    .bloque-categoria {
+      background: #fff;
+      border-radius: 16px;
+      padding: 1.1rem 1.2rem;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+      margin-bottom: 0.9rem;
+    }
+
+    .titulo-categoria {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .subcategorias {
+      margin-top: 0.6rem;
+      padding-left: 0.5rem;
+      display: none;
+    }
+
+    .subcategorias.activo {
+      display: block;
+    }
+
+    .fila {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.4rem;
+      font-size: 0.9rem;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 40px;
+      height: 20px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #d1d5db;
+      transition: .4s;
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 14px;
+      width: 14px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: #4F46E5;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(20px);
+    }
+
+    /* ========== VISTA MONTOS ========== */
+
+    .grid-montos {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1.2fr);
+      gap: 18px;
+    }
+
+    .bloque-tabla {
+      margin-bottom: 16px;
+    }
+
+    .bloque-tabla h3 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    table.cm-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    .cm-table th,
+    .cm-table td {
+      padding: 6px 8px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .cm-table th {
+      text-align: left;
+      font-weight: 700;
+      color: var(--cm-muted);
+      font-size: 0.8rem;
+    }
+
+    .cm-input-money {
+      width: 110px;
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      padding: 4px 8px;
+      font-size: 0.85rem;
+      text-align: right;
+      font-family: inherit;
+    }
+
+    .panel-resumen {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .card-totales {
+      border-radius: 16px;
+      border: 1px solid #e5e7eb;
+      padding: 14px 16px;
+      background: #f9fafb;
+    }
+
+    .card-totales h3 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .fila-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+    }
+
+    .fila-total span.valor {
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .card-dona {
+      border-radius: 16px;
+      border: 1px solid #e5e7eb;
+      padding: 14px 16px 16px;
+      background: #ffffff;
+    }
+
+    .card-dona h3 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .card-dona canvas {
+      max-width: 260px;
+      margin: 0 auto;
+    }
+
+    .card-dona .nota {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--cm-muted);
+      margin-top: 6px;
+    }
+
+    .btn-guardar-presupuesto {
+      margin-top: 10px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    /* ========== VISTA VS REAL ========== */
+
+    .cm-banner {
+      margin-top: 4px;
+      margin-bottom: 18px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      box-shadow: var(--shadow-soft);
+      background: #ecfdf3;
+      color: #15803d;
+      font-size: 0.9rem;
+    }
+
+    .cm-banner span.sec {
+      color: var(--cm-muted);
+    }
+
+    .cm-kpi-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .cm-kpi-card {
+      background: var(--cm-card-bg);
+      border-radius: var(--radius-card);
+      padding: 14px 16px;
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .cm-kpi-label {
+      font-size: 0.8rem;
+      color: var(--cm-muted);
+    }
+
+    .cm-kpi-value {
+      font-size: 1.25rem;
+      font-weight: 800;
+    }
+
+    .cm-kpi-sub {
+      font-size: 0.8rem;
+      color: var(--cm-muted);
+    }
+
+    .cm-main-row {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1.3fr);
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .cm-chart-placeholder {
+      border-radius: 12px;
+      border: 1px dashed #d4d4d8;
+      background: #f9fafb;
+      min-height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      color: var(--cm-muted);
+      text-align: center;
+      padding: 16px;
+    }
+
+    .cm-category-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .cm-category-item {
+      border-radius: 10px;
+      border: 1px solid var(--cm-border);
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 0.85rem;
+    }
+
+    .cm-category-top {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+    }
+
+    .cm-category-name {
+      font-weight: 600;
+    }
+
+    .cm-category-bar {
+      position: relative;
+      height: 6px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      overflow: hidden;
+      margin-top: 3px;
+    }
+
+    .cm-category-bar-fill {
+      position: absolute;
+      inset: 0;
+      width: 70%;
+      background: linear-gradient(90deg, var(--cm-primary), var(--cm-secondary));
+    }
+
+    .cm-badge {
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+    }
+
+    .cm-badge.green {
+      background: rgba(34, 197, 94, 0.08);
+      color: #15803d;
+    }
+    .cm-badge.yellow {
+      background: rgba(234, 179, 8, 0.08);
+      color: #92400e;
+    }
+    .cm-badge.red {
+      background: rgba(239, 68, 68, 0.08);
+      color: #b91c1c;
+    }
+
+    .cm-table-card {
+      background: var(--cm-card-bg);
+      border-radius: var(--radius-card);
+      padding: 16px 18px 12px;
+      box-shadow: var(--shadow-soft);
+      margin-bottom: 20px;
+    }
+
+    .cm-table-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .cm-table-card-header h2 {
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .cm-table-wrapper {
+      border-radius: 12px;
+      border: 1px solid var(--cm-border);
+      overflow: auto;
+      max-height: 280px;
+    }
+
+    table.cm-table-small {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+    }
+
+    .cm-table-small th,
+    .cm-table-small td {
+      padding: 6px 8px;
+      border-bottom: 1px solid #e5e7eb;
+      white-space: nowrap;
+    }
+
+    .cm-table-small thead {
+      background: #f4f4ff;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .grid-montos,
+      .cm-main-row,
+      .cm-kpi-row {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .cm-page {
+        padding: 16px;
+      }
+      .cm-page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="cm-page">
+    <!-- Header -->
+    <header class="cm-page-header">
+      <div class="cm-page-title">
+        <span class="cm-breadcrumb">Tablero / Presupuesto</span>
+        <h1 id="titulo-principal">Presupuesto</h1>
+        <p class="cm-page-subtitle" id="subtitulo-principal">
+          Define el periodo, elige categorías y asigna montos.
+        </p>
+      </div>
+      <div id="info-periodo-header" class="cm-page-subtitle"></div>
+    </header>
+
+    <!-- Navegador de pasos -->
+    <nav class="cm-budget-nav">
+      <button class="nav-item active" data-view="inicio">Inicio</button>
+      <button class="nav-item" data-view="montos">Montos</button>
+      <button class="nav-item" data-view="vsreal">Vs Real</button>
+    </nav>
+
+    <!-- ========================= -->
+    <!-- VISTA 1: INICIO          -->
+    <!-- ========================= -->
+    <section id="view-inicio" class="view active">
+      <!-- Tipo de presupuesto -->
+      <section class="cm-card">
+        <div class="cm-card-header">
+          <div>
+            <div class="cm-card-title">1. Tipo de presupuesto</div>
+            <div class="cm-card-subtitle">
+              Escoge si será mensual o anual y el periodo.
+            </div>
+          </div>
+        </div>
+
+        <div class="cm-type-row">
+          <div class="cm-segment" id="segmento-tipo">
+            <button type="button" data-tipo="mensual" class="active">Mensual</button>
+            <button type="button" data-tipo="anual">Anual</button>
+          </div>
+
+          <select id="select-mes" class="cm-select-inline">
+            <option value="Enero 2025">Enero 2025</option>
+            <option value="Febrero 2025">Febrero 2025</option>
+            <option value="Marzo 2025">Marzo 2025</option>
+            <option value="Abril 2025">Abril 2025</option>
+            <option value="Mayo 2025">Mayo 2025</option>
+            <option value="Junio 2025">Junio 2025</option>
+            <option value="Julio 2025">Julio 2025</option>
+            <option value="Agosto 2025">Agosto 2025</option>
+            <option value="Septiembre 2025">Septiembre 2025</option>
+            <option value="Octubre 2025">Octubre 2025</option>
+            <option value="Noviembre 2025">Noviembre 2025</option>
+            <option value="Diciembre 2025">Diciembre 2025</option>
+          </select>
+        </div>
+
+        <p class="cm-helper-text">
+          Mensual: se aplica al mes elegido. Anual: se aplica al año completo.
+        </p>
+      </section>
+
+      <!-- Categorías -->
+      <section class="cm-card">
+        <div class="cm-card-header">
+          <div>
+            <div class="cm-card-title">2. Escoge categorías</div>
+            <div class="cm-card-subtitle">
+              Activa solo lo que usarás en este presupuesto.
+            </div>
+          </div>
+        </div>
+
+        <section class="seccion-categorias">
+          <h3 class="titulo-categorias">Lista de categorías</h3>
+
+          <!-- INGRESOS -->
+          <div class="bloque-sector" data-sector="ingresos">
+            <div class="encabezado" onclick="toggleBloque(this)">
+              <div class="icono-ingresos"></div>
+              <span>Ingresos</span>
+            </div>
+            <div class="contenido-bloque">
+              <div class="bloque-categoria">
+                <div class="titulo-categoria" onclick="toggleSubcategorias(this)">
+                  <span>Pago por trabajo</span>
+                  <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <div class="subcategorias activo">
+                  <div class="fila">
+                    <span>Bono</span>
+                    <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+                  </div>
+                  <div class="fila">
+                    <span>Comisión</span>
+                    <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+                  </div>
+                  <div class="fila">
+                    <span>Salario</span>
+                    <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bloque-categoria">
+                <div class="titulo-categoria" onclick="toggleSubcategorias(this)">
+                  <span>Ingreso pasivo</span>
+                  <label class="switch">
+                    <input type="checkbox">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <div class="subcategorias">
+                  <div class="fila">
+                    <span>Pensión</span>
+                    <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+                  </div>
+                  <div class="fila">
+                    <span>Dividendos</span>
+                    <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- GASTOS -->
+          <div class="bloque-sector" data-sector="gastos">
+            <div class="encabezado" onclick="toggleBloque(this)">
+              <div class="icono-gastos"></div>
+              <span>Gastos</span>
+            </div>
+            <div class="contenido-bloque">
+              <div class="bloque-categoria">
+                <div class="titulo-categoria" onclick="toggleSubcategorias(this)">
+                  <span>Alimentación</span>
+                  <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <div class="subcategorias activo">
+                  <div class="fila">
+                    <span>Supermercado</span>
+                    <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+                  </div>
+                  <div class="fila">
+                    <span>Comidas fuera</span>
+                    <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bloque-categoria">
+                <div class="titulo-categoria" onclick="toggleSubcategorias(this)">
+                  <span>Vivienda</span>
+                  <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <div class="subcategorias activo">
+                  <div class="fila">
+                    <span>Hipoteca / Alquiler</span>
+                    <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+                  </div>
+                  <div class="fila">
+                    <span>Servicios básicos</span>
+                    <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bloque-categoria">
+                <div class="titulo-categoria" onclick="toggleSubcategorias(this)">
+                  <span>Transporte</span>
+                  <label class="switch">
+                    <input type="checkbox">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <div class="subcategorias">
+                  <div class="fila">
+                    <span>Gasolina</span>
+                    <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+                  </div>
+                  <div class="fila">
+                    <span>Uber / Taxi</span>
+                    <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- AHORRO -->
+          <div class="bloque-sector" data-sector="ahorro">
+            <div class="encabezado" onclick="toggleBloque(this)">
+              <div class="icono-ahorro"></div>
+              <span>Ahorro</span>
+            </div>
+            <div class="contenido-bloque">
+              <div class="bloque-categoria">
+                <div class="titulo-categoria" onclick="toggleSubcategorias(this)">
+                  <span>Emergencia</span>
+                  <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <div class="subcategorias activo">
+                  <div class="fila">
+                    <span>Fondo corto plazo</span>
+                    <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+                  </div>
+                  <div class="fila">
+                    <span>Fondo largo plazo</span>
+                    <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bloque-categoria">
+                <div class="titulo-categoria" onclick="toggleSubcategorias(this)">
+                  <span>Metas</span>
+                  <label class="switch">
+                    <input type="checkbox">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <div class="subcategorias">
+                  <div class="fila">
+                    <span>Vacaciones</span>
+                    <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+                  </div>
+                  <div class="fila">
+                    <span>Auto</span>
+                    <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="cm-actions-row">
+          <button class="cm-btn-primary" id="btn-ir-a-montos" type="button">
+            Continuar a montos →
+          </button>
+        </div>
+      </section>
+    </section>
+
+    <!-- ========================= -->
+    <!-- VISTA 2: MONTOS          -->
+    <!-- ========================= -->
+    <section id="view-montos" class="view">
+      <section class="cm-card">
+        <div class="cm-card-header">
+          <div>
+            <div class="cm-card-title">2. Asigna montos</div>
+            <div class="cm-card-subtitle" id="subtitle-montos">
+              Montos mensuales por categoría.
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-montos">
+          <div>
+            <!-- Tablas -->
+            <div class="bloque-tabla">
+              <h3>Ingresos</h3>
+              <table class="cm-table" id="tabla-ingresos">
+                <thead>
+                  <tr>
+                    <th>Categoría</th>
+                    <th>Subcategoría</th>
+                    <th>Monto</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+
+            <div class="bloque-tabla">
+              <h3>Gastos</h3>
+              <table class="cm-table" id="tabla-gastos">
+                <thead>
+                  <tr>
+                    <th>Categoría</th>
+                    <th>Subcategoría</th>
+                    <th>Monto</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+
+            <div class="bloque-tabla">
+              <h3>Ahorro</h3>
+              <table class="cm-table" id="tabla-ahorro">
+                <thead>
+                  <tr>
+                    <th>Categoría</th>
+                    <th>Subcategoría</th>
+                    <th>Monto</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Resumen derecha -->
+          <div class="panel-resumen">
+            <div class="card-totales">
+              <h3>Totales del presupuesto</h3>
+              <div class="fila-total">
+                <span>Ingresos</span>
+                <span class="valor" id="totalIngresos">$0.00</span>
+              </div>
+              <div class="fila-total">
+                <span>Gastos</span>
+                <span class="valor" id="totalGastos">$0.00</span>
+              </div>
+              <div class="fila-total">
+                <span>Ahorro</span>
+                <span class="valor" id="totalAhorro">$0.00</span>
+              </div>
+              <div class="fila-total" style="margin-top:4px;border-top:1px solid #e5e7eb;padding-top:4px;">
+                <span>Saldo (Ingresos − Gastos − Ahorro)</span>
+                <span class="valor" id="saldoPresupuesto">$0.00</span>
+              </div>
+            </div>
+
+            <div class="card-dona">
+              <h3>Distribución de gastos</h3>
+              <canvas id="gastosDonut"></canvas>
+              <div class="nota">
+                Muestra qué parte de tus gastos va a cada categoría principal.
+              </div>
+            </div>
+
+            <div class="btn-guardar-presupuesto">
+              <button class="cm-btn-primary" id="btn-guardar-presupuesto" type="button">
+                Guardar presupuesto
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <!-- ========================= -->
+    <!-- VISTA 3: VS REAL         -->
+    <!-- ========================= -->
+    <section id="view-vsreal" class="view">
+      <section class="cm-card">
+        <div class="cm-card-header">
+          <div>
+            <div class="cm-card-title">3. Presupuesto vs gasto real</div>
+            <div class="cm-card-subtitle" id="sub-vsreal-periodo"></div>
+          </div>
+        </div>
+
+        <section class="cm-banner" id="banner-vsreal">
+          <div>
+            <strong id="banner-titulo">SUPER:</strong>
+            <span id="banner-texto-principal">Estás usando el 0% de tu presupuesto.</span>
+          </div>
+          <span class="sec" id="banner-texto-secundario">
+            Te queda todo el presupuesto disponible.
+          </span>
+        </section>
+
+        <section class="cm-kpi-row">
+          <article class="cm-kpi-card">
+            <span class="cm-kpi-label">Presupuesto de gastos</span>
+            <div class="cm-kpi-value" id="kpi-presupuesto-gastos">$0.00</div>
+            <div class="cm-kpi-sub">Total que planeaste gastar.</div>
+          </article>
+
+          <article class="cm-kpi-card">
+            <span class="cm-kpi-label">Gasto real</span>
+            <div class="cm-kpi-value" id="kpi-gasto-real">$0.00</div>
+            <div class="cm-kpi-sub">Suma de tus gastos registrados.</div>
+          </article>
+
+          <article class="cm-kpi-card">
+            <span class="cm-kpi-label">Diferencia</span>
+            <div class="cm-kpi-value" id="kpi-diferencia">$0.00</div>
+            <div class="cm-kpi-sub" id="kpi-diferencia-texto"></div>
+          </article>
+        </section>
+
+        <section class="cm-main-row">
+          <article class="cm-card">
+            <header class="cm-card-header">
+              <h2>Presupuesto vs real por categoría</h2>
+            </header>
+            <div class="cm-chart-placeholder">
+              <canvas id="chartVsReal" style="max-width:100%;max-height:260px;"></canvas>
+            </div>
+          </article>
+
+          <article class="cm-card">
+            <header class="cm-card-header">
+              <h2>Categorías con mayor desvío</h2>
+            </header>
+            <div class="cm-category-list" id="lista-desvios"></div>
+          </article>
+        </section>
+
+        <section class="cm-table-card">
+          <header class="cm-table-card-header">
+            <h2>Detalle por categoría de gastos</h2>
+          </header>
+          <div class="cm-table-wrapper">
+            <table class="cm-table-small" id="tabla-vsreal">
+              <thead>
+                <tr>
+                  <th>Categoría</th>
+                  <th>Presupuesto</th>
+                  <th>Gasto real</th>
+                  <th>Diferencia</th>
+                  <th>% usado</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    // =========================
+    //   ESTADO GLOBAL
+    // =========================
+    const appState = {
+      tipo: "mensual",
+      periodo: "Enero 2025",
+      categorias: { ingresos: {}, gastos: {}, ahorro: {} },
+      presupuesto: { ingresos: {}, gastos: {}, ahorro: {} },
+      real: { gastos: {} } // simulación basada en presupuesto
+    };
+
+    // Helpers formato
+    function formatMoney(n) {
+      return "$" + (n || 0).toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+    }
+
+    // =========================
+    //   NAVEGACIÓN ENTRE VISTAS
+    // =========================
+    const navItems = document.querySelectorAll(".cm-budget-nav .nav-item");
+    const views = {
+      inicio: document.getElementById("view-inicio"),
+      montos: document.getElementById("view-montos"),
+      vsreal: document.getElementById("view-vsreal")
+    };
+
+    function setView(name) {
+      Object.values(views).forEach(v => v.classList.remove("active"));
+      views[name].classList.add("active");
+      navItems.forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.view === name);
+      });
+
+      if (name === "inicio") {
+        document.getElementById("titulo-principal").textContent = "Presupuesto";
+        document.getElementById("subtitulo-principal").textContent =
+          "Define el periodo y selecciona categorías.";
+      } else if (name === "montos") {
+        document.getElementById("titulo-principal").textContent = "Presupuesto – Montos";
+        document.getElementById("subtitulo-principal").textContent =
+          "Asigna montos a las categorías activas.";
+      } else if (name === "vsreal") {
+        document.getElementById("titulo-principal").textContent = "Presupuesto vs gasto real";
+        document.getElementById("subtitulo-principal").textContent =
+          "Compara lo planificado con lo que has gastado.";
+      }
+    }
+
+    navItems.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const target = btn.dataset.view;
+        if (target === "montos" && !Object.keys(appState.categorias.gastos).length) return;
+        if (target === "vsreal" && !Object.keys(appState.presupuesto.gastos).length) return;
+        setView(target);
+        if (target === "vsreal") {
+          prepararVsReal();
+        }
+      });
+    });
+
+    // Mostrar info periodo en header
+    function actualizarHeaderPeriodo() {
+      const txt = appState.tipo === "mensual"
+        ? `Mensual · ${appState.periodo}`
+        : `Anual · ${appState.periodo}`;
+      document.getElementById("info-periodo-header").textContent = txt;
+      document.getElementById("subtitle-montos").textContent =
+        appState.tipo === "mensual"
+          ? "Montos mensuales por categoría."
+          : "Montos anuales por categoría.";
+      document.getElementById("sub-vsreal-periodo").textContent = txt;
+    }
+
+    // =========================
+    //   VISTA 1: INICIO
+    // =========================
+
+    // Toggle tipo mensual/anual
+    const segmentoTipo = document.getElementById("segmento-tipo");
+    segmentoTipo.addEventListener("click", (e) => {
+      if (e.target.tagName !== "BUTTON") return;
+      segmentoTipo.querySelectorAll("button").forEach(b => b.classList.remove("active"));
+      e.target.classList.add("active");
+      appState.tipo = e.target.dataset.tipo;
+      actualizarHeaderPeriodo();
+    });
+
+    // Selección de mes / periodo
+    const selectMes = document.getElementById("select-mes");
+    selectMes.addEventListener("change", () => {
+      appState.periodo = selectMes.value;
+      actualizarHeaderPeriodo();
+    });
+
+    // Acordeones categorías
+    function toggleBloque(encabezado) {
+      const parent = encabezado.closest(".bloque-sector");
+      document.querySelectorAll(".bloque-sector").forEach(b => {
+        if (b !== parent) b.classList.remove("abierto");
+      });
+      parent.classList.toggle("abierto");
+    }
+
+    function toggleSubcategorias(element) {
+      const sc = element.nextElementSibling;
+      if (!sc) return;
+      const activo = sc.classList.contains("activo");
+      sc.classList.toggle("activo", !activo);
+    }
+
+    window.toggleBloque = toggleBloque;
+    window.toggleSubcategorias = toggleSubcategorias;
+
+    // Leer categorías activas
+    function leerCategoriasActivas() {
+      const resultado = { ingresos: {}, gastos: {}, ahorro: {} };
+
+      document.querySelectorAll(".bloque-sector").forEach(sectorEl => {
+        const sector = sectorEl.dataset.sector;
+        if (!sector) return;
+
+        sectorEl.querySelectorAll(".bloque-categoria").forEach(catEl => {
+          const tituloEl = catEl.querySelector(".titulo-categoria span");
+          const switchCat = catEl.querySelector(".titulo-categoria input[type='checkbox']");
+          if (!tituloEl || (switchCat && !switchCat.checked)) return;
+
+          const catNombre = tituloEl.textContent.trim();
+          const subActivas = [];
+
+          catEl.querySelectorAll(".subcategorias .fila").forEach(fila => {
+            const label = fila.querySelector("span");
+            const sw = fila.querySelector("input[type='checkbox']");
+            if (label && sw && sw.checked) {
+              subActivas.push(label.textContent.trim());
+            }
+          });
+
+          if (subActivas.length) {
+            if (!resultado[sector][catNombre]) resultado[sector][catNombre] = [];
+            resultado[sector][catNombre].push(...subActivas);
+          }
+        });
+      });
+
+      appState.categorias = resultado;
+    }
+
+    // Botón "Continuar a montos"
+    document.getElementById("btn-ir-a-montos").addEventListener("click", () => {
+      leerCategoriasActivas();
+      actualizarHeaderPeriodo();
+      construirTablasMontos();
+      setView("montos");
+    });
+
+    // =========================
+    //   VISTA 2: MONTOS
+    // =========================
+    const tablaIngresos = document.querySelector("#tabla-ingresos tbody");
+    const tablaGastos = document.querySelector("#tabla-gastos tbody");
+    const tablaAhorro = document.querySelector("#tabla-ahorro tbody");
+
+    function limpiarTablas() {
+      tablaIngresos.innerHTML = "";
+      tablaGastos.innerHTML = "";
+      tablaAhorro.innerHTML = "";
+    }
+
+    function crearFilaMonto(sector, categoria, subcategoria) {
+      const tr = document.createElement("tr");
+      const tdCat = document.createElement("td");
+      const tdSub = document.createElement("td");
+      const tdMonto = document.createElement("td");
+
+      tdCat.textContent = categoria;
+      tdSub.textContent = subcategoria;
+
+      const input = document.createElement("input");
+      input.type = "number";
+      input.min = "0";
+      input.step = "0.01";
+      input.className = "cm-input-money";
+      input.dataset.key = `${sector}|${categoria}|${subcategoria}`;
+
+      input.addEventListener("input", () => {
+        actualizarPresupuestoDesdeInputs();
+        recalcularTotalesYDonut();
+      });
+
+      tdMonto.appendChild(input);
+      tr.appendChild(tdCat);
+      tr.appendChild(tdSub);
+      tr.appendChild(tdMonto);
+      return tr;
+    }
+
+    function construirTablasMontos() {
+      limpiarTablas();
+      appState.presupuesto = { ingresos: {}, gastos: {}, ahorro: {} };
+
+      // Ingresos
+      Object.entries(appState.categorias.ingresos || {}).forEach(([cat, subs]) => {
+        subs.forEach(sub => {
+          tablaIngresos.appendChild(crearFilaMonto("ingresos", cat, sub));
+        });
+      });
+
+      // Gastos
+      Object.entries(appState.categorias.gastos || {}).forEach(([cat, subs]) => {
+        subs.forEach(sub => {
+          tablaGastos.appendChild(crearFilaMonto("gastos", cat, sub));
+        });
+      });
+
+      // Ahorro
+      Object.entries(appState.categorias.ahorro || {}).forEach(([cat, subs]) => {
+        subs.forEach(sub => {
+          tablaAhorro.appendChild(crearFilaMonto("ahorro", cat, sub));
+        });
+      });
+
+      recalcularTotalesYDonut();
+    }
+
+    function actualizarPresupuestoDesdeInputs() {
+      const nuevo = { ingresos: {}, gastos: {}, ahorro: {} };
+      document.querySelectorAll(".cm-input-money").forEach(inp => {
+        const key = inp.dataset.key;
+        if (!key) return;
+        const valor = parseFloat(inp.value) || 0;
+        const [sector, cat, sub] = key.split("|");
+        if (!nuevo[sector][cat]) nuevo[sector][cat] = {};
+        nuevo[sector][cat][sub] = valor;
+      });
+      appState.presupuesto = nuevo;
+    }
+
+    function sumarMapaSector(mapa) {
+      let total = 0;
+      Object.values(mapa || {}).forEach(catObj => {
+        Object.values(catObj).forEach(v => total += v);
+      });
+      return total;
+    }
+
+    // Totales + dona
+    let donutChart = null;
+
+    function obtenerTotalesGastosPorCategoria() {
+      const resultado = {};
+      Object.entries(appState.presupuesto.gastos || {}).forEach(([cat, subs]) => {
+        let suma = 0;
+        Object.values(subs).forEach(v => suma += v);
+        if (suma > 0) resultado[cat] = suma;
+      });
+      return resultado;
+    }
+
+    function recalcularTotalesYDonut() {
+      const totalIng = sumarMapaSector(appState.presupuesto.ingresos);
+      const totalGas = sumarMapaSector(appState.presupuesto.gastos);
+      const totalAho = sumarMapaSector(appState.presupuesto.ahorro);
+      const saldo = totalIng - totalGas - totalAho;
+
+      document.getElementById("totalIngresos").textContent = formatMoney(totalIng);
+      document.getElementById("totalGastos").textContent = formatMoney(totalGas);
+      document.getElementById("totalAhorro").textContent = formatMoney(totalAho);
+      document.getElementById("saldoPresupuesto").textContent = formatMoney(saldo);
+
+      const dataGastosCat = obtenerTotalesGastosPorCategoria();
+      const labels = Object.keys(dataGastosCat);
+      const data = Object.values(dataGastosCat);
+
+      const ctx = document.getElementById("gastosDonut").getContext("2d");
+      if (!donutChart) {
+        donutChart = new Chart(ctx, {
+          type: "doughnut",
+          data: {
+            labels,
+            datasets: [{
+              data,
+              borderWidth: 1
+            }]
+          },
+          options: {
+            plugins: {
+              legend: { position: "bottom" }
+            },
+            cutout: "55%"
+          }
+        });
+      } else {
+        donutChart.data.labels = labels;
+        donutChart.data.datasets[0].data = data;
+        donutChart.update();
+      }
+    }
+
+    // Botón guardar presupuesto -> pasa a Vs Real
+    document.getElementById("btn-guardar-presupuesto").addEventListener("click", () => {
+      actualizarPresupuestoDesdeInputs();
+      recalcularTotalesYDonut();
+      prepararVsReal();
+      setView("vsreal");
+    });
+
+    // =========================
+    //   VISTA 3: VS REAL
+    // =========================
+    let chartVsReal = null;
+
+    function prepararVsReal() {
+      // Construye totales de gastos por categoría
+      const totalesGastos = obtenerTotalesGastosPorCategoria();
+
+      // Simulación de gasto real: 70–110% del presupuesto por categoría
+      const real = {};
+      Object.entries(totalesGastos).forEach(([cat, monto]) => {
+        const factor = 0.7 + Math.random() * 0.4; // 0.7–1.1
+        real[cat] = Math.round(monto * factor);
+      });
+      appState.real.gastos = real;
+
+      // KPIs
+      const totalPresupuesto = Object.values(totalesGastos).reduce((a, b) => a + b, 0);
+      const totalReal = Object.values(real).reduce((a, b) => a + b, 0);
+      const diferencia = totalPresupuesto - totalReal;
+      const usadoPct = totalPresupuesto > 0 ? (totalReal / totalPresupuesto) * 100 : 0;
+
+      document.getElementById("kpi-presupuesto-gastos").textContent = formatMoney(totalPresupuesto);
+      document.getElementById("kpi-gasto-real").textContent = formatMoney(totalReal);
+      document.getElementById("kpi-diferencia").textContent = formatMoney(diferencia);
+      document.getElementById("kpi-diferencia-texto").textContent =
+        usadoPct > 100
+          ? `Estás ${Math.round(usadoPct - 100)}% sobre el presupuesto.`
+          : `Has usado ${Math.round(usadoPct)}% de tu presupuesto.`;
+
+      // Banner
+      const bannerTitulo = document.getElementById("banner-titulo");
+      const bannerTextoPrincipal = document.getElementById("banner-texto-principal");
+      const bannerTextoSec = document.getElementById("banner-texto-secundario");
+      const restante = totalPresupuesto - totalReal;
+
+      if (usadoPct <= 90) {
+        bannerTitulo.textContent = "SUPER:";
+        bannerTextoPrincipal.textContent =
+          `Vas usando el ${Math.round(usadoPct)}% de tu presupuesto.`;
+        bannerTextoSec.textContent =
+          `Te quedan ${formatMoney(restante)} para este periodo.`;
+      } else if (usadoPct <= 110) {
+        bannerTitulo.textContent = "ATENTO:";
+        bannerTextoPrincipal.textContent =
+          `Estás cerca del límite (${Math.round(usadoPct)}%).`;
+        bannerTextoSec.textContent =
+          `Te quedan ${formatMoney(restante)} antes de pasarte.`;
+      } else {
+        bannerTitulo.textContent = "OJO:";
+        bannerTextoPrincipal.textContent =
+          `Te pasaste del presupuesto (${Math.round(usadoPct)}%).`;
+        bannerTextoSec.textContent =
+          `Has gastado ${formatMoney(-restante)} más de lo planeado.`;
+      }
+
+      // Gráfico barras horizontales
+      const labels = Object.keys(totalesGastos);
+      const dataPres = labels.map(l => totalesGastos[l]);
+      const dataReal = labels.map(l => real[l] || 0);
+
+      const ctx = document.getElementById("chartVsReal").getContext("2d");
+      if (!chartVsReal) {
+        chartVsReal = new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels,
+            datasets: [
+              {
+                label: "Presupuesto",
+                data: dataPres,
+                borderWidth: 1
+              },
+              {
+                label: "Gasto real",
+                data: dataReal,
+                borderWidth: 1
+              }
+            ]
+          },
+          options: {
+            indexAxis: "y",
+            responsive: true,
+            plugins: {
+              legend: { position: "bottom" }
+            },
+            scales: {
+              x: { beginAtZero: true }
+            }
+          }
+        });
+      } else {
+        chartVsReal.data.labels = labels;
+        chartVsReal.data.datasets[0].data = dataPres;
+        chartVsReal.data.datasets[1].data = dataReal;
+        chartVsReal.update();
+      }
+
+      // Lista de desvíos (top 3)
+      const listaDesvios = document.getElementById("lista-desvios");
+      listaDesvios.innerHTML = "";
+      const items = labels.map(cat => {
+        const pres = totalesGastos[cat];
+        const r = real[cat] || 0;
+        const pct = pres > 0 ? (r / pres) * 100 : 0;
+        return { cat, pres, r, pct };
+      }).sort((a, b) => b.pct - a.pct).slice(0, 3);
+
+      items.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "cm-category-item";
+
+        const top = document.createElement("div");
+        top.className = "cm-category-top";
+        const name = document.createElement("span");
+        name.className = "cm-category-name";
+        name.textContent = item.cat;
+        const amount = document.createElement("span");
+        amount.textContent = `${formatMoney(item.r)} / ${formatMoney(item.pres)}`;
+        top.appendChild(name);
+        top.appendChild(amount);
+
+        const bar = document.createElement("div");
+        bar.className = "cm-category-bar";
+        const fill = document.createElement("div");
+        fill.className = "cm-category-bar-fill";
+        fill.style.width = `${Math.min(item.pct, 140)}%`;
+        bar.appendChild(fill);
+
+        const bottom = document.createElement("div");
+        bottom.className = "cm-category-top";
+        const badge = document.createElement("span");
+        badge.className = "cm-badge";
+        let colorClass = "green";
+        if (item.pct > 110) colorClass = "red";
+        else if (item.pct > 95) colorClass = "yellow";
+        badge.classList.add(colorClass);
+        badge.textContent = `${Math.round(item.pct)}% del presupuesto`;
+        bottom.appendChild(badge);
+
+        div.appendChild(top);
+        div.appendChild(bar);
+        div.appendChild(bottom);
+        listaDesvios.appendChild(div);
+      });
+
+      // Tabla detalle
+      const tbody = document.querySelector("#tabla-vsreal tbody");
+      tbody.innerHTML = "";
+      labels.forEach(cat => {
+        const pres = totalesGastos[cat];
+        const r = real[cat] || 0;
+        const dif = pres - r;
+        const pct = pres > 0 ? (r / pres) * 100 : 0;
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${cat}</td>
+          <td>${formatMoney(pres)}</td>
+          <td>${formatMoney(r)}</td>
+          <td>${formatMoney(dif)}</td>
+          <td>${Math.round(pct)}%</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // =========================
+    //   INIT
+    // =========================
+    document.addEventListener("DOMContentLoaded", () => {
+      actualizarHeaderPeriodo();
+    });
+  </script>
+</body>
+</html>
