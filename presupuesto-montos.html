@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Asignar montos de presupuesto – Cada Menudo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Nunito -->
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root {
+      --cm-primary: #3956e8;
+      --cm-secondary: #7459d9;
+      --cm-bg: #f5f6ff;
+      --cm-card-bg: #ffffff;
+      --cm-text: #0f172a;
+      --cm-muted: #64748b;
+      --cm-border: #e5e7eb;
+      --cm-success-bg: #ecfdf3;
+      --cm-success-text: #15803d;
+      --cm-warning-bg: #fef9c3;
+      --cm-warning-text: #92400e;
+      --cm-danger-bg: #fef2f2;
+      --cm-danger-text: #b91c1c;
+      --radius-card: 16px;
+      --shadow-soft: 0 10px 30px rgba(15, 23, 42, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Nunito", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--cm-bg);
+      color: var(--cm-text);
+    }
+
+    .cm-page {
+      padding: 24px 32px 32px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .cm-page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .cm-page-title {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .cm-breadcrumb {
+      font-size: 0.8rem;
+      color: var(--cm-muted);
+    }
+
+    .cm-page-title h1 {
+      font-size: 1.8rem;
+      font-weight: 800;
+    }
+
+    .cm-page-subtitle {
+      font-size: 0.95rem;
+      color: var(--cm-muted);
+      margin-top: 4px;
+      max-width: 520px;
+    }
+
+    .cm-page-controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .cm-segment {
+      display: inline-flex;
+      padding: 3px;
+      border-radius: 999px;
+      background: #eef2ff;
+      gap: 4px;
+    }
+
+    .cm-segment button {
+      border: none;
+      background: transparent;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      color: var(--cm-muted);
+      cursor: pointer;
+    }
+
+    .cm-segment button.active {
+      background: #ffffff;
+      color: var(--cm-primary);
+      font-weight: 700;
+      box-shadow: 0 2px 6px rgba(148, 163, 184, 0.4);
+    }
+
+    .cm-select-inline {
+      border-radius: 999px;
+      border: 1px solid var(--cm-border);
+      background: #fff;
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      color: var(--cm-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      min-width: 140px;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+    }
+
+    /* Card base */
+    .cm-card {
+      background: var(--cm-card-bg);
+      border-radius: var(--radius-card);
+      padding: 18px 20px;
+      box-shadow: var(--shadow-soft);
+      margin-bottom: 18px;
+    }
+
+    .cm-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      gap: 8px;
+    }
+
+    .cm-card-title {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .cm-card-subtitle {
+      font-size: 0.85rem;
+      color: var(--cm-muted);
+      margin-top: 2px;
+    }
+
+    /* Ingreso disponible */
+    .cm-income-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      margin-top: 12px;
+    }
+
+    .cm-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 0.85rem;
+      color: var(--cm-muted);
+    }
+
+    .cm-input-group label {
+      font-weight: 600;
+      color: var(--cm-text);
+    }
+
+    .cm-input-money {
+      border-radius: 999px;
+      border: 1px solid var(--cm-border);
+      background: #fff;
+      padding: 8px 12px;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 220px;
+    }
+
+    .cm-input-money span {
+      color: var(--cm-muted);
+      font-weight: 600;
+    }
+
+    .cm-input-money input {
+      border: none;
+      outline: none;
+      width: 100%;
+      font-family: inherit;
+      font-size: 0.95rem;
+      background: transparent;
+    }
+
+    .cm-helper-text {
+      font-size: 0.8rem;
+      color: var(--cm-muted);
+      margin-top: 6px;
+    }
+
+    .cm-highlight {
+      color: var(--cm-primary);
+      font-weight: 600;
+    }
+
+    /* KPIs */
+    .cm-kpi-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 14px;
+    }
+
+    .cm-kpi-card {
+      background: #f9fafb;
+      border-radius: 14px;
+      padding: 12px 14px;
+      border: 1px solid #e5e7eb;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .cm-kpi-label {
+      font-size: 0.8rem;
+      color: var(--cm-muted);
+    }
+
+    .cm-kpi-value {
+      font-size: 1.3rem;
+      font-weight: 800;
+    }
+
+    .cm-kpi-sub {
+      font-size: 0.8rem;
+      color: var(--cm-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .cm-chip-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+    }
+
+    .cm-chip-status.green {
+      background: rgba(34, 197, 94, 0.08);
+      color: #15803d;
+    }
+
+    .cm-chip-status.yellow {
+      background: rgba(234, 179, 8, 0.08);
+      color: #92400e;
+    }
+
+    .cm-chip-status.red {
+      background: rgba(239, 68, 68, 0.08);
+      color: #b91c1c;
+    }
+
+    /* Layout central */
+    .cm-main-row {
+      display: grid;
+      grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.2fr);
+      gap: 18px;
+      margin-top: 8px;
+    }
+
+    /* Tabla de montos */
+    .cm-table-wrapper {
+      border-radius: 12px;
+      border: 1px solid var(--cm-border);
+      overflow: auto;
+      max-height: 430px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    thead {
+      background: #f4f4ff;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    th, td {
+      padding: 8px 10px;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+      white-space: nowrap;
+    }
+
+    th {
+      font-weight: 700;
+      color: var(--cm-muted);
+      font-size: 0.8rem;
+    }
+
+    tbody tr:nth-child(even) {
+      background: #fafafa;
+    }
+
+    .cm-cell-type {
+      font-size: 0.75rem;
+      padding: 3px 8px;
+      border-radius: 999px;
+    }
+
+    .cm-cell-type.esencial {
+      background: #ecfdf3;
+      color: #15803d;
+    }
+
+    .cm-cell-type.opcional {
+      background: #f3e8ff;
+      color: #6b21a8;
+    }
+
+    .cm-cell-type.ahorro {
+      background: #eff6ff;
+      color: #1d4ed8;
+    }
+
+    .cm-input-table-money {
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      padding: 4px 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #fff;
+      min-width: 120px;
+    }
+
+    .cm-input-table-money span {
+      font-size: 0.8rem;
+      color: var(--cm-muted);
+    }
+
+    .cm-input-table-money input {
+      border: none;
+      outline: none;
+      width: 80px;
+      text-align: right;
+      font-size: 0.85rem;
+      background: transparent;
+      font-family: inherit;
+    }
+
+    .cm-cell-note {
+      font-size: 0.75rem;
+      color: var(--cm-muted);
+    }
+
+    /* Panel derecho */
+    .cm-side-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .cm-side-box {
+      background: #f9fafb;
+      border-radius: 14px;
+      padding: 12px 14px;
+      border: 1px solid #e5e7eb;
+      font-size: 0.85rem;
+    }
+
+    .cm-side-box h3 {
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .cm-side-list {
+      margin-left: 18px;
+      margin-top: 4px;
+      color: var(--cm-muted);
+    }
+
+    .cm-coach-card {
+      background: var(--cm-card-bg);
+      border-radius: var(--radius-card);
+      padding: 14px 16px 16px;
+      box-shadow: var(--shadow-soft);
+      font-size: 0.9rem;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .cm-coach-title {
+      font-weight: 700;
+    }
+
+    .cm-coach-list {
+      margin-left: 18px;
+      font-size: 0.85rem;
+      color: var(--cm-muted);
+    }
+
+    /* Botón continuar */
+    .cm-actions-row {
+      margin-top: 18px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .cm-btn-primary {
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, var(--cm-primary), var(--cm-secondary));
+      color: #ffffff;
+      font-size: 0.95rem;
+      padding: 10px 24px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 12px 30px rgba(55, 65, 81, 0.25);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cm-btn-primary:hover {
+      opacity: 0.95;
+      transform: translateY(-1px);
+    }
+
+    /* Responsivo */
+    @media (max-width: 1024px) {
+      .cm-main-row {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .cm-kpi-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 768px) {
+      .cm-page {
+        padding: 16px;
+      }
+      .cm-kpi-row {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="cm-page">
+    <!-- Header -->
+    <header class="cm-page-header">
+      <div class="cm-page-title">
+        <span class="cm-breadcrumb">Tablero / Presupuesto</span>
+        <h1>Asignar montos a tu presupuesto</h1>
+        <p class="cm-page-subtitle">
+          Aquí decides cuánto quieres asignar a cada categoría. A medida que escribes, te mostramos
+          cuánto llevas presupuestado y cuánto te queda disponible.
+        </p>
+      </div>
+
+      <div class="cm-page-controls">
+        <div class="cm-segment">
+          <button class="active" type="button">Mensual</button>
+          <button type="button">Anual</button>
+        </div>
+        <div class="cm-select-inline">
+          <span>Periodo:</span> <strong>Enero 2025</strong> ⌄
+        </div>
+      </div>
+    </header>
+
+    <!-- Card ingreso disponible + KPIs -->
+    <section class="cm-card">
+      <div class="cm-card-header">
+        <div>
+          <div class="cm-card-title">1. Ingreso disponible para este periodo</div>
+          <div class="cm-card-subtitle">
+            Idealmente, este es tu ingreso neto menos ahorro obligatorio y pagos fijos que no quieres tocar.
+          </div>
+        </div>
+      </div>
+
+      <div class="cm-income-row">
+        <div class="cm-input-group">
+          <label for="ingresoDisponible">Ingreso disponible para presupuestar</label>
+          <div class="cm-input-money">
+            <span>$</span>
+            <input
+              id="ingresoDisponible"
+              type="number"
+              min="0"
+              step="0.01"
+              placeholder="Ej. 3,500"
+              oninput="recalcularPresupuesto()"
+            />
+          </div>
+          <span class="cm-helper-text">
+            Puedes ajustar este número cuando quieras. <span class="cm-highlight">Coach Xai</span> usará este monto como tope.
+          </span>
+        </div>
+      </div>
+
+      <div class="cm-kpi-row">
+        <article class="cm-kpi-card">
+          <span class="cm-kpi-label">Presupuesto asignado</span>
+          <div class="cm-kpi-value" id="kpiPresupuestoAsignado">$0.00</div>
+          <div class="cm-kpi-sub">
+            Suma de todos los montos que ingresas abajo.
+          </div>
+        </article>
+
+        <article class="cm-kpi-card">
+          <span class="cm-kpi-label">Restante disponible</span>
+          <div class="cm-kpi-value" id="kpiRestante">$0.00</div>
+          <div class="cm-kpi-sub" id="kpiRestanteEstado">
+            Aún no has asignado presupuesto.
+          </div>
+        </article>
+
+        <article class="cm-kpi-card">
+          <span class="cm-kpi-label">% del ingreso asignado</span>
+          <div class="cm-kpi-value" id="kpiPorcentaje">0%</div>
+          <div class="cm-kpi-sub">
+            <span class="cm-chip-status green" id="chipEstado">
+              Dentro de un rango saludable
+            </span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Layout principal -->
+    <section class="cm-main-row">
+      <!-- Tabla montos -->
+      <article class="cm-card">
+        <header class="cm-card-header">
+          <div>
+            <div class="cm-card-title">2. Montos por categoría</div>
+            <div class="cm-card-subtitle">
+              Empieza por las categorías esenciales y luego completa las opcionales y ahorro.
+            </div>
+          </div>
+        </header>
+
+        <div class="cm-table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Categoría</th>
+                <th>Tipo</th>
+                <th>Presupuesto</th>
+                <th>Comentario</th>
+              </tr>
+            </thead>
+            <tbody id="tablaCategorias">
+              <!-- Se llena por JS -->
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <!-- Panel lateral / Coach -->
+      <aside class="cm-side-panel">
+        <div class="cm-side-box">
+          <h3>Tips rápidos</h3>
+          <ul class="cm-side-list">
+            <li>Empieza por vivienda, alimentación, salud y transporte.</li>
+            <li>Luego asigna a ocio, extras y metas de ahorro.</li>
+            <li>Si el total pasa tu ingreso disponible, ajusta hasta que el restante vuelva a positivo.</li>
+          </ul>
+        </div>
+
+        <div class="cm-side-box">
+          <h3>Resumen por tipo</h3>
+          <p class="cm-cell-note">
+            (Ejemplo visual – valores se basan en tu tabla)
+          </p>
+          <ul class="cm-side-list" id="resumenPorTipo">
+            <li>Esenciales: <strong>$0.00</strong></li>
+            <li>Opcionales: <strong>$0.00</strong></li>
+            <li>Ahorro: <strong>$0.00</strong></li>
+          </ul>
+        </div>
+
+        <section class="cm-coach-card">
+          <div class="cm-coach-title">🧠 Coach Xai</div>
+          <p id="coachMensaje">
+            Mi gente, mientras escribes los montos, voy chequeando si tu presupuesto se mantiene dentro de tu ingreso disponible.
+          </p>
+          <ul class="cm-coach-list">
+            <li>Si el restante se pone en rojo, piensa qué categoría puedes bajar un poco.</li>
+            <li>Si te sobra mucho, considera aumentar ahorro o adelantar pagos de deuda.</li>
+          </ul>
+        </section>
+      </aside>
+    </section>
+
+    <!-- Botón continuar -->
+    <div class="cm-actions-row">
+      <button class="cm-btn-primary" type="button">
+        Guardar presupuesto
+      </button>
+    </div>
+  </main>
+
+  <script>
+    // Categorías de ejemplo para esta pantalla.
+    // Más adelante, esto se puede conectar con lo que el usuario activó en la página anterior.
+    const categoriasPresupuesto = [
+      { nombre: 'Vivienda', tipo: 'esencial' },
+      { nombre: 'Alimentación', tipo: 'esencial' },
+      { nombre: 'Transporte', tipo: 'esencial' },
+      { nombre: 'Salud', tipo: 'esencial' },
+      { nombre: 'Deuda', tipo: 'esencial' },
+      { nombre: 'Servicios (teléfono, internet)', tipo: 'esencial' },
+      { nombre: 'Entretenimiento', tipo: 'opcional' },
+      { nombre: 'Comidas fuera', tipo: 'opcional' },
+      { nombre: 'Compras personales', tipo: 'opcional' },
+      { nombre: 'Vacaciones', tipo: 'opcional' },
+      { nombre: 'Ahorro emergencia', tipo: 'ahorro' },
+      { nombre: 'Ahorro metas específicas', tipo: 'ahorro' },
+      { nombre: 'Inversión / retiro', tipo: 'ahorro' }
+    ];
+
+    const tablaCategorias = document.getElementById('tablaCategorias');
+
+    function formatearMoneda(valor) {
+      const n = Number(valor) || 0;
+      return n.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+    }
+
+    // Rellena la tabla con inputs
+    function inicializarTabla() {
+      categoriasPresupuesto.forEach((cat, index) => {
+        const tr = document.createElement('tr');
+
+        const tdNombre = document.createElement('td');
+        tdNombre.textContent = cat.nombre;
+
+        const tdTipo = document.createElement('td');
+        const spanTipo = document.createElement('span');
+        spanTipo.classList.add('cm-cell-type', cat.tipo);
+        spanTipo.textContent =
+          cat.tipo === 'esencial'
+            ? 'Esencial'
+            : cat.tipo === 'opcional'
+            ? 'Opcional'
+            : 'Ahorro';
+        tdTipo.appendChild(spanTipo);
+
+        const tdMonto = document.createElement('td');
+        const wrapperMonto = document.createElement('div');
+        wrapperMonto.className = 'cm-input-table-money';
+        const simbolo = document.createElement('span');
+        simbolo.textContent = '$';
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.min = '0';
+        input.step = '0.01';
+        input.placeholder = '0.00';
+        input.dataset.tipo = cat.tipo;
+        input.dataset.index = index;
+        input.oninput = recalcularPresupuesto;
+        wrapperMonto.appendChild(simbolo);
+        wrapperMonto.appendChild(input);
+        tdMonto.appendChild(wrapperMonto);
+
+        const tdNota = document.createElement('td');
+        tdNota.className = 'cm-cell-note';
+        tdNota.textContent =
+          cat.tipo === 'ahorro'
+            ? 'Buen lugar para priorizar si te sobra.'
+            : cat.tipo === 'opcional'
+            ? 'Espacio flexible si necesitas recortar.'
+            : 'Intenta mantenerlo estable.';
+
+        tr.appendChild(tdNombre);
+        tr.appendChild(tdTipo);
+        tr.appendChild(tdMonto);
+        tr.appendChild(tdNota);
+
+        tablaCategorias.appendChild(tr);
+      });
+    }
+
+    function recalcularPresupuesto() {
+      const ingresoInput = document.getElementById('ingresoDisponible');
+      const ingreso = parseFloat(ingresoInput.value) || 0;
+
+      const inputs = tablaCategorias.querySelectorAll('input[type="number"]');
+      let total = 0;
+      let totalEsencial = 0;
+      let totalOpcional = 0;
+      let totalAhorro = 0;
+
+      inputs.forEach(input => {
+        const val = parseFloat(input.value) || 0;
+        total += val;
+        const tipo = input.dataset.tipo;
+        if (tipo === 'esencial') totalEsencial += val;
+        if (tipo === 'opcional') totalOpcional += val;
+        if (tipo === 'ahorro') totalAhorro += val;
+      });
+
+      const restante = ingreso - total;
+      const porcentaje = ingreso > 0 ? (total / ingreso) * 100 : 0;
+
+      // Actualiza KPIs
+      document.getElementById('kpiPresupuestoAsignado').textContent = formatearMoneda(total);
+      document.getElementById('kpiRestante').textContent = formatearMoneda(restante);
+      document.getElementById('kpiPorcentaje').textContent = `${porcentaje.toFixed(0)}%`;
+
+      const kpiRestanteEstado = document.getElementById('kpiRestanteEstado');
+      const chipEstado = document.getElementById('chipEstado');
+      const coachMensaje = document.getElementById('coachMensaje');
+
+      // Reset clases
+      chipEstado.classList.remove('green', 'yellow', 'red');
+
+      if (!ingreso) {
+        kpiRestanteEstado.textContent = 'Ingresa primero tu ingreso disponible.';
+        chipEstado.classList.add('yellow');
+        chipEstado.textContent = 'Falta ingreso disponible';
+        coachMensaje.textContent =
+          'Mi gente, escribe arriba tu ingreso disponible para que podamos ver si tu presupuesto hace sentido.';
+      } else if (total === 0) {
+        kpiRestanteEstado.textContent = 'Aún no has asignado presupuesto.';
+        chipEstado.classList.add('green');
+        chipEstado.textContent = 'Listo para empezar';
+        coachMensaje.textContent =
+          'Empieza por vivienda, alimentación y transporte. Luego seguimos con ocio y ahorro.';
+      } else if (restante > 0 && porcentaje <= 100) {
+        kpiRestanteEstado.textContent = 'Te queda espacio para seguir asignando presupuesto.';
+        chipEstado.classList.add('green');
+        chipEstado.textContent = 'Dentro del presupuesto';
+        coachMensaje.textContent =
+          'Vas bien. Si te queda bastante restante, considera aumentar tu ahorro o adelantar pagos de deuda.';
+      } else if (restante === 0 || Math.abs(restante) < 1) {
+        kpiRestanteEstado.textContent = 'Has asignado exactamente el 100% de tu ingreso disponible.';
+        chipEstado.classList.add('yellow');
+        chipEstado.textContent = 'Presupuesto al límite';
+        coachMensaje.textContent =
+          'Estás al 100%. Si tu vida real suele tener imprevistos, podrías dejar un pequeño margen sin asignar.';
+      } else if (restante < 0) {
+        kpiRestanteEstado.textContent = 'Tu presupuesto supera tu ingreso disponible. Ajusta algunas categorías.';
+        chipEstado.classList.add('red');
+        chipEstado.textContent = 'Te pasaste del presupuesto';
+        coachMensaje.textContent =
+          'Mi gente, ahora sí nos pasamos. Mira primero las categorías opcionales y baja un poco hasta que el restante vuelva a verde.';
+      }
+
+      // Resumen por tipo
+      const resumenPorTipo = document.getElementById('resumenPorTipo');
+      resumenPorTipo.innerHTML = `
+        <li>Esenciales: <strong>${formatearMoneda(totalEsencial)}</strong></li>
+        <li>Opcionales: <strong>${formatearMoneda(totalOpcional)}</strong></li>
+        <li>Ahorro: <strong>${formatearMoneda(totalAhorro)}</strong></li>
+      `;
+    }
+
+    // Init
+    document.addEventListener('DOMContentLoaded', () => {
+      inicializarTabla();
+      recalcularPresupuesto();
+    });
+  </script>
+</body>
+</html>
