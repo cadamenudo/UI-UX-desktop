@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Configurar presupuesto – Cada Menudo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Nunito -->
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root {
+      --cm-primary: #3956e8;
+      --cm-secondary: #7459d9;
+      --cm-bg: #f5f6ff;
+      --cm-card-bg: #ffffff;
+      --cm-text: #0f172a;
+      --cm-muted: #64748b;
+      --cm-border: #e5e7eb;
+      --cm-success-bg: #ecfdf3;
+      --cm-success-text: #15803d;
+      --radius-card: 16px;
+      --shadow-soft: 0 10px 30px rgba(15, 23, 42, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Nunito", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--cm-bg);
+      color: var(--cm-text);
+    }
+
+    .cm-page {
+      padding: 24px 32px 32px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .cm-page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .cm-page-title {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .cm-breadcrumb {
+      font-size: 0.8rem;
+      color: var(--cm-muted);
+    }
+
+    .cm-page-title h1 {
+      font-size: 1.8rem;
+      font-weight: 800;
+    }
+
+    .cm-page-subtitle {
+      font-size: 0.95rem;
+      color: var(--cm-muted);
+      margin-top: 4px;
+    }
+
+    .cm-page-controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .cm-select {
+      border-radius: 999px;
+      border: 1px solid var(--cm-border);
+      background: #fff;
+      font-size: 0.9rem;
+      padding: 6px 12px;
+      color: var(--cm-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+    }
+
+    /* Cards base */
+    .cm-card {
+      background: var(--cm-card-bg);
+      border-radius: var(--radius-card);
+      padding: 18px 20px;
+      box-shadow: var(--shadow-soft);
+      margin-bottom: 18px;
+    }
+
+    .cm-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .cm-card-title {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .cm-card-subtitle {
+      font-size: 0.85rem;
+      color: var(--cm-muted);
+      margin-top: 2px;
+    }
+
+    /* Toggle tipo presupuesto */
+    .cm-segment {
+      display: inline-flex;
+      padding: 3px;
+      border-radius: 999px;
+      background: #eef2ff;
+      gap: 4px;
+      margin-top: 10px;
+    }
+
+    .cm-segment button {
+      border: none;
+      background: transparent;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      color: var(--cm-muted);
+      cursor: pointer;
+    }
+
+    .cm-segment button.active {
+      background: #ffffff;
+      color: var(--cm-primary);
+      font-weight: 700;
+      box-shadow: 0 2px 6px rgba(148, 163, 184, 0.4);
+    }
+
+    .cm-type-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .cm-select-inline {
+      border-radius: 999px;
+      border: 1px solid var(--cm-border);
+      background: #fff;
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      color: var(--cm-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      min-width: 120px;
+    }
+
+    /* Texto pequeño */
+    .cm-helper-text {
+      font-size: 0.8rem;
+      color: var(--cm-muted);
+      margin-top: 6px;
+    }
+
+    .cm-highlight {
+      color: var(--cm-primary);
+      font-weight: 600;
+    }
+
+    /* Contenedor de categorías (donde va tu componente) */
+    .cm-categories-wrapper {
+      margin-top: 10px;
+      border-radius: 14px;
+      border: 1px dashed var(--cm-border);
+      background: #f9fafb;
+      padding: 10px 12px;
+      font-size: 0.85rem;
+      color: var(--cm-muted);
+    }
+
+    /* Resumen simple */
+    .cm-summary {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .cm-summary-item {
+      border-radius: 12px;
+      border: 1px solid var(--cm-border);
+      padding: 10px 12px;
+      font-size: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      background: #f9fafb;
+    }
+
+    .cm-summary-label {
+      color: var(--cm-muted);
+    }
+
+    .cm-summary-value {
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    /* Coach */
+    .cm-coach-card {
+      background: var(--cm-card-bg);
+      border-radius: var(--radius-card);
+      padding: 16px 18px 18px;
+      box-shadow: var(--shadow-soft);
+      font-size: 0.9rem;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .cm-coach-title {
+      font-weight: 700;
+    }
+
+    .cm-coach-list {
+      margin-left: 18px;
+      font-size: 0.85rem;
+      color: var(--cm-muted);
+    }
+
+    /* Botón principal */
+    .cm-actions-row {
+      margin-top: 18px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .cm-btn-primary {
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, var(--cm-primary), var(--cm-secondary));
+      color: #ffffff;
+      font-size: 0.95rem;
+      padding: 10px 24px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 12px 30px rgba(55, 65, 81, 0.25);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cm-btn-primary:hover {
+      opacity: 0.95;
+      transform: translateY(-1px);
+    }
+
+    /* Responsivo */
+    @media (max-width: 960px) {
+      .cm-page {
+        padding: 16px;
+      }
+      .cm-page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+      .cm-page-controls {
+        align-self: stretch;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+      }
+      .cm-summary {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="cm-page">
+    <!-- Header -->
+    <header class="cm-page-header">
+      <div class="cm-page-title">
+        <span class="cm-breadcrumb">Tablero / Presupuesto</span>
+        <h1>Configurar tu presupuesto</h1>
+        <p class="cm-page-subtitle">
+          Primero define si tu presupuesto será <strong>mensual</strong> o <strong>anual</strong> y qué periodo quieres trabajar.
+        </p>
+      </div>
+    </header>
+
+    <!-- 1. Tipo de presupuesto -->
+    <section class="cm-card">
+      <div class="cm-card-header">
+        <div>
+          <div class="cm-card-title">1. Tipo de presupuesto</div>
+          <div class="cm-card-subtitle">
+            Puedes trabajar mes a mes o planificar el año completo.
+          </div>
+        </div>
+      </div>
+
+      <div class="cm-type-row">
+        <div class="cm-segment">
+          <!-- Más adelante será un toggle real con JS -->
+          <button class="active" type="button">Mensual</button>
+          <button type="button">Anual</button>
+        </div>
+
+        <!-- Para el wireframe solo es un placeholder -->
+        <div class="cm-select-inline">
+          <span>Mes:</span> <strong>Enero 2025</strong> ⌄
+        </div>
+
+        <!-- Si fuera anual podrías mostrar algo así: -->
+        <!-- <div class="cm-select-inline"><span>Año:</span> <strong>2025</strong> ⌄</div> -->
+      </div>
+
+      <p class="cm-helper-text">
+        Si eliges <span class="cm-highlight">mensual</span>, el presupuesto se aplicará solo al mes seleccionado.
+        Más adelante podrás copiarlo o ajustarlo para otros meses.
+      </p>
+    </section>
+
+    <!-- 2. Seleccionar categorías (tu componente de categorias.html) -->
+    <section class="cm-card">
+      <div class="cm-card-header">
+        <div>
+          <div class="cm-card-title">2. Selecciona las categorías que quieres presupuestar</div>
+          <div class="cm-card-subtitle">
+            Activa solo las categorías que realmente quieres controlar este periodo.
+          </div>
+        </div>
+      </div>
+
+      <div class="cm-categories-wrapper">
+        <!-- 
+          🧩 AQUÍ INSERTAS TU COMPONENTE DE CATEGORÍAS (categorias.html)
+          Por ejemplo:
+          - Bloques de Ingresos / Gastos / Ahorro
+          - Cada categoría con su switch / checkbox
+          - Subcategorías colapsables si ya las tienes
+          
+          Puedes reemplazar este div por un:
+          <iframe src="https://cadamenudo.github.io/UI-UX/categorias.html"></iframe>
+          o directamente pegar el HTML que ya usas para categorías.
+        -->
+        <p>
+          Aquí se mostrará la lista de categorías (Ingresos, Gastos, Ahorro) con sus switches,
+          igual que en tu pantalla de <strong>Categorías</strong>. El usuario marcará cuáles usará en su presupuesto.
+        </p>
+      </div>
+
+      <p class="cm-helper-text">
+        Consejo: empezar con pocas categorías hace el primer presupuesto mucho más manejable.
+      </p>
+    </section>
+
+    <!-- 3. Resumen simple (placeholder para el futuro) -->
+    <section class="cm-card">
+      <div class="cm-card-header">
+        <div>
+          <div class="cm-card-title">3. Resumen del periodo</div>
+          <div class="cm-card-subtitle">
+            Una vista rápida antes de pasar a asignar montos por categoría.
+          </div>
+        </div>
+      </div>
+
+      <div class="cm-summary">
+        <div class="cm-summary-item">
+          <span class="cm-summary-label">Tipo de presupuesto</span>
+          <span class="cm-summary-value">Mensual</span>
+        </div>
+        <div class="cm-summary-item">
+          <span class="cm-summary-label">Periodo</span>
+          <span class="cm-summary-value">Enero 2025</span>
+        </div>
+        <div class="cm-summary-item">
+          <span class="cm-summary-label">Categorías activas</span>
+          <span class="cm-summary-value">12</span>
+          <span class="cm-summary-label">(dato de ejemplo / futuro)</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Coach Xai -->
+    <section class="cm-coach-card">
+      <div class="cm-coach-title">🧠 Coach Xai</div>
+      <p>
+        Mi gente, este primer paso es solo para decidir
+        <strong>cómo quieres organizar tu presupuesto</strong>.
+      </p>
+      <ul class="cm-coach-list">
+        <li>Si estás empezando, te sugiero trabajar <strong>mensual</strong>.</li>
+        <li>Activa solo las categorías que realmente usas. Menos ruido, más claridad.</li>
+        <li>Después de esto, pasamos a asignar montos a cada categoría.</li>
+      </ul>
+    </section>
+
+    <!-- Botón continuar -->
+    <div class="cm-actions-row">
+      <button class="cm-btn-primary" type="button">
+        Continuar a asignar montos
+      </button>
+    </div>
+  </main>
+</body>
+</html>
