@@ -39,14 +39,12 @@
       color: var(--cm-text);
     }
 
-    /* Contenedor principal (área de contenido a la derecha del sidebar) */
     .cm-page {
       padding: 24px 32px 32px;
       max-width: 1200px;
       margin: 0 auto;
     }
 
-    /* Header / título */
     .cm-page-header {
       display: flex;
       align-items: center;
@@ -101,7 +99,6 @@
       font-weight: 600;
     }
 
-    /* Banner estado general */
     .cm-banner {
       margin-top: 8px;
       margin-bottom: 20px;
@@ -125,7 +122,6 @@
       color: var(--cm-muted);
     }
 
-    /* KPIs */
     .cm-kpi-row {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -185,7 +181,6 @@
       color: #b91c1c;
     }
 
-    /* Zona central: gráfico + lista */
     .cm-main-row {
       display: grid;
       grid-template-columns: minmax(0, 2fr) minmax(0, 1.4fr);
@@ -235,7 +230,6 @@
       font-weight: 600;
     }
 
-    /* Placeholder gráfico */
     .cm-chart-placeholder {
       border-radius: 12px;
       border: 1px dashed #d4d4d8;
@@ -250,7 +244,6 @@
       padding: 16px;
     }
 
-    /* Lista de categorías / alertas */
     .cm-category-list {
       display: flex;
       flex-direction: column;
@@ -309,7 +302,6 @@
       gap: 4px;
     }
 
-    /* Tabla detallada */
     .cm-table-card {
       background: var(--cm-card-bg);
       border-radius: var(--radius-card);
@@ -394,7 +386,6 @@
       color: #b91c1c;
     }
 
-    /* Coach Xai card */
     .cm-coach-card {
       background: var(--cm-card-bg);
       border-radius: var(--radius-card);
@@ -416,7 +407,6 @@
       color: var(--cm-muted);
     }
 
-    /* Responsivo básico para reducir columnas si se estrecha */
     @media (max-width: 1024px) {
       .cm-main-row {
         grid-template-columns: minmax(0, 1fr);
@@ -425,24 +415,7 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
-      .cm-btn-adjust {
-  border-radius: 999px;
-  border: 1px solid var(--cm-primary);
-  background: #ffffff;
-  color: var(--cm-primary);
-  font-size: 0.9rem;
-  padding: 6px 14px;
-  font-weight: 600;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  box-shadow: 0 2px 6px rgba(57, 86, 232, 0.15);
-}
 
-.cm-btn-adjust:hover {
-  background: rgba(57, 86, 232, 0.06);
-}
     @media (max-width: 768px) {
       .cm-page {
         padding: 16px;
@@ -460,7 +433,6 @@
         justify-content: flex-start;
         flex-wrap: wrap;
       }
-
     }
   </style>
 </head>
@@ -479,10 +451,6 @@
           <span>Año</span>
         </div>
         <div class="cm-select">Enero 2025 ⌄</div>
-    <!-- Botón para ajustar presupuesto -->
-    <button class="cm-btn-adjust" type="button">
-      ✏️ Ajustar presupuesto
-    </button>
       </div>
     </header>
 
