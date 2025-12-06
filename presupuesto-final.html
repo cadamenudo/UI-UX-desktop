@@ -49,6 +49,7 @@
       justify-content: space-between;
       margin-bottom: 16px;
       gap: 12px;
+      flex-wrap: wrap;
     }
 
     .cm-page-title {
@@ -360,6 +361,7 @@
       background: var(--cm-success-bg);
       color: var(--cm-success-text);
       font-size: 0.9rem;
+      flex-wrap: wrap;
     }
 
     .cm-banner strong {
@@ -483,6 +485,8 @@
     .cm-category-top {
       display: flex;
       justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 4px;
     }
 
     .cm-category-name {
@@ -666,16 +670,6 @@
     @media (max-width: 768px) {
       .cm-page {
         padding: 16px;
-      }
-      .cm-page-header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .cm-page-controls {
-        align-self: stretch;
-      }
-      .cm-totals-grid {
-        grid-template-columns: minmax(0, 1fr);
       }
     }
   </style>
@@ -965,7 +959,7 @@
     };
 
     function initDemoData() {
-      // Ingresos demo
+      // Ingresos demo (mensuales)
       state.presupuesto.ingresos = [
         { id: 'ing1', nombre: 'Salario', grupo: 'Pago por trabajo', monto: 2500 },
         { id: 'ing2', nombre: 'Bono', grupo: 'Pago por trabajo', monto: 300 },
@@ -977,7 +971,7 @@
         { id: 'ing3', nombre: 'Negocio propio', grupo: 'Otros ingresos', monto: 380 }
       ];
 
-      // Gastos demo
+      // Gastos demo (mensuales)
       state.presupuesto.gastos = [
         { id: 'gas1', nombre: 'Vivienda', grupo: 'Vivienda', monto: 900 },
         { id: 'gas2', nombre: 'Alimentación', grupo: 'Alimentación', monto: 450 },
@@ -993,7 +987,7 @@
         { id: 'gas5', nombre: 'Entretenimiento', grupo: 'Otros', monto: 80 }
       ];
 
-      // Ahorro demo
+      // Ahorro demo (mensuales)
       state.presupuesto.ahorro = [
         { id: 'aho1', nombre: 'Fondo de emergencia', grupo: 'Emergencia', monto: 200 },
         { id: 'aho2', nombre: 'Ahorro meta', grupo: 'Metas', monto: 150 }
@@ -1005,7 +999,7 @@
     }
 
     // ==============================
-    //  RENDER PRESUPUESTO (MONTOS)
+    //  FORMATO Y RENDER
     // ==============================
     function formatCurrency(value) {
       return '$' + value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -1049,7 +1043,6 @@
         btnDel.textContent = '✕';
         btnDel.addEventListener('click', () => {
           state.presupuesto[area].splice(index, 1);
-          // También borra el real asociado por id
           const idBorrar = item.id;
           state.real[area] = state.real[area].filter(r => r.id !== idBorrar);
           renderBudgetTable(area);
@@ -1075,10 +1068,8 @@
     }
 
     function updateTotals() {
-      const factor = state.tipoPeriodo === 'anual' ? 12 : 1;
-
       const sumArea = (area) =>
-        (state.presupuesto[area] || []).reduce((acc, item) => acc + (item.monto || 0), 0) * factor;
+        (state.presupuesto[area] || []).reduce((acc, item) => acc + (item.monto || 0), 0);
 
       const totalIng = sumArea('ingresos');
       const totalGas = sumArea('gastos');
@@ -1127,14 +1118,13 @@
 
     function updateDonaGastos() {
       if (!chartDona) return;
-      const factor = state.tipoPeriodo === 'anual' ? 12 : 1;
       const gastos = state.presupuesto.gastos || [];
 
       chartDona.data.labels = gastos.map(g => g.nombre);
-      chartDona.data.datasets[0].data = gastos.map(g => (g.monto || 0) * factor);
+      chartDona.data.datasets[0].data = gastos.map(g => (g.monto || 0));
       chartDona.update();
 
-      const total = gastos.reduce((acc, g) => acc + (g.monto || 0) * factor, 0);
+      const total = gastos.reduce((acc, g) => acc + (g.monto || 0), 0);
       const texto = document.getElementById('textoDonaGastos');
       texto.textContent = total > 0
         ? 'Total de gastos: ' + formatCurrency(total)
@@ -1157,7 +1147,6 @@
 
       desc.textContent = 'Activa las categorías que quieras incluir.';
 
-      // Construir lista
       const catArea = catalogo[area] || {};
       const actuales = new Set((state.presupuesto[area] || []).map(i => i.nombre));
 
@@ -1218,7 +1207,6 @@
         }
       });
 
-      // Actualizar presupuesto[area] manteniendo montos si ya existían
       const anteriores = state.presupuesto[area] || [];
       const mapaPrevios = new Map();
       anteriores.forEach(item => {
@@ -1228,9 +1216,8 @@
       const nuevaLista = seleccionadas.map(sel => {
         const previo = mapaPrevios.get(sel.nombre);
         if (previo) {
-          return previo; // mantiene id y monto
+          return previo;
         }
-        // nuevo
         return {
           id: area.slice(0,3) + '-' + sel.nombre.replace(/\s+/g,'_').toLowerCase(),
           nombre: sel.nombre,
@@ -1241,7 +1228,6 @@
 
       state.presupuesto[area] = nuevaLista;
 
-      // Ajustar real[area]: mantener solo los que existan en presupuesto; si no existía, crear con mismo monto que presupuesto
       const mapaRealPrevio = new Map();
       (state.real[area] || []).forEach(r => {
         mapaRealPrevio.set(r.nombre, r);
@@ -1267,18 +1253,13 @@
     }
 
     // ==============================
-    //  TAB VS REAL – CÁLCULOS
+    //  VS REAL – CÁLCULOS Y GRÁFICOS
     // ==============================
     let chartVsReal = null;
 
-    function getFactor() {
-      return state.tipoPeriodo === 'anual' ? 12 : 1;
-    }
-
     function computeSumArea(area, tipo) {
-      const factor = getFactor();
       const lista = state[tipo][area] || [];
-      return lista.reduce((acc, item) => acc + (item.monto || 0) * factor, 0);
+      return lista.reduce((acc, item) => acc + (item.monto || 0), 0);
     }
 
     function updateBannerAndKPIs() {
@@ -1316,7 +1297,6 @@
     }
 
     function buildChartData(area) {
-      const factor = getFactor();
       const pres = state.presupuesto[area] || [];
       const real = state.real[area] || [];
 
@@ -1329,9 +1309,9 @@
 
       pres.forEach(p => {
         labels.push(p.nombre);
-        dataPres.push((p.monto || 0) * factor);
+        dataPres.push((p.monto || 0));
         const r = mapaReal.get(p.nombre);
-        dataReal.push(r ? (r.monto || 0) * factor : 0);
+        dataReal.push(r ? (r.monto || 0) : 0);
       });
 
       return { labels, dataPres, dataReal };
@@ -1406,7 +1386,6 @@
       const cont = document.getElementById('listaDesvios');
       cont.innerHTML = '';
 
-      const factor = getFactor();
       const pres = state.presupuesto.gastos || [];
       const real = state.real.gastos || [];
       const mapaReal = new Map();
@@ -1414,8 +1393,8 @@
 
       const items = pres.map(p => {
         const r = mapaReal.get(p.nombre);
-        const preMonto = (p.monto || 0) * factor;
-        const realMonto = r ? (r.monto || 0) * factor : 0;
+        const preMonto = (p.monto || 0);
+        const realMonto = r ? (r.monto || 0) : 0;
         const diff = realMonto - preMonto;
         const porc = preMonto > 0 ? (realMonto / preMonto) * 100 : 0;
         return { nombre: p.nombre, presupuesto: preMonto, real: realMonto, diff, porc };
@@ -1463,7 +1442,6 @@
     function renderTablaDetalleGastos() {
       const tbody = document.getElementById('tbody-gastos-detalle');
       tbody.innerHTML = '';
-      const factor = getFactor();
 
       const pres = state.presupuesto.gastos || [];
       const real = state.real.gastos || [];
@@ -1472,9 +1450,9 @@
 
       pres.forEach(p => {
         const tr = document.createElement('tr');
-        const preMonto = (p.monto || 0) * factor;
+        const preMonto = (p.monto || 0);
         const r = mapaReal.get(p.nombre);
-        const realMonto = r ? (r.monto || 0) * factor : 0;
+        const realMonto = r ? (r.monto || 0) : 0;
         const diff = realMonto - preMonto;
         const porc = preMonto > 0 ? (realMonto / preMonto) * 100 : 0;
 
@@ -1510,6 +1488,30 @@
     }
 
     // ==============================
+    //  CONVERSIÓN MENSUAL ↔ ANUAL
+    // ==============================
+    function convertirMontosPeriodo(oldTipo, newTipo) {
+      if (oldTipo === newTipo) return;
+      let factor = 1;
+      if (oldTipo === 'mensual' && newTipo === 'anual') {
+        factor = 12;
+      } else if (oldTipo === 'anual' && newTipo === 'mensual') {
+        factor = 1/12;
+      } else {
+        return;
+      }
+
+      ['presupuesto', 'real'].forEach(kind => {
+        ['ingresos','gastos','ahorro'].forEach(area => {
+          state[kind][area] = (state[kind][area] || []).map(item => ({
+            ...item,
+            monto: parseFloat(((item.monto || 0) * factor).toFixed(2))
+          }));
+        });
+      });
+    }
+
+    // ==============================
     //  TABS + TOGGLE TIPO PERIODO
     // ==============================
     function initTabs() {
@@ -1532,16 +1534,29 @@
       const btns = document.querySelectorAll('#toggleTipo button');
       btns.forEach(btn => {
         btn.addEventListener('click', () => {
+          const newTipo = btn.dataset.tipo;
+          if (newTipo === state.tipoPeriodo) return;
+
+          const oldTipo = state.tipoPeriodo;
+          // 1) Convertir montos de todas las áreas
+          convertirMontosPeriodo(oldTipo, newTipo);
+          // 2) Actualizar estado
+          state.tipoPeriodo = newTipo;
+
+          // 3) UI: botones, labels, etc.
           btns.forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
-          state.tipoPeriodo = btn.dataset.tipo;
+
           document.getElementById('subtitlePeriodo').textContent =
             (state.tipoPeriodo === 'mensual' ? 'Mensual · ' : 'Anual · ') + state.periodoLabel;
 
-          // Cambia label "Mes:" / "Año:"
           const lbl = document.getElementById('labelPeriodo');
           lbl.textContent = state.tipoPeriodo === 'mensual' ? 'Mes:' : 'Año:';
 
+          // 4) Re-render de todo con los nuevos montos
+          renderBudgetTable('ingresos');
+          renderBudgetTable('gastos');
+          renderBudgetTable('ahorro');
           updateTotals();
           updateDonaGastos();
           updateVsRealFromState();
