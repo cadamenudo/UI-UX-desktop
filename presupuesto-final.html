@@ -95,6 +95,15 @@
       box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
     }
 
+    .cm-select-inline select {
+      border: none;
+      background: transparent;
+      font: inherit;
+      color: inherit;
+      outline: none;
+      cursor: pointer;
+    }
+
     /* Tabs */
     .cm-tabs {
       display: inline-flex;
@@ -520,17 +529,6 @@
       text-align: right;
     }
 
-    .cm-badge-mini {
-      display: inline-flex;
-      align-items: center;
-      padding: 2px 8px;
-      border-radius: 999px;
-      font-size: 0.7rem;
-      background: #eef2ff;
-      color: var(--cm-primary);
-      font-weight: 600;
-    }
-
     .cm-totals-card {
       display: flex;
       flex-direction: column;
@@ -673,18 +671,9 @@
       margin-bottom: 24px;
     }
 
-    .cm-chart-placeholder {
-      border-radius: 12px;
-      border: 1px dashed #d4d4d8;
-      background: #f9fafb;
-      min-height: 220px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.9rem;
-      color: var(--cm-muted);
-      text-align: center;
-      padding: 16px;
+    #chartVsReal {
+      width: 100%;
+      max-height: 260px;
     }
 
     .cm-category-list {
@@ -1215,7 +1204,7 @@
   <section id="view-vsreal" class="cm-view">
     <section class="cm-banner">
       <div>
-        <strong>Estado del mes:</strong>
+        <strong>Estado del período:</strong>
         Estás usando el <strong id="porcUsoMes">0%</strong> de tu presupuesto.
       </div>
       <span class="cm-banner-secondary">
@@ -1225,9 +1214,9 @@
 
     <section class="cm-kpi-row">
       <article class="cm-kpi-card">
-        <span class="cm-kpi-label">Presupuesto del mes (gastos + ahorro)</span>
+        <span class="cm-kpi-label">Presupuesto (gastos + ahorro)</span>
         <div class="cm-kpi-value" id="kpiPresupuestoMes">$0.00</div>
-        <div class="cm-kpi-sub">Monto total planeado para salir.</div>
+        <div class="cm-kpi-sub">Monto total planeado para este período.</div>
       </article>
 
       <article class="cm-kpi-card">
@@ -1249,11 +1238,16 @@
       <article class="cm-card">
         <header class="cm-card-header">
           <h2>Presupuesto vs real por categoría</h2>
+          <div class="cm-select-inline">
+            <span>Área:</span>
+            <select id="selectAreaVsReal" class="cm-select-native">
+              <option value="ingreso">Ingresos</option>
+              <option value="gasto" selected>Gastos</option>
+              <option value="ahorro">Ahorro</option>
+            </select>
+          </div>
         </header>
-        <div class="cm-chart-placeholder">
-          Aquí puedes conectar un gráfico de barras reales.<br>
-          Por ahora usamos los datos en la tabla de abajo.
-        </div>
+        <canvas id="chartVsReal"></canvas>
       </article>
 
       <article class="cm-card">
@@ -1324,6 +1318,12 @@
 </main>
 
 <script>
+  /* ---------- ESTADO GLOBAL ---------- */
+  let modoPeriodo = 'mensual'; // 'mensual' o 'anual'
+  let filasUltimoCalculo = [];
+  let chartGastos;
+  let chartVsReal;
+
   /* ---------- UTILIDADES ---------- */
   function formatMoney(v) {
     const num = Number(v) || 0;
@@ -1356,15 +1356,16 @@
 
     tabs.forEach(t => t.classList.remove('active'));
     document.querySelector('.cm-tab[data-view="' + id + '"]').classList.add('active');
+
+    if (id === 'vsreal') {
+      actualizarVsReal();
+    }
   }
 
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
       const view = tab.dataset.view;
       mostrarVista(view);
-      if (view === 'vsreal') {
-        actualizarVsReal();
-      }
     });
   });
 
@@ -1447,6 +1448,7 @@
     'Salario': 3000,
     'Bono': 200,
     'Negocio propio': 600,
+    'Pago por trabajo': 0, // general, no lo usamos directo
     'Vivienda': 900,
     'Alimentación': 450,
     'Transporte': 120,
@@ -1504,8 +1506,6 @@
   const spanTotalAhorro   = document.getElementById('totalAhorro');
   const spanSaldoPres     = document.getElementById('saldoPresupuesto');
 
-  let chartGastos;
-
   function recalcularTotales() {
     let totIng = 0, totGas = 0, totAho = 0;
 
@@ -1562,7 +1562,7 @@
     });
   }
 
-  /* ---------- VS REAL (FUNCIÓN ACTUALIZADA) ---------- */
+  /* ---------- VS REAL ---------- */
 
   const kpiPresupuestoMes = document.getElementById('kpiPresupuestoMes');
   const kpiGastoReal      = document.getElementById('kpiGastoReal');
@@ -1571,6 +1571,7 @@
   const montoDisponibleVs = document.getElementById('montoDisponibleVs');
   const tbodyVsReal       = document.getElementById('tbodyVsReal');
   const listaDesvios      = document.getElementById('listaDesvios');
+  const selectAreaVsReal  = document.getElementById('selectAreaVsReal');
 
   function actualizarVsReal() {
     const inputs = document.querySelectorAll('.monto-input');
@@ -1584,7 +1585,8 @@
     const factoresIngreso = {
       'Pago por trabajo': 1.00,
       'Salario': 1.00,
-      'Negocio propio': 0.95
+      'Negocio propio': 0.95,
+      'Bono': 1.10
     };
 
     const factoresGasto = {
@@ -1633,8 +1635,15 @@
       filas.push({ cat, tipo, pres, real, diff, porc });
     });
 
-    const totalPresOut = totalPresGasto + totalPresAhorro;
-    const totalRealOut = totalRealGasto + totalRealAhorro;
+    filasUltimoCalculo = filas;
+
+    const totalPresOutMensual = totalPresGasto + totalPresAhorro;
+    const totalRealOutMensual = totalRealGasto + totalRealAhorro;
+
+    const factorPeriodo = (modoPeriodo === 'anual') ? 12 : 1;
+
+    const totalPresOut = totalPresOutMensual * factorPeriodo;
+    const totalRealOut = totalRealOutMensual * factorPeriodo;
 
     kpiPresupuestoMes.textContent = formatMoney(totalPresOut);
     kpiGastoReal.textContent      = formatMoney(totalRealOut);
@@ -1649,25 +1658,25 @@
     filas.sort((a, b) => b.porc - a.porc);
 
     filas.forEach(f => {
-      let badgeClass = 'green';
-      if (f.porc > 110) badgeClass = 'red';
-      else if (f.porc > 95) badgeClass = 'yellow';
+      const presEsc = f.pres * factorPeriodo;
+      const realEsc = f.real * factorPeriodo;
+      const diffEsc = realEsc - presEsc;
 
-      const diffTexto = (f.diff >= 0 ? '+' : '') + formatMoney(f.diff);
+      const diffTexto = (diffEsc >= 0 ? '+' : '') + formatMoney(diffEsc);
 
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td>${f.cat}</td>
         <td>${f.tipo.charAt(0).toUpperCase() + f.tipo.slice(1)}</td>
-        <td>${formatMoney(f.pres)}</td>
-        <td>${formatMoney(f.real)}</td>
+        <td>${formatMoney(presEsc)}</td>
+        <td>${formatMoney(realEsc)}</td>
         <td>${diffTexto}</td>
         <td>${f.porc.toFixed(0)}%</td>
       `;
       tbodyVsReal.appendChild(tr);
     });
 
-    // Lista de desvíos (solo gastos + ahorro)
+    // Lista de desvíos (Gastos + Ahorro)
     listaDesvios.innerHTML = '';
     filas
       .filter(f => f.tipo !== 'ingreso')
@@ -1677,12 +1686,15 @@
         if (f.porc > 110) badgeClass = 'red';
         else if (f.porc > 95) badgeClass = 'yellow';
 
+        const presEsc = f.pres * factorPeriodo;
+        const realEsc = f.real * factorPeriodo;
+
         const item = document.createElement('div');
         item.className = 'cm-category-item';
         item.innerHTML = `
           <div class="cm-category-top">
             <span class="cm-category-name">${f.cat}</span>
-            <span class="cm-category-amounts">${formatMoney(f.pres)} / ${formatMoney(f.real)}</span>
+            <span class="cm-category-amounts">${formatMoney(presEsc)} / ${formatMoney(realEsc)}</span>
           </div>
           <div class="cm-category-bar">
             <div class="cm-category-bar-fill" style="width:${Math.min(f.porc,130)}%;"></div>
@@ -1693,6 +1705,87 @@
         `;
         listaDesvios.appendChild(item);
       });
+
+    // Actualizar gráfico vertical según área seleccionada
+    if (selectAreaVsReal) {
+      actualizarGraficoVsReal(selectAreaVsReal.value);
+    }
+  }
+
+  function actualizarGraficoVsReal(area) {
+    if (!filasUltimoCalculo.length) return;
+    const factorPeriodo = (modoPeriodo === 'anual') ? 12 : 1;
+
+    const rows = filasUltimoCalculo.filter(f => f.tipo === area);
+    if (!rows.length) {
+      if (chartVsReal) chartVsReal.destroy();
+      return;
+    }
+
+    const labels = rows.map(r => r.cat);
+    const dataPres = rows.map(r => r.pres * factorPeriodo);
+    const dataReal = rows.map(r => r.real * factorPeriodo);
+
+    const ctx = document.getElementById('chartVsReal').getContext('2d');
+    if (chartVsReal) chartVsReal.destroy();
+
+    chartVsReal = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [
+          {
+            label: 'Presupuesto',
+            data: dataPres,
+          },
+          {
+            label: 'Real (demo)',
+            data: dataReal,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+          }
+        },
+        plugins: {
+          legend: {
+            position: 'bottom'
+          }
+        }
+      }
+    });
+  }
+
+  /* ---------- TOGGLE MENSUAL / ANUAL (SINCRONIZADO) ---------- */
+
+  function configurarTogglesPeriodo() {
+    const grupos = [
+      document.getElementById('toggleTipo'),
+      document.getElementById('segmentTipoLocal')
+    ];
+
+    grupos.forEach(grupo => {
+      if (!grupo) return;
+      grupo.querySelectorAll('button').forEach(btn => {
+        btn.addEventListener('click', () => {
+          modoPeriodo = btn.dataset.tipo;
+
+          grupos.forEach(g => {
+            if (!g) return;
+            g.querySelectorAll('button').forEach(b => {
+              b.classList.toggle('active', b.dataset.tipo === modoPeriodo);
+            });
+          });
+
+          // Cuando cambie el período, recalculamos vs real (escala mensual/anual)
+          actualizarVsReal();
+        });
+      });
+    });
   }
 
   /* ---------- FLUJO BOTONES ---------- */
@@ -1705,10 +1798,15 @@
   });
 
   document.getElementById('btnGuardarIrVsReal').addEventListener('click', () => {
-    // Simplemente recalculamos totales (ya se hace en input)
     actualizarVsReal();
     mostrarVista('vsreal');
   });
+
+  if (selectAreaVsReal) {
+    selectAreaVsReal.addEventListener('change', () => {
+      actualizarGraficoVsReal(selectAreaVsReal.value);
+    });
+  }
 
   /* ---------- INIT ---------- */
 
@@ -1722,6 +1820,8 @@
     const cats = leerCategoriasActivas();
     localStorage.setItem('presupuesto-categorias', JSON.stringify(cats));
     construirTablasMontos(cats);
+
+    configurarTogglesPeriodo();
   });
 </script>
 </body>
