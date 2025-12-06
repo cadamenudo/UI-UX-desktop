@@ -7,7 +7,7 @@
   <!-- Nunito -->
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
   <!-- Chart.js -->
-  <script src="httpshttps://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
     :root {
@@ -390,7 +390,7 @@
 
     .cm-kpi-label {
       font-size: 0.8rem;
-      color: var (--cm-muted);
+      color: var(--cm-muted);
     }
 
     .cm-kpi-value {
@@ -973,8 +973,8 @@
       ];
       state.real.ingresos = [
         { id: 'ing1', nombre: 'Salario', grupo: 'Pago por trabajo', monto: 2450 },
-        { id: 'ing2', nombre: 'Bono', grupo: 'Pago por trabajo', monto: 300 },
-        { id: 'ing3', nombre: 'Negocio propio', grupo: 'Otros ingresos', monto: 350 }
+        { id: 'ing2', nombre: 'Bono', grupo: 'Pago por trabajo', monto: 320 },
+        { id: 'ing3', nombre: 'Negocio propio', grupo: 'Otros ingresos', monto: 380 }
       ];
 
       // Gastos demo
@@ -1102,7 +1102,14 @@
         data: {
           labels: [],
           datasets: [{
-            data: []
+            data: [],
+            backgroundColor: [
+              '#3956e8',
+              '#7459d9',
+              '#e8c239',
+              '#64748b',
+              '#a5b4fc'
+            ]
           }]
         },
         options: {
@@ -1341,8 +1348,16 @@
         data: {
           labels,
           datasets: [
-            { label: 'Presupuesto', data: dataPres },
-            { label: 'Real', data: dataReal }
+            {
+              label: 'Presupuesto',
+              data: dataPres,
+              backgroundColor: '#3956e8'
+            },
+            {
+              label: 'Real',
+              data: dataReal,
+              backgroundColor: '#e8c239'
+            }
           ]
         },
         options: {
