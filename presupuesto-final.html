@@ -518,40 +518,6 @@
       color: #b91c1c;
     }
 
-    /* Tabla detalle */
-    .cm-table-card {
-      background: var(--cm-card-bg);
-      border-radius: var(--radius-card);
-      padding: 16px 18px 12px;
-      box-shadow: var(--shadow-soft);
-      margin-bottom: 16px;
-    }
-
-    .cm-table-card-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 10px;
-    }
-
-    .cm-table-wrapper {
-      border-radius: 12px;
-      border: 1px solid var(--cm-border);
-      overflow: auto;
-      max-height: 280px;
-    }
-
-    .cm-table-card-header h2 {
-      font-size: 1rem;
-      font-weight: 700;
-    }
-
-    .cm-table-actions {
-      font-size: 0.8rem;
-      color: var(--cm-primary);
-      cursor: pointer;
-    }
-
     /* NUEVO: tarjeta detalle por subcategorías */
     .cm-subcat-controls {
       display: flex;
@@ -912,29 +878,7 @@
         </article>
       </section>
 
-      <!-- Tabla detalle gastos -->
-      <section class="cm-table-card">
-        <header class="cm-table-card-header">
-          <h2>Detalle de gastos</h2>
-          <div class="cm-table-actions">Editar presupuesto en la pestaña anterior ⟶</div>
-        </header>
-        <div class="cm-table-wrapper">
-          <table>
-            <thead>
-              <tr>
-                <th>Categoría</th>
-                <th>Presupuesto</th>
-                <th>Gasto real</th>
-                <th>Diferencia</th>
-                <th>% usado</th>
-              </tr>
-            </thead>
-            <tbody id="tbody-gastos-detalle"></tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- NUEVO: Detalle por subcategorías -->
+      <!-- SOLO: Detalle por subcategorías (subido) -->
       <section class="cm-card" id="cm-subcat-card">
         <div class="cm-card-header">
           <div>
@@ -1042,7 +986,7 @@
       }
     };
 
-    // Demo data ajustada con subcategorías reales en gastos (grupo = categoría, nombre = subcategoría)
+    // Demo data con subcategorías
     function initDemoData() {
       // Ingresos demo (mensuales)
       state.presupuesto.ingresos = [
@@ -1056,7 +1000,7 @@
         { id: 'ing3', nombre: 'Negocio propio', grupo: 'Otros ingresos', monto: 380 }
       ];
 
-      // Gastos demo (mensuales) – varias subcategorías por grupo
+      // Gastos demo (mensuales)
       state.presupuesto.gastos = [
         { id: 'gas1', nombre: 'Hipoteca / Alquiler', grupo: 'Vivienda', monto: 900 },
         { id: 'gas4', nombre: 'Servicios básicos', grupo: 'Vivienda', monto: 180 },
@@ -1390,26 +1334,39 @@
       }
     }
 
-    function buildChartData(area) {
-      const pres = state.presupuesto[area] || [];
-      const real = state.real[area] || [];
+function buildChartData(area) {
+  const pres = state.presupuesto[area] || [];
+  const real = state.real[area] || [];
 
-      const mapaReal = new Map();
-      real.forEach(r => mapaReal.set(r.nombre, r));
+  // Mapa: grupo (categoría principal) -> { pres, real }
+  const mapa = new Map();
 
-      const labels = [];
-      const dataPres = [];
-      const dataReal = [];
-
-      pres.forEach(p => {
-        labels.push(p.nombre);
-        dataPres.push((p.monto || 0));
-        const r = mapaReal.get(p.nombre);
-        dataReal.push(r ? (r.monto || 0) : 0);
-      });
-
-      return { labels, dataPres, dataReal };
+  // Suma presupuesto por grupo
+  pres.forEach(p => {
+    const key = p.grupo || p.nombre; // fallback por si no tiene grupo
+    if (!mapa.has(key)) {
+      mapa.set(key, { pres: 0, real: 0 });
     }
+    const entry = mapa.get(key);
+    entry.pres += p.monto || 0;
+  });
+
+  // Suma real por grupo
+  real.forEach(r => {
+    const key = r.grupo || r.nombre;
+    if (!mapa.has(key)) {
+      mapa.set(key, { pres: 0, real: 0 });
+    }
+    const entry = mapa.get(key);
+    entry.real += r.monto || 0;
+  });
+
+  const labels = Array.from(mapa.keys());
+  const dataPres = labels.map(label => mapa.get(label).pres);
+  const dataReal = labels.map(label => mapa.get(label).real);
+
+  return { labels, dataPres, dataReal };
+}
 
     function initVsRealChart() {
       const ctx = document.getElementById('chartVsReal');
@@ -1533,52 +1490,10 @@
       });
     }
 
-    function renderTablaDetalleGastos() {
-      const tbody = document.getElementById('tbody-gastos-detalle');
-      tbody.innerHTML = '';
-
-      const pres = state.presupuesto.gastos || [];
-      const real = state.real.gastos || [];
-      const mapaReal = new Map();
-      real.forEach(r => mapaReal.set(r.nombre, r));
-
-      pres.forEach(p => {
-        const tr = document.createElement('tr');
-        const preMonto = (p.monto || 0);
-        const r = mapaReal.get(p.nombre);
-        const realMonto = r ? (r.monto || 0) : 0;
-        const diff = realMonto - preMonto;
-        const porc = preMonto > 0 ? (realMonto / preMonto) * 100 : 0;
-
-        const tdCat = document.createElement('td');
-        tdCat.textContent = p.nombre;
-        tr.appendChild(tdCat);
-
-        const tdPre = document.createElement('td');
-        tdPre.textContent = formatCurrency(preMonto);
-        tr.appendChild(tdPre);
-
-        const tdReal = document.createElement('td');
-        tdReal.textContent = formatCurrency(realMonto);
-        tr.appendChild(tdReal);
-
-        const tdDiff = document.createElement('td');
-        tdDiff.textContent = (diff >= 0 ? '+' : '') + formatCurrency(diff);
-        tr.appendChild(tdDiff);
-
-        const tdPorc = document.createElement('td');
-        tdPorc.textContent = Math.round(porc) + '%';
-        tr.appendChild(tdPorc);
-
-        tbody.appendChild(tr);
-      });
-    }
-
     function updateVsRealFromState() {
       updateBannerAndKPIs();
       updateVsRealChart();
       renderListaDesvios();
-      renderTablaDetalleGastos();
     }
 
     // ==============================
@@ -1781,7 +1696,6 @@
     }
 
     function updateSubcatFromState() {
-      // Recalcular selects y gráfico/tabla cuando cambian los datos
       updateSubcatCategorySelect();
     }
 
@@ -1836,12 +1750,9 @@
           if (newTipo === state.tipoPeriodo) return;
 
           const oldTipo = state.tipoPeriodo;
-          // 1) Convertir montos de todas las áreas
           convertirMontosPeriodo(oldTipo, newTipo);
-          // 2) Actualizar estado
           state.tipoPeriodo = newTipo;
 
-          // 3) UI: botones, labels, etc.
           btns.forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
 
@@ -1851,7 +1762,6 @@
           const lbl = document.getElementById('labelPeriodo');
           lbl.textContent = state.tipoPeriodo === 'mensual' ? 'Mes:' : 'Año:';
 
-          // 4) Re-render de todo con los nuevos montos
           renderBudgetTable('ingresos');
           renderBudgetTable('gastos');
           renderBudgetTable('ahorro');
@@ -1889,7 +1799,6 @@
       initVsRealChart();
       document.getElementById('selectAreaChart').addEventListener('change', () => {
         updateVsRealChart();
-        // si cambias de área en el gráfico, podrías también cambiar el área en subcats si quieres
       });
       updateVsRealFromState();
 
