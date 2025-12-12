@@ -552,6 +552,42 @@
       cursor: pointer;
     }
 
+    /* NUEVO: tarjeta detalle por subcategorías */
+    .cm-subcat-controls {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 0.8rem;
+      color: var(--cm-muted);
+    }
+
+    .cm-subcat-controls select {
+      border-radius: 999px;
+      border: 1px solid var(--cm-border);
+      background: #fff;
+      padding: 4px 10px;
+      font-size: 0.8rem;
+      color: var(--cm-muted);
+      cursor: pointer;
+    }
+
+    .cm-subcat-chart-container {
+      position: relative;
+      height: 220px;
+      margin-bottom: 10px;
+    }
+
+    #chartSubcat {
+      width: 100%;
+      height: 100%;
+    }
+
+    .cm-subcat-empty {
+      font-size: 0.8rem;
+      color: var(--cm-muted);
+      margin-top: 4px;
+    }
+
     /* Modal simple para añadir categorías */
     .cm-modal-backdrop {
       position: fixed;
@@ -897,6 +933,54 @@
           </table>
         </div>
       </section>
+
+      <!-- NUEVO: Detalle por subcategorías -->
+      <section class="cm-card" id="cm-subcat-card">
+        <div class="cm-card-header">
+          <div>
+            <h2>Detalle por subcategorías</h2>
+            <p class="cm-card-subtitle">
+              Profundiza dentro de cada categoría para ver en qué se concentra el gasto.
+            </p>
+          </div>
+          <div class="cm-subcat-controls">
+            <div>
+              <span>Área:</span>
+              <select id="subcat-area">
+                <option value="gastos">Gastos</option>
+                <option value="ingresos">Ingresos</option>
+                <option value="ahorro">Ahorro</option>
+              </select>
+            </div>
+            <div>
+              <span>Categoría:</span>
+              <select id="subcat-category"></select>
+            </div>
+          </div>
+        </div>
+
+        <div class="cm-subcat-chart-container">
+          <canvas id="chartSubcat"></canvas>
+        </div>
+
+        <div class="cm-table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Subcategoría</th>
+                <th>Presupuesto</th>
+                <th>Real</th>
+                <th>Diferencia</th>
+                <th>% del presupuesto</th>
+              </tr>
+            </thead>
+            <tbody id="subcat-tbody"></tbody>
+          </table>
+        </div>
+        <p id="subcat-empty" class="cm-subcat-empty" style="display:none;">
+          No hay datos para esta categoría en el período seleccionado.
+        </p>
+      </section>
     </section>
   </main>
 
@@ -958,6 +1042,7 @@
       }
     };
 
+    // Demo data ajustada con subcategorías reales en gastos (grupo = categoría, nombre = subcategoría)
     function initDemoData() {
       // Ingresos demo (mensuales)
       state.presupuesto.ingresos = [
@@ -971,20 +1056,24 @@
         { id: 'ing3', nombre: 'Negocio propio', grupo: 'Otros ingresos', monto: 380 }
       ];
 
-      // Gastos demo (mensuales)
+      // Gastos demo (mensuales) – varias subcategorías por grupo
       state.presupuesto.gastos = [
-        { id: 'gas1', nombre: 'Vivienda', grupo: 'Vivienda', monto: 900 },
-        { id: 'gas2', nombre: 'Alimentación', grupo: 'Alimentación', monto: 450 },
-        { id: 'gas3', nombre: 'Transporte', grupo: 'Transporte', monto: 120 },
+        { id: 'gas1', nombre: 'Hipoteca / Alquiler', grupo: 'Vivienda', monto: 900 },
         { id: 'gas4', nombre: 'Servicios básicos', grupo: 'Vivienda', monto: 180 },
+        { id: 'gas2', nombre: 'Supermercado', grupo: 'Alimentación', monto: 320 },
+        { id: 'gas6', nombre: 'Comidas fuera', grupo: 'Alimentación', monto: 130 },
+        { id: 'gas3', nombre: 'Gasolina', grupo: 'Transporte', monto: 90 },
+        { id: 'gas7', nombre: 'Transporte público / Uber', grupo: 'Transporte', monto: 30 },
         { id: 'gas5', nombre: 'Entretenimiento', grupo: 'Otros', monto: 150 }
       ];
       state.real.gastos = [
-        { id: 'gas1', nombre: 'Vivienda', grupo: 'Vivienda', monto: 890 },
-        { id: 'gas2', nombre: 'Alimentación', grupo: 'Alimentación', monto: 510 },
-        { id: 'gas3', nombre: 'Transporte', grupo: 'Transporte', monto: 95 },
-        { id: 'gas4', nombre: 'Servicios básicos', grupo: 'Vivienda', monto: 175 },
-        { id: 'gas5', nombre: 'Entretenimiento', grupo: 'Otros', monto: 80 }
+        { id: 'gas1', nombre: 'Hipoteca / Alquiler', grupo: 'Vivienda', monto: 880 },
+        { id: 'gas4', nombre: 'Servicios básicos', grupo: 'Vivienda', monto: 195 },
+        { id: 'gas2', nombre: 'Supermercado', grupo: 'Alimentación', monto: 350 },
+        { id: 'gas6', nombre: 'Comidas fuera', grupo: 'Alimentación', monto: 210 },
+        { id: 'gas3', nombre: 'Gasolina', grupo: 'Transporte', monto: 110 },
+        { id: 'gas7', nombre: 'Transporte público / Uber', grupo: 'Transporte', monto: 45 },
+        { id: 'gas5', nombre: 'Entretenimiento', grupo: 'Otros', monto: 100 }
       ];
 
       // Ahorro demo (mensuales)
@@ -993,8 +1082,8 @@
         { id: 'aho2', nombre: 'Ahorro meta', grupo: 'Metas', monto: 150 }
       ];
       state.real.ahorro = [
-        { id: 'aho1', nombre: 'Fondo de emergencia', grupo: 'Emergencia', monto: 200 },
-        { id: 'aho2', nombre: 'Ahorro meta', grupo: 'Metas', monto: 100 }
+        { id: 'aho1', nombre: 'Fondo de emergencia', grupo: 'Emergencia', monto: 220 },
+        { id: 'aho2', nombre: 'Ahorro meta', grupo: 'Metas', monto: 120 }
       ];
     }
 
@@ -1002,7 +1091,7 @@
     //  FORMATO Y RENDER
     // ==============================
     function formatCurrency(value) {
-      return '$' + value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      return '$' + (value || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
     function renderBudgetTable(area) {
@@ -1031,6 +1120,7 @@
           updateTotals();
           updateDonaGastos();
           updateVsRealFromState();
+          updateSubcatFromState();
         });
         tdMonto.appendChild(input);
         tr.appendChild(tdMonto);
@@ -1050,6 +1140,7 @@
           updateTotals();
           updateDonaGastos();
           updateVsRealFromState();
+          updateSubcatFromState();
         });
         tdAcciones.appendChild(btnDel);
         tr.appendChild(tdAcciones);
@@ -1099,7 +1190,9 @@
               '#7459d9',
               '#e8c239',
               '#64748b',
-              '#a5b4fc'
+              '#a5b4fc',
+              '#14b8a6',
+              '#f97316'
             ]
           }]
         },
@@ -1248,6 +1341,7 @@
       updateTotals();
       updateDonaGastos();
       updateVsRealFromState();
+      updateSubcatFromState();
 
       closeModal();
     }
@@ -1280,7 +1374,7 @@
       kDiff.textContent = formatCurrency(diff);
 
       textoPorc.textContent = Math.round(porc) + '% de tu presupuesto de gastos.';
-      textoRestante.textContent = diff >= 0 ? formatCurrency(diff) : formatCurrency(-diff);
+      textoRestante.textContent = formatCurrency(Math.abs(diff));
 
       // Estado
       badgeEstado.classList.remove('green','yellow','red');
@@ -1488,6 +1582,210 @@
     }
 
     // ==============================
+    //  DETALLE POR SUBCATEGORÍAS
+    // ==============================
+    let chartSubcat = null;
+
+    function getCategoriasPorArea(area) {
+      const set = new Set();
+      (state.presupuesto[area] || []).forEach(i => {
+        if (i.grupo) set.add(i.grupo);
+      });
+      return Array.from(set);
+    }
+
+    function initSubcatDetalle() {
+      const areaSel = document.getElementById('subcat-area');
+      const catSel = document.getElementById('subcat-category');
+      if (!areaSel || !catSel) return;
+
+      areaSel.addEventListener('change', () => {
+        updateSubcatCategorySelect();
+      });
+
+      catSel.addEventListener('change', () => {
+        renderSubcatDetalle();
+      });
+
+      updateSubcatCategorySelect();
+    }
+
+    function updateSubcatCategorySelect() {
+      const areaSel = document.getElementById('subcat-area');
+      const catSel = document.getElementById('subcat-category');
+      const emptyMsg = document.getElementById('subcat-empty');
+      if (!areaSel || !catSel) return;
+
+      const area = areaSel.value;
+      const categorias = getCategoriasPorArea(area);
+
+      catSel.innerHTML = '';
+      if (categorias.length === 0) {
+        const opt = document.createElement('option');
+        opt.value = '';
+        opt.textContent = 'Sin categorías';
+        catSel.appendChild(opt);
+        if (emptyMsg) emptyMsg.style.display = 'block';
+        clearSubcatChart();
+        clearSubcatTable();
+        return;
+      }
+
+      categorias.forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat;
+        opt.textContent = cat;
+        catSel.appendChild(opt);
+      });
+
+      renderSubcatDetalle();
+    }
+
+    function clearSubcatChart() {
+      if (chartSubcat) {
+        chartSubcat.destroy();
+        chartSubcat = null;
+      }
+    }
+
+    function clearSubcatTable() {
+      const tbody = document.getElementById('subcat-tbody');
+      if (tbody) tbody.innerHTML = '';
+    }
+
+    function renderSubcatDetalle() {
+      const areaSel = document.getElementById('subcat-area');
+      const catSel = document.getElementById('subcat-category');
+      const emptyMsg = document.getElementById('subcat-empty');
+      if (!areaSel || !catSel) return;
+
+      const area = areaSel.value;
+      const categoria = catSel.value;
+
+      const presArea = state.presupuesto[area] || [];
+      const realArea = state.real[area] || [];
+
+      const pres = presArea.filter(i => i.grupo === categoria);
+      const real = realArea.filter(i => i.grupo === categoria);
+
+      const tbody = document.getElementById('subcat-tbody');
+
+      if ((pres.length === 0 && real.length === 0) || !categoria) {
+        clearSubcatChart();
+        clearSubcatTable();
+        if (emptyMsg) emptyMsg.style.display = 'block';
+        return;
+      } else {
+        if (emptyMsg) emptyMsg.style.display = 'none';
+      }
+
+      // Mapear por subcategoría (nombre)
+      const mapa = {};
+      pres.forEach(p => {
+        const key = p.nombre;
+        if (!mapa[key]) mapa[key] = { pres: 0, real: 0 };
+        mapa[key].pres += p.monto || 0;
+      });
+      real.forEach(r => {
+        const key = r.nombre;
+        if (!mapa[key]) mapa[key] = { pres: 0, real: 0 };
+        mapa[key].real += r.monto || 0;
+      });
+
+      const labels = Object.keys(mapa);
+      const dataPres = labels.map(l => mapa[l].pres);
+      const dataReal = labels.map(l => mapa[l].real);
+
+      // Chart
+      const ctx = document.getElementById('chartSubcat').getContext('2d');
+      if (chartSubcat) chartSubcat.destroy();
+      chartSubcat = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'Presupuesto',
+              data: dataPres,
+              backgroundColor: '#3956e8'
+            },
+            {
+              label: 'Real',
+              data: dataReal,
+              backgroundColor: '#e8c239'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: { boxWidth: 10 }
+            },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => {
+                  const v = ctx.parsed.y || 0;
+                  return ctx.dataset.label + ': ' + formatCurrency(v);
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: value => '$' + value
+              }
+            }
+          }
+        }
+      });
+
+      // Tabla
+      tbody.innerHTML = '';
+      const totalPres = dataPres.reduce((a,b) => a + b, 0) || 1;
+
+      labels.forEach((sub, idx) => {
+        const p = dataPres[idx] || 0;
+        const r = dataReal[idx] || 0;
+        const diff = r - p;
+        const pct = p > 0 ? (p / totalPres) * 100 : 0;
+
+        const tr = document.createElement('tr');
+
+        const tdSub = document.createElement('td');
+        tdSub.textContent = sub;
+        tr.appendChild(tdSub);
+
+        const tdPres = document.createElement('td');
+        tdPres.textContent = formatCurrency(p);
+        tr.appendChild(tdPres);
+
+        const tdReal = document.createElement('td');
+        tdReal.textContent = formatCurrency(r);
+        tr.appendChild(tdReal);
+
+        const tdDiff = document.createElement('td');
+        tdDiff.textContent = (diff >= 0 ? '+' : '') + formatCurrency(diff);
+        tr.appendChild(tdDiff);
+
+        const tdPct = document.createElement('td');
+        tdPct.textContent = pct.toFixed(1) + '%';
+        tr.appendChild(tdPct);
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    function updateSubcatFromState() {
+      // Recalcular selects y gráfico/tabla cuando cambian los datos
+      updateSubcatCategorySelect();
+    }
+
+    // ==============================
     //  CONVERSIÓN MENSUAL ↔ ANUAL
     // ==============================
     function convertirMontosPeriodo(oldTipo, newTipo) {
@@ -1560,6 +1858,7 @@
           updateTotals();
           updateDonaGastos();
           updateVsRealFromState();
+          updateSubcatFromState();
         });
       });
     }
@@ -1588,8 +1887,14 @@
 
       // Vs real
       initVsRealChart();
-      document.getElementById('selectAreaChart').addEventListener('change', updateVsRealChart);
+      document.getElementById('selectAreaChart').addEventListener('change', () => {
+        updateVsRealChart();
+        // si cambias de área en el gráfico, podrías también cambiar el área en subcats si quieres
+      });
       updateVsRealFromState();
+
+      // Subcategorías
+      initSubcatDetalle();
     });
   </script>
 </body>
