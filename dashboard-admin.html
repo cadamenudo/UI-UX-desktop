@@ -43,6 +43,24 @@
   #overlay{position:fixed;inset:0;background:rgba(3,10,28,.35);backdrop-filter:saturate(120%) blur(2px);display:none;z-index:25;}
   #overlay.show{display:block;}
   #edgeZone{position:fixed;inset:0 auto 0 0;width:22px;height:100vh;z-index:24;display:none;}
+
+  /* Badges (etapas) */
+  .badge{
+    display:inline-flex;align-items:center;gap:.35rem;
+    padding:.35rem .6rem;border-radius:999px;font-size:.85rem;font-weight:700;
+    border:1px solid var(--border); background:#f8fafc; color:#0f172a;
+    white-space:nowrap;
+  }
+  .badge small{font-weight:600;opacity:.8}
+  .badge.registro{background:#eef2ff;border-color:#c7d2fe;color:#1e3a8a;}
+  .badge.desconocido{background:#fff7ed;border-color:#fed7aa;color:#9a3412;}
+  .badge.prueba{background:#ecfeff;border-color:#a5f3fc;color:#155e75;}
+  .badge.activo{background:#e7f7ee;border-color:#bbf7d0;color:#166534;}
+  .badge.inactivo{background:#fef9c3;border-color:#fde68a;color:#854d0e;}
+  .badge.baja{background:#fde2e1;border-color:#fecaca;color:#991b1b;}
+
+  .stack{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
+
   @media (max-width:800px){
     #menuBtn{display:inline-block;}
     .container{grid-template-columns:1fr;}
@@ -120,6 +138,28 @@
           </div>
         </div>
 
+        <!-- ✅ NUEVO: Etapas del usuario (macro) -->
+        <div class="card" style="grid-column:1/-1">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:.75rem;flex-wrap:wrap">
+            <h3 style="margin:0">Etapas del usuario (macro)</h3>
+            <span class="pill" title="Conteos agregados (sin datos sensibles)">🔒 Agregado / Anonimizado</span>
+          </div>
+
+          <div class="kpis" style="margin-top:.75rem">
+            <div class="kpi"><div class="label">Registro</div><div class="value" id="kpiStageRegistro">—</div></div>
+            <div class="kpi"><div class="label">Desconocido</div><div class="value" id="kpiStageDesconocido">—</div></div>
+            <div class="kpi"><div class="label">Prueba (14d)</div><div class="value" id="kpiStagePrueba">—</div></div>
+            <div class="kpi"><div class="label">Activo</div><div class="value" id="kpiStageActivo">—</div></div>
+            <div class="kpi"><div class="label">Inactivo (2m sin uso)</div><div class="value" id="kpiStageInactivo">—</div></div>
+            <div class="kpi"><div class="label">Baja</div><div class="value" id="kpiStageBaja">—</div></div>
+          </div>
+
+          <canvas id="lifecycleChart" aria-label="Distribución de etapas" role="img"></canvas>
+          <p class="muted" style="margin:.6rem 0 0 0">
+            Definición: Registro → Desconocido (checkout incompleto) → Prueba (14 días) → Activo (pagó) → Inactivo (2 meses sin uso) → Baja (canceló/salió).
+          </p>
+        </div>
+
         <div class="card">
           <div class="kpis">
             <div class="kpi"><div class="label"><strong>UA</strong> – Usuarios Activos</div><div class="value" id="kpiUsuariosActivos">—</div></div>
@@ -167,19 +207,37 @@
         <div class="card" style="grid-column:1/-1;">
           <h3>Top Usuarios (demo)</h3>
           <table id="tablaUsuarios">
-            <thead><tr><th>Usuario</th><th>País</th><th>Estado</th><th>Ciudad</th><th>Plan</th><th>Último login</th></tr></thead>
+            <thead><tr><th>Usuario</th><th>País</th><th>Estado</th><th>Ciudad</th><th>Plan</th><th>Etapa</th><th>Último login</th></tr></thead>
             <tbody></tbody>
           </table>
         </div>
       </section>
 
-      <!-- 👤 Usuario (Resumen financiero agregado + categorías) -->
+      <!-- 👤 Usuario (Resumen financiero agregado + categorías + etapa) -->
       <section id="user" class="dashboard-grid" style="display:none;">
         <div class="card" style="grid-column:1/-1;display:flex;gap:.75rem;align-items:center;flex-wrap:wrap">
           <h3 style="margin:0">Buscar usuario</h3>
           <input id="userSearch" type="search" placeholder="usuario_1001, email@dominio, ID..." />
           <button class="chip" id="userSearchBtn">Buscar</button>
           <span id="userSearchInfo" class="muted">Demo: escribe o deja vacío para ver un ejemplo</span>
+        </div>
+
+        <!-- ✅ NUEVO: Etapa del usuario (micro) -->
+        <div class="card" id="userStageCard" style="grid-column:1/-1">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:.75rem;flex-wrap:wrap">
+            <h3 style="margin:0">Etapa del usuario</h3>
+            <span class="pill" title="Sin transacciones ni comercios">🔒 Estado agregado</span>
+          </div>
+
+          <div class="stack" style="margin-top:.75rem">
+            <span id="userStageBadge" class="badge registro">🧾 Registro</span>
+            <span id="userStageSince" class="muted">—</span>
+            <span id="userStageReason" class="muted">—</span>
+          </div>
+
+          <div class="muted" style="margin-top:.6rem">
+            Reglas: Prueba = dentro de 14 días. Inactivo = 60+ días sin uso. Baja = canceló/salió.
+          </div>
         </div>
 
         <div class="card" id="userAggFinanceCard" style="grid-column:1/-1">
@@ -342,6 +400,32 @@ function ensureCanvasWrappers(){
   });
 }
 
+/* ===== Etapas ===== */
+const STAGES = ['registro','desconocido','prueba','activo','inactivo','baja'];
+const STAGE_LABEL = {
+  registro:'Registro',
+  desconocido:'Desconocido',
+  prueba:'Prueba (14d)',
+  activo:'Activo',
+  inactivo:'Inactivo',
+  baja:'Baja'
+};
+const STAGE_ICON = {
+  registro:'🧾',
+  desconocido:'❓',
+  prueba:'🧪',
+  activo:'✅',
+  inactivo:'⏸️',
+  baja:'🚪'
+};
+function stageBadgeHTML(stage, extraText=''){
+  const s = stage || 'registro';
+  const cls = `badge ${s}`;
+  const label = STAGE_LABEL[s] || 'Registro';
+  const icon = STAGE_ICON[s] || '🧾';
+  return `<span class="${cls}">${icon} ${label}${extraText?` <small>${extraText}</small>`:''}</span>`;
+}
+
 /* ===== Sidebar / Overlay / Swipe ===== */
 const asideEl = document.querySelector('aside');
 const overlayEl = document.getElementById('overlay');
@@ -382,6 +466,18 @@ const mockApi = (()=> {
   const pick=arr=> arr[Math.floor(rnd(0,arr.length))];
   const series=(len,base,drift=0.03,vol=0.08)=>{ const out=[]; let v=base; for(let i=0;i<len;i++){ v=Math.max(0,v*(1+drift + (rnd(-vol,vol)))); out.push(Math.round(v)); } return out; };
   const COUNTRIES=['US','PR','PA','MX','CO'], SOURCES=['Orgánico','Referido','Social','Email','Webinar'];
+
+  // helpers lifecycle
+  const stageWeights = { registro:0.16, desconocido:0.11, prueba:0.09, activo:0.46, inactivo:0.12, baja:0.06 };
+  const stageReasons = {
+    registro:'Cuenta creada (email/password)',
+    desconocido:'Entró al checkout pero no finalizó',
+    prueba:'En trial de 14 días',
+    activo:'Suscripción paga activa',
+    inactivo:'60+ días sin uso',
+    baja:'Canceló o se salió'
+  };
+  const sumObj = (o)=> Object.values(o).reduce((a,b)=>a+(+b||0),0);
 
   const get=(path,params={})=> new Promise(res=>{
     setTimeout(()=>{
@@ -428,10 +524,67 @@ const mockApi = (()=> {
 
         res({usuarios, ingresos, labels:genLabels(len,range), plans, paid, convByPlan, funnelCombined, planBreakdown, kpis});
       }
+      else if(path==='/lifecycle-summary'){
+        // Base total users varies w/ range a bit
+        const baseTotal = range==='30d' ? 12000 : range==='90d' ? 18000 : 24000;
+        const geoFactor = (params.geoWeight || 1);
+        const total = Math.max(300, Math.round(baseTotal * geoFactor * (0.9 + Math.random()*0.2)));
+
+        // allocate by weights with small noise
+        const noisy = {};
+        STAGES.forEach(s=>{
+          const w = stageWeights[s] || 0.1;
+          const n = w * (0.9 + Math.random()*0.2);
+          noisy[s]=n;
+        });
+        const noisySum = sumObj(noisy) || 1;
+
+        const counts = {};
+        let acc = 0;
+        STAGES.forEach((s,i)=>{
+          const v = Math.round((noisy[s]/noisySum) * total);
+          counts[s]=v;
+          acc += v;
+        });
+        // fix rounding
+        const diff = total - acc;
+        counts.activo = Math.max(0, (counts.activo||0) + diff);
+
+        res({ total, counts });
+      }
+      else if(path==='/user-lifecycle'){
+        const userId = String(params.userId || 'demo');
+        // deterministic-ish stage for demo:
+        const hash = Array.from(userId).reduce((a,c)=>a + c.charCodeAt(0), 0);
+        const pickStage = STAGES[hash % STAGES.length];
+
+        const days = 3 + (hash % 180);
+        const stage = pickStage;
+
+        const sinceISO = new Date(Date.now() - days*24*3600*1000).toISOString();
+        const reason = stageReasons[stage] || '—';
+
+        // extra fields
+        const trialDaysLeft = stage==='prueba' ? Math.max(0, 14 - (hash % 14)) : null;
+        const lastActiveDays = stage==='inactivo' ? 60 + (hash % 45) : (hash % 25);
+        const checkoutAbandoned = stage==='desconocido' ? true : false;
+
+        res({ userId, stage, sinceISO, daysInStage: days, reason, trialDaysLeft, lastActiveDays, checkoutAbandoned });
+      }
       else if(path==='/users'){
         const dist=Object.fromEntries(COUNTRIES.map(c=>[c,Math.round(rnd(200,4000))]));
         const planes={ 'Básico':Math.round(rnd(6000,12000)), 'Premium':Math.round(rnd(800,2500)) };
-        const tabla=Array.from({length:8}).map((_,i)=>({ nombre:`usuario_${1000+i}`, pais:pick(COUNTRIES), plan:pick(Object.keys(planes)), ultimo:diasAtras(Math.round(rnd(0,15))) }));
+        const tabla=Array.from({length:8}).map((_,i)=>{
+          const nombre = `usuario_${1000+i}`;
+          const stage = STAGES[(i + Math.floor(rnd(0,STAGES.length))) % STAGES.length];
+          return ({
+            nombre,
+            pais:pick(COUNTRIES),
+            plan:pick(Object.keys(planes)),
+            etapa:stage,
+            ultimo:diasAtras(Math.round(rnd(0,75))) // permite inactivo
+          });
+        });
         res({dist,planes,tabla});
       }
       else if(path==='/geo'){
@@ -489,7 +642,6 @@ const mockApi = (()=> {
         const cohort={ labels:['Abr','May','Jun','Jul','Ago','Sep'], data:[[100,72,61,55],[120,80,69,60],[150,92,74,66],[130,90,70,62],[160,110,88,71],[200,144,120,96]] };
         res({indicadores,cohort});
       }
-      /* ===== NUEVO: Resumen financiero agregado por usuario ===== */
       else if(path==='/user-agg'){
         const months = Math.max(3, Math.min(24, +(params.months||12)));
         const labels = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
@@ -512,14 +664,11 @@ const mockApi = (()=> {
 
         res({ consent, bankLinked, labels: seq, income, expense, saving });
       }
-      /* ===== NUEVO: Distribución por categoría (agregada / anonimizada) ===== */
       else if(path==='/user-cats'){
-        // Mocks agregados (ningún detalle por transacción/merchant)
         const income = { 'Sueldo':1800, 'Negocio/Freelance':450, 'Intereses/Bonos':120, 'Otros':80 };
         const expense= { 'Vivienda':700, 'Alimentación':520, 'Seguros':260, 'Transporte':210, 'Servicios':180, 'Entretenimiento':120, 'Otros':410 };
         const saving = { 'Ahorro Vista':240, 'Retiro':160, 'Inversiones':80, 'Otros':40 };
 
-        // Permite variar por usuario (demo)
         const factor = (String(params.userId||'').length % 3)*0.05 + 0.95;
         const scale = obj => Object.fromEntries(Object.entries(obj).map(([k,v])=>[k, Math.round(v*factor)]));
 
@@ -647,10 +796,48 @@ function mostrar(id, el){
 }
 
 /* ===== Loaders ===== */
+async function loadLifecycleMacro(geo, w){
+  // usamos geoWeight para simular segmentación
+  const life = await mockApi.get('/lifecycle-summary', { ...state, geoWeight: w });
+
+  // KPIs
+  document.getElementById('kpiStageRegistro').textContent = fmt.num(life.counts.registro);
+  document.getElementById('kpiStageDesconocido').textContent = fmt.num(life.counts.desconocido);
+  document.getElementById('kpiStagePrueba').textContent = fmt.num(life.counts.prueba);
+  document.getElementById('kpiStageActivo').textContent = fmt.num(life.counts.activo);
+  document.getElementById('kpiStageInactivo').textContent = fmt.num(life.counts.inactivo);
+  document.getElementById('kpiStageBaja').textContent = fmt.num(life.counts.baja);
+
+  // Chart (doughnut)
+  const labels = STAGES.map(s=>`${STAGE_ICON[s]} ${STAGE_LABEL[s]}`);
+  const data = STAGES.map(s=> life.counts[s] || 0);
+
+  upsertChart('lifecycleChart','doughnut',{
+    labels,
+    datasets:[{ label:'Usuarios', data }]
+  }, {
+    plugins:{
+      tooltip:{
+        callbacks:{
+          label:(ctx)=>{
+            const val = ctx.raw || 0;
+            const total = data.reduce((a,b)=>a+b,0) || 1;
+            const pct = ((val/total)*100).toFixed(1);
+            return `${ctx.label}: ${fmt.num(val)} (${pct}%)`;
+          }
+        }
+      }
+    }
+  });
+}
+
 async function loadOverview(){
   const geo = await setupGeoSelectors('o', {country:'US'});
   const w = geoWeight(geo);
   const base = await mockApi.get('/overview', state);
+
+  // ✅ lifecycle macro
+  await loadLifecycleMacro(geo, w);
 
   const usuariosScaled = scaleArray(base.usuarios, w);
   const ingresosScaled = scaleArray(base.ingresos, w);
@@ -703,9 +890,51 @@ async function loadUsers(){
   const randomCity = ()=> cities.length? cities[Math.floor(Math.random()*cities.length)] : '-';
   const rows = (users.tabla||[]).map(u=>{
     const c = geo.selected?.country||'-', s = geo.selected?.state||'-', city = randomCity();
-    return `<tr><td>${u.nombre}</td><td>${c}</td><td>${s}</td><td>${city}</td><td>${u.plan}</td><td>${u.ultimo}</td></tr>`;
+    const etapa = u.etapa || 'registro';
+    return `<tr>
+      <td>${u.nombre}</td>
+      <td>${c}</td>
+      <td>${s}</td>
+      <td>${city}</td>
+      <td>${u.plan}</td>
+      <td>${stageBadgeHTML(etapa)}</td>
+      <td>${u.ultimo}</td>
+    </tr>`;
   });
-  tbody.innerHTML = rows.join('') || `<tr><td colspan="6" class="muted">Sin datos</td></tr>`;
+  tbody.innerHTML = rows.join('') || `<tr><td colspan="7" class="muted">Sin datos</td></tr>`;
+}
+
+/* === 👤 USUARIO: Etapa (micro) === */
+function formatDaysAgo(days){
+  if(days==null) return '—';
+  if(days===0) return 'Hoy';
+  if(days===1) return 'Hace 1 día';
+  return `Hace ${days} días`;
+}
+async function loadUserLifecycle(opts={}){
+  const uid = opts.userId || (document.getElementById('userSearch')?.value || 'demo');
+  const lc = await mockApi.get('/user-lifecycle', { userId: uid });
+
+  const badgeEl = document.getElementById('userStageBadge');
+  const sinceEl = document.getElementById('userStageSince');
+  const reasonEl= document.getElementById('userStageReason');
+
+  if(badgeEl){
+    badgeEl.className = `badge ${lc.stage}`;
+    badgeEl.textContent = `${STAGE_ICON[lc.stage]||'🧾'} ${STAGE_LABEL[lc.stage]||'Registro'}`;
+  }
+
+  if(sinceEl){
+    const extra = lc.stage==='prueba' && lc.trialDaysLeft!=null ? ` • ${lc.trialDaysLeft}d restantes de trial` : '';
+    const last = lc.stage==='inactivo' && lc.lastActiveDays!=null ? ` • Última actividad: hace ${lc.lastActiveDays}d` : '';
+    sinceEl.textContent = `${formatDaysAgo(lc.daysInStage)}${extra}${last}`;
+  }
+
+  if(reasonEl){
+    let more = '';
+    if(lc.stage==='desconocido' && lc.checkoutAbandoned) more = ' • Checkout abandonado';
+    reasonEl.textContent = `— ${lc.reason || '—'}${more}`;
+  }
 }
 
 /* === 👤 USUARIO: Resumen financiero agregado === */
@@ -763,7 +992,6 @@ async function loadUserCats(opts={}){
   const uid = opts.userId || (document.getElementById('userSearch')?.value || 'demo');
   const cats = await mockApi.get('/user-cats', { userId: uid });
 
-  // Si está activada la anonimización, forzamos % (no montos)
   const usePercent = anonymize || unit === '%';
 
   const inData = usePercent ? objToPercent(cats.income)  : cats.income;
@@ -821,7 +1049,7 @@ function exportUserCatsCSV(){
     const rows = [`\n${title}`,'Categoría,Valor'];
     labels.forEach((l,i)=>{ rows.push(`${l},${data[i]||0}`); });
     return rows.join('\n');
-    }
+  }
 
   let csv = 'Distribución por Categoría (Unidad actual en gráfico)\n';
   csv += chartToRows(incChart, 'Ingresos');
@@ -850,9 +1078,24 @@ function bindUserAggEvents(){
   if(btn){ btn.onclick = ()=> loadUserAggregates({ userId: sInp?.value }); }
   if(req){ req.onclick = ()=> alert('Solicitud de detalle enviada (demo). Requiere rol y justificación.'); }
   if(exp){ exp.onclick = ()=> exportUserAggCSV(); }
-  if(sBtn){ sBtn.onclick = ()=> { loadUserAggregates({ userId: sInp?.value }); loadUserCats({ userId: sInp?.value }); }; }
+  if(sBtn){
+    sBtn.onclick = ()=> {
+      const uid = sInp?.value || 'demo';
+      loadUserLifecycle({ userId: uid });
+      loadUserAggregates({ userId: uid });
+      loadUserCats({ userId: uid });
+    };
+  }
   if(sInp){
-    sInp.addEventListener('keydown',(e)=>{ if(e.key==='Enter'){ e.preventDefault(); loadUserAggregates({ userId: sInp.value }); loadUserCats({ userId: sInp.value }); }});
+    sInp.addEventListener('keydown',(e)=>{
+      if(e.key==='Enter'){
+        e.preventDefault();
+        const uid = sInp.value || 'demo';
+        loadUserLifecycle({ userId: uid });
+        loadUserAggregates({ userId: uid });
+        loadUserCats({ userId: uid });
+      }
+    });
   }
 }
 
@@ -864,12 +1107,12 @@ function bindUserCatsEvents(){
   const sInp    = document.getElementById('userSearch');
 
   if(unitSel){ unitSel.onchange = ()=> loadUserCats({ userId: sInp?.value }); }
-  if(anonChk){ anonChk.onchange = ()=> { 
-      // Si anonimizamos, forzamos selector a %
+  if(anonChk){
+    anonChk.onchange = ()=> {
       const sel = document.getElementById('uCatUnit');
       if(anonChk.checked && sel){ sel.value = '%'; }
       loadUserCats({ userId: sInp?.value });
-    }; 
+    };
   }
   if(refBtn){ refBtn.onclick = ()=> loadUserCats({ userId: sInp?.value }); }
   if(expBtn){ expBtn.onclick = ()=> exportUserCatsCSV(); }
@@ -878,6 +1121,7 @@ function bindUserCatsEvents(){
 async function loadUserView(){
   bindUserAggEvents();
   bindUserCatsEvents();
+  await loadUserLifecycle({});
   await loadUserAggregates({});
   await loadUserCats({});
 }
@@ -1006,3 +1250,4 @@ document.addEventListener('DOMContentLoaded', async ()=>{
 </script>
 </body>
 </html>
+
