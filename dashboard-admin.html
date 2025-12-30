@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Admin Dashboard – Cada Menudo (Geo + Usuario)</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+  :root{ --primary:#3956E8; --secondary:#7459D9; --accent:#E8C239;
+    --bg:#ffffff; --text:#0f172a; --muted:#64748B; --border:#e5e7eb;
+    --soft:#f5f7ff; --shadow:0 4px 14px rgba(15,23,42,.08); }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Nunito",system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--text);}
+  header{background:var(--primary);color:#fff;padding:1rem 1.25rem;display:flex;gap:.75rem;justify-content:space-between;align-items:center;box-shadow:0 4px 10px rgba(0,0,0,.1);position:sticky;top:0;z-index:30;}
+  header h1{font-size:1.1rem;margin:0}
+  .top-actions{display:flex;gap:.75rem;align-items:center;}
+  .pill{background:rgba(255,255,255,.12);padding:.4rem .7rem;border-radius:999px;font-size:.85rem}
+  #menuBtn{display:none;background:none;border:none;color:#fff;font-size:1.5rem;line-height:1;cursor:pointer;}
+  .container{display:grid;grid-template-columns:260px 1fr;min-height:100vh;}
+  aside{background:#f9faff;border-right:1px solid var(--border);padding:1rem;display:flex;flex-direction:column;gap:1rem;position:sticky;top:64px;height:calc(100vh - 64px);}
+  aside h2{font-size:.8rem;color:var(--muted);text-transform:uppercase;margin:.25rem 0 .5rem}
+  aside button{background:none;border:none;text-align:left;padding:.6rem .9rem;border-radius:10px;cursor:pointer;color:var(--text);font-size:.95rem;}
+  aside button.active, aside button:hover{background:var(--primary);color:#fff;}
+  main{padding:1.25rem 1.5rem;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+  .filters{display:flex;gap:.75rem;align-items:center;margin:0 0 1rem 0;flex-wrap:wrap;}
+  .filters .chip{border:1px solid var(--border);background:var(--soft);color:#202636;padding:.45rem .7rem;border-radius:999px;font-size:.85rem;cursor:pointer;}
+  .filters .chip.active{border-color:var(--primary)}
+  section.dashboard-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.2rem;}
+  .card{background:#fff;padding:1rem;border-radius:12px;box-shadow:var(--shadow);}
+  .card h3{margin:.2rem 0 .6rem;color:#1d2450;font-size:1rem}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.8rem;margin-bottom:1rem}
+  .kpi{background:#fff;border:1px solid var(--border);border-radius:12px;padding:.9rem}
+  .kpi .label{font-size:.8rem;color:var(--muted)}
+  .kpi .value{font-weight:700;font-size:1.15rem;margin-top:.2rem}
+  .chart-box{position:relative;width:100%;height:260px;overflow:hidden;}
+  .chart-box>canvas{width:100% !important;height:100% !important;}
+  table{width:100%;border-collapse:collapse;font-size:.92rem}
+  th,td{padding:.6rem .5rem;border-bottom:1px solid #eef0f4;text-align:left;}
+  th{color:#4b5563;font-weight:600;background:#fafbff}
+  #overlay{position:fixed;inset:0;background:rgba(3,10,28,.35);backdrop-filter:saturate(120%) blur(2px);display:none;z-index:25;}
+  #overlay.show{display:block;}
+  #edgeZone{position:fixed;inset:0 auto 0 0;width:22px;height:100vh;z-index:24;display:none;}
+  @media (max-width:800px){
+    #menuBtn{display:inline-block;}
+    .container{grid-template-columns:1fr;}
+    aside{position:fixed;left:-280px;top:64px;bottom:0;width:260px;height:auto;box-shadow:0 12px 30px rgba(15,23,42,.18);z-index:26;transition:left .28s ease;}
+    aside.open{left:0;}
+    main{padding:1rem;}
+    header h1{font-size:1rem;}
+    .filters{gap:.45rem;}
+    .kpi .value{font-size:1rem;}
+    section.dashboard-grid{grid-template-columns:1fr;}
+    .card{padding:.9rem;}
+    #edgeZone{display:block;}
+  }
+  @media (max-width:380px){
+    header{padding:.8rem 1rem;}
+    .pill{display:none;}
+    .kpi{padding:.7rem;}
+    .kpi .label{font-size:.75rem;}
+  }
+  .sr-only{position:absolute;clip:rect(0 0 0 0);clip-path:inset(50%);height:1px;width:1px;overflow:hidden;white-space:nowrap;border:0;padding:0;margin:-1px;}
+  .muted{color:var(--muted)}
+  input[type="search"]{padding:.5rem .7rem;border:1px solid var(--border);border-radius:10px;min-width:220px;}
+</style>
+</head>
+
+<body>
+  <header>
+    <button id="menuBtn" aria-label="Abrir menú">☰</button>
+    <h1>📊 Panel Administrativo – Cada Menudo</h1>
+    <div class="top-actions"><span class="pill">👤 Admin</span><span class="pill">⚙️ Configuración</span></div>
+  </header>
+
+  <div id="overlay" aria-hidden="true"></div>
+  <div id="edgeZone" aria-hidden="true"></div>
+
+  <div class="container">
+    <aside aria-label="Menú lateral">
+      <div>
+        <h2>Secciones</h2>
+        <button class="active" onclick="mostrar('overview', this)">🏠 Resumen General</button>
+        <button onclick="mostrar('usuarios', this)">👥 Usuarios</button>
+        <button onclick="mostrar('user', this)">👤 Usuario</button>
+        <button onclick="mostrar('tickets', this)">💬 Soporte</button>
+        <button onclick="mostrar('marketing', this)">📈 Marketing</button>
+        <button onclick="mostrar('finanzas', this)">💰 Finanzas</button>
+        <button onclick="mostrar('analytics', this)">📊 Data Insights</button>
+        <button onclick="mostrar('config', this)">⚙️ Configuración</button>
+      </div>
+    </aside>
+
+    <main>
+      <div class="filters" id="filters">
+        <span>Rango:</span>
+        <button class="chip active" data-range="30d" onclick="setRange(this)">30d</button>
+        <button class="chip" data-range="90d" onclick="setRange(this)">90d</button>
+        <button class="chip" data-range="365d" onclick="setRange(this)">365d</button>
+        <span style="margin-left:.5rem">País:</span>
+        <button class="chip active" data-country="all" onclick="setCountry(this)">Todos</button>
+        <button class="chip" data-country="US" onclick="setCountry(this)">US</button>
+        <button class="chip" data-country="PR" onclick="setCountry(this)">PR</button>
+        <button class="chip" data-country="PA" onclick="setCountry(this)">PA</button>
+      </div>
+
+      <!-- Resumen General -->
+      <section id="overview" class="dashboard-grid">
+        <div class="card" style="grid-column:1/-1">
+          <h3>Segmentación geográfica</h3>
+          <div class="filters" style="margin-top:.5rem">
+            <label><strong>País:</strong></label>
+            <select id="oCountrySel"></select>
+            <label style="margin-left:.5rem"><strong>Estado/Provincia:</strong></label>
+            <select id="oStateSel"></select>
+            <label style="margin-left:.5rem"><strong>Ciudad:</strong></label>
+            <select id="oCitySel"></select>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="kpis">
+            <div class="kpi"><div class="label"><strong>UA</strong> – Usuarios Activos</div><div class="value" id="kpiUsuariosActivos">—</div></div>
+            <div class="kpi"><div class="label"><strong>MRR</strong> – Monthly Recurring Revenue</div><div class="value" id="kpiMRR">—</div></div>
+            <div class="kpi"><div class="label"><strong>CH</strong> – Churn</div><div class="value" id="kpiChurn">—</div></div>
+            <div class="kpi"><div class="label"><strong>F2P</strong> – Free → Premium</div><div class="value" id="kpiConversion">—</div></div>
+            <div class="kpi"><div class="label"><strong>PBY</strong> – Plan Breakdown</div><div class="value" id="kpiPlanBreakdown">—</div></div>
+          </div>
+          <h3>Crecimiento de Usuarios (UA)</h3>
+          <canvas id="usuariosChart" aria-label="Crecimiento de usuarios" role="img"></canvas>
+        </div>
+
+        <div class="card"><h3>Ingresos Mensuales (MRR)</h3><canvas id="ingresosChart"></canvas></div>
+
+        <div class="card">
+          <div class="filters" style="margin:0 0 .5rem 0">
+            <span><strong>Modo embudo:</strong></span>
+            <button class="chip funnelToggle active" data-mode="abs" onclick="setFunnelMode(this)">Abs</button>
+            <button class="chip funnelToggle" data-mode="pct" onclick="setFunnelMode(this)">%</button>
+          </div>
+          <h3>Embudo de Conversión (F2P & Pagos)</h3>
+          <canvas id="conversionChart"></canvas>
+        </div>
+      </section>
+
+      <!-- Usuarios (Geo) -->
+      <section id="usuarios" class="dashboard-grid" style="display:none;">
+        <div class="card" style="grid-column:1/-1">
+          <h3>Segmentación geográfica</h3>
+          <div class="filters" style="margin-top:.5rem">
+            <label><strong>País:</strong></label>
+            <select id="uCountrySel"></select>
+            <label style="margin-left:.5rem"><strong>Estado/Provincia:</strong></label>
+            <select id="uStateSel"></select>
+            <label style="margin-left:.5rem"><strong>Ciudad:</strong></label>
+            <select id="uCitySel"></select>
+          </div>
+        </div>
+
+        <div class="card"><h3>Usuarios por País (vista general)</h3><canvas id="usuariosPais"></canvas></div>
+        <div class="card"><h3>Usuarios por Estado</h3><canvas id="estadosChart"></canvas></div>
+        <div class="card"><h3>Usuarios por Ciudad</h3><canvas id="ciudadesChart"></canvas></div>
+        <div class="card"><h3>Planes</h3><canvas id="planesChart"></canvas></div>
+
+        <div class="card" style="grid-column:1/-1;">
+          <h3>Top Usuarios (demo)</h3>
+          <table id="tablaUsuarios">
+            <thead><tr><th>Usuario</th><th>País</th><th>Estado</th><th>Ciudad</th><th>Plan</th><th>Último login</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 👤 Usuario (Resumen financiero agregado + categorías) -->
+      <section id="user" class="dashboard-grid" style="display:none;">
+        <div class="card" style="grid-column:1/-1;display:flex;gap:.75rem;align-items:center;flex-wrap:wrap">
+          <h3 style="margin:0">Buscar usuario</h3>
+          <input id="userSearch" type="search" placeholder="usuario_1001, email@dominio, ID..." />
+          <button class="chip" id="userSearchBtn">Buscar</button>
+          <span id="userSearchInfo" class="muted">Demo: escribe o deja vacío para ver un ejemplo</span>
+        </div>
+
+        <div class="card" id="userAggFinanceCard" style="grid-column:1/-1">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:.75rem;flex-wrap:wrap">
+            <h3 style="margin:0">Resumen financiero (agregado)</h3>
+            <div>
+              <span class="pill" title="Datos agregados, sin transacciones">🔒 Solo agregados</span>
+              <span id="consentBadge" class="pill" title="Estado de consentimiento del usuario">⏳ Verificando consentimiento…</span>
+            </div>
+          </div>
+
+          <div class="kpis" style="margin-top:.75rem">
+            <div class="kpi"><div class="label">Ingreso (último mes)</div><div class="value" id="uIncLast">—</div></div>
+            <div class="kpi"><div class="label">Gasto (último mes)</div><div class="value" id="uExpLast">—</div></div>
+            <div class="kpi"><div class="label">Ahorro (último mes)</div><div class="value" id="uSavLast">—</div></div>
+            <div class="kpi"><div class="label">Ahorro % (último mes)</div><div class="value" id="uSavRateLast">—</div></div>
+          </div>
+
+          <div class="filters" style="gap:.5rem">
+            <label><strong>Rango:</strong></label>
+            <select id="uAggRange">
+              <option value="3">3m</option>
+              <option value="6">6m</option>
+              <option value="12" selected>12m</option>
+            </select>
+            <label style="margin-left:.5rem"><input type="checkbox" id="uIncludeBank" checked> Incluir bancos conectados</label>
+            <button class="chip" id="uAggRefreshBtn">Actualizar</button>
+          </div>
+
+          <canvas id="userAggFinanceChart"></canvas>
+
+          <div style="margin-top:.5rem;display:flex;gap:.5rem;flex-wrap:wrap">
+            <button class="chip" id="uRequestDetailBtn" title="Requiere rol y justificación">🔍 Solicitar detalle</button>
+            <button class="chip" id="uExportBtn">⬇️ Exportar resumen (CSV)</button>
+          </div>
+        </div>
+
+        <!-- Nueva tarjeta: Distribución por categoría (agregada / anonimizada) -->
+        <div class="card" id="userCatsCard" style="grid-column:1/-1">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:.75rem;flex-wrap:wrap">
+            <h3 style="margin:0">Distribución por Categoría (agregada / anonimizada)</h3>
+            <div class="filters" style="gap:.5rem;margin:0">
+              <label><strong>Unidad:</strong></label>
+              <select id="uCatUnit">
+                <option value="$" selected>$</option>
+                <option value="%">%</option>
+              </select>
+              <label style="margin-left:.5rem"><input type="checkbox" id="uCatAnon" /> Anonimizar (solo %)</label>
+              <button class="chip" id="uCatRefreshBtn">Actualizar</button>
+              <button class="chip" id="uCatExportBtn">⬇️ Exportar (CSV)</button>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-wrap:wrap;gap:1rem;margin-top:.5rem">
+            <div style="flex:1;min-width:300px">
+              <h4>💵 Ingresos</h4>
+              <canvas id="uCatIncome"></canvas>
+            </div>
+            <div style="flex:1;min-width:300px">
+              <h4>💸 Gastos</h4>
+              <canvas id="uCatExpense"></canvas>
+            </div>
+            <div style="flex:1;min-width:300px">
+              <h4>💰 Ahorros</h4>
+              <canvas id="uCatSaving"></canvas>
+            </div>
+          </div>
+          <p class="muted" style="margin-top:.5rem">Nota: Visualización agregada; no se muestran transacciones ni nombres de comercios.</p>
+        </div>
+
+      </section>
+
+      <!-- Marketing -->
+      <section id="marketing" class="dashboard-grid" style="display:none;">
+        <div class="card" style="grid-column:1/-1">
+          <h3>Segmentación geográfica</h3>
+          <div class="filters" style="margin-top:.5rem">
+            <label><strong>País:</strong></label>
+            <select id="mCountrySel"></select>
+            <label style="margin-left:.5rem"><strong>Estado/Provincia:</strong></label>
+            <select id="mStateSel"></select>
+            <label style="margin-left:.5rem"><strong>Ciudad:</strong></label>
+            <select id="mCitySel"></select>
+          </div>
+        </div>
+
+        <div class="card"><h3>Usuarios por Fuente (segmentado)</h3><canvas id="fuentesChart"></canvas></div>
+        <div class="card"><h3>Email: Open / Click (segmentado)</h3><canvas id="emailChart"></canvas></div>
+      </section>
+
+      <!-- Finanzas -->
+      <section id="finanzas" class="dashboard-grid" style="display:none;">
+        <div class="card" style="grid-column:1/-1">
+          <h3>Segmentación geográfica</h3>
+          <div class="filters" style="margin-top:.5rem">
+            <label><strong>País:</strong></label>
+            <select id="fCountrySel"></select>
+            <label style="margin-left:.5rem"><strong>Estado/Provincia:</strong></label>
+            <select id="fStateSel"></select>
+            <label style="margin-left:.5rem"><strong>Ciudad:</strong></label>
+            <select id="fCitySel"></select>
+          </div>
+        </div>
+
+        <div class="card"><h3>MRR vs Churn (segmentado)</h3><canvas id="mrrChart"></canvas></div>
+        <div class="card"><h3>Unit Economics</h3><canvas id="unitChart"></canvas></div>
+      </section>
+
+      <!-- Analytics -->
+      <section id="analytics" class="dashboard-grid" style="display:none;">
+        <div class="card" style="grid-column:1/-1">
+          <h3>Segmentación geográfica</h3>
+          <div class="filters" style="margin-top:.5rem">
+            <label><strong>País:</strong></label>
+            <select id="aCountrySel"></select>
+            <label style="margin-left:.5rem"><strong>Estado/Provincia:</strong></label>
+            <select id="aStateSel"></select>
+            <label style="margin-left:.5rem"><strong>Ciudad:</strong></label>
+            <select id="aCitySel"></select>
+          </div>
+        </div>
+
+        <div class="card"><h3>Indicadores Financieros Promedio (segmentado)</h3><canvas id="indicadoresChart"></canvas></div>
+        <div class="card"><h3>Cohortes por Mes de Registro (segmentado)</h3><canvas id="cohortChart"></canvas></div>
+      </section>
+
+      <!-- Soporte -->
+      <section id="tickets" class="dashboard-grid" style="display:none;">
+        <div class="card"><h3>Tickets por Estado</h3><canvas id="ticketsChart"></canvas></div>
+        <div class="card">
+          <h3>Últimos Tickets (demo)</h3>
+          <table id="tablaTickets"><thead><tr><th>ID</th><th>Categoría</th><th>Estado</th><th>Tiempo abierto</th></tr></thead><tbody></tbody></table>
+        </div>
+      </section>
+
+      <!-- Config -->
+      <section id="config" style="display:none;">
+        <div class="card">
+          <h3>Integraciones</h3>
+          <p>Simulando: Plaid, SendGrid/Mailchimp, Render API, Backups.</p>
+          <p class="muted">Para producción: reemplaza <code>mockApi.get()</code> por <code>fetch()</code> hacia tus endpoints.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+<script>
+/* ===== Utilidades ===== */
+const fmt = {
+  money:n=> n==null ? '—' : new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(n),
+  pct:n=> n==null ? '—' : (n*100).toFixed(1)+'%',
+  num:n=> n==null ? '—' : new Intl.NumberFormat('en-US').format(n)
+};
+function ensureCanvasWrappers(){
+  document.querySelectorAll('canvas').forEach(cv=>{
+    if(!cv.parentElement || !cv.parentElement.classList.contains('chart-box')){
+      const box=document.createElement('div'); box.className='chart-box';
+      cv.parentNode.insertBefore(box, cv); box.appendChild(cv);
+    }
+  });
+}
+
+/* ===== Sidebar / Overlay / Swipe ===== */
+const asideEl = document.querySelector('aside');
+const overlayEl = document.getElementById('overlay');
+document.getElementById('menuBtn').addEventListener('click', ()=>{
+  const open = asideEl.classList.toggle('open');
+  overlayEl.classList.toggle('show', open);
+  overlayEl.setAttribute('aria-hidden', String(!open));
+});
+overlayEl.addEventListener('click', ()=>{ asideEl.classList.remove('open'); overlayEl.classList.remove('show'); overlayEl.setAttribute('aria-hidden','true'); });
+const edgeZone = document.getElementById('edgeZone');
+let touchStartX=0,touchStartY=0, asideStartX=0, asideStartY=0;
+const SWIPE_OPEN=50, SWIPE_CLOSE=-50, MAX_DRIFT=30;
+function openSidebar(){ asideEl.classList.add('open'); overlayEl.classList.add('show'); overlayEl.setAttribute('aria-hidden','false'); }
+function closeSidebar(){ asideEl.classList.remove('open'); overlayEl.classList.remove('show'); overlayEl.setAttribute('aria-hidden','true'); }
+edgeZone.addEventListener('touchstart',e=>{ if(innerWidth>800) return; const t=e.touches[0]; touchStartX=t.clientX; touchStartY=t.clientY; },{passive:true});
+edgeZone.addEventListener('touchmove',e=>{ if(innerWidth>800) return; const t=e.touches[0]; const dx=t.clientX-touchStartX, dy=Math.abs(t.clientY-touchStartY); if(dy>MAX_DRIFT) return; if(dx>SWIPE_OPEN && !asideEl.classList.contains('open')) openSidebar(); },{passive:true});
+asideEl.addEventListener('touchstart',e=>{ if(innerWidth>800) return; const t=e.touches[0]; asideStartX=t.clientX; asideStartY=t.clientY; },{passive:true});
+asideEl.addEventListener('touchmove',e=>{ if(innerWidth>800) return; const t=e.touches[0]; const dx=t.clientX-asideStartX; const dy=Math.abs(t.clientY-asideStartY); if(dy>MAX_DRIFT) return; if(dx<SWIPE_CLOSE && asideEl.classList.contains('open')) closeSidebar(); },{passive:true});
+overlayEl.addEventListener('touchstart',e=>{ if(innerWidth>800) return; const t=e.touches[0]; touchStartX=t.clientX; touchStartY=t.clientY; },{passive:true});
+overlayEl.addEventListener('touchmove',e=>{ if(innerWidth>800) return; const t=e.touches[0]; const dx=t.clientX-touchStartX; const dy=Math.abs(t.clientY-touchStartY); if(dy>MAX_DRIFT) return; if(dx<SWIPE_CLOSE && asideEl.classList.contains('open')) closeSidebar(); },{passive:true});
+
+/* ===== Estado global ===== */
+const state={ range:'30d', country:'all', overviewFunnel:'abs' };
+
+/* Selección geo por sección */
+const geoSelMap = {
+  overview: {country:null,state:null,city:null},
+  usuarios: {country:null,state:null,city:null},
+  marketing: {country:null,state:null,city:null},
+  finanzas: {country:null,state:null,city:null},
+  analytics: {country:null,state:null,city:null}
+};
+
+/* ===== Mock API ===== */
+const mockApi = (()=> {
+  let seed=42;
+  const rnd=(min=0,max=1)=>{ seed=(seed*1664525+1013904223)%4294967296; return min+(seed/4294967296)*(max-min); };
+  const pick=arr=> arr[Math.floor(rnd(0,arr.length))];
+  const series=(len,base,drift=0.03,vol=0.08)=>{ const out=[]; let v=base; for(let i=0;i<len;i++){ v=Math.max(0,v*(1+drift + (rnd(-vol,vol)))); out.push(Math.round(v)); } return out; };
+  const COUNTRIES=['US','PR','PA','MX','CO'], SOURCES=['Orgánico','Referido','Social','Email','Webinar'];
+
+  const get=(path,params={})=> new Promise(res=>{
+    setTimeout(()=>{
+      const range=params.range||'30d';
+      const len = range==='30d'?30 : range==='90d'?13 : 12;
+
+      if(path==='/overview'){
+        const usuarios=series(len,4000,0.05,0.1);
+        const ingresos=series(len,8000,0.06,0.12);
+        const visitas=Math.round(15000+rnd(-1500,1500));
+        const registros=Math.round(visitas*0.6);
+        const conexiones=Math.round(registros*0.5);
+
+        const PAID_PLANS=['Premium','Plus','Pro'];
+        const nPaid = Math.random()<0.5?2:3;
+        const paid = PAID_PLANS.slice(0,nPaid);
+        const plans = ['Free', ...paid];
+
+        const convByPlan = {};
+        let totalConv=0;
+        paid.forEach((p,i)=>{
+          const r = 0.03 + i*0.02 + Math.random()*0.03;
+          convByPlan[p]= +r.toFixed(3);
+          totalConv += r;
+        });
+
+        const lastU = usuarios[usuarios.length-1];
+        const pFree = 1 - Math.min(0.9, totalConv + 0.1);
+        const planBreakdown = { Free: pFree };
+        paid.forEach(p=>{
+          const w = convByPlan[p] / totalConv;
+          planBreakdown[p] = +( (1-pFree) * w ).toFixed(3);
+        });
+
+        const convCounts = paid.map(p=> Math.round(registros * convByPlan[p]));
+        const funnelCombined = [visitas, registros, conexiones, ...convCounts];
+
+        const kpis={
+          activos: Math.round(lastU*0.72),
+          mrr: Math.round(ingresos[ingresos.length-1]),
+          churn:+(0.025+rnd(-0.01,0.01)).toFixed(3),
+          f2p:+(convByPlan[paid.includes('Premium')?'Premium':paid[0]] || 0).toFixed(3)
+        };
+
+        res({usuarios, ingresos, labels:genLabels(len,range), plans, paid, convByPlan, funnelCombined, planBreakdown, kpis});
+      }
+      else if(path==='/users'){
+        const dist=Object.fromEntries(COUNTRIES.map(c=>[c,Math.round(rnd(200,4000))]));
+        const planes={ 'Básico':Math.round(rnd(6000,12000)), 'Premium':Math.round(rnd(800,2500)) };
+        const tabla=Array.from({length:8}).map((_,i)=>({ nombre:`usuario_${1000+i}`, pais:pick(COUNTRIES), plan:pick(Object.keys(planes)), ultimo:diasAtras(Math.round(rnd(0,15))) }));
+        res({dist,planes,tabla});
+      }
+      else if(path==='/geo'){
+        const GEO = {
+          US: {'California':{'Los Angeles':Math.round(rnd(400,1200)),'San Francisco':Math.round(rnd(200,700)),'San Diego':Math.round(rnd(180,600))},
+               'Texas':{'Houston':Math.round(rnd(300,900)),'Dallas':Math.round(rnd(250,800)),'Austin':Math.round(rnd(180,650))},
+               'Florida':{'Miami':Math.round(rnd(260,850)),'Orlando':Math.round(rnd(180,600)),'Tampa':Math.round(rnd(150,520))}},
+          PR: {'San Juan':{'Hato Rey':Math.round(rnd(80,250)),'Santurce':Math.round(rnd(70,220)),'Río Piedras':Math.round(rnd(60,200))},
+               'Bayamón':{'Bayamón':Math.round(rnd(70,210))},
+               'Carolina':{'Carolina':Math.round(rnd(60,190))}},
+          PA: {'Panamá':{'Ciudad de Panamá':Math.round(rnd(120,380)),'San Miguelito':Math.round(rnd(80,260))},
+               'Colón':{'Colón':Math.round(rnd(60,180))}}
+        };
+        const countries = Object.keys(GEO);
+        const country = (params.country && GEO[params.country]) ? params.country : (params.fallbackCountry || countries[0]);
+        const states = Object.keys(GEO[country]);
+        const stateName = (params.state && GEO[country][params.state]) ? params.state : states[0];
+        const cities = Object.keys(GEO[country][stateName]);
+        const cityName = (params.city && GEO[country][stateName][params.city]!=null) ? params.city : cities[0];
+
+        const countryAgg = {};
+        for(const c of Object.keys(GEO)){
+          let sum = 0;
+          for(const st of Object.keys(GEO[c])) for(const city of Object.keys(GEO[c][st])) sum += GEO[c][st][city];
+          countryAgg[c]=sum;
+        }
+        const stateAgg = {};
+        for(const st of Object.keys(GEO[country])){
+          let sum = 0;
+          for(const city of Object.keys(GEO[country][st])) sum += GEO[country][st][city];
+          stateAgg[st]=sum;
+        }
+        const cityAgg = GEO[country][stateName];
+
+        res({ GEO, countryAgg, stateAgg, cityAgg, selected:{country, state:stateName, city:cityName} });
+      }
+      else if(path==='/support'){
+        const tickets={ Abierto:Math.round(rnd(12,35)), Pendiente:Math.round(rnd(5,18)), Resuelto:Math.round(rnd(80,160)) };
+        const tabla=Array.from({length:10}).map(_=>({ id:'T-'+Math.round(rnd(10000,99999)), categoria:pick(['Plaid','Cuenta','Errores','Pagos']), estado:pick(['Abierto','Pendiente','Resuelto']), horas:Math.round(rnd(1,72)) }));
+        res({tickets,tabla});
+      }
+      else if(path==='/marketing'){
+        const fuentes=Object.fromEntries(SOURCES.map(s=>[s,Math.round(rnd(200,3500))]));
+        const email={ open:series(6,22,0,0.3).map(v=>Math.min(60,Math.max(15,Math.round(v)))), click:series(6,4,0,0.25).map(v=>Math.min(15,Math.max(2,Math.round(v)))) };
+        res({fuentes,email,labels:['Ene','Feb','Mar','Abr','May','Jun']});
+      }
+      else if(path==='/finance'){
+        const mrr=series(12,9000,0.05,0.1);
+        const churn=Array.from({length:12}).map(()=>+(0.02+rnd(-0.008,0.012)).toFixed(3));
+        const unit={ cac:Array.from({length:6}).map(()=>Math.round(rnd(3,8)*10)), ltv:Array.from({length:6}).map(()=>Math.round(rnd(180,350))), cpu:Array.from({length:6}).map(()=>Math.round(rnd(1.2,3.5)*10)) };
+        res({mrr,churn,unit,labels:['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic']});
+      }
+      else if(path==='/analytics'){
+        const indicadores={ ingreso_prom:+rnd(2600,4800).toFixed(0), gasto_prom:+rnd(2100,3600).toFixed(0), ahorro_prom:+rnd(200,700).toFixed(0), dti_prom:+(rnd(0.22,0.38)).toFixed(2), reserva_meses:+(rnd(1.5,4.2)).toFixed(1) };
+        const cohort={ labels:['Abr','May','Jun','Jul','Ago','Sep'], data:[[100,72,61,55],[120,80,69,60],[150,92,74,66],[130,90,70,62],[160,110,88,71],[200,144,120,96]] };
+        res({indicadores,cohort});
+      }
+      /* ===== NUEVO: Resumen financiero agregado por usuario ===== */
+      else if(path==='/user-agg'){
+        const months = Math.max(3, Math.min(24, +(params.months||12)));
+        const labels = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+        const today = new Date();
+        const seq = Array.from({length:months}, (_,i)=> {
+          const d = new Date(today.getFullYear(), today.getMonth()- (months-1-i), 1);
+          return labels[d.getMonth()]+' '+String(d.getFullYear()).slice(-2);
+        });
+
+        const consent = Math.random() < 0.85;
+        const bankLinked = Math.random() < 0.75;
+        const includeBank = !(params.includeBank===false);
+
+        const baseIncome = (!includeBank || !consent || !bankLinked) ? 1600 : 2600;
+        const baseExpense= (!includeBank || !consent || !bankLinked) ? 1300 : 2100;
+
+        const income = seq.map(()=> Math.round(baseIncome * (0.9 + Math.random()*0.4)));
+        const expense= seq.map(()=> Math.round(baseExpense * (0.9 + Math.random()*0.35)));
+        const saving = income.map((v,i)=> Math.max(0, v - expense[i]));
+
+        res({ consent, bankLinked, labels: seq, income, expense, saving });
+      }
+      /* ===== NUEVO: Distribución por categoría (agregada / anonimizada) ===== */
+      else if(path==='/user-cats'){
+        // Mocks agregados (ningún detalle por transacción/merchant)
+        const income = { 'Sueldo':1800, 'Negocio/Freelance':450, 'Intereses/Bonos':120, 'Otros':80 };
+        const expense= { 'Vivienda':700, 'Alimentación':520, 'Seguros':260, 'Transporte':210, 'Servicios':180, 'Entretenimiento':120, 'Otros':410 };
+        const saving = { 'Ahorro Vista':240, 'Retiro':160, 'Inversiones':80, 'Otros':40 };
+
+        // Permite variar por usuario (demo)
+        const factor = (String(params.userId||'').length % 3)*0.05 + 0.95;
+        const scale = obj => Object.fromEntries(Object.entries(obj).map(([k,v])=>[k, Math.round(v*factor)]));
+
+        res({ income: scale(income), expense: scale(expense), saving: scale(saving) });
+      }
+      else res({});
+    }, 240 + Math.random()*300);
+  });
+
+  const genLabels=(len,range)=> range==='30d'? Array.from({length:len},(_,i)=>`D${i+1}`) : range==='90d'? Array.from({length:len},(_,i)=>`Sem ${i+1}`) : ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'].slice(0,len);
+  const diasAtras=d=> `${d}d ago`;
+  return { get };
+})();
+
+/* ===== Charts ===== */
+const charts={};
+const baseOpts={ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:true}} };
+function upsertChart(id,type,data,extraOpts={}){
+  const el=document.getElementById(id);
+  if(!el) return;
+  try{
+    if(charts[id]){ charts[id].data=data; charts[id].options={...baseOpts,...extraOpts}; charts[id].update(); }
+    else{ charts[id]= new Chart(el,{ type, data, options:{...baseOpts,...extraOpts} }); }
+  }catch(e){ /* no rompas UI */ }
+}
+
+/* ===== Helper geo selectors ===== */
+async function setupGeoSelectors(prefix, defaults){
+  const keyMap = {o:'overview', u:'usuarios', m:'marketing', f:'finanzas', a:'analytics'};
+  const k = keyMap[prefix];
+  const sel = {
+    country: document.getElementById(`${prefix}CountrySel`),
+    state:   document.getElementById(`${prefix}StateSel`),
+    city:    document.getElementById(`${prefix}CitySel`)
+  };
+
+  const geo = await mockApi.get('/geo', {
+    country: geoSelMap[k].country || defaults?.country,
+    state:   geoSelMap[k].state   || defaults?.state,
+    city:    geoSelMap[k].city    || defaults?.city,
+    fallbackCountry: 'US'
+  });
+
+  if(!sel.country || !sel.state || !sel.city){
+    geoSelMap[k] = { country: geo.selected.country, state: geo.selected.state, city: geo.selected.city };
+    return geo;
+  }
+
+  sel.country.innerHTML = Object.keys(geo.GEO).map(c=>`<option value="${c}">${c}</option>`).join('');
+  sel.country.value = geo.selected.country;
+
+  const states = Object.keys(geo.GEO[geo.selected.country]);
+  sel.state.innerHTML = states.map(s=>`<option value="${s}">${s}</option>`).join('');
+  sel.state.value = geo.selected.state;
+
+  const cities = Object.keys(geo.GEO[geo.selected.country][geo.selected.state]);
+  sel.city.innerHTML = cities.map(c=>`<option value="${c}">${c}</option>`).join('');
+  sel.city.value = geo.selected.city;
+
+  geoSelMap[k] = { country: geo.selected.country, state: geo.selected.state, city: geo.selected.city };
+
+  if(!sel.country._bound){
+    sel.country._bound = true;
+    sel.country.onchange = async ()=>{
+      const g = await mockApi.get('/geo', { country: sel.country.value });
+      sel.state.innerHTML = Object.keys(g.GEO[sel.country.value]).map(s=>`<option value="${s}">${s}</option>`).join('');
+      sel.state.value = Object.keys(g.GEO[sel.country.value])[0];
+      sel.city.innerHTML = Object.keys(g.GEO[sel.country.value][sel.state.value]).map(c=>`<option value="${c}">${c}</option>`).join('');
+      sel.city.value = Object.keys(g.GEO[sel.country.value][sel.state.value])[0];
+      geoSelMap[k] = { country: sel.country.value, state: sel.state.value, city: sel.city.value };
+      await reloadSection(k);
+    };
+  }
+  if(!sel.state._bound){
+    sel.state._bound = true;
+    sel.state.onchange = async ()=>{
+      const g = await mockApi.get('/geo', { country: sel.country.value, state: sel.state.value });
+      sel.city.innerHTML = Object.keys(g.GEO[sel.country.value][sel.state.value]).map(c=>`<option value="${c}">${c}</option>`).join('');
+      sel.city.value = Object.keys(g.GEO[sel.country.value][sel.state.value])[0];
+      geoSelMap[k] = { country: sel.country.value, state: sel.state.value, city: sel.city.value };
+      await reloadSection(k);
+    };
+  }
+  if(!sel.city._bound){
+    sel.city._bound = true;
+    sel.city.onchange = async ()=>{
+      geoSelMap[k] = { country: sel.country.value, state: sel.state.value, city: sel.city.value };
+      await reloadSection(k);
+    };
+  }
+
+  return geo;
+}
+
+/* ===== Peso geo ===== */
+function geoWeight(geo){
+  try{
+    const countryTotal = Object.values(geo.countryAgg||{}).reduce((a,b)=>a+b,0) || 1;
+    const cityTotal = (geo.cityAgg && geo.cityAgg[geo.selected.city]) ? geo.cityAgg[geo.selected.city] : countryTotal;
+    const w = cityTotal / countryTotal;
+    return Math.max(0.05, Math.min(w, 1.2));
+  }catch(_){ return 0.2; }
+}
+function scaleArray(arr, w){ return (arr||[]).map(v=> Math.round((+v||0)*w)); }
+
+/* ===== Toggle Embudo Abs/% ===== */
+function setFunnelMode(btn){
+  document.querySelectorAll('.funnelToggle').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  state.overviewFunnel = btn.dataset.mode;
+  reloadSection('overview');
+}
+
+/* ===== Navegación ===== */
+function mostrar(id, el){
+  if(asideEl.classList.contains('open')){ asideEl.classList.remove('open'); overlayEl.classList.remove('show'); overlayEl.setAttribute('aria-hidden','true'); }
+  document.querySelectorAll('main section').forEach(s=>s.style.display='none');
+  const sec=document.getElementById(id);
+  sec.style.display = (id==='overview'||id==='usuarios'||id==='user'||id==='tickets'||id==='marketing'||id==='finanzas'||id==='analytics')? 'grid':'block';
+  document.querySelectorAll('aside button').forEach(b=>b.classList.remove('active'));
+  if(el) el.classList.add('active');
+
+  reloadSection(id);
+  setTimeout(()=>{ ensureCanvasWrappers(); Object.values(charts).forEach(ch=>{ try{ ch.resize(); }catch(_){}}); }, 0);
+}
+
+/* ===== Loaders ===== */
+async function loadOverview(){
+  const geo = await setupGeoSelectors('o', {country:'US'});
+  const w = geoWeight(geo);
+  const base = await mockApi.get('/overview', state);
+
+  const usuariosScaled = scaleArray(base.usuarios, w);
+  const ingresosScaled = scaleArray(base.ingresos, w);
+
+  document.getElementById('kpiUsuariosActivos').textContent=fmt.num(Math.round(usuariosScaled[usuariosScaled.length-1]*0.72));
+  document.getElementById('kpiMRR').textContent=fmt.money(ingresosScaled[ingresosScaled.length-1]);
+  document.getElementById('kpiChurn').textContent=fmt.pct(base.kpis.churn);
+
+  const mainPaid = base.paid.includes('Premium') ? 'Premium' : base.paid[0];
+  const f2p = base.convByPlan[mainPaid] || 0;
+  document.getElementById('kpiConversion').textContent=fmt.pct(f2p);
+
+  const pbyText = ['Free', ...base.paid].map(p=>`${p} ${((base.planBreakdown[p]||0)*100).toFixed(0)}%`).join(' • ');
+  document.getElementById('kpiPlanBreakdown').textContent=pbyText;
+
+  upsertChart('usuariosChart','line',{labels:base.labels,datasets:[{label:`UA (${geo.selected?.country}/${geo.selected?.state}/${geo.selected?.city})`,data:usuariosScaled,tension:.3,borderWidth:2}]});
+  upsertChart('ingresosChart','bar',{labels:base.labels,datasets:[{label:`MRR (${geo.selected?.city})`,data:ingresosScaled,borderWidth:1}]});
+
+  const labels = ['Visitas','Registros','Conexiones', ...base.paid];
+  const funnelAbs = scaleArray(base.funnelCombined, w);
+
+  let funnelData = funnelAbs.slice();
+  let extraOpts = { scales:{ y:{ beginAtZero:true } } };
+  let dsLabel = `F2P & Pagos (${geo.selected?.city}) – Abs`;
+
+  if(state.overviewFunnel==='pct'){
+    const registros = funnelAbs[1] || 1;
+    funnelData = funnelAbs.map(v=> Math.round((v / registros) * 100));
+    dsLabel = `F2P & Pagos (${geo.selected?.city}) – % sobre Registros`;
+    extraOpts = {
+      scales:{ y:{ beginAtZero:true, ticks:{ callback:(val)=> val + '%' } } },
+      plugins:{ tooltip:{ callbacks:{ label:(ctx)=> `${ctx.dataset.label}: ${ctx.parsed.y}%` } } }
+    };
+  }
+  upsertChart('conversionChart','bar',{ labels, datasets:[{label: dsLabel, data: funnelData}] }, extraOpts);
+}
+
+/* === USUARIOS (geo) === */
+async function loadUsers(){
+  const geo = await setupGeoSelectors('u');
+  upsertChart('usuariosPais','doughnut',{labels:Object.keys(geo.countryAgg||{}),datasets:[{label:'Usuarios',data:Object.values(geo.countryAgg||{})}]});
+  upsertChart('estadosChart','bar',{labels:Object.keys(geo.stateAgg||{}),datasets:[{label:`Estados de ${geo.selected?.country||'-'}`,data:Object.values(geo.stateAgg||{})}]});
+  upsertChart('ciudadesChart','bar',{labels:Object.keys(geo.cityAgg||{}),datasets:[{label:`Ciudades de ${geo.selected?.state||'-'}`,data:Object.values(geo.cityAgg||{})}]});
+
+  const users = await mockApi.get('/users', state);
+  upsertChart('planesChart','pie',{labels:Object.keys(users.planes||{}),datasets:[{label:'Planes',data:Object.values(users.planes||{})}]});
+
+  const tbody = document.querySelector('#tablaUsuarios tbody');
+  const cities = Object.keys(geo.cityAgg||{});
+  const randomCity = ()=> cities.length? cities[Math.floor(Math.random()*cities.length)] : '-';
+  const rows = (users.tabla||[]).map(u=>{
+    const c = geo.selected?.country||'-', s = geo.selected?.state||'-', city = randomCity();
+    return `<tr><td>${u.nombre}</td><td>${c}</td><td>${s}</td><td>${city}</td><td>${u.plan}</td><td>${u.ultimo}</td></tr>`;
+  });
+  tbody.innerHTML = rows.join('') || `<tr><td colspan="6" class="muted">Sin datos</td></tr>`;
+}
+
+/* === 👤 USUARIO: Resumen financiero agregado === */
+async function loadUserAggregates(opts={}){
+  const months = +(document.getElementById('uAggRange')?.value || 12);
+  const includeBank = !!document.getElementById('uIncludeBank')?.checked;
+
+  const agg = await mockApi.get('/user-agg', {
+    months,
+    includeBank,
+    userId: opts.userId || (document.getElementById('userSearch')?.value || 'demo')
+  });
+
+  const lastIdx = agg.income.length - 1;
+  const inc = agg.income[lastIdx]||0, exp = agg.expense[lastIdx]||0, sav = Math.max(0, inc-exp);
+  document.getElementById('uIncLast').textContent = fmt.money(inc);
+  document.getElementById('uExpLast').textContent = fmt.money(exp);
+  document.getElementById('uSavLast').textContent = fmt.money(sav);
+  document.getElementById('uSavRateLast').textContent = inc ? Math.round((sav/inc)*100) + '%' : '—';
+
+  const badge = document.getElementById('consentBadge');
+  if(agg.consent && agg.bankLinked){
+    badge.textContent = '✅ Consentimiento activo';
+    badge.style.background = '#e7f7ee';
+  }else if(agg.consent && !agg.bankLinked){
+    badge.textContent = '⚠️ Consentido, sin bancos conectados';
+    badge.style.background = '#fff3cd';
+  }else{
+    badge.textContent = '⛔ Sin consentimiento';
+    badge.style.background = '#fde2e1';
+  }
+
+  upsertChart('userAggFinanceChart','bar',{
+    labels: agg.labels,
+    datasets:[
+      {label:'Ingreso', data: agg.income},
+      {label:'Gasto', data: agg.expense},
+      {type:'line', label:'Ahorro', data: agg.saving, borderWidth:2, tension:.25}
+    ]
+  },{ scales:{ y:{ beginAtZero:true } }});
+}
+
+/* === 👤 USUARIO: Distribución por Categoría (agregada/anonimizada) === */
+function objToPercent(obj){
+  const total = Object.values(obj||{}).reduce((a,b)=>a+(+b||0),0) || 1;
+  return Object.fromEntries(Object.entries(obj||{}).map(([k,v])=>[k, +( (v/total)*100 ).toFixed(1)]));
+}
+
+async function loadUserCats(opts={}){
+  const unitSel = document.getElementById('uCatUnit');
+  const anonChk = document.getElementById('uCatAnon');
+  const unit = unitSel?.value || '$';
+  const anonymize = !!anonChk?.checked;
+
+  const uid = opts.userId || (document.getElementById('userSearch')?.value || 'demo');
+  const cats = await mockApi.get('/user-cats', { userId: uid });
+
+  // Si está activada la anonimización, forzamos % (no montos)
+  const usePercent = anonymize || unit === '%';
+
+  const inData = usePercent ? objToPercent(cats.income)  : cats.income;
+  const exData = usePercent ? objToPercent(cats.expense) : cats.expense;
+  const svData = usePercent ? objToPercent(cats.saving)  : cats.saving;
+
+  const suffix = usePercent ? '%' : '$';
+  const tooltipFmt = (ctx)=> {
+    const raw = ctx.raw ?? 0;
+    return `${ctx.label}: ${usePercent ? raw+'%' : fmt.money(raw)}`;
+  };
+
+  upsertChart('uCatIncome', 'doughnut', {
+    labels: Object.keys(inData),
+    datasets:[{label:`Ingresos (${suffix})`, data:Object.values(inData)}]
+  }, { plugins:{ tooltip:{ callbacks:{ label: tooltipFmt } } }});
+
+  upsertChart('uCatExpense', 'doughnut', {
+    labels: Object.keys(exData),
+    datasets:[{label:`Gastos (${suffix})`, data:Object.values(exData)}]
+  }, { plugins:{ tooltip:{ callbacks:{ label: tooltipFmt } } }});
+
+  upsertChart('uCatSaving', 'doughnut', {
+    labels: Object.keys(svData),
+    datasets:[{label:`Ahorros (${suffix})`, data:Object.values(svData)}]
+  }, { plugins:{ tooltip:{ callbacks:{ label: tooltipFmt } } }});
+}
+
+function exportUserAggCSV(){
+  const ch = charts['userAggFinanceChart'];
+  if(!ch) return;
+  const labels = ch.data.labels || [];
+  const inc = (ch.data.datasets[0]?.data)||[];
+  const exp = (ch.data.datasets[1]?.data)||[];
+  const sav = (ch.data.datasets[2]?.data)||[];
+  let csv = 'Periodo,Ingreso,Gasto,Ahorro\n';
+  labels.forEach((l,i)=>{ csv += `${l},${inc[i]||0},${exp[i]||0},${sav[i]||0}\n`; });
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'resumen_financiero_usuario.csv';
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function exportUserCatsCSV(){
+  const incChart = charts['uCatIncome'];
+  const expChart = charts['uCatExpense'];
+  const savChart = charts['uCatSaving'];
+  if(!incChart || !expChart || !savChart) return;
+
+  function chartToRows(chart, title){
+    const labels = chart.data.labels || [];
+    const data = (chart.data.datasets?.[0]?.data)||[];
+    const rows = [`\n${title}`,'Categoría,Valor'];
+    labels.forEach((l,i)=>{ rows.push(`${l},${data[i]||0}`); });
+    return rows.join('\n');
+    }
+
+  let csv = 'Distribución por Categoría (Unidad actual en gráfico)\n';
+  csv += chartToRows(incChart, 'Ingresos');
+  csv += chartToRows(expChart, 'Gastos');
+  csv += chartToRows(savChart, 'Ahorros');
+
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'distribucion_categorias_usuario.csv';
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function bindUserAggEvents(){
+  const r = document.getElementById('uAggRange');
+  const b = document.getElementById('uIncludeBank');
+  const btn = document.getElementById('uAggRefreshBtn');
+  const req = document.getElementById('uRequestDetailBtn');
+  const exp = document.getElementById('uExportBtn');
+  const sBtn = document.getElementById('userSearchBtn');
+  const sInp = document.getElementById('userSearch');
+
+  if(r){ r.onchange = ()=> loadUserAggregates({ userId: sInp?.value }); }
+  if(b){ b.onchange = ()=> loadUserAggregates({ userId: sInp?.value }); }
+  if(btn){ btn.onclick = ()=> loadUserAggregates({ userId: sInp?.value }); }
+  if(req){ req.onclick = ()=> alert('Solicitud de detalle enviada (demo). Requiere rol y justificación.'); }
+  if(exp){ exp.onclick = ()=> exportUserAggCSV(); }
+  if(sBtn){ sBtn.onclick = ()=> { loadUserAggregates({ userId: sInp?.value }); loadUserCats({ userId: sInp?.value }); }; }
+  if(sInp){
+    sInp.addEventListener('keydown',(e)=>{ if(e.key==='Enter'){ e.preventDefault(); loadUserAggregates({ userId: sInp.value }); loadUserCats({ userId: sInp.value }); }});
+  }
+}
+
+function bindUserCatsEvents(){
+  const unitSel = document.getElementById('uCatUnit');
+  const anonChk = document.getElementById('uCatAnon');
+  const refBtn  = document.getElementById('uCatRefreshBtn');
+  const expBtn  = document.getElementById('uCatExportBtn');
+  const sInp    = document.getElementById('userSearch');
+
+  if(unitSel){ unitSel.onchange = ()=> loadUserCats({ userId: sInp?.value }); }
+  if(anonChk){ anonChk.onchange = ()=> { 
+      // Si anonimizamos, forzamos selector a %
+      const sel = document.getElementById('uCatUnit');
+      if(anonChk.checked && sel){ sel.value = '%'; }
+      loadUserCats({ userId: sInp?.value });
+    }; 
+  }
+  if(refBtn){ refBtn.onclick = ()=> loadUserCats({ userId: sInp?.value }); }
+  if(expBtn){ expBtn.onclick = ()=> exportUserCatsCSV(); }
+}
+
+async function loadUserView(){
+  bindUserAggEvents();
+  bindUserCatsEvents();
+  await loadUserAggregates({});
+  await loadUserCats({});
+}
+
+/* === MARKETING (robusto) === */
+async function loadMarketing(){
+  try{
+    const geo = await setupGeoSelectors('m', {country:'US'});
+    const w = geoWeight(geo);
+    const base = await mockApi.get('/marketing', state);
+
+    const fuentesScaled = Object.fromEntries(Object.entries(base.fuentes||{}).map(([k,v])=>[k,Math.round((+v||0)*w)]));
+    const openScaled  = scaleArray(base.email?.open,  w);
+    const clickScaled = scaleArray(base.email?.click, w);
+
+    upsertChart('fuentesChart','bar',{ labels:Object.keys(fuentesScaled), datasets:[{label:`Usuarios Nuevos (${geo.selected?.country}/${geo.selected?.state}/${geo.selected?.city})`, data:Object.values(fuentesScaled)}] });
+    upsertChart('emailChart','line',{ labels:base.labels||[], datasets:[ {label:`Open % (${geo.selected?.city})`, data:openScaled}, {label:`Click % (${geo.selected?.city})`, data:clickScaled} ] });
+  }catch(_){}
+}
+
+/* === FINANZAS (robusto) === */
+async function loadFinance(){
+  try{
+    const geo = await setupGeoSelectors('f', {country:'US'});
+    const w = geoWeight(geo);
+    const base = await mockApi.get('/finance', state);
+
+    const mrrScaled = scaleArray(base.mrr, w);
+
+    upsertChart('mrrChart','line',{
+      labels:base.labels||[],
+      datasets:[
+        {label:`MRR (${geo.selected?.country}/${geo.selected?.state}/${geo.selected?.city})`, data:mrrScaled},
+        {label:'Churn %', data:(base.churn||[]).map(x=>+(x*100).toFixed(2)), yAxisID:'y1'}
+      ]
+    },{ scales:{ y:{ beginAtZero:true }, y1:{ position:'right', beginAtZero:true } }});
+
+    upsertChart('unitChart','bar',{ labels:['Q1','Q2','Q3','Q4','Q5','Q6'], datasets:[
+      {label:'CAC ($)', data:base.unit?.cac||[]},
+      {label:'LTV ($)', data:base.unit?.ltv||[]},
+      {label:'CPU ($)', data:base.unit?.cpu||[]}
+    ]});
+  }catch(_){}
+}
+
+/* === ANALYTICS (robusto) === */
+async function loadAnalytics(){
+  try{
+    const geo = await setupGeoSelectors('a', {country:'US'});
+    const base = await mockApi.get('/analytics', state);
+
+    const geoShare = geoWeight(geo);
+    const f = 0.85 + Math.min(geoShare, 1)*0.3;
+
+    const ind = {
+      ingreso_prom: Math.round((base.indicadores?.ingreso_prom||3000) * f),
+      gasto_prom:   Math.round((base.indicadores?.gasto_prom||2500)   * f),
+      ahorro_prom:  Math.round((base.indicadores?.ahorro_prom||500)   * f),
+      dti_prom:     +(((base.indicadores?.dti_prom)||0.3) * (2 - f)).toFixed(2),
+      reserva_meses:+(((base.indicadores?.reserva_meses)||2.5) * (0.9 + (f-0.85))).toFixed(1)
+    };
+
+    upsertChart('indicadoresChart','radar',{
+      labels:['Ingreso prom','Gasto prom','Ahorro prom','DTI prom','Reserva (meses)'],
+      datasets:[{label:`Promedios (${geo.selected?.city||'-'})`, data:[ind.ingreso_prom, ind.gasto_prom, ind.ahorro_prom, +(ind.dti_prom*100).toFixed(1), ind.reserva_meses]}]
+    });
+
+    const labels = base.cohort?.labels || [];
+    const d = base.cohort?.data || [];
+    const data0 = d.map(r=> Math.round((r[0]||0)*geoShare));
+    const data1 = d.map(r=> Math.round((r[1]||0)*geoShare));
+    const data2 = d.map(r=> Math.round((r[2]||0)*geoShare));
+    const data3 = d.map(r=> Math.round((r[3]||0)*geoShare));
+
+    upsertChart('cohortChart','bar',{ labels, datasets:[
+      {label:`Mes 0 (${geo.selected?.city||'-'})`, data:data0},
+      {label:'Mes 1', data:data1},
+      {label:'Mes 2', data:data2},
+      {label:'Mes 3', data:data3},
+    ]});
+  }catch(_){}
+}
+
+/* ===== Control de rango / país global ===== */
+function setRange(btn){ document.querySelectorAll('.chip[data-range]').forEach(c=>c.classList.remove('active')); btn.classList.add('active'); state.range=btn.dataset.range; refreshAll(); }
+function setCountry(btn){ document.querySelectorAll('.chip[data-country]').forEach(c=>c.classList.remove('active')); btn.classList.add('active'); state.country=btn.dataset.country; refreshAll(); }
+
+/* ===== Orquestación ===== */
+async function reloadSection(key){
+  if(key==='overview')      await loadOverview();
+  else if(key==='usuarios') await loadUsers();
+  else if(key==='user')     await loadUserView();
+  else if(key==='marketing') await loadMarketing();
+  else if(key==='finanzas')  await loadFinance();
+  else if(key==='analytics') await loadAnalytics();
+}
+
+async function refreshAll(){
+  ensureCanvasWrappers();
+  await Promise.allSettled([
+    loadOverview(),
+    loadUsers(),
+    loadSupport(),
+    loadMarketing(),
+    loadFinance(),
+    loadAnalytics()
+    // 'user' se carga al entrar a la sección
+  ]);
+}
+
+let refreshTimer;
+function startAutoRefresh(){ if(refreshTimer) clearInterval(refreshTimer); refreshTimer=setInterval(refreshAll,20000); }
+
+/* === SOPORTE === */
+async function loadSupport(){
+  const {tickets,tabla}= await mockApi.get('/support', state);
+  upsertChart('ticketsChart','bar',{labels:Object.keys(tickets),datasets:[{label:'Tickets',data:Object.values(tickets)}]});
+  const tbody=document.querySelector('#tablaTickets tbody'); tbody.innerHTML= (tabla||[]).map(t=>`<tr><td>${t.id}</td><td>${t.categoria}</td><td>${t.estado}</td><td>${t.horas}h</td></tr>`).join('');
+}
+
+document.addEventListener('DOMContentLoaded', async ()=>{
+  ensureCanvasWrappers();
+  await refreshAll();
+  startAutoRefresh();
+});
+</script>
+</body>
+</html>
