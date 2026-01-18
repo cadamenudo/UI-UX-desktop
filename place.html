@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cada Menudo – Login</title>
+
+  <!-- Greycliff CF (tu link) -->
+  <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX/css-fonts.css"/>
+
+  <style>
+    :root{
+      --primary:#3956E8;       /* Cada Menudo */
+      --secondary:#7459D9;     /* Cada Menudo */
+      --text:#0f172a;
+      --muted:#64748B;
+      --bg:#ffffff;
+      --field-bg:#EEF3FF;      /* azul suave como en tu screenshot */
+      --field-border:#C8D3FF;
+      --shadow:0 10px 30px rgba(15, 23, 42, .08);
+      --radius:18px;
+      --radius-field:16px;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: "Greycliff CF", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      color:var(--text);
+      background:var(--bg);
+    }
+
+    /* Contenedor responsive: móvil full / desktop centrado */
+    .page{
+      min-height:100svh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px 14px;
+    }
+
+    .shell{
+      width:100%;
+      max-width: 980px; /* web */
+      display:flex;
+      justify-content:center;
+    }
+
+    .card{
+      width:100%;
+      max-width: 520px; /* tamaño web tipo “pantalla” */
+      padding:28px 18px 22px;
+      border-radius:24px;
+      background:#fff;
+    }
+
+    /* En desktop le damos aire y “presentación” */
+    @media (min-width: 900px){
+      .card{
+        padding:38px 44px 34px;
+        box-shadow: var(--shadow);
+        border: 1px solid #eef2ff;
+      }
+    }
+
+    .brand{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:14px;
+      margin-bottom:22px;
+    }
+
+    .logo{
+      width: 170px;
+      height:auto;
+      display:block;
+    }
+
+    h1{
+      margin:0;
+      text-align:center;
+      font-size:34px;
+      line-height:1.12;
+      color:var(--muted);
+      font-weight:700;
+      letter-spacing:-.2px;
+    }
+
+    .subtitle{
+      margin:10px auto 0;
+      text-align:center;
+      color:#111827;
+      font-size:18px;
+      line-height:1.45;
+      max-width: 40ch;
+    }
+
+    .form{
+      margin-top:18px;
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+    }
+
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+
+    .label{
+      font-size:16px;
+      color:var(--muted);
+      padding-left:10px;
+    }
+
+    .control{
+      position:relative;
+    }
+
+    input{
+      width:100%;
+      border:1px solid var(--field-border);
+      background:var(--field-bg);
+      border-radius: var(--radius-field);
+      padding:16px 16px;
+      font-size:22px;
+      outline:none;
+      color:#0b1220;
+      transition: border .15s ease, box-shadow .15s ease;
+    }
+
+    input::placeholder{color:#9aa6c1}
+
+    input:focus{
+      border-color: rgba(57,86,232,.65);
+      box-shadow: 0 0 0 4px rgba(57,86,232,.12);
+    }
+
+    /* Password con botón ojo */
+    .pw input{ padding-right: 56px; }
+
+    .eye{
+      position:absolute;
+      right:10px;
+      top:50%;
+      transform:translateY(-50%);
+      width:44px;
+      height:44px;
+      border:none;
+      background:#fff;
+      border-radius: 12px;
+      cursor:pointer;
+      display:grid;
+      place-items:center;
+      box-shadow: 0 6px 14px rgba(15,23,42,.08);
+    }
+    .eye:active{ transform:translateY(-50%) scale(.98); }
+
+    /* Botón principal */
+    .btn{
+      margin-top:6px;
+      width:100%;
+      border:none;
+      border-radius: 14px;
+      padding:18px 16px;
+      font-size:18px;
+      font-weight:800;
+      letter-spacing:.8px;
+      text-transform:uppercase;
+      color:#fff;
+      background: linear-gradient(90deg, var(--secondary), var(--primary));
+      cursor:pointer;
+      transition: transform .08s ease, filter .12s ease;
+    }
+    .btn:hover{ filter: brightness(1.02); }
+    .btn:active{ transform: translateY(1px); }
+
+    .links{
+      margin-top:18px;
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      text-align:center;
+    }
+
+    .link{
+      color: var(--secondary);
+      font-weight:700;
+      text-decoration:none;
+      font-size:18px;
+    }
+    .link:hover{ text-decoration:underline; }
+
+    .link.secondary{
+      color: var(--primary);
+      font-weight:800;
+    }
+
+    /* Ajustes mobile para verse “como app” */
+    @media (max-width: 420px){
+      h1{ font-size:30px; }
+      input{ font-size:20px; }
+      .logo{ width: 160px; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <section class="shell">
+      <div class="card" role="region" aria-label="Login Cada Menudo">
+
+        <div class="brand">
+          <!-- Cambia por tu logo real -->
+          <img class="logo" src="https://cadamenudo.github.io/UI-UX/assets/logo/cadamenudo_logo_BLUE.png"
+               alt="Cada Menudo" onerror="this.style.display='none'"/>
+          <h1>Entre con su cuenta</h1>
+          <p class="subtitle">
+            Ingresa con los datos que usaste al registrarte para empezar a gestionar tus gastos e ingresos.
+          </p>
+        </div>
+
+        <form class="form" onsubmit="return handleLogin(event)">
+          <div class="field">
+            <div class="label">Correo</div>
+            <div class="control">
+              <input id="email" type="email" inputmode="email" autocomplete="email"
+                     placeholder="tuemail@ejemplo.com" required />
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="label">Contraseña</div>
+            <div class="control pw">
+              <input id="password" type="password" autocomplete="current-password"
+                     placeholder="••••••••••••••••" required />
+              <button class="eye" type="button" aria-label="Mostrar u ocultar contraseña" onclick="togglePassword()">
+                <!-- icono simple ojo tachado -->
+                <svg id="eyeIcon" width="22" height="22" viewBox="0 0 24 24" fill="none"
+                     xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M3 3l18 18" stroke="#64748B" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M10.58 10.58A2 2 0 0012 14a2 2 0 001.42-.58" stroke="#64748B" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M9.88 5.08A10.9 10.9 0 0112 5c6 0 10 7 10 7a18.2 18.2 0 01-4.3 5.36" stroke="#64748B" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M6.2 6.2C3.6 8.2 2 12 2 12s4 7 10 7c1.2 0 2.3-.2 3.3-.6" stroke="#64748B" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <button class="btn" type="submit">Entrar</button>
+
+          <div class="links">
+            <a class="link" href="/registro.html">Regístrese aquí</a>
+            <a class="link secondary" href="/olvido-password.html">¿Has olvidado tu contraseña?</a>
+          </div>
+        </form>
+
+      </div>
+    </section>
+  </main>
+
+  <script>
+    function togglePassword(){
+      const pw = document.getElementById('password');
+      pw.type = (pw.type === 'password') ? 'text' : 'password';
+    }
+
+    function handleLogin(e){
+      e.preventDefault();
+
+      // Aquí conectas tu auth (Wix, API, Firebase, etc.)
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      console.log("LOGIN:", { email, password: password ? "••••" : "" });
+      // return false para demo
+      return false;
+    }
+  </script>
+</body>
+</html>
