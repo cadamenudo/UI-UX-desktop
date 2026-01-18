@@ -3,34 +3,31 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Cada Menudo – Login</title>
+  <title>Cada Menudo – Ubicación</title>
 
   <!-- Greycliff CF (tu link) -->
   <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX/css-fonts.css"/>
 
   <style>
     :root{
-      --primary:#3956E8;       /* Cada Menudo */
-      --secondary:#7459D9;     /* Cada Menudo */
+      --primary:#3956E8;
+      --secondary:#7459D9;
       --text:#0f172a;
       --muted:#64748B;
       --bg:#ffffff;
-      --field-bg:#EEF3FF;      /* azul suave como en tu screenshot */
+      --field-bg:#EEF3FF;
       --field-border:#C8D3FF;
       --shadow:0 10px 30px rgba(15, 23, 42, .08);
-      --radius:18px;
+      --radius:24px;
       --radius-field:16px;
     }
-
     *{box-sizing:border-box}
     body{
       margin:0;
-      font-family: "Greycliff CF", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      font-family:"Greycliff CF",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
       color:var(--text);
       background:var(--bg);
     }
-
-    /* Contenedor responsive: móvil full / desktop centrado */
     .page{
       min-height:100svh;
       display:flex;
@@ -38,28 +35,19 @@
       justify-content:center;
       padding:24px 14px;
     }
-
-    .shell{
-      width:100%;
-      max-width: 980px; /* web */
-      display:flex;
-      justify-content:center;
-    }
-
+    .shell{ width:100%; max-width:980px; display:flex; justify-content:center; }
     .card{
       width:100%;
-      max-width: 520px; /* tamaño web tipo “pantalla” */
+      max-width:520px;
       padding:28px 18px 22px;
-      border-radius:24px;
+      border-radius:var(--radius);
       background:#fff;
     }
-
-    /* En desktop le damos aire y “presentación” */
     @media (min-width: 900px){
       .card{
         padding:38px 44px 34px;
-        box-shadow: var(--shadow);
-        border: 1px solid #eef2ff;
+        box-shadow:var(--shadow);
+        border:1px solid #eef2ff;
       }
     }
 
@@ -68,32 +56,34 @@
       flex-direction:column;
       align-items:center;
       gap:14px;
-      margin-bottom:22px;
+      margin-bottom:18px;
     }
-
-    .logo{
-      width: 170px;
-      height:auto;
-      display:block;
-    }
+    .logo{ width:170px; height:auto; display:block; }
 
     h1{
       margin:0;
       text-align:center;
-      font-size:34px;
+      font-size:30px;
       line-height:1.12;
-      color:var(--muted);
-      font-weight:700;
+      color:#3b3b3b;
+      font-weight:800;
       letter-spacing:-.2px;
     }
-
     .subtitle{
-      margin:10px auto 0;
+      margin:8px auto 0;
       text-align:center;
       color:#111827;
-      font-size:18px;
+      font-size:17px;
       line-height:1.45;
-      max-width: 40ch;
+      max-width: 42ch;
+    }
+    .legal{
+      margin:10px auto 0;
+      text-align:center;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.35;
+      max-width: 48ch;
     }
 
     .form{
@@ -103,106 +93,95 @@
       gap:16px;
     }
 
-    .field{
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-    }
-
+    .field{ display:flex; flex-direction:column; gap:8px; }
     .label{
       font-size:16px;
       color:var(--muted);
       padding-left:10px;
     }
 
-    .control{
-      position:relative;
-    }
-
-    input{
+    .control{ position:relative; }
+    select, input{
       width:100%;
       border:1px solid var(--field-border);
       background:var(--field-bg);
-      border-radius: var(--radius-field);
+      border-radius:var(--radius-field);
       padding:16px 16px;
-      font-size:22px;
+      font-size:18px;
       outline:none;
       color:#0b1220;
-      transition: border .15s ease, box-shadow .15s ease;
+      transition:border .15s ease, box-shadow .15s ease;
+      appearance:none;
+      -webkit-appearance:none;
+      -moz-appearance:none;
     }
+    select{
+      padding-right:46px;
+      background-image: none;
+    }
+    input::placeholder{ color:#9aa6c1; }
 
-    input::placeholder{color:#9aa6c1}
-
-    input:focus{
+    select:focus, input:focus{
       border-color: rgba(57,86,232,.65);
       box-shadow: 0 0 0 4px rgba(57,86,232,.12);
     }
 
-    /* Password con botón ojo */
-    .pw input{ padding-right: 56px; }
-
-    .eye{
+    /* Flecha dropdown (como app) */
+    .chev{
       position:absolute;
-      right:10px;
+      right:14px;
       top:50%;
       transform:translateY(-50%);
-      width:44px;
-      height:44px;
-      border:none;
-      background:#fff;
-      border-radius: 12px;
-      cursor:pointer;
-      display:grid;
-      place-items:center;
-      box-shadow: 0 6px 14px rgba(15,23,42,.08);
+      pointer-events:none;
+      opacity:.85;
     }
-    .eye:active{ transform:translateY(-50%) scale(.98); }
 
-    /* Botón principal */
+    /* Botón */
     .btn{
       margin-top:6px;
       width:100%;
       border:none;
-      border-radius: 14px;
+      border-radius:14px;
       padding:18px 16px;
       font-size:18px;
-      font-weight:800;
-      letter-spacing:.8px;
+      font-weight:900;
+      letter-spacing:.4px;
       text-transform:uppercase;
       color:#fff;
       background: linear-gradient(90deg, var(--secondary), var(--primary));
       cursor:pointer;
-      transition: transform .08s ease, filter .12s ease;
+      transition: transform .08s ease, filter .12s ease, opacity .12s ease;
     }
     .btn:hover{ filter: brightness(1.02); }
     .btn:active{ transform: translateY(1px); }
-
-    .links{
-      margin-top:18px;
-      display:flex;
-      flex-direction:column;
-      gap:14px;
-      text-align:center;
+    .btn:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+      filter:none;
     }
 
-    .link{
-      color: var(--secondary);
-      font-weight:700;
-      text-decoration:none;
-      font-size:18px;
+    /* Animación suave al mostrar campos */
+    .hidden{ display:none; }
+    .fade-in{
+      animation: fade .18s ease-out both;
     }
-    .link:hover{ text-decoration:underline; }
-
-    .link.secondary{
-      color: var(--primary);
-      font-weight:800;
+    @keyframes fade{
+      from{ opacity:0; transform: translateY(-4px); }
+      to{ opacity:1; transform: translateY(0); }
     }
 
-    /* Ajustes mobile para verse “como app” */
-    @media (max-width: 420px){
-      h1{ font-size:30px; }
-      input{ font-size:20px; }
-      .logo{ width: 160px; }
+    /* Mobile */
+    @media (max-width:420px){
+      h1{ font-size:28px; }
+      .logo{ width:160px; }
+    }
+
+    /* Mini helper debajo (opcional) */
+    .hint{
+      margin-top:4px;
+      padding-left:10px;
+      color:var(--muted);
+      font-size:13px;
     }
   </style>
 </head>
@@ -210,51 +189,87 @@
 <body>
   <main class="page">
     <section class="shell">
-      <div class="card" role="region" aria-label="Login Cada Menudo">
+      <div class="card" role="region" aria-label="Ubicación">
 
         <div class="brand">
-          <!-- Cambia por tu logo real -->
-          <img class="logo" src="https://cadamenudo.github.io/UI-UX/assets/logo/cadamenudo_logo_BLUE.png"
-               alt="Cada Menudo" onerror="this.style.display='none'"/>
-          <h1>Entre con su cuenta</h1>
-          <p class="subtitle">
-            Ingresa con los datos que usaste al registrarte para empezar a gestionar tus gastos e ingresos.
-          </p>
+          <img class="logo"
+               src="https://cadamenudo.github.io/UI-UX/assets/logo/cadamenudo_logo_BLUE.png"
+               alt="Cada Menudo"
+               onerror="this.style.display='none'"/>
+          <h1>¿De dónde nos visitas?</h1>
+          <p class="legal">Queremos saber donde llega Cada Menudo.</p>
         </div>
 
-        <form class="form" onsubmit="return handleLogin(event)">
+        <form class="form" onsubmit="return handleSubmit(event)">
+          <!-- País -->
           <div class="field">
-            <div class="label">Correo</div>
+            <div class="label">Seleccionar país</div>
             <div class="control">
-              <input id="email" type="email" inputmode="email" autocomplete="email"
-                     placeholder="tuemail@ejemplo.com" required />
-            </div>
-          </div>
-
-          <div class="field">
-            <div class="label">Contraseña</div>
-            <div class="control pw">
-              <input id="password" type="password" autocomplete="current-password"
-                     placeholder="••••••••••••••••" required />
-              <button class="eye" type="button" aria-label="Mostrar u ocultar contraseña" onclick="togglePassword()">
-                <!-- icono simple ojo tachado -->
-                <svg id="eyeIcon" width="22" height="22" viewBox="0 0 24 24" fill="none"
-                     xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                  <path d="M3 3l18 18" stroke="#64748B" stroke-width="2" stroke-linecap="round"/>
-                  <path d="M10.58 10.58A2 2 0 0012 14a2 2 0 001.42-.58" stroke="#64748B" stroke-width="2" stroke-linecap="round"/>
-                  <path d="M9.88 5.08A10.9 10.9 0 0112 5c6 0 10 7 10 7a18.2 18.2 0 01-4.3 5.36" stroke="#64748B" stroke-width="2" stroke-linecap="round"/>
-                  <path d="M6.2 6.2C3.6 8.2 2 12 2 12s4 7 10 7c1.2 0 2.3-.2 3.3-.6" stroke="#64748B" stroke-width="2" stroke-linecap="round"/>
+              <select id="country" required>
+                <option value="" selected disabled>Selecciona un país</option>
+                <option value="United States">Estados Unidos</option>
+                <option value="Puerto Rico">Puerto Rico</option>
+                <option value="Colombia">Colombia</option>
+                <option value="Mexico">México</option>
+                <option value="Spain">España</option>
+                <option value="Argentina">Argentina</option>
+                <option value="Chile">Chile</option>
+                <option value="Dominican Republic">República Dominicana</option>
+                <option value="Venezuela">Venezuela</option>
+                <option value="Other">Otro</option>
+              </select>
+              <span class="chev" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                     xmlns="http://www.w3.org/2000/svg">
+                  <path d="M6 9l6 6 6-6" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-              </button>
+              </span>
             </div>
           </div>
 
-          <button class="btn" type="submit">Entrar</button>
-
-          <div class="links">
-            <a class="link" href="/registro.html">Regístrese aquí</a>
-            <a class="link secondary" href="/olvido-password.html">¿Has olvidado tu contraseña?</a>
+          <!-- USA: Estado -->
+          <div id="stateWrap" class="field hidden">
+            <div class="label">Estado</div>
+            <div class="control">
+              <select id="state">
+                <option value="" selected disabled>Selecciona un estado</option>
+                <option value="AL">Alabama</option><option value="AK">Alaska</option><option value="AZ">Arizona</option>
+                <option value="AR">Arkansas</option><option value="CA">California</option><option value="CO">Colorado</option>
+                <option value="CT">Connecticut</option><option value="DE">Delaware</option><option value="DC">Washington, D.C.</option>
+                <option value="FL">Florida</option><option value="GA">Georgia</option><option value="HI">Hawaii</option>
+                <option value="ID">Idaho</option><option value="IL">Illinois</option><option value="IN">Indiana</option>
+                <option value="IA">Iowa</option><option value="KS">Kansas</option><option value="KY">Kentucky</option>
+                <option value="LA">Louisiana</option><option value="ME">Maine</option><option value="MD">Maryland</option>
+                <option value="MA">Massachusetts</option><option value="MI">Michigan</option><option value="MN">Minnesota</option>
+                <option value="MS">Mississippi</option><option value="MO">Missouri</option><option value="MT">Montana</option>
+                <option value="NE">Nebraska</option><option value="NV">Nevada</option><option value="NH">New Hampshire</option>
+                <option value="NJ">New Jersey</option><option value="NM">New Mexico</option><option value="NY">New York</option>
+                <option value="NC">North Carolina</option><option value="ND">North Dakota</option><option value="OH">Ohio</option>
+                <option value="OK">Oklahoma</option><option value="OR">Oregon</option><option value="PA">Pennsylvania</option>
+                <option value="RI">Rhode Island</option><option value="SC">South Carolina</option><option value="SD">South Dakota</option>
+                <option value="TN">Tennessee</option><option value="TX">Texas</option><option value="UT">Utah</option>
+                <option value="VT">Vermont</option><option value="VA">Virginia</option><option value="WA">Washington</option>
+                <option value="WV">West Virginia</option><option value="WI">Wisconsin</option><option value="WY">Wyoming</option>
+              </select>
+              <span class="chev" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                     xmlns="http://www.w3.org/2000/svg">
+                  <path d="M6 9l6 6 6-6" stroke="#64748B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </div>
           </div>
+
+          <!-- Ciudad -->
+          <div id="cityWrap" class="field hidden">
+            <div class="label">Ciudad</div>
+            <div class="control">
+              <input id="city" type="text" placeholder="Ej. Miami" />
+            </div>
+            <div class="hint">Escribe el nombre de tu ciudad.</div>
+          </div>
+
+          <button id="continueBtn" class="btn" type="submit" disabled>Continuar</button>
         </form>
 
       </div>
@@ -262,20 +277,81 @@
   </main>
 
   <script>
-    function togglePassword(){
-      const pw = document.getElementById('password');
-      pw.type = (pw.type === 'password') ? 'text' : 'password';
+    const countryEl = document.getElementById('country');
+    const stateWrap = document.getElementById('stateWrap');
+    const stateEl = document.getElementById('state');
+    const cityWrap = document.getElementById('cityWrap');
+    const cityEl = document.getElementById('city');
+    const btn = document.getElementById('continueBtn');
+
+    function show(el){
+      el.classList.remove('hidden');
+      el.classList.remove('fade-in');
+      void el.offsetWidth; // restart animation
+      el.classList.add('fade-in');
+    }
+    function hide(el){ el.classList.add('hidden'); el.classList.remove('fade-in'); }
+
+    function isUSA(country){
+      return country === 'United States';
     }
 
-    function handleLogin(e){
+    function validate(){
+      const country = countryEl.value;
+      if(!country){ btn.disabled = true; return; }
+
+      if(isUSA(country)){
+        const stateOk = !!stateEl.value;
+        const cityOk = cityEl.value.trim().length > 1;
+        btn.disabled = !(stateOk && cityOk);
+      }else{
+        const cityOk = cityEl.value.trim().length > 1;
+        btn.disabled = !cityOk;
+      }
+    }
+
+    countryEl.addEventListener('change', () => {
+      const country = countryEl.value;
+
+      // reset
+      stateEl.value = '';
+      cityEl.value = '';
+      hide(stateWrap);
+      hide(cityWrap);
+
+      // show fields based on country
+      if(isUSA(country)){
+        show(stateWrap);
+        show(cityWrap);
+        cityEl.placeholder = "Ej. Miami";
+      }else{
+        show(cityWrap);
+        cityEl.placeholder = "Ej. Bogotá";
+      }
+      validate();
+    });
+
+    stateEl.addEventListener('change', validate);
+    cityEl.addEventListener('input', validate);
+
+    function handleSubmit(e){
       e.preventDefault();
 
-      // Aquí conectas tu auth (Wix, API, Firebase, etc.)
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
+      const country = countryEl.value;
+      const payload = {
+        country,
+        state: isUSA(country) ? stateEl.value : null,
+        city: cityEl.value.trim()
+      };
 
-      console.log("LOGIN:", { email, password: password ? "••••" : "" });
-      // return false para demo
+      // Aquí: enviar a tu backend / guardar en localStorage / etc.
+      console.log("LOCATION:", payload);
+
+      // Demo: guardar localmente para probar
+      localStorage.setItem('cm_location', JSON.stringify(payload));
+
+      // Siguiente paso (cambia a tu ruta real)
+      alert("Guardado ✅\\n" + JSON.stringify(payload, null, 2));
       return false;
     }
   </script>
