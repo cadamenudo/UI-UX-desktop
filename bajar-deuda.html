@@ -5,247 +5,283 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Cada Menudo – Bajar Deuda (Desktop)</title>
 
-  <!-- Greycliff CF (tu link) -->
-  <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX/css-fonts.css"/>
+  <!-- Nunito -->
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
 
   <style>
     :root{
+      --sidebar-w: 280px;
+      --header-h: 64px;
       --primary:#3956E8;
       --secondary:#7459D9;
-      --accent:#E8C239;
+      --yellow:#E8C239;
+      --gray:#64748B;
+      --muted:#EEF0F6;
+      --bg:#F7F8FC;
+      --card:#FFFFFF;
+      --text:#0F172A;
+      --border:#E5E7EB;
+      --shadow:0 6px 18px rgba(17,24,39,.06);
 
-      --bg:#F6F7FF;
-      --card:#ffffff;
-      --ink:#0f172a;
-      --muted:#64748B;
-      --stroke:#e6eaf5;
-      --soft:#EEF3FF;
-
+      /* inputs */
       --placeholder:#94a3b8;
-
-      --radius:18px;
-      --radius2:24px;
-      --shadow:0 14px 40px rgba(15,23,42,.10);
     }
 
     *{box-sizing:border-box}
-    html{-webkit-text-size-adjust:100%}
     body{
       margin:0;
-      font-family: "Greycliff CF", "Nunito", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color:var(--ink);
-      background:
-        radial-gradient(900px 480px at 18% 6%, rgba(116,89,217,.14), transparent 55%),
-        radial-gradient(900px 520px at 84% 18%, rgba(57,86,232,.16), transparent 55%),
-        var(--bg);
+      background:var(--bg);
+      font-family:"Nunito", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
     }
 
-    /* MAIN WRAP */
-    .main{
-      padding:18px 18px 24px;
-      max-width: 1320px;
-      margin: 0 auto;
-    }
-
-    /* TOP */
-    .topbar{
-      display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
-      margin-bottom:12px;
-    }
-    .title{
-      display:flex; flex-direction:column; gap:4px;
-    }
-    .title h2{ margin:0; font-size:20px; letter-spacing:.2px;}
-    .title small{ color:var(--muted); font-weight:650; }
-
-    .topActions{
-      display:flex; gap:10px; align-items:center;
-      margin-top:2px;
-    }
-    .search{
-      width:360px; max-width:42vw;
-      display:flex; align-items:center; gap:8px;
-      border:1px solid var(--stroke);
-      background:#fff;
-      border-radius:14px;
-      padding:10px 12px;
-      box-shadow:0 10px 22px rgba(15,23,42,.06);
-    }
-    .search input{
-      border:0; outline:0; width:100%;
-      font-size:13px;
-      font-weight:650;
-      color:var(--ink);
-    }
-    .btn{
-      border:0; cursor:pointer;
-      border-radius:14px;
-      padding:10px 12px;
-      font-weight:900;
-      letter-spacing:.2px;
-      white-space:nowrap;
-    }
-    .btnPrimary{
-      background:linear-gradient(135deg, var(--primary), var(--secondary));
+    /* ===== HEADER ===== */
+    header{
+      position:fixed; top:0; left:0; right:0;
+      height:var(--header-h);
+      background:#594AE2;
+      border:none;
+      z-index:100;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:0 20px;
+      box-shadow:0 2px 6px rgba(0,0,0,0.15);
       color:#fff;
-      box-shadow:0 14px 24px rgba(57,86,232,.22);
     }
-    .btnGhost{
-      background:#fff;
-      border:1px solid var(--stroke);
-      color:var(--ink);
-      box-shadow:0 10px 20px rgba(15,23,42,.06);
+    header *{ color:#fff !important; }
+    header .logo img{height:44px; object-fit:contain}
+
+    .usuario-header{
+      display:flex; align-items:center; gap:10px;
+      font-weight:700; font-size:15px; color:#fff;
+    }
+    .usuario-header .avatar{
+      width:38px; height:38px; border-radius:50%;
+      background:#C7BEFF url('https://cadamenudo.github.io/UI-UX/assets/icons/user-placeholder.png') center/60% no-repeat;
+      border:2px solid rgba(255,255,255,0.3);
     }
 
-    /* Placeholder gris suave */
-    input::placeholder{ color: var(--placeholder); font-weight:650; }
-    textarea::placeholder{ color: var(--placeholder); font-weight:650; }
-    .search input::placeholder{ color: var(--placeholder); font-weight:650; }
-
-    /* ✅ BANNER RESUMEN */
-    .summary{
-      border:1px solid rgba(57,86,232,.16);
-      background: linear-gradient(135deg, rgba(57,86,232,.14), rgba(116,89,217,.10), rgba(255,255,255,.80));
-      border-radius: 22px;
-      padding: 14px 14px;
-      box-shadow: 0 16px 38px rgba(15,23,42,.10);
-      margin-bottom: 14px;
-      overflow:hidden;
-      position:relative;
-    }
-    .summary:before{
-      content:"";
-      position:absolute; inset:-60px -140px auto auto;
-      width:260px; height:260px;
-      background: radial-gradient(circle at 30% 30%, rgba(232,194,57,.22), transparent 60%);
-      border-radius:999px;
-      transform: rotate(18deg);
-      pointer-events:none;
-    }
-    .summaryRow{
-      display:grid;
-      grid-template-columns: 1.2fr 1fr 1fr auto;
-      gap:12px;
-      align-items:stretch;
-      position:relative;
-      z-index:1;
-    }
-    .sumLeft{
-      display:flex; flex-direction:column; justify-content:center;
-      padding: 10px 12px;
-      border-radius:18px;
-      background: rgba(255,255,255,.65);
-      border:1px solid rgba(255,255,255,.55);
-    }
-    .sumLeft b{
-      font-size:14px;
-      font-weight:1100;
-      letter-spacing:.2px;
-    }
-    .sumLeft small{
-      margin-top:3px;
-      color:var(--muted);
-      font-weight:750;
-      font-size:12px;
-      line-height:1.2;
-    }
-
-    .sumStat{
-      padding: 10px 12px;
-      border-radius:18px;
-      background: rgba(255,255,255,.85);
-      border:1px solid rgba(255,255,255,.65);
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      min-height:64px;
-    }
-    .sumStat small{
-      font-size:11px;
-      color:var(--muted);
-      font-weight:950;
-      letter-spacing:.4px;
-      text-transform:uppercase;
-      margin-bottom:6px;
-    }
-    .sumStat .val{
-      font-weight:1200;
-      font-size:18px;
-      letter-spacing:.2px;
-    }
-    .sumStat .hint{
-      margin-top:4px;
-      font-size:11px;
-      color:var(--muted);
-      font-weight:750;
-    }
-
-    .sumActions{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      justify-content:flex-end;
-    }
-
-    /* GRID */
-    .grid{
-      display:grid;
-      grid-template-columns: 440px 1fr;
-      gap:14px;
-      align-items:start;
+    /* ===== MAIN LAYOUT (sin sidebar) ===== */
+    main{
+      margin-top:var(--header-h);
+      padding:24px;
+      max-width: 1320px;
+      margin-left:auto;
+      margin-right:auto;
+      display:block;
     }
 
     .card{
-      background:rgba(255,255,255,.85);
-      border:1px solid var(--stroke);
-      border-radius:var(--radius2);
+      background:#fff;
+      border-radius:20px;
       box-shadow:var(--shadow);
-      overflow:hidden;
+      padding:18px;
     }
-    .cardHd{
-      padding:14px 16px 10px;
-      border-bottom:1px solid var(--stroke);
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-      background:linear-gradient(180deg, rgba(57,86,232,.06), rgba(116,89,217,.04));
-    }
-    .cardHd h3{ margin:0; font-size:14px; letter-spacing:.2px;}
-    .cardHd .meta{ color:var(--muted); font-size:12px; font-weight:700;}
-    .cardBd{ padding:14px 16px 16px; }
 
-    /* FILTER */
-    .filters{
+    /* ===== TOP ROW: TITULO + BUSCADOR/CTA ===== */
+    .topbar{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:16px;
+      margin-bottom:16px;
+    }
+    .title h1{
+      margin:0;
+      font-size:22px;
+      font-weight:900;
+      letter-spacing:.2px;
+    }
+    .title p{
+      margin:6px 0 0;
+      color:var(--gray);
+      font-weight:700;
+      font-size:13px;
+    }
+
+    .actions{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .search{
+      width:380px;
+      max-width:46vw;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      border:1px solid var(--border);
+      border-radius:12px;
+      background:#fff;
+      padding:10px 12px;
+    }
+    .search .k{ color:var(--gray); font-weight:900; font-size:12px; }
+    .search input{
+      width:100%;
+      border:0;
+      outline:none;
+      font-family:"Nunito", system-ui, sans-serif;
+      font-weight:700;
+      font-size:14px;
+      color:var(--text);
+    }
+
+    .btn{
+      border:0;
+      border-radius:12px;
+      padding:10px 14px;
+      font-weight:900;
+      cursor:pointer;
+      font-family:"Nunito", system-ui, sans-serif;
+      letter-spacing:.2px;
+    }
+    .btn.primary{
+      background:#594AE2;
+      color:#fff;
+      box-shadow:0 10px 18px rgba(89,74,226,.22);
+    }
+    .btn.ghost{
+      background:#fff;
+      color:var(--gray);
+      border:1px solid var(--border);
+    }
+    .btn:active{ transform:translateY(1px); }
+
+    /* ✅ Placeholder gris suave */
+    input::placeholder{ color: var(--placeholder); font-weight:700; }
+
+    /* ===== BANNER RESUMEN (estilo cards Cada Menudo) ===== */
+    .contenido-tablero{ width:100%; margin: 0 0 18px 0; }
+    .header-grid{
       display:grid;
       grid-template-columns: 1fr;
-      gap:10px;
-      margin-bottom:12px;
-    }
-    .field label{
-      display:block;
-      font-size:11px;
-      color:var(--muted);
-      font-weight:900;
-      margin-bottom:6px;
-      letter-spacing:.4px;
-      text-transform:uppercase;
-    }
-    .field select, .field input{
-      width:100%;
-      border:1px solid var(--stroke);
-      background:#fff;
-      border-radius:14px;
-      padding:10px 12px;
-      font-size:13px;
-      font-weight:700;
-      outline:none;
-      color:var(--ink);
+      gap:18px;
+      align-items: stretch;
+      width: 100%;
+      background: transparent;
+      padding: 0;
+      border: 0;
+      box-shadow: none;
     }
 
-    /* LIST */
+    .resumen-unificado.card{
+      width:100%;
+      padding:16px 20px;
+      min-height:100px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+    }
+
+    .resumen-unificado .bloque-indicador{
+      flex: 1;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      background:#FFFFFF;
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:12px 16px;
+      min-height:72px;
+    }
+
+    .ico{
+      width:40px; height:40px;
+      border-radius:12px;
+      display:grid;
+      place-items:center;
+      font-weight:900;
+      color: var(--primary);
+      background: rgba(57,86,232,.10);
+      border:1px solid rgba(57,86,232,.18);
+      flex:0 0 40px;
+    }
+    .ico.yellow{
+      color:#8a6a00;
+      background: rgba(232,194,57,.22);
+      border-color: rgba(232,194,57,.35);
+    }
+
+    .metric{
+      display:flex;
+      flex-direction:column;
+      line-height:1.1;
+    }
+    .metric .label{
+      font-size:12px;
+      color:var(--gray);
+      font-weight:800;
+      letter-spacing:.02em;
+      margin-bottom:6px;
+    }
+    .metric .value{
+      font-size:20px;
+      font-weight:900;
+      color:var(--text);
+      letter-spacing:.2px;
+    }
+    .metric .sub{
+      margin-top:6px;
+      font-size:12px;
+      color:var(--gray);
+      font-weight:700;
+    }
+
+    /* ===== LAYOUT PRINCIPAL: LISTA | DETALLE ===== */
+    .grid{
+      display:grid;
+      grid-template-columns: 440px 1fr;
+      gap:20px;
+      align-items:start;
+    }
+
+    .card-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:12px;
+    }
+    .card-head h3{
+      margin:0;
+      font-size:16px;
+      font-weight:900;
+    }
+    .meta{
+      color:var(--gray);
+      font-weight:800;
+      font-size:12px;
+    }
+
+    .field label{
+      display:block;
+      font-size:12px;
+      color:var(--gray);
+      text-transform:uppercase;
+      letter-spacing:.1em;
+      margin: 0 0 8px 2px;
+      font-weight:800;
+    }
+    .field select{
+      width:100%;
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:10px 12px;
+      background:#fff;
+      font-family:"Nunito", system-ui, sans-serif;
+      font-weight:700;
+      color:var(--text);
+    }
+
     .debtList{
+      margin-top:12px;
       display:flex;
       flex-direction:column;
       gap:10px;
-      max-height:72vh;
+      max-height: 66vh;
       overflow:auto;
       padding-right:2px;
     }
@@ -254,319 +290,333 @@
       display:grid;
       grid-template-columns: 1fr auto;
       gap:10px;
+      align-items:center;
       padding:12px 12px;
-      border-radius:18px;
-      border:1px solid var(--stroke);
+      border:1px solid var(--border);
+      border-radius:14px;
       background:#fff;
       cursor:pointer;
-      transition:transform .08s ease, border-color .08s ease, background .08s ease;
+      transition: background .15s ease, border-color .15s ease;
     }
-    .debtItem:hover{ transform: translateY(-1px); border-color: rgba(57,86,232,.25); }
+    .debtItem:hover{ background: var(--muted); }
     .debtItem.active{
-      background:linear-gradient(180deg, rgba(57,86,232,.10), rgba(116,89,217,.06));
-      border-color: rgba(57,86,232,.28);
+      background: rgba(57,86,232,.08);
+      border-color: rgba(57,86,232,.20);
     }
-    .debtName{ font-weight:950; font-size:13px; }
-    .debtSub{ color:var(--muted); font-size:12px; font-weight:750; margin-top:2px; }
+    .dname{ font-weight:900; font-size:14px; }
+    .dsub{ margin-top:4px; color:var(--gray); font-weight:700; font-size:12px; }
 
-    .amountCol{
-      text-align:right;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      min-width:120px;
-    }
-    .amt{ font-weight:1000; font-size:13px; }
-    .mini{ color:var(--muted); font-size:11px; font-weight:800; }
+    .amountCol{ text-align:right; min-width:140px; }
+    .amountCol .amt{ font-weight:900; font-size:14px; }
+    .amountCol .mini{ margin-top:4px; color:var(--gray); font-weight:800; font-size:12px; }
 
-    /* DETAIL */
+    /* ===== DETALLE / PROGRESO ===== */
     .hero{
       display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
       margin-bottom:12px;
     }
-    .hero .left h4{ margin:0; font-size:16px; font-weight:1000; }
-    .hero .left p{ margin:4px 0 0; color:var(--muted); font-weight:750; font-size:12px; }
-    .hero .right{
-      display:flex; gap:10px; align-items:center;
-      flex-wrap:wrap; justify-content:flex-end;
-    }
+    .hero h4{ margin:0; font-size:18px; font-weight:900; }
+    .hero p{ margin:6px 0 0; color:var(--gray); font-weight:700; font-size:13px; }
 
-    .progressWrap{
-      border:1px solid var(--stroke);
+    .progressBox{
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:14px;
       background:#fff;
-      border-radius:18px;
-      padding:12px;
-      margin-bottom:12px;
     }
     .progTop{
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:12px;
       margin-bottom:10px;
     }
     .bigPct{
-      font-size:22px;
-      font-weight:1100;
+      font-size:26px;
+      font-weight:900;
       letter-spacing:.2px;
     }
+    .bigBal{
+      text-align:right;
+    }
+    .bigBal .lbl{ color:var(--gray); font-weight:800; font-size:12px; text-transform:uppercase; letter-spacing:.1em; }
+    .bigBal .val{ font-size:18px; font-weight:900; margin-top:6px; }
+
     .bar{
       width:100%;
       height:12px;
       border-radius:999px;
-      background:rgba(100,116,139,.14);
+      background: #E9ECF6;
       overflow:hidden;
-      border:1px solid rgba(100,116,139,.18);
+      border:1px solid var(--border);
     }
     .bar > div{
       height:100%;
       width:0%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
       border-radius:999px;
-      background:linear-gradient(90deg, var(--primary), var(--secondary));
-      transition:width .35s ease;
+      transition: width .35s ease;
     }
 
     .metrics{
       display:grid;
       grid-template-columns: repeat(4, 1fr);
-      gap:10px;
+      gap:12px;
       margin-top:12px;
     }
-    .metric{
-      border:1px solid var(--stroke);
-      border-radius:18px;
-      background:linear-gradient(180deg, rgba(57,86,232,.06), rgba(255,255,255,.85));
-      padding:10px 10px;
+    .m{
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:12px;
+      background:#fff;
     }
-    .metric small{
-      display:block;
-      font-size:11px;
-      color:var(--muted);
-      font-weight:900;
-      letter-spacing:.4px;
-      text-transform:uppercase;
-      margin-bottom:6px;
-    }
-    .metric b{ font-size:14px; font-weight:1100; }
+    .m .k{ font-size:11px; color:var(--gray); font-weight:900; text-transform:uppercase; letter-spacing:.1em; }
+    .m .v{ margin-top:8px; font-weight:900; font-size:14px; }
 
     .box{
-      border:1px solid var(--stroke);
+      margin-top:14px;
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:14px;
       background:#fff;
-      border-radius:18px;
-      padding:12px;
-      margin-top:12px;
     }
-    .box h5{
+    .box .box-title{
+      font-weight:900;
       margin:0 0 10px;
-      font-size:12px;
-      letter-spacing:.35px;
-      text-transform:uppercase;
-      color:var(--muted);
-      font-weight:1000;
+      font-size:13px;
+      color:var(--text);
     }
 
     .history{
       display:flex;
       flex-direction:column;
-      gap:8px;
-      max-height:360px;
+      gap:10px;
+      max-height: 340px;
       overflow:auto;
       padding-right:2px;
     }
-    .txn{
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-      border:1px solid var(--stroke);
-      border-radius:16px;
-      padding:10px 10px;
-      background:rgba(255,255,255,.9);
+    .tx{
+      display:grid;
+      grid-template-columns: 1fr auto;
+      gap:8px;
+      align-items:center;
+      padding:10px 12px;
+      border:1px solid var(--border);
+      border-radius:14px;
+      background:#fff;
     }
-    .txn .l b{ display:block; font-size:12px; font-weight:1000; }
-    .txn .l small{ color:var(--muted); font-weight:800; font-size:11px; }
-    .txn .r{ text-align:right; }
-    .txn .r b{ font-weight:1100; font-size:12px; }
-    .txn .r small{ display:block; font-size:11px; color:var(--muted); font-weight:800; margin-top:2px; }
+    .tx b{ font-weight:900; font-size:13px; }
+    .tx small{ display:block; margin-top:4px; color:var(--gray); font-weight:700; font-size:12px; }
+    .tx .amt{ font-weight:900; }
 
-    /* MODAL */
+    /* ===== MODAL ===== */
     .overlay{
       position:fixed; inset:0;
       background:rgba(15,23,42,.45);
       display:none;
       align-items:center; justify-content:center;
       padding:18px;
+      z-index:200;
     }
     .overlay.show{ display:flex; }
     .modal{
       width:min(560px, 96vw);
-      border-radius:24px;
+      border-radius:18px;
       background:#fff;
-      border:1px solid rgba(255,255,255,.25);
-      box-shadow:0 30px 80px rgba(0,0,0,.30);
+      box-shadow: 0 22px 60px rgba(0,0,0,.25);
       overflow:hidden;
+      border:1px solid var(--border);
     }
     .modalHd{
       padding:14px 16px;
-      background:linear-gradient(135deg, rgba(57,86,232,.12), rgba(116,89,217,.10));
-      border-bottom:1px solid var(--stroke);
+      background: #F3F4FF;
+      border-bottom:1px solid var(--border);
       display:flex; align-items:center; justify-content:space-between; gap:10px;
     }
-    .modalHd b{ font-size:14px; font-weight:1100; }
+    .modalHd b{ font-size:14px; font-weight:900; color:var(--text); }
     .xBtn{
-      border:1px solid var(--stroke);
+      width:34px; height:34px;
+      border-radius:10px;
+      border:1px solid var(--border);
       background:#fff;
-      width:36px; height:36px;
-      border-radius:12px;
       cursor:pointer;
-      font-weight:1100;
+      font-weight:900;
+      color:var(--gray);
     }
     .modalBd{ padding:14px 16px 16px; }
     .modalGrid{
       display:grid;
       grid-template-columns: 1fr 1fr;
-      gap:10px;
+      gap:12px;
     }
     .modalFoot{
       padding:12px 16px 16px;
-      display:flex; justify-content:flex-end; gap:10px;
+      display:flex;
+      justify-content:flex-end;
+      gap:10px;
     }
 
-    .muted{ color:var(--muted); font-weight:800; }
-    .kbd{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; font-size:11px; }
+    .field input{
+      width:100%;
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:10px 12px;
+      font-family:"Nunito", system-ui, sans-serif;
+      font-weight:700;
+      color:var(--text);
+      outline:none;
+      background:#fff;
+    }
 
-    @media (max-width: 1080px){
-      .summaryRow{ grid-template-columns: 1fr; }
+    /* Responsive */
+    @media (max-width: 1100px){
       .grid{ grid-template-columns: 1fr; }
       .search{ width:100%; max-width:none; }
       .metrics{ grid-template-columns: 1fr 1fr; }
-      .sumActions{ justify-content:flex-start; }
+      .resumen-unificado.card{ flex-direction:column; align-items:stretch; }
     }
   </style>
 </head>
 
 <body>
-  <main class="main">
+  <!-- HEADER (simple placeholder) -->
+  <header>
+    <div class="logo" aria-label="Cada Menudo">
+      <!-- si tienes logo real, reemplaza el src -->
+      <img src="https://cadamenudo.github.io/UI-UX/assets/icons/nueva.png" alt="Cada Menudo"/>
+    </div>
+
+    <div class="usuario-header">
+      <div class="avatar" aria-hidden="true"></div>
+      <div>Mi perfil</div>
+    </div>
+  </header>
+
+  <main>
+    <!-- TOPBAR -->
     <div class="topbar">
       <div class="title">
-        <h2>Bajar deuda</h2>
-        <small>Progreso transparente: monto original, total abonado y saldo real.</small>
+        <h1>Bajar deuda</h1>
+        <p>Transparencia total: total deuda, cuánto pagaste y cuánto falta. Sin borrar historial.</p>
       </div>
 
-      <div class="topActions">
+      <div class="actions">
         <div class="search" role="search">
-          <span class="muted">⌕</span>
+          <span class="k">⌕</span>
           <input id="q" type="text" placeholder="Buscar deuda (ej. Visa, Auto, Universidad)…" />
-          <span class="muted kbd">⌘K</span>
+          <span class="k">⌘K</span>
         </div>
-        <button class="btn btnPrimary" id="btnNewDebt" type="button">+ Nueva deuda</button>
+        <button class="btn primary" id="btnNewDebt" type="button">+ Nueva deuda</button>
       </div>
     </div>
 
-    <!-- ✅ Banner resumen -->
-    <section class="summary" aria-label="Resumen de deuda">
-      <div class="summaryRow">
-        <div class="sumLeft">
-          <b>Resumen general</b>
-          <small>La suma total de todas tus deudas, cuánto has pagado y cuánto falta.</small>
-        </div>
+    <!-- ✅ BANNER RESUMEN -->
+    <section class="contenido-tablero" aria-label="Resumen de deuda">
+      <div class="header-grid">
+        <div class="resumen-unificado card">
+          <div class="bloque-indicador">
+            <div class="ico">Σ</div>
+            <div class="metric">
+              <div class="label">Total deuda</div>
+              <div class="value" id="sumTotalDebt">$0</div>
+              <div class="sub">Monto original acumulado</div>
+            </div>
+          </div>
 
-        <div class="sumStat">
-          <small>Total deuda</small>
-          <div class="val" id="sumTotalDebt">$0</div>
-          <div class="hint">Monto original acumulado</div>
-        </div>
+          <div class="bloque-indicador">
+            <div class="ico">✓</div>
+            <div class="metric">
+              <div class="label">Monto pagado</div>
+              <div class="value" id="sumTotalPaid">$0</div>
+              <div class="sub">Abonos acumulados</div>
+            </div>
+          </div>
 
-        <div class="sumStat">
-          <small>Monto pagado</small>
-          <div class="val" id="sumTotalPaid">$0</div>
-          <div class="hint">Abonos acumulados</div>
-        </div>
-
-        <div class="sumStat">
-          <small>Falta por pagar</small>
-          <div class="val" id="sumTotalRemaining">$0</div>
-          <div class="hint">Saldo real acumulado</div>
+          <div class="bloque-indicador">
+            <div class="ico yellow">↘</div>
+            <div class="metric">
+              <div class="label">Falta por pagar</div>
+              <div class="value" id="sumTotalRemaining">$0</div>
+              <div class="sub">Saldo real acumulado</div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
+    <!-- GRID -->
     <section class="grid">
-      <!-- Lista -->
+      <!-- LISTA -->
       <div class="card">
-        <div class="cardHd">
+        <div class="card-head">
           <h3>Deudas</h3>
           <div class="meta"><span id="countDebts">0</span> activas</div>
         </div>
 
-        <div class="cardBd">
-          <div class="filters">
-            <div class="field">
-              <label for="filterCategory">Categoría</label>
-              <select id="filterCategory"></select>
-            </div>
-          </div>
-
-          <div class="debtList" id="debtList" aria-label="Lista de deudas"></div>
+        <div class="field">
+          <label for="filterCategory">Categoría</label>
+          <select id="filterCategory"></select>
         </div>
+
+        <div class="debtList" id="debtList"></div>
       </div>
 
-      <!-- Detalle -->
+      <!-- DETALLE -->
       <div class="card">
-        <div class="cardHd">
-          <h3>Progreso real</h3>
-          <div class="meta">Historial intacto</div>
+        <div class="hero">
+          <div>
+            <h4 id="dTitle">Selecciona una deuda</h4>
+            <p id="dSubtitle">Verás monto original, total abonado, saldo real y % pagado.</p>
+          </div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;">
+            <button class="btn ghost" id="btnAddPayment" type="button" disabled>+ Abono</button>
+            <button class="btn ghost" id="btnEditDebt" type="button" disabled>Editar</button>
+          </div>
         </div>
 
-        <div class="cardBd">
-          <div class="hero">
-            <div class="left">
-              <h4 id="dTitle">Selecciona una deuda</h4>
-              <p id="dSubtitle">Verás monto original, abonado, saldo real y % pagado.</p>
+        <div class="progressBox">
+          <div class="progTop">
+            <div>
+              <div class="meta" style="text-transform:uppercase;letter-spacing:.1em">Porcentaje pagado</div>
+              <div class="bigPct" id="dPct">—</div>
             </div>
-            <div class="right">
-              <button class="btn btnGhost" id="btnAddPayment" type="button" disabled>+ Abono</button>
-              <button class="btn btnGhost" id="btnEditDebt" type="button" disabled>Editar</button>
-            </div>
-          </div>
-
-          <div class="progressWrap">
-            <div class="progTop">
-              <div>
-                <div class="muted" style="font-weight:950;font-size:12px">Porcentaje pagado</div>
-                <div class="bigPct" id="dPct">—</div>
-              </div>
-              <div style="text-align:right">
-                <div class="muted" style="font-weight:950;font-size:12px">Saldo actual real</div>
-                <div style="font-size:18px;font-weight:1100" id="dBalance">—</div>
-              </div>
-            </div>
-            <div class="bar" aria-label="Barra de progreso"><div id="barFill"></div></div>
-
-            <div class="metrics">
-              <div class="metric">
-                <small>Monto original</small>
-                <b id="dOriginal">—</b>
-              </div>
-              <div class="metric">
-                <small>Total abonado</small>
-                <b id="dPaid">—</b>
-              </div>
-              <div class="metric">
-                <small>% pagado</small>
-                <b id="dPctSmall">—</b>
-              </div>
-              <div class="metric">
-                <small>Categoría</small>
-                <b id="dCat">—</b>
-              </div>
+            <div class="bigBal">
+              <div class="lbl">Saldo actual real</div>
+              <div class="val" id="dBalance">—</div>
             </div>
           </div>
 
-          <div class="box">
-            <h5>Historial de abonos</h5>
-            <div class="history" id="history"></div>
+          <div class="bar"><div id="barFill"></div></div>
+
+          <div class="metrics">
+            <div class="m">
+              <div class="k">Monto original</div>
+              <div class="v" id="dOriginal">—</div>
+            </div>
+            <div class="m">
+              <div class="k">Total abonado</div>
+              <div class="v" id="dPaid">—</div>
+            </div>
+            <div class="m">
+              <div class="k">% pagado</div>
+              <div class="v" id="dPctSmall">—</div>
+            </div>
+            <div class="m">
+              <div class="k">Categoría</div>
+              <div class="v" id="dCat">—</div>
+            </div>
           </div>
+        </div>
+
+        <div class="box">
+          <div class="box-title">Historial de abonos</div>
+          <div class="history" id="history"></div>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- Modal: Abono -->
+  <!-- MODAL: ABONO -->
   <div class="overlay" id="overlayPay" aria-hidden="true">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="payTitle">
       <div class="modalHd">
@@ -590,13 +640,13 @@
         </div>
       </div>
       <div class="modalFoot">
-        <button class="btn btnGhost" id="cancelPay" type="button">Cancelar</button>
-        <button class="btn btnPrimary" id="savePay" type="button">Guardar abono</button>
+        <button class="btn ghost" id="cancelPay" type="button">Cancelar</button>
+        <button class="btn primary" id="savePay" type="button">Guardar abono</button>
       </div>
     </div>
   </div>
 
-  <!-- Modal: Nueva deuda -->
+  <!-- MODAL: NUEVA DEUDA -->
   <div class="overlay" id="overlayDebt" aria-hidden="true">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="debtTitle">
       <div class="modalHd">
@@ -622,19 +672,15 @@
             <input id="newApr" type="number" min="0" step="0.01" placeholder="Ej. 24.99"/>
           </div>
         </div>
-        <p class="muted" style="margin:10px 0 0;font-size:12px;line-height:1.35">
-          Progreso = <b>monto original</b> − <b>total abonado</b>.
-        </p>
       </div>
       <div class="modalFoot">
-        <button class="btn btnGhost" id="cancelDebt" type="button">Cancelar</button>
-        <button class="btn btnPrimary" id="saveDebt" type="button">Crear deuda</button>
+        <button class="btn ghost" id="cancelDebt" type="button">Cancelar</button>
+        <button class="btn primary" id="saveDebt" type="button">Crear deuda</button>
       </div>
     </div>
   </div>
 
   <script>
-    // ✅ Categorías base (completa tu lista aquí)
     const BASE_CATEGORIES = [
       {id:'all', name:'Todas'},
       {id:'tarjetas',name:'Tarjetas de Crédito, tiendas, gasolinera, etc.'},
@@ -651,54 +697,25 @@
       // agrega el resto…
     ];
 
-    // Demo data
+    // Demo
     let debts = [
-      {
-        id: cryptoId(),
-        name: 'Visa – Banco',
-        categoryId: 'tarjetas',
-        original: 8200,
-        apr: 24.99,
-        payments: [
-          {date:'2026-01-10', amount:250, note:'Pago mínimo'},
-          {date:'2026-02-05', amount:400, note:'Pago extra'}
-        ]
-      },
-      {
-        id: cryptoId(),
-        name: 'Préstamo Auto',
-        categoryId: 'auto',
-        original: 14500,
-        apr: 7.50,
-        payments: [
-          {date:'2026-01-15', amount:375, note:'Pago mensual'},
-          {date:'2026-02-15', amount:375, note:'Pago mensual'}
-        ]
-      },
-      {
-        id: cryptoId(),
-        name: 'Universidad',
-        categoryId: 'educacion',
-        original: 5200,
-        apr: 0,
-        payments: [
-          {date:'2026-02-01', amount:200, note:'Abono'}
-        ]
-      }
+      { id: rid(), name:'Visa – Banco', categoryId:'tarjetas', original:8200, apr:24.99,
+        payments:[{date:'2026-01-10',amount:250,note:'Pago mínimo'},{date:'2026-02-05',amount:400,note:'Pago extra'}]},
+      { id: rid(), name:'Préstamo Auto', categoryId:'auto', original:14500, apr:7.5,
+        payments:[{date:'2026-01-15',amount:375,note:'Pago mensual'},{date:'2026-02-15',amount:375,note:'Pago mensual'}]},
+      { id: rid(), name:'Universidad', categoryId:'educacion', original:5200, apr:0,
+        payments:[{date:'2026-02-01',amount:200,note:'Abono'}]},
     ];
-
     let selectedDebtId = null;
 
-    // Elements
+    // UI
     const debtListEl = document.getElementById('debtList');
     const countDebtsEl = document.getElementById('countDebts');
-
     const filterCategoryEl = document.getElementById('filterCategory');
     const qEl = document.getElementById('q');
 
     const dTitle = document.getElementById('dTitle');
     const dSubtitle = document.getElementById('dSubtitle');
-
     const dPct = document.getElementById('dPct');
     const dPctSmall = document.getElementById('dPctSmall');
     const dBalance = document.getElementById('dBalance');
@@ -706,7 +723,6 @@
     const dPaid = document.getElementById('dPaid');
     const dCat = document.getElementById('dCat');
     const barFill = document.getElementById('barFill');
-
     const historyEl = document.getElementById('history');
     const btnAddPayment = document.getElementById('btnAddPayment');
     const btnEditDebt = document.getElementById('btnEditDebt');
@@ -721,7 +737,6 @@
     const overlayDebt = document.getElementById('overlayDebt');
 
     const btnNewDebt = document.getElementById('btnNewDebt');
-
     const closePay = document.getElementById('closePay');
     const cancelPay = document.getElementById('cancelPay');
     const savePay = document.getElementById('savePay');
@@ -737,11 +752,9 @@
     const newOriginal = document.getElementById('newOriginal');
     const newApr = document.getElementById('newApr');
 
-    // Init
     hydrateCategorySelect(filterCategoryEl, true);
     hydrateCategorySelect(newCategory, false);
     payDate.value = isoToday();
-
     render();
 
     // Events
@@ -754,7 +767,7 @@
       newOriginal.value = '';
       newApr.value = '';
       newCategory.value = BASE_CATEGORIES.find(c => c.id !== 'all')?.id || 'tarjetas';
-      setTimeout(() => newName.focus(), 0);
+      setTimeout(()=>newName.focus(),0);
     });
 
     btnAddPayment.addEventListener('click', () => {
@@ -763,13 +776,13 @@
       payDate.value = isoToday();
       payAmount.value = '';
       payNote.value = '';
-      setTimeout(() => payAmount.focus(), 0);
+      setTimeout(()=>payAmount.focus(),0);
     });
 
-    closePay.addEventListener('click', () => closeModal(overlayPay));
-    cancelPay.addEventListener('click', () => closeModal(overlayPay));
-    closeDebt.addEventListener('click', () => closeModal(overlayDebt));
-    cancelDebt.addEventListener('click', () => closeModal(overlayDebt));
+    closePay.addEventListener('click', ()=>closeModal(overlayPay));
+    cancelPay.addEventListener('click', ()=>closeModal(overlayPay));
+    closeDebt.addEventListener('click', ()=>closeModal(overlayDebt));
+    cancelDebt.addEventListener('click', ()=>closeModal(overlayDebt));
 
     savePay.addEventListener('click', () => {
       const d = getSelectedDebt();
@@ -779,16 +792,11 @@
       const dt = payDate.value || isoToday();
       const note = (payNote.value || '').trim();
 
-      if(amt <= 0){
-        shake(payAmount);
-        payAmount.focus();
-        return;
-      }
+      if(amt <= 0){ shake(payAmount); payAmount.focus(); return; }
 
-      d.payments.push({date: dt, amount: amt, note});
-      d.payments.sort((a,b) => (a.date < b.date ? 1 : -1));
+      d.payments.push({date:dt, amount:amt, note});
       closeModal(overlayPay);
-      render(); // ✅ recalcula banner + lista + detalle
+      render();
     });
 
     saveDebt.addEventListener('click', () => {
@@ -800,52 +808,35 @@
       if(!name){ shake(newName); newName.focus(); return; }
       if(orig <= 0){ shake(newOriginal); newOriginal.focus(); return; }
 
-      debts.unshift({
-        id: cryptoId(),
-        name,
-        categoryId: cat,
-        original: orig,
-        apr,
-        payments: []
-      });
-
-      closeModal(overlayDebt);
+      debts.unshift({ id: rid(), name, categoryId:cat, original:orig, apr, payments:[] });
       selectedDebtId = debts[0].id;
-      render(); // ✅ recalcula banner + lista + detalle
+      closeModal(overlayDebt);
+      render();
     });
 
     document.addEventListener('keydown', (e) => {
       const k = e.key.toLowerCase();
-      if((e.metaKey || e.ctrlKey) && k === 'k'){
-        e.preventDefault();
-        qEl.focus();
-      }
-      if(k === 'escape'){
-        closeModal(overlayPay);
-        closeModal(overlayDebt);
-      }
+      if((e.metaKey || e.ctrlKey) && k === 'k'){ e.preventDefault(); qEl.focus(); }
+      if(k === 'escape'){ closeModal(overlayPay); closeModal(overlayDebt); }
     });
 
-    overlayPay.addEventListener('click', (e) => { if(e.target === overlayPay) closeModal(overlayPay); });
-    overlayDebt.addEventListener('click', (e) => { if(e.target === overlayDebt) closeModal(overlayDebt); });
+    overlayPay.addEventListener('click', (e)=>{ if(e.target===overlayPay) closeModal(overlayPay); });
+    overlayDebt.addEventListener('click', (e)=>{ if(e.target===overlayDebt) closeModal(overlayDebt); });
 
     // Render
     function render(){
-      renderSummary();   // ✅ banner arriba
+      renderSummary();
       renderList();
       countDebtsEl.textContent = debts.length;
 
       const selected = getSelectedDebt();
-      if(selected){
-        renderDetail(selected);
-      }else{
-        renderEmptyDetail();
-      }
+      if(selected) renderDetail(selected);
+      else renderEmptyDetail();
     }
 
     function renderSummary(){
       const totals = debts.reduce((acc,d)=>{
-        const paid = (d.payments || []).reduce((s,p)=> s + Number(p.amount||0), 0);
+        const paid = (d.payments||[]).reduce((s,p)=> s + Number(p.amount||0), 0);
         acc.original += Number(d.original||0);
         acc.paid += paid;
         return acc;
@@ -860,45 +851,43 @@
 
     function renderList(){
       const filtered = applyFilters(debts);
-
       debtListEl.innerHTML = '';
+
       if(filtered.length === 0){
         debtListEl.innerHTML = `
-          <div style="padding:12px;border:1px dashed var(--stroke);border-radius:18px;background:rgba(255,255,255,.85)">
-            <b style="display:block;font-size:13px">No hay deudas que coincidan</b>
-            <div class="muted" style="margin-top:6px;font-size:12px">Ajusta filtros o crea una nueva deuda.</div>
+          <div class="tx">
+            <div>
+              <b>No hay deudas que coincidan</b>
+              <small>Ajusta filtros o crea una nueva deuda.</small>
+            </div>
           </div>`;
         return;
       }
 
-      filtered.forEach(d => {
+      filtered.forEach(d=>{
         const stats = compute(d);
         const catName = getCatName(d.categoryId);
-        const active = (d.id === selectedDebtId);
+        const active = d.id === selectedDebtId;
 
-        const el = document.createElement('div');
-        el.className = 'debtItem' + (active ? ' active' : '');
-        el.innerHTML = `
+        const row = document.createElement('div');
+        row.className = 'debtItem' + (active ? ' active' : '');
+        row.innerHTML = `
           <div>
-            <div class="debtName">${escapeHtml(d.name)}</div>
-            <div class="debtSub">${escapeHtml(catName)} · ${d.apr ? (d.apr.toFixed(2)+'% APR') : 'sin APR'}</div>
+            <div class="dname">${esc(d.name)}</div>
+            <div class="dsub">${esc(catName)} · ${d.apr ? (d.apr.toFixed(2)+'% APR') : 'sin APR'}</div>
           </div>
           <div class="amountCol">
-            <div>
-              <div class="amt">${money(stats.balance)}</div>
-              <div class="mini">saldo real</div>
-            </div>
-            <div>
-              <div class="mini">${stats.pct.toFixed(0)}% pagado</div>
-            </div>
+            <div class="amt">${money(stats.balance)}</div>
+            <div class="mini">${stats.pct.toFixed(0)}% pagado</div>
           </div>
         `;
-        el.addEventListener('click', () => {
+        row.addEventListener('click', ()=>{
           selectedDebtId = d.id;
           renderList();
           renderDetail(d);
         });
-        debtListEl.appendChild(el);
+
+        debtListEl.appendChild(row);
       });
 
       if(!selectedDebtId && filtered[0]){
@@ -909,8 +898,6 @@
     }
 
     function renderDetail(d){
-      if(!d){ renderEmptyDetail(); return; }
-
       btnAddPayment.disabled = false;
       btnEditDebt.disabled = false;
 
@@ -926,34 +913,33 @@
       dOriginal.textContent = money(d.original);
       dPaid.textContent = money(stats.paid);
       dCat.textContent = catName;
-
       barFill.style.width = clamp(stats.pct, 0, 100) + '%';
 
       historyEl.innerHTML = '';
-      const sorted = [...d.payments].sort((a,b)=> (a.date < b.date ? 1 : -1));
+      const sorted = [...(d.payments||[])].sort((a,b)=> (a.date < b.date ? 1 : -1));
       if(sorted.length === 0){
         historyEl.innerHTML = `
-          <div style="padding:10px;border:1px dashed var(--stroke);border-radius:16px;background:rgba(238,243,255,.55)">
-            <b style="font-size:12px;display:block">Sin abonos aún</b>
-            <div class="muted" style="margin-top:4px;font-size:11px">Registra un abono para empezar a ver progreso tangible.</div>
+          <div class="tx">
+            <div>
+              <b>Sin abonos aún</b>
+              <small>Registra un abono para ver progreso tangible.</small>
+            </div>
           </div>`;
-      }else{
-        sorted.forEach(p => {
-          const row = document.createElement('div');
-          row.className = 'txn';
-          row.innerHTML = `
-            <div class="l">
-              <b>${fmtDate(p.date)}</b>
-              <small>${escapeHtml(p.note || 'Abono')}</small>
-            </div>
-            <div class="r">
-              <b>${money(p.amount)}</b>
-              <small>abonado total: ${money(stats.paid)}</small>
-            </div>
-          `;
-          historyEl.appendChild(row);
-        });
+        return;
       }
+
+      sorted.forEach(p=>{
+        const item = document.createElement('div');
+        item.className = 'tx';
+        item.innerHTML = `
+          <div>
+            <b>${fmtDate(p.date)}</b>
+            <small>${esc(p.note || 'Abono')}</small>
+          </div>
+          <div class="amt">${money(p.amount)}</div>
+        `;
+        historyEl.appendChild(item);
+      });
     }
 
     function renderEmptyDetail(){
@@ -971,18 +957,20 @@
       barFill.style.width = '0%';
 
       historyEl.innerHTML = `
-        <div style="padding:10px;border:1px dashed var(--stroke);border-radius:16px;background:rgba(238,243,255,.55)">
-          <b style="font-size:12px;display:block">Historial</b>
-          <div class="muted" style="margin-top:4px;font-size:11px">Selecciona una deuda para ver sus abonos.</div>
+        <div class="tx">
+          <div>
+            <b>Historial</b>
+            <small>Selecciona una deuda para ver sus abonos.</small>
+          </div>
         </div>`;
     }
 
-    // Helpers
+    // Utils
     function applyFilters(list){
       const cat = filterCategoryEl.value || 'all';
       const q = (qEl.value || '').trim().toLowerCase();
 
-      return list.filter(d => {
+      return list.filter(d=>{
         const okCat = (cat === 'all') ? true : d.categoryId === cat;
         const okQ = !q ? true : (d.name.toLowerCase().includes(q) || getCatName(d.categoryId).toLowerCase().includes(q));
         return okCat && okQ;
@@ -990,16 +978,16 @@
     }
 
     function compute(d){
-      const paid = (d.payments || []).reduce((s,p)=> s + Number(p.amount||0), 0);
+      const paid = (d.payments||[]).reduce((s,p)=> s + Number(p.amount||0), 0);
       const balance = Math.max(0, Number(d.original||0) - paid);
       const pct = (Number(d.original||0) > 0) ? (paid / d.original * 100) : 0;
-      return {paid, balance, pct: clamp(pct, 0, 999)};
+      return {paid, balance, pct};
     }
 
     function hydrateCategorySelect(selectEl, includeAll){
       selectEl.innerHTML = '';
-      BASE_CATEGORIES.forEach(c => {
-        if(!includeAll && c.id === 'all') return;
+      BASE_CATEGORIES.forEach(c=>{
+        if(!includeAll && c.id==='all') return;
         const opt = document.createElement('option');
         opt.value = c.id;
         opt.textContent = c.name;
@@ -1009,28 +997,21 @@
     }
 
     function getCatName(id){
-      return (BASE_CATEGORIES.find(c => c.id === id)?.name) || 'Categoría';
+      return BASE_CATEGORIES.find(c=>c.id===id)?.name || 'Categoría';
     }
 
     function getSelectedDebt(){
-      return debts.find(d => d.id === selectedDebtId) || null;
+      return debts.find(d=>d.id===selectedDebtId) || null;
     }
 
-    function openModal(el){
-      el.classList.add('show');
-      el.setAttribute('aria-hidden', 'false');
-    }
-    function closeModal(el){
-      el.classList.remove('show');
-      el.setAttribute('aria-hidden', 'true');
-    }
+    function openModal(el){ el.classList.add('show'); el.setAttribute('aria-hidden','false'); }
+    function closeModal(el){ el.classList.remove('show'); el.setAttribute('aria-hidden','true'); }
 
     function money(n){
-      const v = Number(n || 0);
+      const v = Number(n||0);
       return v.toLocaleString('en-US', {style:'currency', currency:'USD', maximumFractionDigits:0});
     }
-
-    function clamp(n, a, b){ return Math.min(b, Math.max(a, n)); }
+    function clamp(n,a,b){ return Math.min(b, Math.max(a, n)); }
 
     function isoToday(){
       const d = new Date();
@@ -1039,37 +1020,28 @@
       const dd = String(d.getDate()).padStart(2,'0');
       return `${yyyy}-${mm}-${dd}`;
     }
-
     function fmtDate(iso){
       try{
         const d = new Date(iso + 'T00:00:00');
         return d.toLocaleDateString('es-US', {year:'numeric', month:'short', day:'2-digit'});
-      }catch(_){
-        return iso;
-      }
+      }catch(_){ return iso; }
     }
 
     function debounce(fn, ms){
       let t=null;
-      return (...args)=>{
-        clearTimeout(t);
-        t=setTimeout(()=>fn(...args), ms);
-      };
+      return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn(...args), ms); };
     }
 
     function shake(el){
       const old = el.style.boxShadow;
-      el.style.boxShadow = '0 0 0 3px rgba(239,68,68,.25)';
+      el.style.boxShadow = '0 0 0 3px rgba(239,68,68,.22)';
       el.animate([{transform:'translateX(0)'},{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'translateX(0)'}],
                  {duration:220, iterations:1});
       setTimeout(()=> el.style.boxShadow = old, 420);
     }
 
-    function cryptoId(){
-      return Math.random().toString(16).slice(2) + Math.random().toString(16).slice(2);
-    }
-
-    function escapeHtml(s){
+    function rid(){ return Math.random().toString(16).slice(2) + Math.random().toString(16).slice(2); }
+    function esc(s){
       return String(s ?? '').replace(/[&<>"']/g, (m)=>({
         '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
       }[m]));
