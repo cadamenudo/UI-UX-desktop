@@ -1,0 +1,1205 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Cada Menudo – Bajar Deuda (Desktop)</title>
+
+  <!-- Greycliff CF (tu link) -->
+  <link rel="stylesheet" href="https://cadamenudo.github.io/UI-UX/css-fonts.css"/>
+
+  <style>
+    :root{
+      --primary:#3956E8;
+      --secondary:#7459D9;
+      --accent:#E8C239;
+      --bg:#F6F7FF;
+      --card:#ffffff;
+      --ink:#0f172a;
+      --muted:#64748B;
+      --stroke:#e6eaf5;
+      --soft:#EEF3FF;
+
+      --ok:#10b981;
+      --warn:#f59e0b;
+      --bad:#ef4444;
+
+      --radius:18px;
+      --radius2:24px;
+      --shadow:0 14px 40px rgba(15,23,42,.10);
+    }
+
+    *{box-sizing:border-box}
+    html{-webkit-text-size-adjust:100%}
+    body{
+      margin:0;
+      font-family: "Greycliff CF", "Nunito", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--ink);
+      background:radial-gradient(900px 480px at 18% 6%, rgba(116,89,217,.14), transparent 55%),
+                 radial-gradient(900px 520px at 84% 18%, rgba(57,86,232,.16), transparent 55%),
+                 var(--bg);
+    }
+
+    .app{
+      min-height:100vh;
+      display:grid;
+      grid-template-columns: 280px 1fr;
+    }
+
+    /* SIDEBAR */
+    .side{
+      padding:18px 16px;
+      border-right:1px solid var(--stroke);
+      background:rgba(255,255,255,.55);
+      backdrop-filter: blur(10px);
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      padding:12px 12px;
+      border:1px solid var(--stroke);
+      border-radius:16px;
+      background:linear-gradient(180deg, rgba(57,86,232,.10), rgba(116,89,217,.08));
+    }
+    .logoDot{
+      width:38px; height:38px; border-radius:12px;
+      background:linear-gradient(135deg, var(--primary), var(--secondary));
+      box-shadow:0 10px 18px rgba(57,86,232,.22);
+    }
+    .brand h1{ margin:0; font-size:14px; line-height:1.1; letter-spacing:.2px;}
+    .brand p{ margin:2px 0 0; font-size:12px; color:var(--muted);}
+
+    .menu{ margin-top:14px; display:flex; flex-direction:column; gap:8px;}
+    .navBtn{
+      display:flex; align-items:center; gap:10px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid transparent;
+      background:transparent;
+      color:var(--ink);
+      cursor:pointer;
+      font-weight:700;
+      text-align:left;
+    }
+    .navBtn:hover{ background:rgba(57,86,232,.08); }
+    .navBtn.active{
+      background:rgba(57,86,232,.12);
+      border-color:rgba(57,86,232,.20);
+    }
+    .pill{
+      margin-left:auto;
+      font-size:11px;
+      padding:4px 8px;
+      border-radius:999px;
+      border:1px solid rgba(57,86,232,.20);
+      background:rgba(57,86,232,.08);
+      color:var(--primary);
+      font-weight:800;
+    }
+
+    /* MAIN */
+    .main{
+      padding:18px 18px 24px;
+    }
+
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      margin-bottom:14px;
+    }
+    .title{
+      display:flex; flex-direction:column; gap:4px;
+    }
+    .title h2{ margin:0; font-size:20px; letter-spacing:.2px;}
+    .title small{ color:var(--muted); font-weight:650; }
+    .topActions{
+      display:flex; gap:10px; align-items:center;
+    }
+    .search{
+      width:340px; max-width:42vw;
+      display:flex; align-items:center; gap:8px;
+      border:1px solid var(--stroke);
+      background:#fff;
+      border-radius:14px;
+      padding:10px 12px;
+      box-shadow:0 10px 22px rgba(15,23,42,.06);
+    }
+    .search input{
+      border:0; outline:0; width:100%;
+      font-size:13px;
+      font-weight:650;
+    }
+    .btn{
+      border:0; cursor:pointer;
+      border-radius:14px;
+      padding:10px 12px;
+      font-weight:900;
+      letter-spacing:.2px;
+    }
+    .btnPrimary{
+      background:linear-gradient(135deg, var(--primary), var(--secondary));
+      color:#fff;
+      box-shadow:0 14px 24px rgba(57,86,232,.22);
+    }
+    .btnGhost{
+      background:#fff;
+      border:1px solid var(--stroke);
+      color:var(--ink);
+      box-shadow:0 10px 20px rgba(15,23,42,.06);
+    }
+
+    /* DASH GRID */
+    .grid{
+      display:grid;
+      grid-template-columns: 440px 1fr;
+      gap:14px;
+      align-items:start;
+    }
+
+    .card{
+      background:rgba(255,255,255,.85);
+      border:1px solid var(--stroke);
+      border-radius:var(--radius2);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .cardHd{
+      padding:14px 16px 10px;
+      border-bottom:1px solid var(--stroke);
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      background:linear-gradient(180deg, rgba(57,86,232,.06), rgba(116,89,217,.04));
+    }
+    .cardHd h3{ margin:0; font-size:14px; letter-spacing:.2px;}
+    .cardHd .meta{ color:var(--muted); font-size:12px; font-weight:700;}
+    .cardBd{ padding:14px 16px 16px; }
+
+    /* LISTA DEUDAS */
+    .filters{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+      margin-bottom:12px;
+    }
+    .field label{
+      display:block;
+      font-size:11px;
+      color:var(--muted);
+      font-weight:900;
+      margin-bottom:6px;
+      letter-spacing:.4px;
+      text-transform:uppercase;
+    }
+    .field select, .field input{
+      width:100%;
+      border:1px solid var(--stroke);
+      background:#fff;
+      border-radius:14px;
+      padding:10px 12px;
+      font-size:13px;
+      font-weight:700;
+      outline:none;
+    }
+
+    .debtList{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      max-height:62vh;
+      overflow:auto;
+      padding-right:2px;
+    }
+
+    .debtItem{
+      display:grid;
+      grid-template-columns: 1fr auto;
+      gap:10px;
+      padding:12px 12px;
+      border-radius:18px;
+      border:1px solid var(--stroke);
+      background:#fff;
+      cursor:pointer;
+      transition:transform .08s ease, border-color .08s ease, background .08s ease;
+    }
+    .debtItem:hover{ transform: translateY(-1px); border-color: rgba(57,86,232,.25); }
+    .debtItem.active{
+      background:linear-gradient(180deg, rgba(57,86,232,.10), rgba(116,89,217,.06));
+      border-color: rgba(57,86,232,.28);
+    }
+    .debtName{ font-weight:950; font-size:13px; }
+    .debtSub{ color:var(--muted); font-size:12px; font-weight:750; margin-top:2px; }
+    .tagsRow{ display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
+    .tag{
+      font-size:11px; font-weight:900;
+      padding:5px 8px;
+      border-radius:999px;
+      border:1px solid var(--stroke);
+      background:var(--soft);
+      color:var(--ink);
+    }
+    .tag.primary{ border-color: rgba(57,86,232,.22); color:var(--primary); background:rgba(57,86,232,.08); }
+    .tag.warn{ border-color: rgba(245,158,11,.30); color:#9a5b00; background:rgba(245,158,11,.12); }
+    .amountCol{
+      text-align:right;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      min-width:120px;
+    }
+    .amt{
+      font-weight:1000;
+      font-size:13px;
+    }
+    .mini{
+      color:var(--muted);
+      font-size:11px;
+      font-weight:800;
+    }
+
+    /* DETALLE */
+    .hero{
+      display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+      margin-bottom:12px;
+    }
+    .hero .left h4{ margin:0; font-size:16px; font-weight:1000; }
+    .hero .left p{ margin:4px 0 0; color:var(--muted); font-weight:750; font-size:12px; }
+    .hero .right{
+      display:flex; gap:10px; align-items:center;
+      flex-wrap:wrap; justify-content:flex-end;
+    }
+
+    .chip{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid var(--stroke);
+      background:#fff;
+      font-weight:950;
+      font-size:12px;
+    }
+    .dot{
+      width:10px; height:10px; border-radius:99px; background:var(--primary);
+    }
+    .dot.warn{ background:var(--warn); }
+    .dot.ok{ background:var(--ok); }
+    .dot.bad{ background:var(--bad); }
+
+    .progressWrap{
+      border:1px solid var(--stroke);
+      background:#fff;
+      border-radius:18px;
+      padding:12px;
+      margin-bottom:12px;
+    }
+    .progTop{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      margin-bottom:10px;
+    }
+    .bigPct{
+      font-size:22px;
+      font-weight:1100;
+      letter-spacing:.2px;
+    }
+    .bar{
+      width:100%;
+      height:12px;
+      border-radius:999px;
+      background:rgba(100,116,139,.14);
+      overflow:hidden;
+      border:1px solid rgba(100,116,139,.18);
+    }
+    .bar > div{
+      height:100%;
+      width:0%;
+      border-radius:999px;
+      background:linear-gradient(90deg, var(--primary), var(--secondary));
+      transition:width .35s ease;
+    }
+
+    .metrics{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap:10px;
+      margin-top:12px;
+    }
+    .metric{
+      border:1px solid var(--stroke);
+      border-radius:18px;
+      background:linear-gradient(180deg, rgba(57,86,232,.06), rgba(255,255,255,.85));
+      padding:10px 10px;
+    }
+    .metric small{
+      display:block;
+      font-size:11px;
+      color:var(--muted);
+      font-weight:900;
+      letter-spacing:.4px;
+      text-transform:uppercase;
+      margin-bottom:6px;
+    }
+    .metric b{
+      font-size:14px;
+      font-weight:1100;
+    }
+
+    .split{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:12px;
+      margin-top:12px;
+    }
+
+    .box{
+      border:1px solid var(--stroke);
+      background:#fff;
+      border-radius:18px;
+      padding:12px;
+    }
+    .box h5{
+      margin:0 0 10px;
+      font-size:12px;
+      letter-spacing:.35px;
+      text-transform:uppercase;
+      color:var(--muted);
+      font-weight:1000;
+    }
+
+    .radioGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:8px;
+    }
+    .radio{
+      display:flex; align-items:center; gap:10px;
+      border:1px solid var(--stroke);
+      border-radius:16px;
+      padding:10px 10px;
+      cursor:pointer;
+      background:rgba(238,243,255,.55);
+    }
+    .radio input{ accent-color: var(--primary); }
+    .radio b{ font-size:12px; font-weight:950; }
+    .radio span{ font-size:11px; color:var(--muted); font-weight:750; display:block; margin-top:2px; }
+
+    .history{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      max-height:260px;
+      overflow:auto;
+      padding-right:2px;
+    }
+    .txn{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      border:1px solid var(--stroke);
+      border-radius:16px;
+      padding:10px 10px;
+      background:rgba(255,255,255,.9);
+    }
+    .txn .l b{ display:block; font-size:12px; font-weight:1000; }
+    .txn .l small{ color:var(--muted); font-weight:800; font-size:11px; }
+    .txn .r{ text-align:right; }
+    .txn .r b{ font-weight:1100; font-size:12px; }
+    .txn .r small{ display:block; font-size:11px; color:var(--muted); font-weight:800; margin-top:2px; }
+
+    /* MODAL */
+    .overlay{
+      position:fixed; inset:0;
+      background:rgba(15,23,42,.45);
+      display:none;
+      align-items:center; justify-content:center;
+      padding:18px;
+    }
+    .overlay.show{ display:flex; }
+    .modal{
+      width:min(560px, 96vw);
+      border-radius:24px;
+      background:#fff;
+      border:1px solid rgba(255,255,255,.25);
+      box-shadow:0 30px 80px rgba(0,0,0,.30);
+      overflow:hidden;
+    }
+    .modalHd{
+      padding:14px 16px;
+      background:linear-gradient(135deg, rgba(57,86,232,.12), rgba(116,89,217,.10));
+      border-bottom:1px solid var(--stroke);
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+    }
+    .modalHd b{ font-size:14px; font-weight:1100; }
+    .xBtn{
+      border:1px solid var(--stroke);
+      background:#fff;
+      width:36px; height:36px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:1100;
+    }
+    .modalBd{ padding:14px 16px 16px; }
+    .modalGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+    .modalFoot{
+      padding:12px 16px 16px;
+      display:flex; justify-content:flex-end; gap:10px;
+    }
+
+    /* tiny */
+    .muted{ color:var(--muted); font-weight:800; }
+    .kbd{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; font-size:11px; }
+
+    @media (max-width: 1080px){
+      .app{ grid-template-columns: 1fr; }
+      .side{ display:none; }
+      .grid{ grid-template-columns: 1fr; }
+      .search{ width:100%; max-width:none; }
+      .metrics{ grid-template-columns: 1fr 1fr; }
+      .split{ grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="side">
+      <div class="brand">
+        <div class="logoDot" aria-hidden="true"></div>
+        <div>
+          <h1>Cada Menudo</h1>
+          <p>Deudas · Progreso real</p>
+        </div>
+      </div>
+
+      <div class="menu" role="navigation" aria-label="Menú">
+        <button class="navBtn active" type="button">📉 Bajar deuda <span class="pill">Nuevo</span></button>
+        <button class="navBtn" type="button">📊 Presupuesto</button>
+        <button class="navBtn" type="button">🎯 Metas</button>
+        <button class="navBtn" type="button">🧾 Transacciones</button>
+        <button class="navBtn" type="button">⚙️ Configuración</button>
+      </div>
+
+      <div style="margin-top:14px;padding:12px;border:1px solid var(--stroke);border-radius:18px;background:#fff">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+          <b style="font-size:13px;font-weight:1100">Tip rápido</b>
+          <span class="tag primary">Transparencia</span>
+        </div>
+        <p style="margin:8px 0 0;color:var(--muted);font-weight:750;font-size:12px;line-height:1.35">
+          Muestra <b>monto original</b>, <b>abonado</b> y <b>saldo real</b> para reducir ansiedad y aumentar retención.
+        </p>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <div class="topbar">
+        <div class="title">
+          <h2>Bajar deuda</h2>
+          <small>Clasifica tu deuda y mira tu progreso real sin borrar historial.</small>
+        </div>
+
+        <div class="topActions">
+          <div class="search" role="search">
+            <span class="muted">⌕</span>
+            <input id="q" type="text" placeholder="Buscar deuda (ej. Visa, Auto, Universidad)…" />
+            <span class="muted kbd">⌘K</span>
+          </div>
+          <button class="btn btnPrimary" id="btnNewDebt" type="button">+ Nueva deuda</button>
+        </div>
+      </div>
+
+      <section class="grid">
+        <!-- Lista -->
+        <div class="card">
+          <div class="cardHd">
+            <h3>Deudas</h3>
+            <div class="meta"><span id="countDebts">0</span> activas</div>
+          </div>
+
+          <div class="cardBd">
+            <div class="filters">
+              <div class="field">
+                <label for="filterCategory">Categoría</label>
+                <select id="filterCategory"></select>
+              </div>
+              <div class="field">
+                <label for="filterType">Tipo de deuda</label>
+                <select id="filterType">
+                  <option value="all">Todas</option>
+                  <option value="puntual">Deuda puntual</option>
+                  <option value="recurrente">Deuda recurrente</option>
+                  <option value="disputa">Deuda en disputa</option>
+                  <option value="temporal">Dificultad temporal</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="debtList" id="debtList" aria-label="Lista de deudas"></div>
+          </div>
+        </div>
+
+        <!-- Detalle -->
+        <div class="card">
+          <div class="cardHd">
+            <h3>Progreso real</h3>
+            <div class="meta">Sin borrar historial · destaca avance</div>
+          </div>
+
+          <div class="cardBd">
+            <div class="hero">
+              <div class="left">
+                <h4 id="dTitle">Selecciona una deuda</h4>
+                <p id="dSubtitle">Verás monto original, abonado, saldo real y % pagado.</p>
+              </div>
+              <div class="right">
+                <button class="btn btnGhost" id="btnAddPayment" type="button" disabled>+ Abono</button>
+                <button class="btn btnGhost" id="btnEditDebt" type="button" disabled>Editar</button>
+              </div>
+            </div>
+
+            <div class="progressWrap">
+              <div class="progTop">
+                <div>
+                  <div class="muted" style="font-weight:950;font-size:12px">Porcentaje pagado</div>
+                  <div class="bigPct" id="dPct">—</div>
+                </div>
+                <div style="text-align:right">
+                  <div class="muted" style="font-weight:950;font-size:12px">Saldo actual real</div>
+                  <div style="font-size:18px;font-weight:1100" id="dBalance">—</div>
+                </div>
+              </div>
+              <div class="bar" aria-label="Barra de progreso"><div id="barFill"></div></div>
+
+              <div class="metrics">
+                <div class="metric">
+                  <small>Monto original</small>
+                  <b id="dOriginal">—</b>
+                </div>
+                <div class="metric">
+                  <small>Total abonado</small>
+                  <b id="dPaid">—</b>
+                </div>
+                <div class="metric">
+                  <small>Tipo</small>
+                  <b id="dType">—</b>
+                </div>
+                <div class="metric">
+                  <small>Categoría</small>
+                  <b id="dCat">—</b>
+                </div>
+              </div>
+            </div>
+
+            <div class="split">
+              <div class="box">
+                <h5>Clasificación (para narrativa + motivación)</h5>
+                <div class="radioGrid" id="typeRadios">
+                  <label class="radio">
+                    <input type="radio" name="dtype" value="puntual" />
+                    <div>
+                      <b>Deuda puntual</b>
+                      <span>Evento único · tiene cierre claro</span>
+                    </div>
+                  </label>
+                  <label class="radio">
+                    <input type="radio" name="dtype" value="recurrente" />
+                    <div>
+                      <b>Deuda recurrente</b>
+                      <span>Compromiso continuo · ritmo de pagos</span>
+                    </div>
+                  </label>
+                  <label class="radio">
+                    <input type="radio" name="dtype" value="disputa" />
+                    <div>
+                      <b>Deuda en disputa</b>
+                      <span>Separada · reduce ansiedad mientras se resuelve</span>
+                    </div>
+                  </label>
+                  <label class="radio">
+                    <input type="radio" name="dtype" value="temporal" />
+                    <div>
+                      <b>Dificultad temporal</b>
+                      <span>Atraso momentáneo · enfoque humano</span>
+                    </div>
+                  </label>
+                </div>
+                <p class="muted" style="margin:10px 0 0;font-size:12px;line-height:1.35">
+                  Esto ayuda a: <b>motivación</b>, <b>sensación de control</b> y <b>retención</b> al mostrar progreso tangible.
+                </p>
+              </div>
+
+              <div class="box">
+                <h5>Historial de abonos (no se borra)</h5>
+                <div class="history" id="history"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Modal: Abono -->
+  <div class="overlay" id="overlayPay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="payTitle">
+      <div class="modalHd">
+        <b id="payTitle">Registrar abono</b>
+        <button class="xBtn" id="closePay" type="button" aria-label="Cerrar">✕</button>
+      </div>
+      <div class="modalBd">
+        <div class="modalGrid">
+          <div class="field">
+            <label for="payDate">Fecha</label>
+            <input id="payDate" type="date"/>
+          </div>
+          <div class="field">
+            <label for="payAmount">Monto abonado</label>
+            <input id="payAmount" type="number" min="0" step="0.01" placeholder="Ej. 125.00"/>
+          </div>
+          <div class="field" style="grid-column:1 / -1;">
+            <label for="payNote">Nota (opcional)</label>
+            <input id="payNote" type="text" placeholder="Ej. Pago extra, mínimo, adelanto…"/>
+          </div>
+        </div>
+      </div>
+      <div class="modalFoot">
+        <button class="btn btnGhost" id="cancelPay" type="button">Cancelar</button>
+        <button class="btn btnPrimary" id="savePay" type="button">Guardar abono</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Nueva deuda -->
+  <div class="overlay" id="overlayDebt" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="debtTitle">
+      <div class="modalHd">
+        <b id="debtTitle">Nueva deuda</b>
+        <button class="xBtn" id="closeDebt" type="button" aria-label="Cerrar">✕</button>
+      </div>
+      <div class="modalBd">
+        <div class="modalGrid">
+          <div class="field">
+            <label for="newName">Nombre</label>
+            <input id="newName" type="text" placeholder="Ej. Visa, Auto, Préstamo…"/>
+          </div>
+          <div class="field">
+            <label for="newCategory">Categoría</label>
+            <select id="newCategory"></select>
+          </div>
+          <div class="field">
+            <label for="newOriginal">Monto original</label>
+            <input id="newOriginal" type="number" min="0" step="0.01" placeholder="Ej. 5000"/>
+          </div>
+          <div class="field">
+            <label for="newType">Tipo de deuda</label>
+            <select id="newType">
+              <option value="puntual">Deuda puntual</option>
+              <option value="recurrente">Deuda recurrente</option>
+              <option value="disputa">Deuda en disputa</option>
+              <option value="temporal">Dificultad temporal</option>
+            </select>
+          </div>
+          <div class="field" style="grid-column:1 / -1;">
+            <label for="newApr">APR / interés (opcional)</label>
+            <input id="newApr" type="number" min="0" step="0.01" placeholder="Ej. 24.99"/>
+          </div>
+        </div>
+        <p class="muted" style="margin:10px 0 0;font-size:12px;line-height:1.35">
+          El progreso se calcula con: <b>monto original</b> − <b>total abonado</b> = <b>saldo real</b>.
+        </p>
+      </div>
+      <div class="modalFoot">
+        <button class="btn btnGhost" id="cancelDebt" type="button">Cancelar</button>
+        <button class="btn btnPrimary" id="saveDebt" type="button">Crear deuda</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ✅ Categorías base (puedes extender este array)
+    const BASE_CATEGORIES = [
+      {id:'all', name:'Todas'},
+      {id:'tarjetas', name:'Tarjetas de Crédito, tiendas, gasolinera, etc.'},
+      {id:'linea_personal', name:'Línea crédito personal'},
+      {id:'linea_propiedad', name:'Línea crédito de la propiedad'},
+      {id:'casa', name:'Casa'},
+      {id:'otras_propiedades', name:'Otras propiedad (barco, casa de playa, etc.)'},
+      {id:'auto', name:'Auto'},
+      {id:'educacion', name:'Educación'},
+      {id:'muebles', name:'Préstamos para Muebles y Enseres'},
+      {id:'mejoras', name:'Mejoras al hogar'},
+      {id:'seguro_vida', name:'Préstamo de seguro de vida'},
+      {id:'margen_broker', name:'Préstamos al Margen con casa de corretaje'},
+      // 👇 agrega aquí lo que sigue en tu lista real
+      // {id:'...', name:'...'},
+    ];
+
+    const TYPE_LABEL = {
+      puntual: 'Deuda puntual',
+      recurrente: 'Deuda recurrente',
+      disputa: 'Deuda en disputa',
+      temporal: 'Dificultad temporal'
+    };
+
+    // Demo data
+    let debts = [
+      {
+        id: cryptoId(),
+        name: 'Visa – Banco',
+        categoryId: 'tarjetas',
+        type: 'recurrente',
+        original: 8200,
+        apr: 24.99,
+        payments: [
+          {date:'2026-01-10', amount:250, note:'Pago mínimo'},
+          {date:'2026-02-05', amount:400, note:'Pago extra'}
+        ]
+      },
+      {
+        id: cryptoId(),
+        name: 'Préstamo Auto',
+        categoryId: 'auto',
+        type: 'recurrente',
+        original: 14500,
+        apr: 7.50,
+        payments: [
+          {date:'2026-01-15', amount:375, note:'Pago mensual'},
+          {date:'2026-02-15', amount:375, note:'Pago mensual'}
+        ]
+      },
+      {
+        id: cryptoId(),
+        name: 'Factura médica (reclamación)',
+        categoryId: 'linea_personal',
+        type: 'disputa',
+        original: 1200,
+        apr: 0,
+        payments: [
+          {date:'2026-02-01', amount:100, note:'Abono parcial'}
+        ]
+      }
+    ];
+
+    let selectedDebtId = null;
+
+    // Elements
+    const debtListEl = document.getElementById('debtList');
+    const countDebtsEl = document.getElementById('countDebts');
+
+    const filterCategoryEl = document.getElementById('filterCategory');
+    const filterTypeEl = document.getElementById('filterType');
+    const qEl = document.getElementById('q');
+
+    const dTitle = document.getElementById('dTitle');
+    const dSubtitle = document.getElementById('dSubtitle');
+
+    const dPct = document.getElementById('dPct');
+    const dBalance = document.getElementById('dBalance');
+    const dOriginal = document.getElementById('dOriginal');
+    const dPaid = document.getElementById('dPaid');
+    const dType = document.getElementById('dType');
+    const dCat = document.getElementById('dCat');
+    const barFill = document.getElementById('barFill');
+
+    const historyEl = document.getElementById('history');
+    const btnAddPayment = document.getElementById('btnAddPayment');
+    const btnEditDebt = document.getElementById('btnEditDebt');
+
+    // Modals
+    const overlayPay = document.getElementById('overlayPay');
+    const overlayDebt = document.getElementById('overlayDebt');
+
+    const btnNewDebt = document.getElementById('btnNewDebt');
+
+    const closePay = document.getElementById('closePay');
+    const cancelPay = document.getElementById('cancelPay');
+    const savePay = document.getElementById('savePay');
+    const payDate = document.getElementById('payDate');
+    const payAmount = document.getElementById('payAmount');
+    const payNote = document.getElementById('payNote');
+
+    const closeDebt = document.getElementById('closeDebt');
+    const cancelDebt = document.getElementById('cancelDebt');
+    const saveDebt = document.getElementById('saveDebt');
+    const newName = document.getElementById('newName');
+    const newCategory = document.getElementById('newCategory');
+    const newOriginal = document.getElementById('newOriginal');
+    const newType = document.getElementById('newType');
+    const newApr = document.getElementById('newApr');
+
+    // Type radios
+    const typeRadiosWrap = document.getElementById('typeRadios');
+
+    // Init
+    hydrateCategorySelect(filterCategoryEl, true);
+    hydrateCategorySelect(newCategory, false);
+
+    // default dates
+    payDate.value = isoToday();
+
+    render();
+
+    // Events
+    filterCategoryEl.addEventListener('change', render);
+    filterTypeEl.addEventListener('change', render);
+    qEl.addEventListener('input', debounce(render, 120));
+
+    btnNewDebt.addEventListener('click', () => {
+      openModal(overlayDebt);
+      // reset fields
+      newName.value = '';
+      newOriginal.value = '';
+      newApr.value = '';
+      newType.value = 'puntual';
+      newCategory.value = BASE_CATEGORIES.find(c => c.id !== 'all')?.id || 'tarjetas';
+      setTimeout(() => newName.focus(), 0);
+    });
+
+    btnAddPayment.addEventListener('click', () => {
+      if(!selectedDebtId) return;
+      openModal(overlayPay);
+      payDate.value = isoToday();
+      payAmount.value = '';
+      payNote.value = '';
+      setTimeout(() => payAmount.focus(), 0);
+    });
+
+    closePay.addEventListener('click', () => closeModal(overlayPay));
+    cancelPay.addEventListener('click', () => closeModal(overlayPay));
+    closeDebt.addEventListener('click', () => closeModal(overlayDebt));
+    cancelDebt.addEventListener('click', () => closeModal(overlayDebt));
+
+    savePay.addEventListener('click', () => {
+      const d = getSelectedDebt();
+      if(!d) return;
+
+      const amt = Number(payAmount.value || 0);
+      const dt = payDate.value || isoToday();
+      const note = (payNote.value || '').trim();
+
+      if(amt <= 0){
+        shake(payAmount);
+        payAmount.focus();
+        return;
+      }
+
+      d.payments.push({date: dt, amount: amt, note});
+      // keep history order by date desc for UI clarity
+      d.payments.sort((a,b) => (a.date < b.date ? 1 : -1));
+      closeModal(overlayPay);
+      renderDetail(d);
+      renderList();
+    });
+
+    saveDebt.addEventListener('click', () => {
+      const name = (newName.value || '').trim();
+      const cat = newCategory.value;
+      const type = newType.value;
+      const orig = Number(newOriginal.value || 0);
+      const apr = Number(newApr.value || 0);
+
+      if(!name){ shake(newName); newName.focus(); return; }
+      if(orig <= 0){ shake(newOriginal); newOriginal.focus(); return; }
+
+      debts.unshift({
+        id: cryptoId(),
+        name,
+        categoryId: cat,
+        type,
+        original: orig,
+        apr,
+        payments: []
+      });
+
+      closeModal(overlayDebt);
+      render();
+      // auto-select created
+      selectedDebtId = debts[0].id;
+      renderDetail(getSelectedDebt());
+      renderList();
+    });
+
+    typeRadiosWrap.addEventListener('change', (e) => {
+      const d = getSelectedDebt();
+      if(!d) return;
+      if(e.target && e.target.name === 'dtype'){
+        d.type = e.target.value;
+        renderDetail(d);
+        renderList();
+      }
+    });
+
+    // Keyboard shortcut ⌘K or Ctrl+K focus search
+    document.addEventListener('keydown', (e) => {
+      const k = e.key.toLowerCase();
+      if((e.metaKey || e.ctrlKey) && k === 'k'){
+        e.preventDefault();
+        qEl.focus();
+      }
+      if(k === 'escape'){
+        closeModal(overlayPay);
+        closeModal(overlayDebt);
+      }
+    });
+
+    // Close modal on backdrop click
+    overlayPay.addEventListener('click', (e) => { if(e.target === overlayPay) closeModal(overlayPay); });
+    overlayDebt.addEventListener('click', (e) => { if(e.target === overlayDebt) closeModal(overlayDebt); });
+
+    // Render functions
+    function render(){
+      renderList();
+      countDebtsEl.textContent = debts.length;
+
+      const selected = getSelectedDebt();
+      if(selected){
+        renderDetail(selected);
+      }else{
+        renderEmptyDetail();
+      }
+    }
+
+    function renderList(){
+      const filtered = applyFilters(debts);
+
+      debtListEl.innerHTML = '';
+      if(filtered.length === 0){
+        debtListEl.innerHTML = `
+          <div style="padding:12px;border:1px dashed var(--stroke);border-radius:18px;background:rgba(255,255,255,.85)">
+            <b style="display:block;font-size:13px">No hay deudas que coincidan</b>
+            <div class="muted" style="margin-top:6px;font-size:12px">Ajusta filtros o crea una nueva deuda.</div>
+          </div>`;
+        return;
+      }
+
+      filtered.forEach(d => {
+        const stats = compute(d);
+        const catName = getCatName(d.categoryId);
+        const active = (d.id === selectedDebtId);
+
+        const typeTag = `<span class="tag primary">${TYPE_LABEL[d.type] || 'Tipo'}</span>`;
+        const catTag = `<span class="tag">${catName}</span>`;
+        const disputeTag = d.type === 'disputa' ? `<span class="tag warn">En disputa</span>` : '';
+
+        const el = document.createElement('div');
+        el.className = 'debtItem' + (active ? ' active' : '');
+        el.innerHTML = `
+          <div>
+            <div class="debtName">${escapeHtml(d.name)}</div>
+            <div class="debtSub">${escapeHtml(catName)} · ${d.apr ? (d.apr.toFixed(2)+'% APR') : 'sin APR'}</div>
+            <div class="tagsRow">
+              ${typeTag}
+              ${catTag}
+              ${disputeTag}
+            </div>
+          </div>
+          <div class="amountCol">
+            <div>
+              <div class="amt">${money(stats.balance)}</div>
+              <div class="mini">saldo real</div>
+            </div>
+            <div>
+              <div class="mini">${stats.pct.toFixed(0)}% pagado</div>
+            </div>
+          </div>
+        `;
+        el.addEventListener('click', () => {
+          selectedDebtId = d.id;
+          renderList();
+          renderDetail(d);
+        });
+        debtListEl.appendChild(el);
+      });
+
+      // If nothing selected yet, auto-select first in filtered list
+      if(!selectedDebtId && filtered[0]){
+        selectedDebtId = filtered[0].id;
+        renderList();
+        renderDetail(getSelectedDebt());
+      }
+    }
+
+    function renderDetail(d){
+      if(!d){ renderEmptyDetail(); return; }
+
+      btnAddPayment.disabled = false;
+      btnEditDebt.disabled = false;
+
+      const stats = compute(d);
+      const catName = getCatName(d.categoryId);
+
+      dTitle.textContent = d.name;
+      dSubtitle.textContent = `${catName} · ${TYPE_LABEL[d.type] || 'Tipo'} · Historial intacto`;
+
+      dPct.textContent = `${stats.pct.toFixed(0)}%`;
+      dBalance.textContent = money(stats.balance);
+      dOriginal.textContent = money(d.original);
+      dPaid.textContent = money(stats.paid);
+      dType.textContent = TYPE_LABEL[d.type] || '—';
+      dCat.textContent = catName;
+
+      barFill.style.width = clamp(stats.pct, 0, 100) + '%';
+
+      // set radios
+      const radios = document.querySelectorAll('input[name="dtype"]');
+      radios.forEach(r => r.checked = (r.value === d.type));
+
+      // history
+      historyEl.innerHTML = '';
+      const sorted = [...d.payments].sort((a,b)=> (a.date < b.date ? 1 : -1));
+      if(sorted.length === 0){
+        historyEl.innerHTML = `
+          <div style="padding:10px;border:1px dashed var(--stroke);border-radius:16px;background:rgba(238,243,255,.55)">
+            <b style="font-size:12px;display:block">Sin abonos aún</b>
+            <div class="muted" style="margin-top:4px;font-size:11px">Registra un abono para empezar a ver progreso tangible.</div>
+          </div>`;
+      }else{
+        sorted.forEach(p => {
+          const row = document.createElement('div');
+          row.className = 'txn';
+          row.innerHTML = `
+            <div class="l">
+              <b>${fmtDate(p.date)}</b>
+              <small>${escapeHtml(p.note || 'Abono')}</small>
+            </div>
+            <div class="r">
+              <b>${money(p.amount)}</b>
+              <small>acumulado: ${money(sumPaymentsUntil(sorted, p.date))}</small>
+            </div>
+          `;
+          historyEl.appendChild(row);
+        });
+      }
+    }
+
+    function renderEmptyDetail(){
+      btnAddPayment.disabled = true;
+      btnEditDebt.disabled = true;
+
+      dTitle.textContent = 'Selecciona una deuda';
+      dSubtitle.textContent = 'Verás monto original, total abonado, saldo real y % pagado.';
+      dPct.textContent = '—';
+      dBalance.textContent = '—';
+      dOriginal.textContent = '—';
+      dPaid.textContent = '—';
+      dType.textContent = '—';
+      dCat.textContent = '—';
+      barFill.style.width = '0%';
+
+      historyEl.innerHTML = `
+        <div style="padding:10px;border:1px dashed var(--stroke);border-radius:16px;background:rgba(238,243,255,.55)">
+          <b style="font-size:12px;display:block">Historial</b>
+          <div class="muted" style="margin-top:4px;font-size:11px">Selecciona una deuda para ver sus abonos.</div>
+        </div>`;
+    }
+
+    // Helpers
+    function applyFilters(list){
+      const cat = filterCategoryEl.value || 'all';
+      const typ = filterTypeEl.value || 'all';
+      const q = (qEl.value || '').trim().toLowerCase();
+
+      return list.filter(d => {
+        const okCat = (cat === 'all') ? true : d.categoryId === cat;
+        const okType = (typ === 'all') ? true : d.type === typ;
+        const okQ = !q ? true : (d.name.toLowerCase().includes(q) || getCatName(d.categoryId).toLowerCase().includes(q));
+        return okCat && okType && okQ;
+      });
+    }
+
+    function compute(d){
+      const paid = (d.payments || []).reduce((s,p)=> s + Number(p.amount||0), 0);
+      const balance = Math.max(0, Number(d.original||0) - paid);
+      const pct = (Number(d.original||0) > 0) ? (paid / d.original * 100) : 0;
+      return {paid, balance, pct: clamp(pct, 0, 999)};
+    }
+
+    function hydrateCategorySelect(selectEl, includeAll){
+      selectEl.innerHTML = '';
+      BASE_CATEGORIES.forEach(c => {
+        if(!includeAll && c.id === 'all') return;
+        const opt = document.createElement('option');
+        opt.value = c.id;
+        opt.textContent = c.name;
+        selectEl.appendChild(opt);
+      });
+      if(includeAll) selectEl.value = 'all';
+    }
+
+    function getCatName(id){
+      return (BASE_CATEGORIES.find(c => c.id === id)?.name) || 'Categoría';
+    }
+
+    function getSelectedDebt(){
+      return debts.find(d => d.id === selectedDebtId) || null;
+    }
+
+    function openModal(el){
+      el.classList.add('show');
+      el.setAttribute('aria-hidden', 'false');
+    }
+    function closeModal(el){
+      el.classList.remove('show');
+      el.setAttribute('aria-hidden', 'true');
+    }
+
+    function money(n){
+      const v = Number(n || 0);
+      return v.toLocaleString('en-US', {style:'currency', currency:'USD', maximumFractionDigits:0});
+    }
+
+    function clamp(n, a, b){ return Math.min(b, Math.max(a, n)); }
+
+    function isoToday(){
+      const d = new Date();
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth()+1).padStart(2,'0');
+      const dd = String(d.getDate()).padStart(2,'0');
+      return `${yyyy}-${mm}-${dd}`;
+    }
+
+    function fmtDate(iso){
+      // iso yyyy-mm-dd -> "Feb 15, 2026" (simple)
+      try{
+        const d = new Date(iso + 'T00:00:00');
+        return d.toLocaleDateString('es-US', {year:'numeric', month:'short', day:'2-digit'});
+      }catch(_){
+        return iso;
+      }
+    }
+
+    function sumPaymentsUntil(sortedDesc, date){
+      // sortedDesc is in desc order; compute cumulative up to that transaction date in desc display
+      // For clarity, compute "paid so far" using payments <= that date.
+      const all = sortedDesc;
+      const target = date;
+      return all.reduce((s,p) => s + (p.date <= target ? Number(p.amount||0) : 0), 0);
+    }
+
+    function debounce(fn, ms){
+      let t=null;
+      return (...args)=>{
+        clearTimeout(t);
+        t=setTimeout(()=>fn(...args), ms);
+      };
+    }
+
+    function shake(el){
+      const old = el.style.boxShadow;
+      el.style.boxShadow = '0 0 0 3px rgba(239,68,68,.25)';
+      el.animate([{transform:'translateX(0)'},{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'translateX(0)'}],
+                 {duration:220, iterations:1});
+      setTimeout(()=> el.style.boxShadow = old, 420);
+    }
+
+    function cryptoId(){
+      return Math.random().toString(16).slice(2) + Math.random().toString(16).slice(2);
+    }
+
+    function escapeHtml(s){
+      return String(s ?? '').replace(/[&<>"']/g, (m)=>({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+      }[m]));
+    }
+  </script>
+</body>
+</html>
