@@ -1,0 +1,724 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Cada Menudo – Nueva Deuda</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    :root{
+      --primary:#594AE2;
+      --primary-light:rgba(89,74,226,.10);
+      --primary-border:rgba(89,74,226,.22);
+      --secondary:#7459D9;
+      --green:#22C55E;
+      --green-light:rgba(34,197,94,.10);
+      --green-border:rgba(34,197,94,.28);
+      --yellow:#E8C239;
+      --red:#EF4444;
+      --orange:#F97316;
+      --gray:#64748B;
+      --muted:#EEF0F6;
+      --bg:#F7F8FC;
+      --text:#0F172A;
+      --border:#E5E7EB;
+      --shadow:0 6px 18px rgba(17,24,39,.06);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:"Nunito",system-ui,sans-serif;
+      color:var(--text);background:var(--bg);
+      min-height:100vh;
+      display:flex;align-items:flex-start;justify-content:center;
+      padding:32px 16px 60px;
+    }
+    .page{width:100%;max-width:680px}
+
+    /* ===== HEADER ===== */
+    .back-link{
+      display:inline-flex;align-items:center;gap:6px;
+      font-size:13px;font-weight:800;color:var(--gray);
+      background:none;border:none;cursor:pointer;
+      font-family:"Nunito",sans-serif;padding:0;
+      margin-bottom:12px;transition:color .15s;
+    }
+    .back-link:hover{color:var(--primary)}
+    .page-title{font-size:22px;font-weight:900;letter-spacing:.2px;margin-bottom:4px}
+    .page-sub{font-size:13px;font-weight:700;color:var(--gray);margin-bottom:24px}
+
+    /* ===== CARD ===== */
+    .card{
+      background:#fff;border-radius:20px;
+      box-shadow:var(--shadow);padding:24px;margin-bottom:16px;
+    }
+    .card-title{
+      font-size:15px;font-weight:900;margin-bottom:16px;
+      display:flex;align-items:center;gap:8px;
+    }
+    .card-title .step{
+      width:24px;height:24px;border-radius:8px;
+      background:var(--primary);color:#fff;
+      font-size:12px;font-weight:900;
+      display:grid;place-items:center;flex:0 0 24px;
+    }
+
+    /* ===== FIELDS ===== */
+    .field{margin-bottom:14px}
+    .field:last-child{margin-bottom:0}
+    .field label{
+      display:flex;align-items:center;justify-content:space-between;
+      font-size:12px;font-weight:800;color:var(--gray);
+      text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px;
+    }
+    .optional{font-size:11px;font-weight:700;color:#CBD5E1;text-transform:none;letter-spacing:0}
+    .field input,.field select{
+      width:100%;border:1.5px solid var(--border);
+      border-radius:12px;padding:11px 14px;
+      font-family:"Nunito",sans-serif;font-size:14px;
+      font-weight:700;color:var(--text);background:#fff;outline:none;
+      transition:border-color .15s,box-shadow .15s;
+    }
+    .field input:focus,.field select:focus{
+      border-color:rgba(89,74,226,.5);
+      box-shadow:0 0 0 3px rgba(89,74,226,.10);
+    }
+    .select-wrap{position:relative}
+    .select-wrap select{appearance:none;cursor:pointer;padding-right:36px}
+    .select-wrap .arr{
+      position:absolute;right:14px;top:50%;transform:translateY(-50%);
+      pointer-events:none;font-size:12px;color:var(--gray);
+    }
+    input::placeholder{color:#94a3b8;font-weight:700}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+    /* ===== CATEGORY GRID ===== */
+    .cat-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:8px;
+    }
+    .cat-btn{
+      display:flex;flex-direction:column;align-items:center;
+      gap:6px;padding:12px 8px;
+      border:1.5px solid var(--border);border-radius:14px;
+      background:#fff;cursor:pointer;
+      font-family:"Nunito",sans-serif;
+      transition:all .15s;text-align:center;
+    }
+    .cat-btn:hover{background:var(--muted);border-color:#C7CAED}
+    .cat-btn.active{background:var(--primary-light);border-color:var(--primary)}
+    .cat-btn.active .cat-label{color:var(--primary)}
+    .cat-icon{font-size:22px;line-height:1}
+    .cat-label{font-size:11px;font-weight:900;color:var(--gray);line-height:1.3}
+
+    /* ===== APR HELPER ===== */
+    .apr-helper{
+      margin-top:10px;padding:10px 14px;
+      background:rgba(249,115,22,.06);border:1.5px solid rgba(249,115,22,.2);
+      border-radius:12px;font-size:12px;font-weight:700;color:var(--gray);
+      line-height:1.5;display:none;
+      animation:slideDown .2s cubic-bezier(.4,0,.2,1);
+    }
+    .apr-helper.show{display:block}
+    .apr-helper span{color:var(--orange);font-weight:900}
+
+    /* ===== PRIMER PAGO — panel condicional ===== */
+    .first-payment-panel{
+      margin-top:16px;
+      border:1.5px solid var(--green-border);
+      border-radius:16px;background:var(--green-light);overflow:hidden;
+      animation:slideDown .22s cubic-bezier(.4,0,.2,1);
+    }
+    @keyframes slideDown{
+      from{opacity:0;transform:translateY(-8px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+    .fp-header{
+      display:flex;align-items:center;gap:10px;
+      padding:12px 16px;
+      background:rgba(34,197,94,.10);
+      border-bottom:1px solid var(--green-border);
+    }
+    .fp-header .fp-icon{font-size:18px}
+    .fp-header .fp-title{font-size:13px;font-weight:900;color:#15803d}
+    .fp-header .fp-sub{font-size:12px;font-weight:700;color:var(--gray);margin-top:1px}
+    .fp-body{padding:14px 16px}
+
+    /* Preview de impacto del primer pago */
+    .payment-impact{
+      display:none;
+      padding:10px 12px;
+      background:#fff;
+      border:1px solid var(--green-border);
+      border-radius:10px;margin-top:10px;
+      font-size:12px;font-weight:700;color:var(--text);
+      line-height:1.5;gap:8px;align-items:flex-start;
+    }
+    .payment-impact.show{display:flex}
+    .payment-impact .pi-icon{font-size:15px;flex:0 0 18px;margin-top:1px}
+    .payment-impact .pi-text span{color:#15803d;font-weight:900}
+
+    /* ===== RESUMEN ===== */
+    .summary-box{
+      border:1.5px solid var(--border);border-radius:16px;
+      padding:16px;background:#fff;
+    }
+    .summary-row{
+      display:flex;justify-content:space-between;align-items:center;
+      padding:7px 0;border-bottom:1px solid var(--border);font-size:13px;
+    }
+    .summary-row:last-child{border-bottom:none}
+    .sr-label{font-weight:700;color:var(--gray)}
+    .sr-value{font-weight:900}
+    .summary-row.total .sr-label{font-size:14px;font-weight:900;color:var(--text)}
+    .summary-row.total .sr-value{font-size:18px;font-weight:900;color:var(--primary)}
+    .summary-row.highlight .sr-value{color:#15803d}
+
+    .badge{
+      display:inline-flex;align-items:center;gap:4px;
+      padding:3px 8px;border-radius:6px;font-size:11px;font-weight:900;
+    }
+    .badge.green{background:var(--green-light);color:#15803d}
+    .badge.purple{background:var(--primary-light);color:var(--primary)}
+
+    /* ===== BOTONES ===== */
+    .btn{
+      border:0;border-radius:14px;padding:13px 20px;font-weight:900;cursor:pointer;
+      font-family:"Nunito",sans-serif;font-size:15px;letter-spacing:.2px;
+      transition:transform .1s,box-shadow .15s;
+      display:inline-flex;align-items:center;gap:8px;
+    }
+    .btn.primary{
+      background:var(--primary);color:#fff;
+      box-shadow:0 10px 20px rgba(89,74,226,.25);
+      width:100%;justify-content:center;
+    }
+    .btn.primary:hover{box-shadow:0 14px 28px rgba(89,74,226,.35)}
+    .btn.primary:disabled{opacity:.4;cursor:not-allowed;box-shadow:none;transform:none!important}
+    .btn.ghost{background:#fff;color:var(--gray);border:1.5px solid var(--border)}
+    .btn:active:not(:disabled){transform:translateY(1px)}
+    .btn-row{display:flex;gap:10px;margin-top:16px}
+    .btn-row .btn.primary{flex:1}
+
+    /* ===== TOAST ===== */
+    .toast{
+      position:fixed;bottom:24px;left:50%;
+      transform:translateX(-50%) translateY(80px);
+      background:#1e293b;color:#fff;
+      padding:12px 20px;border-radius:14px;
+      font-weight:800;font-size:14px;
+      box-shadow:0 8px 24px rgba(0,0,0,.25);
+      z-index:500;transition:transform .3s cubic-bezier(.4,0,.2,1),opacity .3s;
+      opacity:0;pointer-events:none;
+      display:flex;align-items:center;gap:10px;
+    }
+    .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+    /* ===== SUCCESS OVERLAY ===== */
+    .success-overlay{
+      display:none;position:fixed;inset:0;
+      background:rgba(15,23,42,.5);z-index:300;
+      align-items:center;justify-content:center;padding:24px;
+    }
+    .success-overlay.show{display:flex}
+    .success-card{
+      background:#fff;border-radius:24px;
+      box-shadow:0 24px 64px rgba(0,0,0,.2);
+      padding:32px 28px;max-width:400px;width:100%;
+      text-align:center;
+      animation:popIn .28s cubic-bezier(.34,1.56,.64,1);
+    }
+    @keyframes popIn{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+    .sc-icon{font-size:48px;margin-bottom:10px}
+    .sc-title{font-size:20px;font-weight:900;margin-bottom:6px}
+    .sc-debt-name{
+      display:inline-block;margin:8px 0 4px;
+      background:var(--primary-light);border:1px solid var(--primary-border);
+      border-radius:8px;padding:4px 14px;
+      font-size:14px;font-weight:900;color:var(--primary);
+    }
+    .sc-amount{font-size:28px;font-weight:900;color:var(--primary);margin:10px 0 2px}
+    .sc-amount-lbl{font-size:13px;font-weight:700;color:var(--gray);margin-bottom:20px}
+    .sc-sub{font-size:13px;font-weight:700;color:var(--gray);line-height:1.6;margin-bottom:24px}
+    .sc-btn{
+      background:var(--primary);color:#fff;border:0;border-radius:14px;
+      padding:13px 20px;font-family:"Nunito",sans-serif;
+      font-size:15px;font-weight:900;cursor:pointer;width:100%;
+      margin-bottom:10px;box-shadow:0 10px 20px rgba(89,74,226,.25);
+      transition:box-shadow .15s;
+    }
+    .sc-btn:hover{box-shadow:0 14px 28px rgba(89,74,226,.35)}
+    .sc-link{
+      font-size:13px;font-weight:800;color:var(--gray);
+      background:none;border:none;cursor:pointer;
+      font-family:"Nunito",sans-serif;transition:color .15s;
+    }
+    .sc-link:hover{color:var(--primary)}
+
+    /* Confetti */
+    .confetti-wrap{position:fixed;inset:0;pointer-events:none;z-index:400;overflow:hidden}
+    .confetti-piece{
+      position:absolute;border-radius:2px;
+      animation:confettiFall 1.3s ease-in forwards;opacity:0;
+    }
+    @keyframes confettiFall{
+      0%{transform:translateY(-20px) rotate(0deg);opacity:1}
+      100%{transform:translateY(100vh) rotate(720deg);opacity:0}
+    }
+
+    @media(max-width:520px){
+      .cat-grid{grid-template-columns:repeat(3,1fr)}
+      .row{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <button class="back-link" type="button" onclick="goBack()">← Plan de deuda</button>
+  <div class="page-title">Nueva deuda</div>
+  <div class="page-sub">Registra una nueva deuda en tu Plan de Deuda.</div>
+
+  <!-- PASO 1: DATOS DE LA DEUDA -->
+  <div class="card">
+    <div class="card-title">
+      <div class="step">1</div>
+      Datos de la deuda
+    </div>
+
+    <div class="field">
+      <label for="debtSelector">Nombre de la deuda</label>
+      <div class="select-wrap">
+        <select id="debtSelector" onchange="onDebtSelectorChange()">
+          <option value="">— Selecciona o crea —</option>
+          <optgroup label="Deudas registradas en tus categorías">
+            <option value="visa_popular">Visa – Banco Popular</option>
+            <option value="prestamo_auto">Préstamo Auto – FirstBankPR</option>
+            <option value="sallie_mae">Sallie Mae – Student Loan</option>
+          </optgroup>
+          <option value="__nueva__">➕ Escribir nombre nuevo…</option>
+        </select>
+        <span class="arr">▾</span>
+      </div>
+    </div>
+
+    <!-- Nuevo nombre (condicional) -->
+    <div class="field" id="newNameField" style="display:none">
+      <label for="debtName">Nombre de la nueva deuda</label>
+      <input id="debtName" type="text"
+             placeholder="Ej. Visa Banco Popular, Préstamo Auto, Sallie Mae…"
+             oninput="updateSummary(); checkSave();"/>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label for="debtOriginal">Monto total ($)</label>
+        <input id="debtOriginal" type="number" min="0" step="0.01"
+               placeholder="Ej. 8500"
+               oninput="onOriginalInput()"/>
+      </div>
+      <div class="field">
+        <label for="debtApr">
+          APR / interés anual (%)
+          <span class="optional">Opcional</span>
+        </label>
+        <input id="debtApr" type="number" min="0" step="0.01"
+               placeholder="Ej. 24.99"
+               oninput="onAprInput()"/>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label for="debtMonths">
+          Pagos / meses restantes
+          <span class="optional">Opcional</span>
+        </label>
+        <input id="debtMonths" type="number" min="1" step="1"
+               placeholder="Ej. 36"
+               oninput="onMonthsInput()"/>
+      </div>
+      <div class="field">
+        <label for="debtMonthlyPayment">
+          Pago mensual ($)
+          <span class="optional">Opcional</span>
+        </label>
+        <input id="debtMonthlyPayment" type="number" min="0" step="0.01"
+               placeholder="Ej. 250.00"
+               oninput="updateSummary()"/>
+      </div>
+    </div>
+
+    <!-- Months helper -->
+    <div class="apr-helper" id="monthsHelper" style="background:rgba(89,74,226,.06);border-color:rgba(89,74,226,.2);">
+      A ese ritmo, terminas en <span id="monthsFinishDate" style="color:var(--primary)">—</span>.
+      Pago mínimo estimado: <span id="monthsMinPayment" style="color:var(--primary)">—</span>/mes.
+    </div>
+
+    <!-- APR cost helper -->
+    <div class="apr-helper" id="aprHelper">
+      A <span id="aprPct">0%</span> APR, pagas aprox. <span id="aprMonthlyCost">$0</span>/mes
+      solo en intereses sobre <span id="aprOnAmount">$0</span>. Atacar esta deuda rápido ahorra dinero real.
+    </div>
+  </div>
+
+  <!-- PASO 2: CATEGORÍA -->
+  <div class="card">
+    <div class="card-title">
+      <div class="step">2</div>
+      Tipo de deuda
+    </div>
+
+    <div class="cat-grid" id="catGrid" role="radiogroup" aria-label="Tipo de deuda">
+      <button class="cat-btn" data-cat="tarjetas" type="button" onclick="selectCat(this)">
+        <span class="cat-icon">💳</span>
+        <span class="cat-label">Tarjetas de crédito</span>
+      </button>
+      <button class="cat-btn" data-cat="linea_personal" type="button" onclick="selectCat(this)">
+        <span class="cat-icon">🏦</span>
+        <span class="cat-label">Línea crédito personal</span>
+      </button>
+      <button class="cat-btn" data-cat="linea_propiedad" type="button" onclick="selectCat(this)">
+        <span class="cat-icon">🏘️</span>
+        <span class="cat-label">Línea crédito propiedad</span>
+      </button>
+      <button class="cat-btn" data-cat="casa" type="button" onclick="selectCat(this)">
+        <span class="cat-icon">🏠</span>
+        <span class="cat-label">Casa</span>
+      </button>
+      <button class="cat-btn" data-cat="otras_propiedades" type="button" onclick="selectCat(this)">
+        <span class="cat-icon">⛵</span>
+        <span class="cat-label">Otras propiedades</span>
+      </button>
+      <button class="cat-btn" data-cat="auto" type="button" onclick="selectCat(this)">
+        <span class="cat-icon">🚗</span>
+        <span class="cat-label">Auto</span>
+      </button>
+      <button class="cat-btn" data-cat="educacion" type="button" onclick="selectCat(this)">
+        <span class="cat-icon">🎓</span>
+        <span class="cat-label">Educación</span>
+      </button>
+      <button class="cat-btn" data-cat="muebles" type="button" onclick="selectCat(this)">
+        <span class="cat-icon">🛋️</span>
+        <span class="cat-label">Muebles y Enseres</span>
+      </button>
+      <button class="cat-btn" data-cat="mejoras" type="button" onclick="selectCat(this)">
+        <span class="cat-icon">🔨</span>
+        <span class="cat-label">Mejoras al hogar</span>
+      </button>
+      <button class="cat-btn" data-cat="seguro_vida" type="button" onclick="selectCat(this)">
+        <span class="cat-icon">🛡️</span>
+        <span class="cat-label">Seguro de vida</span>
+      </button>
+      <button class="cat-btn" data-cat="margen_broker" type="button" onclick="selectCat(this)">
+        <span class="cat-icon">📈</span>
+        <span class="cat-label">Margen corretaje</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- PASO 3: RESUMEN Y GUARDAR -->
+  <div class="card">
+    <div class="card-title">
+      <div class="step">3</div>
+      Confirmar y agregar al plan
+    </div>
+
+    <div class="summary-box">
+      <div class="summary-row">
+        <span class="sr-label">Nombre</span>
+        <span class="sr-value" id="sumName">—</span>
+      </div>
+      <div class="summary-row">
+        <span class="sr-label">Tipo</span>
+        <span class="sr-value" id="sumCat">—</span>
+      </div>
+      <div class="summary-row">
+        <span class="sr-label">APR</span>
+        <span class="sr-value" id="sumApr">—</span>
+      </div>
+      <div class="summary-row" id="sumMonthsRow" style="display:none">
+        <span class="sr-label">Pagos restantes</span>
+        <span class="sr-value" id="sumMonths">—</span>
+      </div>
+      <div class="summary-row" id="sumMonthlyRow" style="display:none">
+        <span class="sr-label">Pago mensual</span>
+        <span class="sr-value" id="sumMonthly">—</span>
+      </div>
+      <div class="summary-row total">
+        <span class="sr-label">Monto total deuda</span>
+        <span class="sr-value" id="sumOriginal">$0</span>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn ghost" type="button" onclick="goBack()">Cancelar</button>
+      <button class="btn primary" type="button" id="btnSave" onclick="saveDebt()" disabled>
+        Agregar a Plan de Deuda
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span id="toastEmoji">✅</span>
+  <span id="toastMsg">Deuda registrada</span>
+</div>
+
+<!-- SUCCESS OVERLAY -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-card">
+    <div class="sc-icon">✅</div>
+    <div class="sc-title">¡Deuda agregada!</div>
+    <div class="sc-debt-name" id="scDebtName">—</div>
+    <div class="sc-amount" id="scAmount">$0</div>
+    <div class="sc-amount-lbl">registrados como deuda total</div>
+    <div class="sc-sub" id="scSub">Tu Plan de Deuda ya incluye esta deuda.</div>
+    <button class="sc-btn" type="button" onclick="goToPlan()">Ver Plan de Deuda →</button>
+    <button class="sc-link" type="button" onclick="registerAnother()">Agregar otra deuda</button>
+  </div>
+</div>
+
+<div class="confetti-wrap" id="confettiWrap"></div>
+
+<script>
+  const CAT_LABELS = {
+    tarjetas:         'Tarjetas de Crédito, tiendas, gasolinera, etc.',
+    linea_personal:   'Línea crédito personal',
+    linea_propiedad:  'Línea crédito de la propiedad',
+    casa:             'Casa',
+    otras_propiedades:'Otras propiedades (barco, casa de playa, etc.)',
+    auto:             'Auto',
+    educacion:        'Educación',
+    muebles:          'Préstamos para Muebles y Enseres',
+    mejoras:          'Mejoras al hogar',
+    seguro_vida:      'Préstamo de seguro de vida',
+    margen_broker:    'Préstamos al Margen con casa de corretaje',
+  };
+
+  let selectedCat = null;
+
+  // Mock: deudas que vienen del módulo de categorías
+  const PRESET_DEBTS = {
+    visa_popular:  { name: 'Visa – Banco Popular',       cat: 'tarjetas' },
+    prestamo_auto: { name: 'Préstamo Auto – FirstBankPR', cat: 'auto'     },
+    sallie_mae:    { name: 'Sallie Mae – Student Loan',   cat: 'educacion' },
+  };
+
+  function onDebtSelectorChange(){
+    const val       = document.getElementById('debtSelector').value;
+    const nameField = document.getElementById('newNameField');
+    const nameInput = document.getElementById('debtName');
+
+    if(val === '__nueva__'){
+      nameField.style.display = 'block';
+      nameInput.value = '';
+      setTimeout(() => nameInput.focus(), 50);
+    } else {
+      nameField.style.display = 'none';
+      nameInput.value = '';
+    }
+
+    // Auto-select category if preset
+    if(PRESET_DEBTS[val]){
+      const preset = PRESET_DEBTS[val];
+      // select the matching cat button
+      document.querySelectorAll('.cat-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.cat === preset.cat);
+      });
+      selectedCat = preset.cat;
+    }
+
+    updateSummary();
+    checkSave();
+  }
+
+  // Init
+
+  // ===== CATEGORY =====
+  function selectCat(btn){
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedCat = btn.dataset.cat;
+    updateSummary();
+    checkSave();
+  }
+
+  // ===== APR HELPER =====
+  function onAprInput(){
+    const apr    = Number(document.getElementById('debtApr').value || 0);
+    const orig   = Number(document.getElementById('debtOriginal').value || 0);
+    const helper = document.getElementById('aprHelper');
+    if(apr > 0 && orig > 0){
+      const monthly = (orig * (apr / 100)) / 12;
+      document.getElementById('aprPct').textContent        = apr.toFixed(2) + '%';
+      document.getElementById('aprMonthlyCost').textContent = money(monthly);
+      document.getElementById('aprOnAmount').textContent   = money(orig);
+      helper.classList.add('show');
+    } else {
+      helper.classList.remove('show');
+    }
+    updateSummary();
+    checkSave();
+  }
+
+  function onOriginalInput(){
+    onAprInput();
+    onMonthsInput();
+    updateSummary();
+    checkSave();
+  }
+
+  function onMonthsInput(){
+    const months  = Number(document.getElementById('debtMonths').value || 0);
+    const orig    = Number(document.getElementById('debtOriginal').value || 0);
+    const helper  = document.getElementById('monthsHelper');
+    if(months > 0){
+      const finishDate = new Date();
+      finishDate.setMonth(finishDate.getMonth() + months);
+      const finishStr  = finishDate.toLocaleDateString('es-US', {year:'numeric', month:'long'});
+      document.getElementById('monthsFinishDate').textContent = finishStr;
+      if(orig > 0){
+        const minPay = orig / months;
+        document.getElementById('monthsMinPayment').textContent = money(minPay);
+      } else {
+        document.getElementById('monthsMinPayment').textContent = '—';
+      }
+      helper.classList.add('show');
+    } else {
+      helper.classList.remove('show');
+    }
+    updateSummary();
+  }
+
+
+  // ===== RESUMEN =====
+  function getDebtName(){
+    const val = document.getElementById('debtSelector').value;
+    if(!val) return '';
+    if(val === '__nueva__') return document.getElementById('debtName').value.trim();
+    return PRESET_DEBTS[val]?.name || '';
+  }
+
+  function updateSummary(){
+    const name = getDebtName();
+    const orig = Number(document.getElementById('debtOriginal').value || 0);
+    const apr  = Number(document.getElementById('debtApr').value || 0);
+
+    document.getElementById('sumName').textContent     = name || '—';
+    document.getElementById('sumCat').textContent      = selectedCat ? CAT_LABELS[selectedCat] : '—';
+    document.getElementById('sumApr').textContent      = apr > 0 ? apr.toFixed(2) + '%' : 'Sin APR';
+    document.getElementById('sumOriginal').textContent = money(orig);
+
+    const months  = Number(document.getElementById('debtMonths').value || 0);
+    const monthly = Number(document.getElementById('debtMonthlyPayment').value || 0);
+    const mRow    = document.getElementById('sumMonthsRow');
+    const mpRow   = document.getElementById('sumMonthlyRow');
+    if(months > 0){
+      document.getElementById('sumMonths').textContent = months + (months === 1 ? ' pago' : ' pagos');
+      mRow.style.display = 'flex';
+    } else { mRow.style.display = 'none'; }
+    if(monthly > 0){
+      document.getElementById('sumMonthly').textContent = money(monthly);
+      mpRow.style.display = 'flex';
+    } else { mpRow.style.display = 'none'; }
+  }
+
+  function checkSave(){
+    const name = getDebtName();
+    const orig = Number(document.getElementById('debtOriginal').value || 0);
+    document.getElementById('btnSave').disabled = !(name && orig > 0 && selectedCat);
+  }
+
+  document.getElementById('debtSelector').addEventListener('change', checkSave);
+
+  // ===== GUARDAR =====
+  function saveDebt(){
+    const name  = document.getElementById('debtName').value.trim();
+    const orig  = Number(document.getElementById('debtOriginal').value || 0);
+    const apr   = Number(document.getElementById('debtApr').value || 0);
+  
+
+    if(!name || orig <= 0 || !selectedCat) return;
+
+    // Construir objeto de deuda → en app real: store.addDebt(newDebt)
+    const newDebt = {
+      id: rid(), name, categoryId: selectedCat, original: orig, apr,
+      payments: [],
+      months: Number(document.getElementById('debtMonths').value || 0) || null,
+      monthlyPayment: Number(document.getElementById('debtMonthlyPayment').value || 0) || null,
+    };
+
+    console.log('Nueva deuda → Plan de Deuda:', newDebt);
+
+    document.getElementById('scDebtName').textContent = name;
+    document.getElementById('scAmount').textContent   = money(orig);
+    document.getElementById('scSub').textContent      = 'Ya aparece en tu Plan de Deuda. Registra abonos al categorizar tus gastos.';
+
+    document.getElementById('successOverlay').classList.add('show');
+
+  }
+
+  function goToPlan(){
+    document.getElementById('successOverlay').classList.remove('show');
+    window.location.href = 'bajar-deuda-v2.html';
+  }
+
+  function registerAnother(){
+    document.getElementById('successOverlay').classList.remove('show');
+    // Reset todo
+    document.getElementById('debtSelector').value  = '';
+    document.getElementById('debtName').value      = '';
+    document.getElementById('newNameField').style.display = 'none';
+    document.getElementById('debtOriginal').value = '';
+    document.getElementById('debtApr').value           = '';
+    document.getElementById('debtMonths').value        = '';
+    document.getElementById('debtMonthlyPayment').value = '';
+    document.getElementById('monthsHelper').classList.remove('show');
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    selectedCat = null;
+    document.getElementById('aprHelper').classList.remove('show');
+    document.getElementById('btnSave').disabled = true;
+    updateSummary();
+    document.getElementById('debtSelector').focus();
+  }
+
+  function goBack(){
+    window.location.href = 'bajar-deuda-v2.html';
+  }
+
+  // ===== UTILS =====
+  function money(n){
+    return Number(n||0).toLocaleString('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0});
+  }
+  function isoToday(){
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  }
+  function rid(){ return Math.random().toString(16).slice(2) + Math.random().toString(16).slice(2); }
+  function esc(s){
+    return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  }
+  function triggerConfetti(big){
+    const wrap=document.getElementById('confettiWrap');
+    const colors=['#594AE2','#E8C239','#22C55E','#F97316','#EC4899','#7459D9'];
+    const count=big?70:35;
+    wrap.innerHTML='';
+    for(let i=0;i<count;i++){
+      const el=document.createElement('div');
+      el.className='confetti-piece';
+      el.style.cssText=`left:${Math.random()*100}vw;top:-10px;background:${colors[Math.floor(Math.random()*colors.length)]};animation-delay:${Math.random()*.5}s;animation-duration:${.9+Math.random()*.8}s;width:${5+Math.random()*7}px;height:${5+Math.random()*7}px;border-radius:${Math.random()>.5?'50%':'2px'}`;
+      wrap.appendChild(el);
+    }
+    setTimeout(()=>wrap.innerHTML='',2200);
+  }
+  function shake(el){
+    el.style.boxShadow='0 0 0 3px rgba(239,68,68,.2)';
+    el.animate([{transform:'translateX(0)'},{transform:'translateX(-5px)'},{transform:'translateX(5px)'},{transform:'translateX(0)'}],{duration:200});
+    setTimeout(()=>el.style.boxShadow='',400);
+  }
+</script>
+</body>
+</html>
