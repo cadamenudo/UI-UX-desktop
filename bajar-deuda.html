@@ -13,6 +13,7 @@
       --primary:#3956E8;
       --secondary:#7459D9;
       --accent:#E8C239;
+
       --bg:#F6F7FF;
       --card:#ffffff;
       --ink:#0f172a;
@@ -39,16 +40,17 @@
         var(--bg);
     }
 
-    /* MAIN WRAP (sin sidebar) */
+    /* MAIN WRAP */
     .main{
       padding:18px 18px 24px;
       max-width: 1320px;
       margin: 0 auto;
     }
 
+    /* TOP */
     .topbar{
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
-      margin-bottom:14px;
+      display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+      margin-bottom:12px;
     }
     .title{
       display:flex; flex-direction:column; gap:4px;
@@ -58,6 +60,7 @@
 
     .topActions{
       display:flex; gap:10px; align-items:center;
+      margin-top:2px;
     }
     .search{
       width:360px; max-width:42vw;
@@ -80,6 +83,7 @@
       padding:10px 12px;
       font-weight:900;
       letter-spacing:.2px;
+      white-space:nowrap;
     }
     .btnPrimary{
       background:linear-gradient(135deg, var(--primary), var(--secondary));
@@ -93,10 +97,95 @@
       box-shadow:0 10px 20px rgba(15,23,42,.06);
     }
 
-    /* ✅ Placeholder gris suave */
+    /* Placeholder gris suave */
     input::placeholder{ color: var(--placeholder); font-weight:650; }
     textarea::placeholder{ color: var(--placeholder); font-weight:650; }
     .search input::placeholder{ color: var(--placeholder); font-weight:650; }
+
+    /* ✅ BANNER RESUMEN */
+    .summary{
+      border:1px solid rgba(57,86,232,.16);
+      background: linear-gradient(135deg, rgba(57,86,232,.14), rgba(116,89,217,.10), rgba(255,255,255,.80));
+      border-radius: 22px;
+      padding: 14px 14px;
+      box-shadow: 0 16px 38px rgba(15,23,42,.10);
+      margin-bottom: 14px;
+      overflow:hidden;
+      position:relative;
+    }
+    .summary:before{
+      content:"";
+      position:absolute; inset:-60px -140px auto auto;
+      width:260px; height:260px;
+      background: radial-gradient(circle at 30% 30%, rgba(232,194,57,.22), transparent 60%);
+      border-radius:999px;
+      transform: rotate(18deg);
+      pointer-events:none;
+    }
+    .summaryRow{
+      display:grid;
+      grid-template-columns: 1.2fr 1fr 1fr auto;
+      gap:12px;
+      align-items:stretch;
+      position:relative;
+      z-index:1;
+    }
+    .sumLeft{
+      display:flex; flex-direction:column; justify-content:center;
+      padding: 10px 12px;
+      border-radius:18px;
+      background: rgba(255,255,255,.65);
+      border:1px solid rgba(255,255,255,.55);
+    }
+    .sumLeft b{
+      font-size:14px;
+      font-weight:1100;
+      letter-spacing:.2px;
+    }
+    .sumLeft small{
+      margin-top:3px;
+      color:var(--muted);
+      font-weight:750;
+      font-size:12px;
+      line-height:1.2;
+    }
+
+    .sumStat{
+      padding: 10px 12px;
+      border-radius:18px;
+      background: rgba(255,255,255,.85);
+      border:1px solid rgba(255,255,255,.65);
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      min-height:64px;
+    }
+    .sumStat small{
+      font-size:11px;
+      color:var(--muted);
+      font-weight:950;
+      letter-spacing:.4px;
+      text-transform:uppercase;
+      margin-bottom:6px;
+    }
+    .sumStat .val{
+      font-weight:1200;
+      font-size:18px;
+      letter-spacing:.2px;
+    }
+    .sumStat .hint{
+      margin-top:4px;
+      font-size:11px;
+      color:var(--muted);
+      font-weight:750;
+    }
+
+    .sumActions{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      justify-content:flex-end;
+    }
 
     /* GRID */
     .grid{
@@ -123,7 +212,7 @@
     .cardHd .meta{ color:var(--muted); font-size:12px; font-weight:700;}
     .cardBd{ padding:14px 16px 16px; }
 
-    /* FILTERS */
+    /* FILTER */
     .filters{
       display:grid;
       grid-template-columns: 1fr;
@@ -151,7 +240,7 @@
       color:var(--ink);
     }
 
-    /* LISTA */
+    /* LIST */
     .debtList{
       display:flex;
       flex-direction:column;
@@ -190,14 +279,13 @@
     .amt{ font-weight:1000; font-size:13px; }
     .mini{ color:var(--muted); font-size:11px; font-weight:800; }
 
-    /* DETALLE */
+    /* DETAIL */
     .hero{
       display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
       margin-bottom:12px;
     }
     .hero .left h4{ margin:0; font-size:16px; font-weight:1000; }
     .hero .left p{ margin:4px 0 0; color:var(--muted); font-weight:750; font-size:12px; }
-
     .hero .right{
       display:flex; gap:10px; align-items:center;
       flex-wrap:wrap; justify-content:flex-end;
@@ -342,9 +430,11 @@
     .kbd{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; font-size:11px; }
 
     @media (max-width: 1080px){
+      .summaryRow{ grid-template-columns: 1fr; }
       .grid{ grid-template-columns: 1fr; }
       .search{ width:100%; max-width:none; }
       .metrics{ grid-template-columns: 1fr 1fr; }
+      .sumActions{ justify-content:flex-start; }
     }
   </style>
 </head>
@@ -354,7 +444,7 @@
     <div class="topbar">
       <div class="title">
         <h2>Bajar deuda</h2>
-        <small>Progreso transparente: monto original, total abonado, saldo real y % pagado.</small>
+        <small>Progreso transparente: monto original, total abonado y saldo real.</small>
       </div>
 
       <div class="topActions">
@@ -366,6 +456,34 @@
         <button class="btn btnPrimary" id="btnNewDebt" type="button">+ Nueva deuda</button>
       </div>
     </div>
+
+    <!-- ✅ Banner resumen -->
+    <section class="summary" aria-label="Resumen de deuda">
+      <div class="summaryRow">
+        <div class="sumLeft">
+          <b>Resumen general</b>
+          <small>La suma total de todas tus deudas, cuánto has pagado y cuánto falta.</small>
+        </div>
+
+        <div class="sumStat">
+          <small>Total deuda</small>
+          <div class="val" id="sumTotalDebt">$0</div>
+          <div class="hint">Monto original acumulado</div>
+        </div>
+
+        <div class="sumStat">
+          <small>Monto pagado</small>
+          <div class="val" id="sumTotalPaid">$0</div>
+          <div class="hint">Abonos acumulados</div>
+        </div>
+
+        <div class="sumStat">
+          <small>Falta por pagar</small>
+          <div class="val" id="sumTotalRemaining">$0</div>
+          <div class="hint">Saldo real acumulado</div>
+        </div>
+      </div>
+    </section>
 
     <section class="grid">
       <!-- Lista -->
@@ -443,7 +561,6 @@
             <h5>Historial de abonos</h5>
             <div class="history" id="history"></div>
           </div>
-
         </div>
       </div>
     </section>
@@ -594,6 +711,11 @@
     const btnAddPayment = document.getElementById('btnAddPayment');
     const btnEditDebt = document.getElementById('btnEditDebt');
 
+    // Summary banner
+    const sumTotalDebt = document.getElementById('sumTotalDebt');
+    const sumTotalPaid = document.getElementById('sumTotalPaid');
+    const sumTotalRemaining = document.getElementById('sumTotalRemaining');
+
     // Modals
     const overlayPay = document.getElementById('overlayPay');
     const overlayDebt = document.getElementById('overlayDebt');
@@ -618,8 +740,6 @@
     // Init
     hydrateCategorySelect(filterCategoryEl, true);
     hydrateCategorySelect(newCategory, false);
-
-    // default dates
     payDate.value = isoToday();
 
     render();
@@ -668,8 +788,7 @@
       d.payments.push({date: dt, amount: amt, note});
       d.payments.sort((a,b) => (a.date < b.date ? 1 : -1));
       closeModal(overlayPay);
-      renderDetail(d);
-      renderList();
+      render(); // ✅ recalcula banner + lista + detalle
     });
 
     saveDebt.addEventListener('click', () => {
@@ -691,13 +810,10 @@
       });
 
       closeModal(overlayDebt);
-      render();
       selectedDebtId = debts[0].id;
-      renderDetail(getSelectedDebt());
-      renderList();
+      render(); // ✅ recalcula banner + lista + detalle
     });
 
-    // Keyboard shortcut ⌘K or Ctrl+K focus search
     document.addEventListener('keydown', (e) => {
       const k = e.key.toLowerCase();
       if((e.metaKey || e.ctrlKey) && k === 'k'){
@@ -715,6 +831,7 @@
 
     // Render
     function render(){
+      renderSummary();   // ✅ banner arriba
       renderList();
       countDebtsEl.textContent = debts.length;
 
@@ -724,6 +841,21 @@
       }else{
         renderEmptyDetail();
       }
+    }
+
+    function renderSummary(){
+      const totals = debts.reduce((acc,d)=>{
+        const paid = (d.payments || []).reduce((s,p)=> s + Number(p.amount||0), 0);
+        acc.original += Number(d.original||0);
+        acc.paid += paid;
+        return acc;
+      }, {original:0, paid:0});
+
+      const remaining = Math.max(0, totals.original - totals.paid);
+
+      sumTotalDebt.textContent = money(totals.original);
+      sumTotalPaid.textContent = money(totals.paid);
+      sumTotalRemaining.textContent = money(remaining);
     }
 
     function renderList(){
@@ -797,7 +929,6 @@
 
       barFill.style.width = clamp(stats.pct, 0, 100) + '%';
 
-      // history
       historyEl.innerHTML = '';
       const sorted = [...d.payments].sort((a,b)=> (a.date < b.date ? 1 : -1));
       if(sorted.length === 0){
