@@ -20,11 +20,6 @@
       --stroke:#e6eaf5;
       --soft:#EEF3FF;
 
-      --ok:#10b981;
-      --warn:#f59e0b;
-      --bad:#ef4444;
-
-      /* 👇 nuevo: placeholder gris suave */
       --placeholder:#94a3b8;
 
       --radius:18px;
@@ -38,70 +33,17 @@
       margin:0;
       font-family: "Greycliff CF", "Nunito", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color:var(--ink);
-      background:radial-gradient(900px 480px at 18% 6%, rgba(116,89,217,.14), transparent 55%),
-                 radial-gradient(900px 520px at 84% 18%, rgba(57,86,232,.16), transparent 55%),
-                 var(--bg);
+      background:
+        radial-gradient(900px 480px at 18% 6%, rgba(116,89,217,.14), transparent 55%),
+        radial-gradient(900px 520px at 84% 18%, rgba(57,86,232,.16), transparent 55%),
+        var(--bg);
     }
 
-    .app{
-      min-height:100vh;
-      display:grid;
-      grid-template-columns: 280px 1fr;
-    }
-
-    /* SIDEBAR */
-    .side{
-      padding:18px 16px;
-      border-right:1px solid var(--stroke);
-      background:rgba(255,255,255,.55);
-      backdrop-filter: blur(10px);
-    }
-    .brand{
-      display:flex; align-items:center; gap:10px;
-      padding:12px 12px;
-      border:1px solid var(--stroke);
-      border-radius:16px;
-      background:linear-gradient(180deg, rgba(57,86,232,.10), rgba(116,89,217,.08));
-    }
-    .logoDot{
-      width:38px; height:38px; border-radius:12px;
-      background:linear-gradient(135deg, var(--primary), var(--secondary));
-      box-shadow:0 10px 18px rgba(57,86,232,.22);
-    }
-    .brand h1{ margin:0; font-size:14px; line-height:1.1; letter-spacing:.2px;}
-    .brand p{ margin:2px 0 0; font-size:12px; color:var(--muted);}
-
-    .menu{ margin-top:14px; display:flex; flex-direction:column; gap:8px;}
-    .navBtn{
-      display:flex; align-items:center; gap:10px;
-      padding:10px 12px;
-      border-radius:14px;
-      border:1px solid transparent;
-      background:transparent;
-      color:var(--ink);
-      cursor:pointer;
-      font-weight:700;
-      text-align:left;
-    }
-    .navBtn:hover{ background:rgba(57,86,232,.08); }
-    .navBtn.active{
-      background:rgba(57,86,232,.12);
-      border-color:rgba(57,86,232,.20);
-    }
-    .pill{
-      margin-left:auto;
-      font-size:11px;
-      padding:4px 8px;
-      border-radius:999px;
-      border:1px solid rgba(57,86,232,.20);
-      background:rgba(57,86,232,.08);
-      color:var(--primary);
-      font-weight:800;
-    }
-
-    /* MAIN */
+    /* MAIN WRAP (sin sidebar) */
     .main{
       padding:18px 18px 24px;
+      max-width: 1320px;
+      margin: 0 auto;
     }
 
     .topbar{
@@ -113,11 +55,12 @@
     }
     .title h2{ margin:0; font-size:20px; letter-spacing:.2px;}
     .title small{ color:var(--muted); font-weight:650; }
+
     .topActions{
       display:flex; gap:10px; align-items:center;
     }
     .search{
-      width:340px; max-width:42vw;
+      width:360px; max-width:42vw;
       display:flex; align-items:center; gap:8px;
       border:1px solid var(--stroke);
       background:#fff;
@@ -150,16 +93,12 @@
       box-shadow:0 10px 20px rgba(15,23,42,.06);
     }
 
-    /* ✅ Placeholder gris suave (inputs + search) */
+    /* ✅ Placeholder gris suave */
     input::placeholder{ color: var(--placeholder); font-weight:650; }
     textarea::placeholder{ color: var(--placeholder); font-weight:650; }
     .search input::placeholder{ color: var(--placeholder); font-weight:650; }
 
-    /* select placeholder-ish (primera opción) */
-    select{ color: var(--ink); }
-    select option[disabled]{ color: var(--placeholder); }
-
-    /* DASH GRID */
+    /* GRID */
     .grid{
       display:grid;
       grid-template-columns: 440px 1fr;
@@ -184,7 +123,7 @@
     .cardHd .meta{ color:var(--muted); font-size:12px; font-weight:700;}
     .cardBd{ padding:14px 16px 16px; }
 
-    /* LISTA DEUDAS */
+    /* FILTERS */
     .filters{
       display:grid;
       grid-template-columns: 1fr;
@@ -212,11 +151,12 @@
       color:var(--ink);
     }
 
+    /* LISTA */
     .debtList{
       display:flex;
       flex-direction:column;
       gap:10px;
-      max-height:66vh;
+      max-height:72vh;
       overflow:auto;
       padding-right:2px;
     }
@@ -247,15 +187,8 @@
       justify-content:space-between;
       min-width:120px;
     }
-    .amt{
-      font-weight:1000;
-      font-size:13px;
-    }
-    .mini{
-      color:var(--muted);
-      font-size:11px;
-      font-weight:800;
-    }
+    .amt{ font-weight:1000; font-size:13px; }
+    .mini{ color:var(--muted); font-size:11px; font-weight:800; }
 
     /* DETALLE */
     .hero{
@@ -323,23 +256,14 @@
       text-transform:uppercase;
       margin-bottom:6px;
     }
-    .metric b{
-      font-size:14px;
-      font-weight:1100;
-    }
-
-    .split{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap:12px;
-      margin-top:12px;
-    }
+    .metric b{ font-size:14px; font-weight:1100; }
 
     .box{
       border:1px solid var(--stroke);
       background:#fff;
       border-radius:18px;
       padding:12px;
+      margin-top:12px;
     }
     .box h5{
       margin:0 0 10px;
@@ -354,7 +278,7 @@
       display:flex;
       flex-direction:column;
       gap:8px;
-      max-height:320px;
+      max-height:360px;
       overflow:auto;
       padding-right:2px;
     }
@@ -418,8 +342,6 @@
     .kbd{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; font-size:11px; }
 
     @media (max-width: 1080px){
-      .app{ grid-template-columns: 1fr; }
-      .side{ display:none; }
       .grid{ grid-template-columns: 1fr; }
       .search{ width:100%; max-width:none; }
       .metrics{ grid-template-columns: 1fr 1fr; }
@@ -428,128 +350,104 @@
 </head>
 
 <body>
-  <div class="app">
-    <!-- Sidebar -->
-    <aside class="side">
-      <div class="brand">
-        <div class="logoDot" aria-hidden="true"></div>
-        <div>
-          <h1>Cada Menudo</h1>
-          <p>Deudas · Progreso real</p>
+  <main class="main">
+    <div class="topbar">
+      <div class="title">
+        <h2>Bajar deuda</h2>
+        <small>Progreso transparente: monto original, total abonado, saldo real y % pagado.</small>
+      </div>
+
+      <div class="topActions">
+        <div class="search" role="search">
+          <span class="muted">⌕</span>
+          <input id="q" type="text" placeholder="Buscar deuda (ej. Visa, Auto, Universidad)…" />
+          <span class="muted kbd">⌘K</span>
+        </div>
+        <button class="btn btnPrimary" id="btnNewDebt" type="button">+ Nueva deuda</button>
+      </div>
+    </div>
+
+    <section class="grid">
+      <!-- Lista -->
+      <div class="card">
+        <div class="cardHd">
+          <h3>Deudas</h3>
+          <div class="meta"><span id="countDebts">0</span> activas</div>
+        </div>
+
+        <div class="cardBd">
+          <div class="filters">
+            <div class="field">
+              <label for="filterCategory">Categoría</label>
+              <select id="filterCategory"></select>
+            </div>
+          </div>
+
+          <div class="debtList" id="debtList" aria-label="Lista de deudas"></div>
         </div>
       </div>
 
-      <div class="menu" role="navigation" aria-label="Menú">
-        <button class="navBtn active" type="button">📉 Bajar deuda <span class="pill">Nuevo</span></button>
-        <button class="navBtn" type="button">📊 Presupuesto</button>
-        <button class="navBtn" type="button">🎯 Metas</button>
-        <button class="navBtn" type="button">🧾 Transacciones</button>
-        <button class="navBtn" type="button">⚙️ Configuración</button>
+      <!-- Detalle -->
+      <div class="card">
+        <div class="cardHd">
+          <h3>Progreso real</h3>
+          <div class="meta">Historial intacto</div>
+        </div>
+
+        <div class="cardBd">
+          <div class="hero">
+            <div class="left">
+              <h4 id="dTitle">Selecciona una deuda</h4>
+              <p id="dSubtitle">Verás monto original, abonado, saldo real y % pagado.</p>
+            </div>
+            <div class="right">
+              <button class="btn btnGhost" id="btnAddPayment" type="button" disabled>+ Abono</button>
+              <button class="btn btnGhost" id="btnEditDebt" type="button" disabled>Editar</button>
+            </div>
+          </div>
+
+          <div class="progressWrap">
+            <div class="progTop">
+              <div>
+                <div class="muted" style="font-weight:950;font-size:12px">Porcentaje pagado</div>
+                <div class="bigPct" id="dPct">—</div>
+              </div>
+              <div style="text-align:right">
+                <div class="muted" style="font-weight:950;font-size:12px">Saldo actual real</div>
+                <div style="font-size:18px;font-weight:1100" id="dBalance">—</div>
+              </div>
+            </div>
+            <div class="bar" aria-label="Barra de progreso"><div id="barFill"></div></div>
+
+            <div class="metrics">
+              <div class="metric">
+                <small>Monto original</small>
+                <b id="dOriginal">—</b>
+              </div>
+              <div class="metric">
+                <small>Total abonado</small>
+                <b id="dPaid">—</b>
+              </div>
+              <div class="metric">
+                <small>% pagado</small>
+                <b id="dPctSmall">—</b>
+              </div>
+              <div class="metric">
+                <small>Categoría</small>
+                <b id="dCat">—</b>
+              </div>
+            </div>
+          </div>
+
+          <div class="box">
+            <h5>Historial de abonos</h5>
+            <div class="history" id="history"></div>
+          </div>
+
+        </div>
       </div>
-    </aside>
-
-    <!-- Main -->
-    <main class="main">
-      <div class="topbar">
-        <div class="title">
-          <h2>Bajar deuda</h2>
-          <small>Progreso transparente: monto original, total abonado, saldo real y % pagado.</small>
-        </div>
-
-        <div class="topActions">
-          <div class="search" role="search">
-            <span class="muted">⌕</span>
-            <input id="q" type="text" placeholder="Buscar deuda (ej. Visa, Auto, Universidad)…" />
-            <span class="muted kbd">⌘K</span>
-          </div>
-          <button class="btn btnPrimary" id="btnNewDebt" type="button">+ Nueva deuda</button>
-        </div>
-      </div>
-
-      <section class="grid">
-        <!-- Lista -->
-        <div class="card">
-          <div class="cardHd">
-            <h3>Deudas</h3>
-            <div class="meta"><span id="countDebts">0</span> activas</div>
-          </div>
-
-          <div class="cardBd">
-            <div class="filters">
-              <div class="field">
-                <label for="filterCategory">Categoría</label>
-                <select id="filterCategory"></select>
-              </div>
-            </div>
-
-            <div class="debtList" id="debtList" aria-label="Lista de deudas"></div>
-          </div>
-        </div>
-
-        <!-- Detalle -->
-        <div class="card">
-          <div class="cardHd">
-            <h3>Progreso real</h3>
-            <div class="meta">Historial intacto</div>
-          </div>
-
-          <div class="cardBd">
-            <div class="hero">
-              <div class="left">
-                <h4 id="dTitle">Selecciona una deuda</h4>
-                <p id="dSubtitle">Verás monto original, abonado, saldo real y % pagado.</p>
-              </div>
-              <div class="right">
-                <button class="btn btnGhost" id="btnAddPayment" type="button" disabled>+ Abono</button>
-                <button class="btn btnGhost" id="btnEditDebt" type="button" disabled>Editar</button>
-              </div>
-            </div>
-
-            <div class="progressWrap">
-              <div class="progTop">
-                <div>
-                  <div class="muted" style="font-weight:950;font-size:12px">Porcentaje pagado</div>
-                  <div class="bigPct" id="dPct">—</div>
-                </div>
-                <div style="text-align:right">
-                  <div class="muted" style="font-weight:950;font-size:12px">Saldo actual real</div>
-                  <div style="font-size:18px;font-weight:1100" id="dBalance">—</div>
-                </div>
-              </div>
-              <div class="bar" aria-label="Barra de progreso"><div id="barFill"></div></div>
-
-              <div class="metrics">
-                <div class="metric">
-                  <small>Monto original</small>
-                  <b id="dOriginal">—</b>
-                </div>
-                <div class="metric">
-                  <small>Total abonado</small>
-                  <b id="dPaid">—</b>
-                </div>
-                <div class="metric">
-                  <small>% pagado</small>
-                  <b id="dPctSmall">—</b>
-                </div>
-                <div class="metric">
-                  <small>Categoría</small>
-                  <b id="dCat">—</b>
-                </div>
-              </div>
-            </div>
-
-            <div class="split">
-              <div class="box">
-                <h5>Historial de abonos</h5>
-                <div class="history" id="history"></div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-    </main>
-  </div>
+    </section>
+  </main>
 
   <!-- Modal: Abono -->
   <div class="overlay" id="overlayPay" aria-hidden="true">
@@ -974,10 +872,6 @@
         const opt = document.createElement('option');
         opt.value = c.id;
         opt.textContent = c.name;
-        if(includeAll && c.id === 'all'){
-          // makes it feel like a placeholder in UI (still selectable)
-          opt.disabled = false;
-        }
         selectEl.appendChild(opt);
       });
       if(includeAll) selectEl.value = 'all';
