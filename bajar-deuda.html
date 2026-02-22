@@ -24,6 +24,9 @@
       --warn:#f59e0b;
       --bad:#ef4444;
 
+      /* 👇 nuevo: placeholder gris suave */
+      --placeholder:#94a3b8;
+
       --radius:18px;
       --radius2:24px;
       --shadow:0 14px 40px rgba(15,23,42,.10);
@@ -126,6 +129,7 @@
       border:0; outline:0; width:100%;
       font-size:13px;
       font-weight:650;
+      color:var(--ink);
     }
     .btn{
       border:0; cursor:pointer;
@@ -145,6 +149,15 @@
       color:var(--ink);
       box-shadow:0 10px 20px rgba(15,23,42,.06);
     }
+
+    /* ✅ Placeholder gris suave (inputs + search) */
+    input::placeholder{ color: var(--placeholder); font-weight:650; }
+    textarea::placeholder{ color: var(--placeholder); font-weight:650; }
+    .search input::placeholder{ color: var(--placeholder); font-weight:650; }
+
+    /* select placeholder-ish (primera opción) */
+    select{ color: var(--ink); }
+    select option[disabled]{ color: var(--placeholder); }
 
     /* DASH GRID */
     .grid{
@@ -174,7 +187,7 @@
     /* LISTA DEUDAS */
     .filters{
       display:grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
       gap:10px;
       margin-bottom:12px;
     }
@@ -196,13 +209,14 @@
       font-size:13px;
       font-weight:700;
       outline:none;
+      color:var(--ink);
     }
 
     .debtList{
       display:flex;
       flex-direction:column;
       gap:10px;
-      max-height:62vh;
+      max-height:66vh;
       overflow:auto;
       padding-right:2px;
     }
@@ -225,17 +239,7 @@
     }
     .debtName{ font-weight:950; font-size:13px; }
     .debtSub{ color:var(--muted); font-size:12px; font-weight:750; margin-top:2px; }
-    .tagsRow{ display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
-    .tag{
-      font-size:11px; font-weight:900;
-      padding:5px 8px;
-      border-radius:999px;
-      border:1px solid var(--stroke);
-      background:var(--soft);
-      color:var(--ink);
-    }
-    .tag.primary{ border-color: rgba(57,86,232,.22); color:var(--primary); background:rgba(57,86,232,.08); }
-    .tag.warn{ border-color: rgba(245,158,11,.30); color:#9a5b00; background:rgba(245,158,11,.12); }
+
     .amountCol{
       text-align:right;
       display:flex;
@@ -260,26 +264,11 @@
     }
     .hero .left h4{ margin:0; font-size:16px; font-weight:1000; }
     .hero .left p{ margin:4px 0 0; color:var(--muted); font-weight:750; font-size:12px; }
+
     .hero .right{
       display:flex; gap:10px; align-items:center;
       flex-wrap:wrap; justify-content:flex-end;
     }
-
-    .chip{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:8px 10px;
-      border-radius:999px;
-      border:1px solid var(--stroke);
-      background:#fff;
-      font-weight:950;
-      font-size:12px;
-    }
-    .dot{
-      width:10px; height:10px; border-radius:99px; background:var(--primary);
-    }
-    .dot.warn{ background:var(--warn); }
-    .dot.ok{ background:var(--ok); }
-    .dot.bad{ background:var(--bad); }
 
     .progressWrap{
       border:1px solid var(--stroke);
@@ -341,7 +330,7 @@
 
     .split{
       display:grid;
-      grid-template-columns: 1.1fr .9fr;
+      grid-template-columns: 1fr;
       gap:12px;
       margin-top:12px;
     }
@@ -361,28 +350,11 @@
       font-weight:1000;
     }
 
-    .radioGrid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:8px;
-    }
-    .radio{
-      display:flex; align-items:center; gap:10px;
-      border:1px solid var(--stroke);
-      border-radius:16px;
-      padding:10px 10px;
-      cursor:pointer;
-      background:rgba(238,243,255,.55);
-    }
-    .radio input{ accent-color: var(--primary); }
-    .radio b{ font-size:12px; font-weight:950; }
-    .radio span{ font-size:11px; color:var(--muted); font-weight:750; display:block; margin-top:2px; }
-
     .history{
       display:flex;
       flex-direction:column;
       gap:8px;
-      max-height:260px;
+      max-height:320px;
       overflow:auto;
       padding-right:2px;
     }
@@ -442,7 +414,6 @@
       display:flex; justify-content:flex-end; gap:10px;
     }
 
-    /* tiny */
     .muted{ color:var(--muted); font-weight:800; }
     .kbd{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; font-size:11px; }
 
@@ -452,7 +423,6 @@
       .grid{ grid-template-columns: 1fr; }
       .search{ width:100%; max-width:none; }
       .metrics{ grid-template-columns: 1fr 1fr; }
-      .split{ grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -476,16 +446,6 @@
         <button class="navBtn" type="button">🧾 Transacciones</button>
         <button class="navBtn" type="button">⚙️ Configuración</button>
       </div>
-
-      <div style="margin-top:14px;padding:12px;border:1px solid var(--stroke);border-radius:18px;background:#fff">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
-          <b style="font-size:13px;font-weight:1100">Tip rápido</b>
-          <span class="tag primary">Transparencia</span>
-        </div>
-        <p style="margin:8px 0 0;color:var(--muted);font-weight:750;font-size:12px;line-height:1.35">
-          Muestra <b>monto original</b>, <b>abonado</b> y <b>saldo real</b> para reducir ansiedad y aumentar retención.
-        </p>
-      </div>
     </aside>
 
     <!-- Main -->
@@ -493,7 +453,7 @@
       <div class="topbar">
         <div class="title">
           <h2>Bajar deuda</h2>
-          <small>Clasifica tu deuda y mira tu progreso real sin borrar historial.</small>
+          <small>Progreso transparente: monto original, total abonado, saldo real y % pagado.</small>
         </div>
 
         <div class="topActions">
@@ -520,16 +480,6 @@
                 <label for="filterCategory">Categoría</label>
                 <select id="filterCategory"></select>
               </div>
-              <div class="field">
-                <label for="filterType">Tipo de deuda</label>
-                <select id="filterType">
-                  <option value="all">Todas</option>
-                  <option value="puntual">Deuda puntual</option>
-                  <option value="recurrente">Deuda recurrente</option>
-                  <option value="disputa">Deuda en disputa</option>
-                  <option value="temporal">Dificultad temporal</option>
-                </select>
-              </div>
             </div>
 
             <div class="debtList" id="debtList" aria-label="Lista de deudas"></div>
@@ -540,7 +490,7 @@
         <div class="card">
           <div class="cardHd">
             <h3>Progreso real</h3>
-            <div class="meta">Sin borrar historial · destaca avance</div>
+            <div class="meta">Historial intacto</div>
           </div>
 
           <div class="cardBd">
@@ -578,8 +528,8 @@
                   <b id="dPaid">—</b>
                 </div>
                 <div class="metric">
-                  <small>Tipo</small>
-                  <b id="dType">—</b>
+                  <small>% pagado</small>
+                  <b id="dPctSmall">—</b>
                 </div>
                 <div class="metric">
                   <small>Categoría</small>
@@ -590,44 +540,7 @@
 
             <div class="split">
               <div class="box">
-                <h5>Clasificación (para narrativa + motivación)</h5>
-                <div class="radioGrid" id="typeRadios">
-                  <label class="radio">
-                    <input type="radio" name="dtype" value="puntual" />
-                    <div>
-                      <b>Deuda puntual</b>
-                      <span>Evento único · tiene cierre claro</span>
-                    </div>
-                  </label>
-                  <label class="radio">
-                    <input type="radio" name="dtype" value="recurrente" />
-                    <div>
-                      <b>Deuda recurrente</b>
-                      <span>Compromiso continuo · ritmo de pagos</span>
-                    </div>
-                  </label>
-                  <label class="radio">
-                    <input type="radio" name="dtype" value="disputa" />
-                    <div>
-                      <b>Deuda en disputa</b>
-                      <span>Separada · reduce ansiedad mientras se resuelve</span>
-                    </div>
-                  </label>
-                  <label class="radio">
-                    <input type="radio" name="dtype" value="temporal" />
-                    <div>
-                      <b>Dificultad temporal</b>
-                      <span>Atraso momentáneo · enfoque humano</span>
-                    </div>
-                  </label>
-                </div>
-                <p class="muted" style="margin:10px 0 0;font-size:12px;line-height:1.35">
-                  Esto ayuda a: <b>motivación</b>, <b>sensación de control</b> y <b>retención</b> al mostrar progreso tangible.
-                </p>
-              </div>
-
-              <div class="box">
-                <h5>Historial de abonos (no se borra)</h5>
+                <h5>Historial de abonos</h5>
                 <div class="history" id="history"></div>
               </div>
             </div>
@@ -657,7 +570,7 @@
           </div>
           <div class="field" style="grid-column:1 / -1;">
             <label for="payNote">Nota (opcional)</label>
-            <input id="payNote" type="text" placeholder="Ej. Pago extra, mínimo, adelanto…"/>
+            <input id="payNote" type="text" placeholder="Ej. Pago mínimo, pago extra…"/>
           </div>
         </div>
       </div>
@@ -690,21 +603,12 @@
             <input id="newOriginal" type="number" min="0" step="0.01" placeholder="Ej. 5000"/>
           </div>
           <div class="field">
-            <label for="newType">Tipo de deuda</label>
-            <select id="newType">
-              <option value="puntual">Deuda puntual</option>
-              <option value="recurrente">Deuda recurrente</option>
-              <option value="disputa">Deuda en disputa</option>
-              <option value="temporal">Dificultad temporal</option>
-            </select>
-          </div>
-          <div class="field" style="grid-column:1 / -1;">
             <label for="newApr">APR / interés (opcional)</label>
             <input id="newApr" type="number" min="0" step="0.01" placeholder="Ej. 24.99"/>
           </div>
         </div>
         <p class="muted" style="margin:10px 0 0;font-size:12px;line-height:1.35">
-          El progreso se calcula con: <b>monto original</b> − <b>total abonado</b> = <b>saldo real</b>.
+          Progreso = <b>monto original</b> − <b>total abonado</b>.
         </p>
       </div>
       <div class="modalFoot">
@@ -715,30 +619,22 @@
   </div>
 
   <script>
-    // ✅ Categorías base (puedes extender este array)
+    // ✅ Categorías base (completa tu lista aquí)
     const BASE_CATEGORIES = [
       {id:'all', name:'Todas'},
-      {id:'tarjetas', name:'Tarjetas de Crédito, tiendas, gasolinera, etc.'},
-      {id:'linea_personal', name:'Línea crédito personal'},
-      {id:'linea_propiedad', name:'Línea crédito de la propiedad'},
-      {id:'casa', name:'Casa'},
-      {id:'otras_propiedades', name:'Otras propiedad (barco, casa de playa, etc.)'},
-      {id:'auto', name:'Auto'},
-      {id:'educacion', name:'Educación'},
-      {id:'muebles', name:'Préstamos para Muebles y Enseres'},
-      {id:'mejoras', name:'Mejoras al hogar'},
-      {id:'seguro_vida', name:'Préstamo de seguro de vida'},
-      {id:'margen_broker', name:'Préstamos al Margen con casa de corretaje'},
-      // 👇 agrega aquí lo que sigue en tu lista real
-      // {id:'...', name:'...'},
+      {id:'tarjetas',name:'Tarjetas de Crédito, tiendas, gasolinera, etc.'},
+      {id:'linea_personal',name:'Línea crédito personal'},
+      {id:'linea_propiedad',name:'Línea crédito de la propiedad'},
+      {id:'casa',name:'Casa'},
+      {id:'otras_propiedades',name:'Otras propiedad (barco, casa de playa, etc.)'},
+      {id:'auto',name:'Auto'},
+      {id:'educacion',name:'Educación'},
+      {id:'muebles',name:'Préstamos para Muebles y Enseres'},
+      {id:'mejoras',name:'Mejoras al hogar'},
+      {id:'seguro_vida',name:'Préstamo de seguro de vida'},
+      {id:'margen_broker',name:'Préstamos al Margen con casa de corretaje'},
+      // agrega el resto…
     ];
-
-    const TYPE_LABEL = {
-      puntual: 'Deuda puntual',
-      recurrente: 'Deuda recurrente',
-      disputa: 'Deuda en disputa',
-      temporal: 'Dificultad temporal'
-    };
 
     // Demo data
     let debts = [
@@ -746,7 +642,6 @@
         id: cryptoId(),
         name: 'Visa – Banco',
         categoryId: 'tarjetas',
-        type: 'recurrente',
         original: 8200,
         apr: 24.99,
         payments: [
@@ -758,7 +653,6 @@
         id: cryptoId(),
         name: 'Préstamo Auto',
         categoryId: 'auto',
-        type: 'recurrente',
         original: 14500,
         apr: 7.50,
         payments: [
@@ -768,13 +662,12 @@
       },
       {
         id: cryptoId(),
-        name: 'Factura médica (reclamación)',
-        categoryId: 'linea_personal',
-        type: 'disputa',
-        original: 1200,
+        name: 'Universidad',
+        categoryId: 'educacion',
+        original: 5200,
         apr: 0,
         payments: [
-          {date:'2026-02-01', amount:100, note:'Abono parcial'}
+          {date:'2026-02-01', amount:200, note:'Abono'}
         ]
       }
     ];
@@ -786,17 +679,16 @@
     const countDebtsEl = document.getElementById('countDebts');
 
     const filterCategoryEl = document.getElementById('filterCategory');
-    const filterTypeEl = document.getElementById('filterType');
     const qEl = document.getElementById('q');
 
     const dTitle = document.getElementById('dTitle');
     const dSubtitle = document.getElementById('dSubtitle');
 
     const dPct = document.getElementById('dPct');
+    const dPctSmall = document.getElementById('dPctSmall');
     const dBalance = document.getElementById('dBalance');
     const dOriginal = document.getElementById('dOriginal');
     const dPaid = document.getElementById('dPaid');
-    const dType = document.getElementById('dType');
     const dCat = document.getElementById('dCat');
     const barFill = document.getElementById('barFill');
 
@@ -823,11 +715,7 @@
     const newName = document.getElementById('newName');
     const newCategory = document.getElementById('newCategory');
     const newOriginal = document.getElementById('newOriginal');
-    const newType = document.getElementById('newType');
     const newApr = document.getElementById('newApr');
-
-    // Type radios
-    const typeRadiosWrap = document.getElementById('typeRadios');
 
     // Init
     hydrateCategorySelect(filterCategoryEl, true);
@@ -840,16 +728,13 @@
 
     // Events
     filterCategoryEl.addEventListener('change', render);
-    filterTypeEl.addEventListener('change', render);
     qEl.addEventListener('input', debounce(render, 120));
 
     btnNewDebt.addEventListener('click', () => {
       openModal(overlayDebt);
-      // reset fields
       newName.value = '';
       newOriginal.value = '';
       newApr.value = '';
-      newType.value = 'puntual';
       newCategory.value = BASE_CATEGORIES.find(c => c.id !== 'all')?.id || 'tarjetas';
       setTimeout(() => newName.focus(), 0);
     });
@@ -883,7 +768,6 @@
       }
 
       d.payments.push({date: dt, amount: amt, note});
-      // keep history order by date desc for UI clarity
       d.payments.sort((a,b) => (a.date < b.date ? 1 : -1));
       closeModal(overlayPay);
       renderDetail(d);
@@ -893,7 +777,6 @@
     saveDebt.addEventListener('click', () => {
       const name = (newName.value || '').trim();
       const cat = newCategory.value;
-      const type = newType.value;
       const orig = Number(newOriginal.value || 0);
       const apr = Number(newApr.value || 0);
 
@@ -904,7 +787,6 @@
         id: cryptoId(),
         name,
         categoryId: cat,
-        type,
         original: orig,
         apr,
         payments: []
@@ -912,20 +794,9 @@
 
       closeModal(overlayDebt);
       render();
-      // auto-select created
       selectedDebtId = debts[0].id;
       renderDetail(getSelectedDebt());
       renderList();
-    });
-
-    typeRadiosWrap.addEventListener('change', (e) => {
-      const d = getSelectedDebt();
-      if(!d) return;
-      if(e.target && e.target.name === 'dtype'){
-        d.type = e.target.value;
-        renderDetail(d);
-        renderList();
-      }
     });
 
     // Keyboard shortcut ⌘K or Ctrl+K focus search
@@ -941,11 +812,10 @@
       }
     });
 
-    // Close modal on backdrop click
     overlayPay.addEventListener('click', (e) => { if(e.target === overlayPay) closeModal(overlayPay); });
     overlayDebt.addEventListener('click', (e) => { if(e.target === overlayDebt) closeModal(overlayDebt); });
 
-    // Render functions
+    // Render
     function render(){
       renderList();
       countDebtsEl.textContent = debts.length;
@@ -976,21 +846,12 @@
         const catName = getCatName(d.categoryId);
         const active = (d.id === selectedDebtId);
 
-        const typeTag = `<span class="tag primary">${TYPE_LABEL[d.type] || 'Tipo'}</span>`;
-        const catTag = `<span class="tag">${catName}</span>`;
-        const disputeTag = d.type === 'disputa' ? `<span class="tag warn">En disputa</span>` : '';
-
         const el = document.createElement('div');
         el.className = 'debtItem' + (active ? ' active' : '');
         el.innerHTML = `
           <div>
             <div class="debtName">${escapeHtml(d.name)}</div>
             <div class="debtSub">${escapeHtml(catName)} · ${d.apr ? (d.apr.toFixed(2)+'% APR') : 'sin APR'}</div>
-            <div class="tagsRow">
-              ${typeTag}
-              ${catTag}
-              ${disputeTag}
-            </div>
           </div>
           <div class="amountCol">
             <div>
@@ -1010,7 +871,6 @@
         debtListEl.appendChild(el);
       });
 
-      // If nothing selected yet, auto-select first in filtered list
       if(!selectedDebtId && filtered[0]){
         selectedDebtId = filtered[0].id;
         renderList();
@@ -1028,20 +888,16 @@
       const catName = getCatName(d.categoryId);
 
       dTitle.textContent = d.name;
-      dSubtitle.textContent = `${catName} · ${TYPE_LABEL[d.type] || 'Tipo'} · Historial intacto`;
+      dSubtitle.textContent = `${catName} · Historial intacto`;
 
       dPct.textContent = `${stats.pct.toFixed(0)}%`;
+      dPctSmall.textContent = `${stats.pct.toFixed(0)}%`;
       dBalance.textContent = money(stats.balance);
       dOriginal.textContent = money(d.original);
       dPaid.textContent = money(stats.paid);
-      dType.textContent = TYPE_LABEL[d.type] || '—';
       dCat.textContent = catName;
 
       barFill.style.width = clamp(stats.pct, 0, 100) + '%';
-
-      // set radios
-      const radios = document.querySelectorAll('input[name="dtype"]');
-      radios.forEach(r => r.checked = (r.value === d.type));
 
       // history
       historyEl.innerHTML = '';
@@ -1063,7 +919,7 @@
             </div>
             <div class="r">
               <b>${money(p.amount)}</b>
-              <small>acumulado: ${money(sumPaymentsUntil(sorted, p.date))}</small>
+              <small>abonado total: ${money(stats.paid)}</small>
             </div>
           `;
           historyEl.appendChild(row);
@@ -1078,10 +934,10 @@
       dTitle.textContent = 'Selecciona una deuda';
       dSubtitle.textContent = 'Verás monto original, total abonado, saldo real y % pagado.';
       dPct.textContent = '—';
+      dPctSmall.textContent = '—';
       dBalance.textContent = '—';
       dOriginal.textContent = '—';
       dPaid.textContent = '—';
-      dType.textContent = '—';
       dCat.textContent = '—';
       barFill.style.width = '0%';
 
@@ -1095,14 +951,12 @@
     // Helpers
     function applyFilters(list){
       const cat = filterCategoryEl.value || 'all';
-      const typ = filterTypeEl.value || 'all';
       const q = (qEl.value || '').trim().toLowerCase();
 
       return list.filter(d => {
         const okCat = (cat === 'all') ? true : d.categoryId === cat;
-        const okType = (typ === 'all') ? true : d.type === typ;
         const okQ = !q ? true : (d.name.toLowerCase().includes(q) || getCatName(d.categoryId).toLowerCase().includes(q));
-        return okCat && okType && okQ;
+        return okCat && okQ;
       });
     }
 
@@ -1120,6 +974,10 @@
         const opt = document.createElement('option');
         opt.value = c.id;
         opt.textContent = c.name;
+        if(includeAll && c.id === 'all'){
+          // makes it feel like a placeholder in UI (still selectable)
+          opt.disabled = false;
+        }
         selectEl.appendChild(opt);
       });
       if(includeAll) selectEl.value = 'all';
@@ -1158,21 +1016,12 @@
     }
 
     function fmtDate(iso){
-      // iso yyyy-mm-dd -> "Feb 15, 2026" (simple)
       try{
         const d = new Date(iso + 'T00:00:00');
         return d.toLocaleDateString('es-US', {year:'numeric', month:'short', day:'2-digit'});
       }catch(_){
         return iso;
       }
-    }
-
-    function sumPaymentsUntil(sortedDesc, date){
-      // sortedDesc is in desc order; compute cumulative up to that transaction date in desc display
-      // For clarity, compute "paid so far" using payments <= that date.
-      const all = sortedDesc;
-      const target = date;
-      return all.reduce((s,p) => s + (p.date <= target ? Number(p.amount||0) : 0), 0);
     }
 
     function debounce(fn, ms){
