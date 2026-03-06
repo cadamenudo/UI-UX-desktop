@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Cada Menudo – Nueva Deuda</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
   <style>
@@ -12,8 +12,6 @@
       --primary-border:rgba(89,74,226,.22);
       --secondary:#7459D9;
       --green:#22C55E;
-      --green-light:rgba(34,197,94,.10);
-      --green-border:rgba(34,197,94,.28);
       --orange:#F97316;
       --red:#EF4444;
       --gray:#64748B;
@@ -21,184 +19,187 @@
       --bg:#F7F8FC;
       --text:#0F172A;
       --border:#E5E7EB;
-      --shadow:0 4px 14px rgba(17,24,39,.07);
+      --shadow:0 6px 18px rgba(17,24,39,.06);
     }
-    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-    html{height:100%}
+    *{box-sizing:border-box;margin:0;padding:0}
     body{
       font-family:"Nunito",system-ui,sans-serif;
       color:var(--text);background:var(--bg);
-      min-height:100%;
-      max-width:430px;margin:0 auto;
+      min-height:100vh;
     }
 
-    /* ===== INLINE NAV ===== */
-    .inline-nav{
-      display:flex;align-items:center;justify-content:space-between;
-      padding:14px 16px 6px;
-    }
-    .inav-back{
-      width:36px;height:36px;border-radius:10px;
-      background:var(--muted);border:1px solid var(--border);
-      color:var(--text);font-size:22px;display:grid;place-items:center;
-      cursor:pointer;line-height:1;
-    }
-    .inav-center{text-align:center;flex:1}
-    .inav-title{font-size:15px;font-weight:900;color:var(--text)}
-    .inav-sub{font-size:11px;font-weight:800;color:var(--gray);margin-top:1px}
 
-    /* ===== SCROLL BODY ===== */
-    .scroll-body{
-      padding:0 14px 20px;
+
+    /* ===== MAIN ===== */
+    main{
+      margin-top:0;
+      padding:32px 24px;
+      max-width:960px;
+      margin-left:auto;margin-right:auto;
+    }
+
+    /* ===== PAGE TITLE ===== */
+    .page-header{
+      display:flex;align-items:center;gap:16px;
+      margin-bottom:28px;
+    }
+    .back-btn{
+      width:40px;height:40px;border-radius:12px;
+      background:#fff;border:1px solid var(--border);
+      display:grid;place-items:center;cursor:pointer;
+      font-size:22px;color:var(--gray);
+      box-shadow:var(--shadow);
+      transition:background .15s;
+    }
+    .back-btn:hover{background:var(--muted)}
+    .page-title h1{font-size:22px;font-weight:900;margin:0}
+    .page-title p{margin:4px 0 0;color:var(--gray);font-weight:700;font-size:13px}
+
+    /* ===== LAYOUT GRID ===== */
+    .layout{
+      display:grid;
+      grid-template-columns:1fr 360px;
+      gap:20px;
+      align-items:start;
     }
 
     /* ===== CARD ===== */
     .card{
-      background:#fff;border-radius:18px;
-      box-shadow:var(--shadow);padding:16px;
-      margin-bottom:12px;
+      background:#fff;border-radius:20px;
+      box-shadow:var(--shadow);padding:20px;
+      margin-bottom:16px;
     }
+    .card:last-child{margin-bottom:0}
     .card-title{
-      font-size:14px;font-weight:900;
-      display:flex;align-items:center;gap:8px;
-      margin-bottom:14px;
+      font-size:15px;font-weight:900;
+      display:flex;align-items:center;gap:10px;
+      margin-bottom:16px;
     }
     .step-num{
-      width:22px;height:22px;border-radius:7px;
+      width:24px;height:24px;border-radius:8px;
       background:var(--primary);color:#fff;
-      font-size:11px;font-weight:900;
-      display:grid;place-items:center;flex:0 0 22px;
+      font-size:12px;font-weight:900;
+      display:grid;place-items:center;flex:0 0 24px;
     }
 
     /* ===== FIELDS ===== */
-    .field{margin-bottom:12px}
+    .field{margin-bottom:14px}
     .field:last-child{margin-bottom:0}
     .field label{
       display:flex;align-items:center;justify-content:space-between;
       font-size:11px;font-weight:900;color:var(--gray);
       text-transform:uppercase;letter-spacing:.08em;
-      margin-bottom:6px;
+      margin-bottom:7px;
     }
-    .optional{
-      font-size:10px;font-weight:700;color:#CBD5E1;
-      text-transform:none;letter-spacing:0;
-    }
-    .field input,.field select{
-      width:100%;border:1.5px solid var(--border);
-      border-radius:12px;padding:13px 14px;
-      font-family:"Nunito",sans-serif;font-size:16px;
+    .optional{font-size:10px;font-weight:700;color:#CBD5E1;text-transform:none;letter-spacing:0}
+    .field input{
+      width:100%;border:1px solid var(--border);
+      border-radius:12px;padding:11px 14px;
+      font-family:"Nunito",sans-serif;font-size:14px;
       font-weight:700;color:var(--text);background:#fff;
       outline:none;
       transition:border-color .15s,box-shadow .15s;
     }
-    .field input:focus,.field select:focus{
+    .field input:focus{
       border-color:rgba(89,74,226,.5);
       box-shadow:0 0 0 3px rgba(89,74,226,.10);
     }
-    .select-wrap{position:relative}
-    .select-wrap select{appearance:none;cursor:pointer;padding-right:40px}
-    .select-wrap::after{
-      content:'▾';position:absolute;right:14px;top:50%;
-      transform:translateY(-50%);pointer-events:none;
-      font-size:14px;color:var(--gray);
-    }
     input::placeholder{color:#94a3b8;font-weight:700}
-
-    /* Two-col row */
-    .row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .row-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
 
     /* ===== HELPERS ===== */
     .helper{
-      margin-top:10px;padding:10px 13px;
+      margin-top:10px;padding:10px 14px;
       border-radius:12px;font-size:12px;font-weight:700;
       line-height:1.5;display:none;
     }
     .helper.show{display:block}
-    .helper.orange{
-      background:rgba(249,115,22,.06);
-      border:1.5px solid rgba(249,115,22,.2);
-    }
+    .helper.orange{background:rgba(249,115,22,.06);border:1.5px solid rgba(249,115,22,.2)}
     .helper.orange span{color:var(--orange);font-weight:900}
-    .helper.purple{
-      background:rgba(89,74,226,.06);
-      border:1.5px solid rgba(89,74,226,.2);
-    }
+    .helper.purple{background:rgba(89,74,226,.06);border:1.5px solid rgba(89,74,226,.2)}
     .helper.purple span{color:var(--primary);font-weight:900}
 
     /* ===== CATEGORY GRID ===== */
     .cat-grid{
-      display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
+      display:grid;grid-template-columns:repeat(4,1fr);gap:8px;
     }
     .cat-btn{
       display:flex;flex-direction:column;align-items:center;
-      gap:5px;padding:11px 6px;
+      gap:5px;padding:12px 6px;
       border:1.5px solid var(--border);border-radius:14px;
       background:#fff;cursor:pointer;
       font-family:"Nunito",sans-serif;
-      text-align:center;
-      transition:all .12s;
-      min-height:70px;justify-content:center;
+      text-align:center;transition:all .12s;
+      min-height:72px;justify-content:center;
     }
-    .cat-btn:active{background:var(--muted)}
-    .cat-btn.active{
-      background:var(--primary-light);
-      border-color:var(--primary);
-    }
+    .cat-btn:hover{background:var(--muted)}
+    .cat-btn.active{background:var(--primary-light);border-color:var(--primary)}
     .cat-btn.active .cat-label{color:var(--primary)}
     .cat-icon{font-size:22px;line-height:1}
     .cat-label{font-size:10px;font-weight:900;color:var(--gray);line-height:1.3}
 
-    /* ===== SUMMARY BOX ===== */
+    /* ===== SUMMARY (right col) ===== */
+    .summary-sticky{
+      position:sticky;top:calc(var(--header-h) + 20px);
+    }
     .summary-box{
-      border:1.5px solid var(--border);border-radius:14px;
-      overflow:hidden;
+      border:1.5px solid var(--border);border-radius:14px;overflow:hidden;
     }
     .sum-row{
       display:flex;justify-content:space-between;align-items:center;
-      padding:11px 14px;border-bottom:1px solid var(--border);
-      font-size:14px;
+      padding:11px 16px;border-bottom:1px solid var(--border);font-size:14px;
     }
     .sum-row:last-child{border-bottom:none}
     .sum-lbl{font-weight:700;color:var(--gray)}
-    .sum-val{font-weight:900;max-width:60%;text-align:right;font-size:13px}
+    .sum-val{font-weight:900;max-width:55%;text-align:right;font-size:13px}
     .sum-row.total .sum-lbl{font-size:14px;font-weight:900;color:var(--text)}
-    .sum-row.total .sum-val{font-size:18px;font-weight:900;color:var(--primary)}
+    .sum-row.total .sum-val{font-size:20px;font-weight:900;color:var(--primary)}
 
+    /* ===== SAVE BUTTON ===== */
+    .btn-save{
+      width:100%;border:none;border-radius:14px;
+      padding:14px;background:var(--primary);color:#fff;
+      font-family:"Nunito",sans-serif;font-size:16px;font-weight:900;
+      cursor:pointer;box-shadow:0 8px 20px rgba(89,74,226,.28);
+      transition:opacity .15s,transform .1s;
+      margin-top:12px;
+    }
+    .btn-save:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
+    .btn-save:active:not(:disabled){transform:scale(.98)}
+    .btn-cancel{
+      width:100%;border:1.5px solid var(--border);border-radius:14px;
+      padding:12px;background:#fff;
+      font-family:"Nunito",sans-serif;font-size:14px;font-weight:900;
+      color:var(--gray);cursor:pointer;margin-top:8px;
+    }
+    .btn-cancel:hover{background:var(--muted)}
 
-
-    /* ===== SUCCESS SHEET ===== */
-    .success-overlay{
-      position:fixed;inset:0;background:rgba(15,23,42,.5);
-      z-index:300;display:none;align-items:flex-end;
+    /* ===== SUCCESS MODAL ===== */
+    .overlay{
+      position:fixed;inset:0;background:rgba(15,23,42,.45);
+      display:none;align-items:center;justify-content:center;
+      padding:20px;z-index:200;
     }
-    .success-overlay.show{display:flex}
-    .success-sheet{
-      width:100%;max-width:430px;margin:0 auto;
-      background:#fff;border-radius:20px 20px 0 0;
-      padding:0 20px max(20px,env(safe-area-inset-bottom));
-      text-align:center;
-      animation:sheetUp .25s cubic-bezier(.4,0,.2,1);
+    .overlay.show{display:flex}
+    .modal{
+      width:min(480px,96vw);border-radius:20px;background:#fff;
+      box-shadow:0 24px 64px rgba(0,0,0,.22);
+      padding:32px 28px;text-align:center;
+      animation:modalIn .22s cubic-bezier(.34,1.56,.64,1);
     }
-    @keyframes sheetUp{
-      from{transform:translateY(100%)}
-      to{transform:translateY(0)}
-    }
-    .sh-handle{
-      width:36px;height:4px;border-radius:2px;
-      background:#CBD5E1;margin:10px auto 20px;
-    }
-    .sh-icon{font-size:52px;margin-bottom:8px}
+    @keyframes modalIn{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+    .sh-icon{font-size:52px;margin-bottom:10px}
     .sh-title{font-size:22px;font-weight:900;margin-bottom:6px}
     .sh-debt-name{
       display:inline-block;
       background:var(--primary-light);border:1px solid var(--primary-border);
       border-radius:8px;padding:4px 14px;
       font-size:14px;font-weight:900;color:var(--primary);
-      margin-bottom:4px;
+      margin-bottom:6px;
     }
-    .sh-amount{font-size:32px;font-weight:900;color:var(--primary);margin:8px 0 2px}
-    .sh-amount-lbl{font-size:13px;font-weight:700;color:var(--gray);margin-bottom:8px}
-    .sh-sub{font-size:13px;font-weight:700;color:var(--gray);line-height:1.6;margin-bottom:20px}
+    .sh-amount{font-size:34px;font-weight:900;color:var(--primary);margin:8px 0 2px}
+    .sh-amount-lbl{font-size:13px;font-weight:700;color:var(--gray);margin-bottom:20px}
     .sh-btn{
       width:100%;border:none;border-radius:14px;
       padding:14px;background:var(--primary);color:#fff;
@@ -212,8 +213,9 @@
       font-family:"Nunito",sans-serif;
       display:block;width:100%;padding:6px 0;
     }
+    .sh-link:hover{color:var(--primary)}
 
-    /* Confetti */
+    /* confetti */
     .confetti-wrap{position:fixed;inset:0;pointer-events:none;z-index:400;overflow:hidden}
     .confetti-piece{
       position:absolute;border-radius:2px;
@@ -223,190 +225,191 @@
       0%{transform:translateY(-20px) rotate(0deg);opacity:1}
       100%{transform:translateY(100vh) rotate(720deg);opacity:0}
     }
+
+    /* ===== RESPONSIVE ===== */
+    @media(max-width:760px){
+      .layout{grid-template-columns:1fr}
+      .summary-sticky{position:static}
+      .cat-grid{grid-template-columns:repeat(3,1fr)}
+    }
   </style>
 </head>
 <body>
 
-<div class="scroll-body">
-  <div class="inline-nav">
-    <button class="inav-back" onclick="goBack()">‹</button>
-    <div class="inav-center">
-      <div class="inav-title">Nueva deuda</div>
-      <div class="inav-sub">Agregar al Plan de Deuda</div>
-    </div>
-    <div style="width:36px"></div>
-  </div>
-
-  <!-- PASO 1: TIPO -->
-  <div class="card">
-    <div class="card-title">
-      <div class="step-num">1</div>
-      Tipo de deuda
-    </div>
-
-    <div class="cat-grid" role="radiogroup">
-      <button class="cat-btn" data-cat="tarjetas" type="button" onclick="selectCat(this)">
-        <span class="cat-icon">💳</span>
-        <span class="cat-label">Tarjetas de crédito</span>
-      </button>
-      <button class="cat-btn" data-cat="linea_personal" type="button" onclick="selectCat(this)">
-        <span class="cat-icon">🏦</span>
-        <span class="cat-label">Línea crédito personal</span>
-      </button>
-      <button class="cat-btn" data-cat="linea_propiedad" type="button" onclick="selectCat(this)">
-        <span class="cat-icon">🏘️</span>
-        <span class="cat-label">Línea crédito propiedad</span>
-      </button>
-      <button class="cat-btn" data-cat="casa" type="button" onclick="selectCat(this)">
-        <span class="cat-icon">🏠</span>
-        <span class="cat-label">Casa</span>
-      </button>
-      <button class="cat-btn" data-cat="otras_propiedades" type="button" onclick="selectCat(this)">
-        <span class="cat-icon">⛵</span>
-        <span class="cat-label">Otras propiedades</span>
-      </button>
-      <button class="cat-btn" data-cat="auto" type="button" onclick="selectCat(this)">
-        <span class="cat-icon">🚗</span>
-        <span class="cat-label">Auto</span>
-      </button>
-      <button class="cat-btn" data-cat="educacion" type="button" onclick="selectCat(this)">
-        <span class="cat-icon">🎓</span>
-        <span class="cat-label">Educación</span>
-      </button>
-      <button class="cat-btn" data-cat="muebles" type="button" onclick="selectCat(this)">
-        <span class="cat-icon">🛋️</span>
-        <span class="cat-label">Muebles y Enseres</span>
-      </button>
-      <button class="cat-btn" data-cat="mejoras" type="button" onclick="selectCat(this)">
-        <span class="cat-icon">🔨</span>
-        <span class="cat-label">Mejoras al hogar</span>
-      </button>
-      <button class="cat-btn" data-cat="seguro_vida" type="button" onclick="selectCat(this)">
-        <span class="cat-icon">🛡️</span>
-        <span class="cat-label">Seguro de vida</span>
-      </button>
-      <button class="cat-btn" data-cat="margen_broker" type="button" onclick="selectCat(this)">
-        <span class="cat-icon">📈</span>
-        <span class="cat-label">Margen corretaje</span>
-      </button>
+<main>
+  <div class="page-header">
+    <button class="back-btn" onclick="goBack()" title="Volver">‹</button>
+    <div class="page-title">
+      <h1>Nueva deuda</h1>
+      <p>Agrega una deuda a tu Plan de Deuda</p>
     </div>
   </div>
 
-  <!-- PASO 2: DATOS -->
-  <div class="card">
-    <div class="card-title">
-      <div class="step-num">2</div>
-      Datos de la deuda
-    </div>
-    <div class="field">
-      <label for="debtName">Nombre de la deuda</label>
-      <input id="debtName" type="text"
-             placeholder="Ej. Visa Banco Popular…"
-             oninput="updateSummary(); checkSave();"/>
+  <div class="layout">
+
+    <!-- LEFT COL: FORM -->
+    <div>
+
+      <!-- PASO 1: TIPO -->
+      <div class="card">
+        <div class="card-title">
+          <div class="step-num">1</div>
+          Tipo de deuda
+        </div>
+        <div class="cat-grid" role="radiogroup">
+          <button class="cat-btn" data-cat="tarjetas" type="button" onclick="selectCat(this)">
+            <span class="cat-icon">💳</span>
+            <span class="cat-label">Tarjetas de crédito</span>
+          </button>
+          <button class="cat-btn" data-cat="linea_personal" type="button" onclick="selectCat(this)">
+            <span class="cat-icon">🏦</span>
+            <span class="cat-label">Línea crédito personal</span>
+          </button>
+          <button class="cat-btn" data-cat="linea_propiedad" type="button" onclick="selectCat(this)">
+            <span class="cat-icon">🏘️</span>
+            <span class="cat-label">Línea crédito propiedad</span>
+          </button>
+          <button class="cat-btn" data-cat="casa" type="button" onclick="selectCat(this)">
+            <span class="cat-icon">🏠</span>
+            <span class="cat-label">Casa</span>
+          </button>
+          <button class="cat-btn" data-cat="otras_propiedades" type="button" onclick="selectCat(this)">
+            <span class="cat-icon">⛵</span>
+            <span class="cat-label">Otras propiedades</span>
+          </button>
+          <button class="cat-btn" data-cat="auto" type="button" onclick="selectCat(this)">
+            <span class="cat-icon">🚗</span>
+            <span class="cat-label">Auto</span>
+          </button>
+          <button class="cat-btn" data-cat="educacion" type="button" onclick="selectCat(this)">
+            <span class="cat-icon">🎓</span>
+            <span class="cat-label">Educación</span>
+          </button>
+          <button class="cat-btn" data-cat="muebles" type="button" onclick="selectCat(this)">
+            <span class="cat-icon">🛋️</span>
+            <span class="cat-label">Muebles y Enseres</span>
+          </button>
+          <button class="cat-btn" data-cat="mejoras" type="button" onclick="selectCat(this)">
+            <span class="cat-icon">🔨</span>
+            <span class="cat-label">Mejoras al hogar</span>
+          </button>
+          <button class="cat-btn" data-cat="seguro_vida" type="button" onclick="selectCat(this)">
+            <span class="cat-icon">🛡️</span>
+            <span class="cat-label">Seguro de vida</span>
+          </button>
+          <button class="cat-btn" data-cat="margen_broker" type="button" onclick="selectCat(this)">
+            <span class="cat-icon">📈</span>
+            <span class="cat-label">Margen corretaje</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- PASO 2: DATOS -->
+      <div class="card">
+        <div class="card-title">
+          <div class="step-num">2</div>
+          Datos de la deuda
+        </div>
+
+        <div class="field">
+          <label for="debtName">Nombre de la deuda</label>
+          <input id="debtName" type="text"
+                 placeholder="Ej. Visa Banco Popular…"
+                 oninput="updateSummary(); checkSave();"/>
+        </div>
+
+        <div class="row-3">
+          <div class="field">
+            <label for="debtOriginal">Monto total ($)</label>
+            <input id="debtOriginal" type="number" inputmode="decimal"
+                   min="0" step="0.01" placeholder="0.00"
+                   oninput="onOriginalInput()"/>
+          </div>
+          <div class="field">
+            <label for="debtMonthlyPayment">Pago mensual ($) <span class="optional">Opc.</span></label>
+            <input id="debtMonthlyPayment" type="number" inputmode="decimal"
+                   min="0" step="0.01" placeholder="250"
+                   oninput="updateSummary()"/>
+          </div>
+          <div class="field">
+            <label for="debtApr">APR (%) <span class="optional">Opc.</span></label>
+            <input id="debtApr" type="number" inputmode="decimal"
+                   min="0" step="0.01" placeholder="24.99"
+                   oninput="onAprInput()"/>
+          </div>
+        </div>
+
+        <div class="field" id="monthsField">
+          <label for="debtMonths">Meses restantes <span class="optional">Opc. — no aplica para tarjetas</span></label>
+          <input id="debtMonths" type="number" inputmode="numeric"
+                 min="1" step="1" placeholder="36"
+                 oninput="onMonthsInput()"/>
+        </div>
+
+        <div class="helper purple" id="monthsHelper">
+          A ese ritmo, terminas en <span id="monthsFinishDate">—</span>.
+          Pago mínimo estimado: <span id="monthsMinPayment">—</span>/mes.
+        </div>
+        <div class="helper orange" id="aprHelper">
+          A <span id="aprPct">0%</span> APR pagas aprox. <span id="aprMonthlyCost">$0</span>/mes
+          solo en intereses sobre <span id="aprOnAmount">$0</span>.
+        </div>
+      </div>
+
     </div>
 
-    <div class="row-2">
-      <div class="field">
-        <label for="debtOriginal">Monto total ($)</label>
-        <input id="debtOriginal" type="number" inputmode="decimal"
-               min="0" step="0.01" placeholder="0.00"
-               oninput="onOriginalInput()"/>
-      </div>
-      <div class="field">
-        <label for="debtApr">
-          APR (%) <span class="optional">Opc.</span>
-        </label>
-        <input id="debtApr" type="number" inputmode="decimal"
-               min="0" step="0.01" placeholder="24.99"
-               oninput="onAprInput()"/>
+    <!-- RIGHT COL: SUMMARY + SAVE -->
+    <div class="summary-sticky">
+      <div class="card">
+        <div class="card-title">
+          <div class="step-num">3</div>
+          Confirmar
+        </div>
+        <div class="summary-box">
+          <div class="sum-row">
+            <span class="sum-lbl">Nombre</span>
+            <span class="sum-val" id="sumName">—</span>
+          </div>
+          <div class="sum-row">
+            <span class="sum-lbl">Tipo</span>
+            <span class="sum-val" id="sumCat">—</span>
+          </div>
+          <div class="sum-row">
+            <span class="sum-lbl">APR</span>
+            <span class="sum-val" id="sumApr">—</span>
+          </div>
+          <div class="sum-row" id="sumMonthsRow" style="display:none">
+            <span class="sum-lbl">Meses restantes</span>
+            <span class="sum-val" id="sumMonths">—</span>
+          </div>
+          <div class="sum-row" id="sumMonthlyRow" style="display:none">
+            <span class="sum-lbl">Pago mensual</span>
+            <span class="sum-val" id="sumMonthly">—</span>
+          </div>
+          <div class="sum-row total">
+            <span class="sum-lbl">Monto total deuda</span>
+            <span class="sum-val" id="sumOriginal">$0</span>
+          </div>
+        </div>
+
+        <button class="btn-save" id="btnSave" onclick="saveDebt()" disabled>
+          Agregar al Plan
+        </button>
+        <button class="btn-cancel" onclick="goBack()">Cancelar</button>
       </div>
     </div>
 
-    <div class="row-2">
-      <div class="field">
-        <label for="debtMonths">
-          Meses restantes <span class="optional">Opc.</span>
-        </label>
-        <input id="debtMonths" type="number" inputmode="numeric"
-               min="1" step="1" placeholder="36"
-               oninput="onMonthsInput()"/>
-      </div>
-      <div class="field">
-        <label for="debtMonthlyPayment">
-          Pago mensual ($) <span class="optional">Opc.</span>
-        </label>
-        <input id="debtMonthlyPayment" type="number" inputmode="decimal"
-               min="0" step="0.01" placeholder="250"
-               oninput="updateSummary()"/>
-      </div>
-    </div>
-
-    <div class="helper purple" id="monthsHelper">
-      A ese ritmo, terminas en <span id="monthsFinishDate">—</span>.
-      Pago mínimo estimado: <span id="monthsMinPayment">—</span>/mes.
-    </div>
-
-    <div class="helper orange" id="aprHelper">
-      A <span id="aprPct">0%</span> APR pagas aprox. <span id="aprMonthlyCost">$0</span>/mes
-      solo en intereses sobre <span id="aprOnAmount">$0</span>.
-    </div>
   </div>
+</main>
 
-  <!-- PASO 3: RESUMEN -->
-  <div class="card">
-    <div class="card-title">
-      <div class="step-num">3</div>
-      Confirmar
-    </div>
-
-    <div class="summary-box">
-      <div class="sum-row">
-        <span class="sum-lbl">Nombre</span>
-        <span class="sum-val" id="sumName">—</span>
-      </div>
-      <div class="sum-row">
-        <span class="sum-lbl">Tipo</span>
-        <span class="sum-val" id="sumCat">—</span>
-      </div>
-      <div class="sum-row">
-        <span class="sum-lbl">APR</span>
-        <span class="sum-val" id="sumApr">—</span>
-      </div>
-      <div class="sum-row" id="sumMonthsRow" style="display:none">
-        <span class="sum-lbl">Pagos restantes</span>
-        <span class="sum-val" id="sumMonths">—</span>
-      </div>
-      <div class="sum-row" id="sumMonthlyRow" style="display:none">
-        <span class="sum-lbl">Pago mensual</span>
-        <span class="sum-val" id="sumMonthly">—</span>
-      </div>
-      <div class="sum-row total">
-        <span class="sum-lbl">Monto total deuda</span>
-        <span class="sum-val" id="sumOriginal">$0</span>
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<!-- INLINE SAVE BUTTON -->
-<div style="text-align:center;padding:8px 14px 32px">
-  <button id="btnSave" onclick="saveDebt()" disabled
-    style="padding:12px 28px;background:var(--primary);color:#fff;border:none;border-radius:14px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:900;cursor:pointer;box-shadow:0 6px 16px rgba(89,74,226,.3);opacity:.4;transition:opacity .15s">
-    Agregar al Plan
-  </button>
-</div>
-
-<!-- SUCCESS SHEET -->
-<div class="success-overlay" id="successOverlay">
-  <div class="success-sheet">
-    <div class="sh-handle"></div>
+<!-- SUCCESS MODAL -->
+<div class="overlay" id="successOverlay">
+  <div class="modal">
     <div class="sh-icon">✅</div>
     <div class="sh-title">¡Deuda agregada!</div>
     <div class="sh-debt-name" id="scDebtName">—</div>
     <div class="sh-amount" id="scAmount">$0</div>
     <div class="sh-amount-lbl">registrados como deuda total</div>
-    <div class="sh-sub" id="scSub">Ya aparece en tu Plan de Deuda.</div>
     <button class="sh-btn" onclick="goToPlan()">Ver Plan de Deuda →</button>
     <button class="sh-link" onclick="registerAnother()">Agregar otra deuda</button>
   </div>
@@ -416,48 +419,44 @@
 
 <script>
   const CAT_LABELS = {
-    tarjetas:         'Tarjetas de Crédito, tiendas, gasolinera, etc.',
-    linea_personal:   'Línea crédito personal',
-    linea_propiedad:  'Línea crédito de la propiedad',
-    casa:             'Casa',
-    otras_propiedades:'Otras propiedades (barco, casa de playa, etc.)',
-    auto:             'Auto',
-    educacion:        'Educación',
-    muebles:          'Préstamos para Muebles y Enseres',
-    mejoras:          'Mejoras al hogar',
-    seguro_vida:      'Préstamo de seguro de vida',
-    margen_broker:    'Préstamos al Margen con casa de corretaje',
-  };
-
-  const PRESET_DEBTS = {
-    visa_popular:  {name:'Visa – Banco Popular',        cat:'tarjetas'},
-    prestamo_auto: {name:'Préstamo Auto – FirstBankPR', cat:'auto'},
-    sallie_mae:    {name:'Sallie Mae – Student Loan',   cat:'educacion'},
+    tarjetas:          'Tarjetas de Crédito, tiendas, gasolinera, etc.',
+    linea_personal:    'Línea crédito personal',
+    linea_propiedad:   'Línea crédito de la propiedad',
+    casa:              'Casa',
+    otras_propiedades: 'Otras propiedades (barco, casa de playa, etc.)',
+    auto:              'Auto',
+    educacion:         'Educación',
+    muebles:           'Préstamos para Muebles y Enseres',
+    mejoras:           'Mejoras al hogar',
+    seguro_vida:       'Préstamo de seguro de vida',
+    margen_broker:     'Préstamos al Margen con casa de corretaje',
   };
 
   let selectedCat = null;
 
-
-
-  // ===== CATEGORY =====
   function selectCat(btn){
     document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     selectedCat = btn.dataset.cat;
+    // Hide months field for credit cards
+    const mf = document.getElementById('monthsField');
+    mf.style.display = selectedCat === 'tarjetas' ? 'none' : 'block';
+    if(selectedCat === 'tarjetas'){
+      document.getElementById('debtMonths').value = '';
+      document.getElementById('monthsHelper').classList.remove('show');
+    }
     updateSummary();
     checkSave();
   }
 
-  // ===== APR =====
   function onAprInput(){
     const apr  = Number(document.getElementById('debtApr').value || 0);
     const orig = Number(document.getElementById('debtOriginal').value || 0);
     const h    = document.getElementById('aprHelper');
     if(apr > 0 && orig > 0){
-      const monthly = (orig * apr / 100) / 12;
-      document.getElementById('aprPct').textContent       = apr.toFixed(2) + '%';
-      document.getElementById('aprMonthlyCost').textContent = money(monthly);
-      document.getElementById('aprOnAmount').textContent  = money(orig);
+      document.getElementById('aprPct').textContent        = apr.toFixed(2) + '%';
+      document.getElementById('aprMonthlyCost').textContent = money((orig * apr / 100) / 12);
+      document.getElementById('aprOnAmount').textContent   = money(orig);
       h.classList.add('show');
     } else {
       h.classList.remove('show');
@@ -473,7 +472,6 @@
     checkSave();
   }
 
-  // ===== MONTHS =====
   function onMonthsInput(){
     const months = Number(document.getElementById('debtMonths').value || 0);
     const orig   = Number(document.getElementById('debtOriginal').value || 0);
@@ -484,7 +482,7 @@
       document.getElementById('monthsFinishDate').textContent =
         fd.toLocaleDateString('es-US',{year:'numeric',month:'long'});
       document.getElementById('monthsMinPayment').textContent =
-        orig > 0 ? money(orig/months) : '—';
+        orig > 0 ? money(orig / months) : '—';
       h.classList.add('show');
     } else {
       h.classList.remove('show');
@@ -492,7 +490,6 @@
     updateSummary();
   }
 
-  // ===== SUMMARY =====
   function getDebtName(){
     return (document.getElementById('debtName')?.value || '').trim();
   }
@@ -506,13 +503,13 @@
 
     document.getElementById('sumName').textContent     = name || '—';
     document.getElementById('sumCat').textContent      = selectedCat ? CAT_LABELS[selectedCat] : '—';
-    document.getElementById('sumApr').textContent      = apr > 0 ? apr.toFixed(2)+'%' : 'Sin APR';
+    document.getElementById('sumApr').textContent      = apr > 0 ? apr.toFixed(2) + '%' : 'Sin APR';
     document.getElementById('sumOriginal').textContent = money(orig);
 
     const mr  = document.getElementById('sumMonthsRow');
     const mpr = document.getElementById('sumMonthlyRow');
     if(months > 0){
-      document.getElementById('sumMonths').textContent = months + (months===1?' pago':' pagos');
+      document.getElementById('sumMonths').textContent = months + (months === 1 ? ' mes' : ' meses');
       mr.style.display = 'flex';
     } else { mr.style.display = 'none'; }
     if(monthly > 0){
@@ -525,53 +522,64 @@
     const name = getDebtName();
     const orig = Number(document.getElementById('debtOriginal').value || 0);
     const btn  = document.getElementById('btnSave');
-    const ok   = !!(name && orig > 0 && selectedCat);
-    btn.disabled = !ok;
-    btn.style.opacity  = ok ? '1' : '.4';
-    btn.style.cursor   = ok ? 'pointer' : 'not-allowed';
+    btn.disabled = !(name && orig > 0 && selectedCat);
   }
 
-  // ===== SAVE =====
   function saveDebt(){
     const name = getDebtName();
     const orig = Number(document.getElementById('debtOriginal').value || 0);
-    const apr  = Number(document.getElementById('debtApr').value || 0);
     if(!name || orig <= 0 || !selectedCat) return;
-
     document.getElementById('scDebtName').textContent = name;
     document.getElementById('scAmount').textContent   = money(orig);
     document.getElementById('successOverlay').classList.add('show');
+    triggerConfetti();
   }
 
   function goToPlan(){
-    window.location.href = 'bajar-deuda.html';
+    window.location.href = 'bajar-deuda-v2.html';
   }
 
   function goBack(){
-    window.location.href = 'bajar-deuda.html';
+    window.location.href = 'bajar-deuda-v2.html';
   }
 
   function registerAnother(){
     document.getElementById('successOverlay').classList.remove('show');
-    document.getElementById('debtSelector').value = '';
-    document.getElementById('debtName').value     = '';
-    document.getElementById('newNameField').style.display = 'none';
+    document.getElementById('debtName').value = '';
     document.getElementById('debtOriginal').value = '';
-    document.getElementById('debtApr').value      = '';
-    document.getElementById('debtMonths').value   = '';
+    document.getElementById('debtApr').value = '';
+    document.getElementById('debtMonths').value = '';
     document.getElementById('debtMonthlyPayment').value = '';
     document.getElementById('aprHelper').classList.remove('show');
     document.getElementById('monthsHelper').classList.remove('show');
     document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
     selectedCat = null;
     document.getElementById('btnSave').disabled = true;
+    document.getElementById('monthsField').style.display = 'block';
     updateSummary();
-    document.getElementById('debtSelector').focus();
+    document.getElementById('debtName').focus();
   }
 
-  // ===== UTILS =====
-  function money(n){ return Number(n||0).toLocaleString('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}); }
-  function rid(){ return Math.random().toString(16).slice(2)+Math.random().toString(16).slice(2); }
+  document.getElementById('successOverlay').addEventListener('click', function(e){
+    if(e.target === this) this.classList.remove('show');
+  });
+
+  function triggerConfetti(){
+    const wrap = document.getElementById('confettiWrap');
+    const colors = ['#594AE2','#E8C239','#22C55E','#F97316','#EC4899','#7459D9'];
+    wrap.innerHTML = '';
+    for(let i = 0; i < 60; i++){
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.style.cssText = `left:${Math.random()*100}vw;top:-10px;background:${colors[Math.floor(Math.random()*colors.length)]};animation-delay:${Math.random()*.6}s;animation-duration:${.9+Math.random()*.8}s;width:${5+Math.random()*7}px;height:${5+Math.random()*7}px;border-radius:${Math.random()>.5?'50%':'2px'}`;
+      wrap.appendChild(el);
+    }
+    setTimeout(() => wrap.innerHTML = '', 2200);
+  }
+
+  function money(n){
+    return Number(n||0).toLocaleString('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0});
+  }
 </script>
 </body>
 </html>
