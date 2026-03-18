@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cada Menudo — Tu dinero. Claro.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary:          #3956E8;
+      --secondary:        #7459D9;
+      --yellow:           #E8C239;
+      --gray:             #64748B;
+      --muted:            #EEF0F6;
+      --bg:               #F7F8FC;
+      --card:             #FFFFFF;
+      --text:             #0F172A;
+      --border:           #E5E7EB;
+      --gradient-primary: linear-gradient(135deg, #3956E8 0%, #7459D9 100%);
+      --navy:             #1E1B4B;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--muted); }
+    ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-8px); }
+    }
+    @keyframes float2 {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-8px); }
+    }
+    @keyframes pulse {
+      0%,100% { opacity:1; transform:scale(1); }
+      50%      { opacity:.4; transform:scale(.85); }
+    }
+    @keyframes growBar {
+      from { height: 0 !important; }
+    }
+    @keyframes countUp {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    .fade-up  { animation: fadeUp .7s ease both; }
+    .delay-1  { animation-delay: .1s; }
+    .delay-2  { animation-delay: .22s; }
+    .delay-3  { animation-delay: .38s; }
+    .delay-4  { animation-delay: .52s; }
+    .float    { animation: float 4s ease-in-out infinite; }
+    .float2   { animation: float2 5s ease-in-out infinite .8s; }
+    .pulse-dot{ animation: pulse 2s ease-in-out infinite; }
+
+    /* ── Nav ── */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(247,248,252,.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1.5px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1200px; margin: 0 auto;
+      padding: 0 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 8px;
+      text-decoration: none; color: var(--text);
+    }
+    .nav-logo-icon {
+      width: 32px; height: 32px; border-radius: 10px;
+      background: var(--gradient-primary);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+    .nav-logo span { font-weight: 800; font-size: 1.05rem; }
+    nav { display: flex; gap: 28px; align-items: center; }
+    .nav-link {
+      position: relative; color: var(--text);
+      text-decoration: none; font-size: .875rem; font-weight: 600;
+    }
+    .nav-link::after {
+      content: ''; position: absolute;
+      bottom: -2px; left: 0;
+      width: 0; height: 2px;
+      background: var(--gradient-primary);
+      transition: width .25s;
+    }
+    .nav-link:hover::after { width: 100%; }
+    .nav-actions { display: flex; gap: 12px; align-items: center; }
+    .btn-primary {
+      background: var(--gradient-primary); color: #fff;
+      padding: 8px 18px; border-radius: 10px;
+      font-family: 'Nunito', sans-serif; font-size: .85rem; font-weight: 700;
+      text-decoration: none; border: none; cursor: pointer;
+      transition: opacity .2s, transform .2s;
+      display: inline-block;
+    }
+    .btn-primary:hover { opacity: .9; transform: translateY(-1px); }
+    .btn-primary-lg {
+      background: var(--gradient-primary); color: #fff;
+      padding: 14px 28px; border-radius: 12px;
+      font-family: 'Nunito', sans-serif; font-weight: 700; font-size: .95rem;
+      text-decoration: none; border: none; cursor: pointer;
+      box-shadow: 0 8px 24px rgba(57,86,232,.35);
+      transition: transform .2s, box-shadow .2s;
+      display: inline-block;
+    }
+    .btn-primary-lg:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(57,86,232,.45); }
+    .btn-outline {
+      background: #fff; color: var(--text);
+      padding: 14px 28px; border-radius: 12px;
+      font-family: 'Nunito', sans-serif; font-weight: 700; font-size: .95rem;
+      text-decoration: none; border: 1.5px solid var(--border); cursor: pointer;
+      display: inline-block;
+    }
+
+    /* ── Orb ── */
+    .orb {
+      position: absolute; border-radius: 50%;
+      filter: blur(80px); pointer-events: none; opacity: .35;
+    }
+
+    /* ── Section utils ── */
+    .section-label {
+      font-size: .78rem; font-weight: 700; color: var(--primary);
+      letter-spacing: .1em; text-transform: uppercase; margin-bottom: 10px;
+    }
+    .section-title {
+      font-size: clamp(1.8rem,4vw,2.6rem); font-weight: 800;
+      letter-spacing: -.02em; line-height: 1.2;
+    }
+    .section-sub {
+      color: var(--gray); margin-top: 12px; line-height: 1.7;
+      max-width: 520px;
+    }
+    .section-center { text-align: center; }
+    .section-center .section-sub { margin: 12px auto 0; }
+
+    /* ── Hero ── */
+    #hero {
+      position: relative; overflow: hidden;
+      padding: 80px 24px 100px;
+    }
+    .hero-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 60px; align-items: center;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #fff; border: 1.5px solid var(--border);
+      border-radius: 100px; padding: 6px 14px 6px 8px;
+      margin-bottom: 24px;
+    }
+    .hero-badge span { font-size: .78rem; font-weight: 600; color: var(--gray); }
+    h1 { font-size: clamp(2.4rem,5vw,3.5rem); font-weight: 800; line-height: 1.1; letter-spacing: -.02em; }
+    h1 .accent { color: var(--primary); }
+    .hero-desc { margin-top: 20px; font-size: 1.05rem; color: var(--gray); line-height: 1.7; max-width: 440px; }
+    .hero-ctas { display: flex; gap: 12px; margin-top: 32px; flex-wrap: wrap; }
+    .hero-trust { display: flex; gap: 24px; margin-top: 36px; flex-wrap: wrap; }
+    .hero-trust span { font-size: .8rem; color: var(--gray); display: flex; gap: 6px; align-items: center; }
+    .hero-mockup-wrap {
+      display: flex; justify-content: center; position: relative;
+    }
+
+    /* ── App Mockup ── */
+    .app-mockup {
+      background: #fff; border-radius: 24px;
+      box-shadow: 0 32px 80px rgba(0,0,0,.14);
+      overflow: hidden; width: 100%; max-width: 340px;
+    }
+    .mockup-status {
+      background: var(--navy); padding: 10px 20px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .mockup-status .time { color: #fff; font-size: 11px; opacity: .7; }
+    .mockup-dots { display: flex; gap: 4px; }
+    .mockup-dots span { width: 4px; height: 4px; border-radius: 2px; background: #fff; opacity: .6; display: block; }
+    .mockup-header {
+      background: var(--gradient-primary);
+      padding: 20px 20px 28px; color: #fff;
+    }
+    .mockup-header .bal-label { font-size: 11px; opacity: .8; margin-bottom: 2px; }
+    .mockup-header .bal-amount { font-size: 28px; font-weight: 800; }
+    .mockup-pills { display: flex; gap: 12px; margin-top: 16px; }
+    .mockup-pill {
+      background: rgba(255,255,255,.15); border-radius: 10px;
+      padding: 8px 14px; flex: 1;
+    }
+    .mockup-pill .pill-label { font-size: 10px; opacity: .8; }
+    .mockup-pill .pill-val { font-size: 14px; font-weight: 700; }
+    .mockup-body { padding: 16px 20px 20px; }
+    .mockup-bar-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
+    .mockup-bar-header .title { font-size: 12px; font-weight: 600; }
+    .mockup-bar-header .link { font-size: 10px; color: var(--primary); cursor: pointer; }
+    .bar-chart { display: flex; align-items: flex-end; gap: 6px; height: 64px; }
+    .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .bar-fill { width: 100%; border-radius: 4px; animation: growBar .7s ease both; }
+    .bar-label { font-size: 9px; color: var(--gray); }
+    .txn-list { margin-top: 12px; }
+    .txn-title { font-size: 12px; font-weight: 600; margin-bottom: 8px; }
+    .txn-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--muted); }
+    .txn-row:last-child { border-bottom: none; }
+    .txn-ico { width: 32px; height: 32px; border-radius: 10px; background: var(--muted); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+    .txn-info { flex: 1; }
+    .txn-info .name { font-size: 12px; font-weight: 500; }
+    .txn-info .sub  { font-size: 10px; color: var(--gray); }
+    .txn-amt { font-size: 12px; font-weight: 700; }
+    .neg { color: #ef4444; } .pos { color: #22c55e; }
+
+    /* ── Floating badges ── */
+    .badge-gold {
+      position: absolute; top: -16px; right: -20px;
+      background: var(--yellow); border-radius: 12px;
+      padding: 10px 14px; box-shadow: 0 8px 24px rgba(0,0,0,.12);
+      font-size: .75rem; font-weight: 700;
+    }
+    .badge-white {
+      position: absolute; bottom: 20px; left: -20px;
+      background: #fff; border-radius: 12px;
+      padding: 10px 14px; box-shadow: 0 8px 24px rgba(0,0,0,.12);
+      font-size: .75rem; font-weight: 600;
+      border: 1.5px solid var(--border);
+    }
+    .badge-white .prog-label { color: var(--gray); font-size: 10px; margin-bottom: 4px; }
+    .badge-white .prog-row { display: flex; align-items: center; gap: 8px; }
+    .prog-bar { flex: 1; height: 6px; background: var(--muted); border-radius: 3px; overflow: hidden; }
+    .prog-fill { height: 100%; background: var(--primary); border-radius: 3px; }
+    .prog-pct { color: var(--primary); font-size: 11px; font-weight: 700; }
+
+    /* ── Stats band ── */
+    #stats {
+      background: var(--gradient-primary);
+      padding: 52px 24px;
+    }
+    .stats-grid {
+      max-width: 900px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
+      gap: 32px;
+    }
+    .stat-item { text-align: center; }
+    .stat-number { font-size: 2.5rem; font-weight: 800; color: #fff; }
+    .stat-number.gold { color: var(--yellow); }
+    .stat-label { font-size: .85rem; color: rgba(255,255,255,.7); margin-top: 4px; }
+
+    /* ── Dashboard mockup ── */
+    .dash-mockup {
+      background: #fff; border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.1);
+      padding: 24px; width: 100%;
+    }
+    .kpi-row { display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+    .kpi-card {
+      flex: 1 1 120px; background: var(--muted);
+      border-radius: 12px; padding: 14px 16px;
+    }
+    .kpi-card .kpi-label { font-size: 11px; color: var(--gray); margin-bottom: 4px; }
+    .kpi-card .kpi-val   { font-size: 20px; font-weight: 800; }
+    .kpi-card .kpi-delta { font-size: 11px; margin-top: 4px; font-weight: 600; }
+    .dash-charts { display: flex; gap: 20px; align-items: center; }
+    .dash-bars { flex: 2; }
+    .dash-bars .chart-title { font-size: 12px; font-weight: 600; margin-bottom: 12px; }
+    .dash-donut { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .dash-donut .chart-title { font-size: 12px; font-weight: 600; align-self: flex-start; }
+    .donut-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px; width: 100%; }
+    .donut-legend-item { display: flex; align-items: center; gap: 5px; }
+    .donut-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+    .donut-legend-item span { font-size: 10px; color: var(--gray); }
+
+    /* ── Features ── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
+      gap: 20px;
+    }
+    .feat-card {
+      background: #fff; border: 1.5px solid var(--border);
+      border-radius: 18px; padding: 24px;
+      position: relative; overflow: hidden;
+      transition: transform .25s, box-shadow .25s;
+    }
+    .feat-card:hover { transform: translateY(-4px); box-shadow: 0 20px 48px rgba(57,86,232,.12); }
+    .feat-card .accent-blob {
+      position: absolute; top: 0; right: 0;
+      width: 80px; height: 80px;
+      opacity: .06; border-radius: 0 0 0 80px;
+    }
+    .feat-card .icon { font-size: 28px; margin-bottom: 12px; }
+    .feat-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+    .feat-card p  { font-size: .85rem; color: var(--gray); line-height: 1.6; }
+
+    /* ── Steps ── */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+      gap: 32px; margin-top: 0;
+    }
+    .step { text-align: center; }
+    .step-num {
+      width: 52px; height: 52px; border-radius: 14px;
+      background: var(--gradient-primary); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 1.1rem;
+      margin: 0 auto 16px;
+      box-shadow: 0 8px 24px rgba(57,86,232,.3);
+    }
+    .step h3 { font-weight: 700; margin-bottom: 8px; }
+    .step p  { font-size: .85rem; color: var(--gray); line-height: 1.6; }
+
+    /* ── Transactions ── */
+    .txn-full-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 0; border-bottom: 1px solid var(--muted);
+    }
+    .txn-full-row:last-child { border-bottom: none; }
+    .txn-full-ico {
+      width: 40px; height: 40px; border-radius: 12px;
+      background: var(--muted); display: flex; align-items: center;
+      justify-content: center; font-size: 18px; flex-shrink: 0;
+    }
+    .txn-full-info { flex: 1; }
+    .txn-full-info .name { font-size: .85rem; font-weight: 600; }
+    .txn-full-info .sub  { font-size: .75rem; color: var(--gray); }
+    .check-list { list-style: none; margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
+    .check-list li { display: flex; gap: 8px; align-items: center; font-size: .875rem; }
+    .check-list li .ck { color: var(--primary); font-weight: 700; font-size: 1rem; }
+
+    /* ── Testimonials ── */
+    .testimonials-grid {
+      display: grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+      gap: 20px;
+    }
+    .testi-card {
+      background: #fff; border-radius: 20px; padding: 24px;
+      border: 1.5px solid var(--border);
+    }
+    .stars { display: flex; gap: 4px; margin-bottom: 12px; }
+    .stars span { color: var(--yellow); font-size: 14px; }
+    .testi-card p { font-size: .875rem; color: #374151; line-height: 1.7; margin-bottom: 16px; }
+    .testi-author { display: flex; align-items: center; gap: 10px; }
+    .testi-avatar {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: var(--gradient-primary);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 14px; font-weight: 700;
+    }
+    .testi-name { font-size: .85rem; font-weight: 600; }
+    .testi-role { font-size: .75rem; color: var(--gray); }
+
+    /* ── Video cards ── */
+    .videos-grid {
+      display: grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+      gap: 20px;
+    }
+    .video-card {
+      background: #fff; border-radius: 16px;
+      overflow: hidden; text-align: left;
+      border: 1.5px solid var(--border);
+      transition: transform .2s, box-shadow .2s;
+      cursor: pointer;
+    }
+    .video-card:hover { transform: translateY(-4px); box-shadow: 0 20px 48px rgba(0,0,0,.1); }
+    .video-thumb {
+      height: 160px; background: var(--gradient-primary);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 52px; position: relative;
+    }
+    .play-btn {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .play-btn span {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: rgba(255,255,255,.25); backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; padding-left: 3px;
+    }
+    .video-info { padding: 16px; }
+    .video-info h4 { font-weight: 600; font-size: .9rem; margin-bottom: 8px; }
+    .video-meta { display: flex; gap: 12px; font-size: .75rem; color: var(--gray); }
+
+    /* ── CTA band ── */
+    #cta-band {
+      padding: 80px 24px;
+      background: var(--navy);
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    #cta-band h2 { font-size: clamp(1.8rem,4vw,2.8rem); font-weight: 800; color: #fff; letter-spacing: -.02em; line-height: 1.2; }
+    #cta-band h2 .gold { color: var(--yellow); }
+    #cta-band p { color: rgba(255,255,255,.6); margin: 16px auto 0; max-width: 440px; line-height: 1.7; }
+    .btn-yellow {
+      display: inline-block; margin-top: 36px;
+      background: var(--yellow); color: var(--text);
+      padding: 15px 36px; border-radius: 12px;
+      font-family: 'Nunito',sans-serif; font-weight: 800; font-size: 1rem;
+      text-decoration: none;
+      box-shadow: 0 8px 32px rgba(232,194,57,.4);
+      transition: transform .2s;
+    }
+    .btn-yellow:hover { transform: scale(1.04); }
+    #cta-band .sub { font-size: .8rem; color: rgba(255,255,255,.4); margin-top: 14px; }
+
+    /* ── Auth ── */
+    .auth-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .login-card {
+      padding: 36px; background: #fff;
+      border-radius: 24px; border: 1.5px solid var(--border);
+    }
+    .signup-card {
+      padding: 36px;
+      background: var(--gradient-primary);
+      border-radius: 24px;
+    }
+    .form-eyebrow {
+      font-size: .75rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .login-card .form-eyebrow { color: var(--primary); }
+    .signup-card .form-eyebrow { color: rgba(255,255,255,.6); }
+    .form-title { font-size: 1.4rem; font-weight: 800; margin-bottom: 24px; }
+    .signup-card .form-title { color: #fff; }
+    .form-fields { display: flex; flex-direction: column; gap: 12px; }
+    .cm-input {
+      width: 100%; border: 1.5px solid var(--border);
+      background: #fff; padding: 12px 16px;
+      border-radius: 12px; font-size: .9rem;
+      font-family: 'Nunito', sans-serif; outline: none;
+      transition: border-color .2s; color: var(--text);
+    }
+    .cm-input:focus { border-color: var(--primary); }
+    .cm-input::placeholder { color: #9ca3af; }
+    .cm-input.light {
+      background: rgba(255,255,255,1);
+      border-color: var(--border);
+      color: var(--text);
+    }
+    .btn-login {
+      width: 100%; background: var(--text); color: #fff;
+      border: none; border-radius: 12px; padding: 13px;
+      font-family: 'Nunito',sans-serif; font-size: .95rem; font-weight: 700;
+      cursor: pointer; transition: background .2s;
+    }
+    .btn-login:hover { background: var(--primary); }
+    .btn-signup {
+      width: 100%; background: var(--yellow); color: var(--text);
+      border: none; border-radius: 12px; padding: 13px;
+      font-family: 'Nunito',sans-serif; font-size: .95rem; font-weight: 800;
+      cursor: pointer; transition: transform .15s, box-shadow .15s;
+    }
+    .btn-signup:hover { transform: scale(1.02); box-shadow: 0 8px 24px rgba(0,0,0,.2); }
+    .form-footer { font-size: .8rem; text-align: center; color: var(--gray); margin-top: 4px; }
+    .form-footer a { color: var(--primary); text-decoration: none; }
+    .signup-card .form-footer { color: rgba(255,255,255,.6); }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--primary);
+      padding: 48px 24px 32px;
+      border-top: 1px solid rgba(255,255,255,.1);
+    }
+    .footer-inner { max-width: 1200px; margin: 0 auto; }
+    .footer-top {
+      display: flex; justify-content: space-between;
+      align-items: flex-start; flex-wrap: wrap;
+      gap: 32px; margin-bottom: 40px;
+    }
+    .footer-brand { max-width: 260px; }
+    .footer-logo {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+    }
+    .footer-logo-icon {
+      width: 32px; height: 32px; border-radius: 10px;
+      background: rgba(255,255,255,.2);
+      display: flex; align-items: center; justify-content: center; font-size: 16px;
+    }
+    .footer-logo span { font-weight: 800; color: #fff; }
+    .footer-brand p { font-size: .82rem; color: rgba(255,255,255,.75); line-height: 1.6; }
+    .footer-links { display: flex; gap: 48px; flex-wrap: wrap; }
+    .footer-col h4 {
+      font-size: .78rem; font-weight: 700;
+      color: rgba(255,255,255,.5); letter-spacing: .08em;
+      text-transform: uppercase; margin-bottom: 12px;
+    }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .footer-col a {
+      font-size: .85rem; color: rgba(255,255,255,.8);
+      text-decoration: none; transition: color .2s;
+    }
+    .footer-col a:hover { color: #fff; }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,.15);
+      padding-top: 24px;
+      display: flex; justify-content: space-between;
+      align-items: center; flex-wrap: wrap; gap: 12px;
+    }
+    .footer-bottom span { font-size: .8rem; color: rgba(255,255,255,.7); }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-mockup-wrap { display: none; }
+      .auth-grid { grid-template-columns: 1fr; }
+      .dash-charts { flex-direction: column; }
+    }
+    @media (max-width: 640px) {
+      nav { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── HEADER ──────────────────────────────────────────── -->
+<header>
+  <div class="nav-inner">
+    <a href="#hero" class="nav-logo">
+      <div class="nav-logo-icon">💰</div>
+      <span>Cada Menudo</span>
+    </a>
+
+    <nav>
+      <a href="#hero" class="nav-link">Inicio</a>
+      <a href="#features" class="nav-link">Features</a>
+      <a href="#como-funciona" class="nav-link">Cómo funciona</a>
+      <a href="#learn" class="nav-link">Aprende</a>
+    </nav>
+
+    <div class="nav-actions">
+      <a href="#login" class="nav-link">Ingresar</a>
+      <a href="#signup" class="btn-primary">Crear cuenta</a>
+    </div>
+  </div>
+</header>
+
+<!-- ── HERO ────────────────────────────────────────────── -->
+<section id="hero">
+  <div class="orb" style="width:500px;height:500px;background:var(--primary);top:-200px;right:-100px;"></div>
+  <div class="orb" style="width:300px;height:300px;background:var(--yellow);bottom:-100px;left:0;"></div>
+
+  <div class="hero-inner">
+    <!-- Left -->
+    <div>
+      <div class="hero-badge fade-up">
+        <div class="pulse-dot" style="width:8px;height:8px;border-radius:50%;background:#22c55e;flex-shrink:0;"></div>
+        <span>Más de 12,000 usuarios activos</span>
+      </div>
+
+      <h1 class="fade-up delay-1">
+        Tu dinero.<br>
+        <span class="accent">Claro.</span><br>
+        Sin excusas.
+      </h1>
+
+      <p class="hero-desc fade-up delay-2">
+        Cada Menudo te ayuda a entender exactamente en qué se va tu dinero, organizar tus gastos y tomar control real de tus finanzas personales.
+      </p>
+
+      <div class="hero-ctas fade-up delay-3">
+        <a href="#signup" class="btn-primary-lg">Crear cuenta gratis →</a>
+        <a href="#features" class="btn-outline">Ver features</a>
+      </div>
+
+      <div class="hero-trust fade-up delay-4">
+        <span>✅ Sin conexión bancaria</span>
+        <span>✅ 100% gratis</span>
+        <span>✅ Datos privados</span>
+      </div>
+    </div>
+
+    <!-- Right: App Mockup -->
+    <div class="hero-mockup-wrap float">
+      <div style="position:absolute;inset:-30px;background:radial-gradient(ellipse at center,rgba(57,86,232,.15) 0%,transparent 70%);border-radius:50%;"></div>
+
+      <div class="app-mockup">
+        <div class="mockup-status">
+          <span class="time">9:41</span>
+          <div class="mockup-dots"><span></span><span></span><span></span></div>
+        </div>
+        <div class="mockup-header">
+          <div class="bal-label">Balance total</div>
+          <div class="bal-amount">$42,380</div>
+          <div class="mockup-pills">
+            <div class="mockup-pill">
+              <div class="pill-label">Ingresos</div>
+              <div class="pill-val" style="color:#4ade80">+$18,000</div>
+            </div>
+            <div class="mockup-pill">
+              <div class="pill-label">Gastos</div>
+              <div class="pill-val" style="color:#f87171">-$8,420</div>
+            </div>
+          </div>
+        </div>
+        <div class="mockup-body">
+          <div class="mockup-bar-header">
+            <span class="title">Gastos por mes</span>
+            <span class="link">Ver todo</span>
+          </div>
+          <div class="bar-chart" id="hero-bars"></div>
+          <div class="txn-list">
+            <div class="txn-title">Últimos movimientos</div>
+            <div class="txn-row"><div class="txn-ico">🛒</div><div class="txn-info"><div class="name">Supermercado</div><div class="sub">Hoy</div></div><span class="txn-amt neg">-$1,240</span></div>
+            <div class="txn-row"><div class="txn-ico">💼</div><div class="txn-info"><div class="name">Salario</div><div class="sub">Ayer</div></div><span class="txn-amt pos">+$18,000</span></div>
+            <div class="txn-row"><div class="txn-ico">🍕</div><div class="txn-info"><div class="name">Restaurante</div><div class="sub">Mar 15</div></div><span class="txn-amt neg">-$380</span></div>
+            <div class="txn-row" style="border:none"><div class="txn-ico">⚡</div><div class="txn-info"><div class="name">Electricidad</div><div class="sub">Mar 14</div></div><span class="txn-amt neg">-$520</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="badge-gold float2">💰 +$18,000 hoy</div>
+      <div class="badge-white float">
+        <div class="prog-label">Meta vacaciones</div>
+        <div class="prog-row">
+          <div class="prog-bar"><div class="prog-fill" style="width:68%"></div></div>
+          <span class="prog-pct">68%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── STATS ────────────────────────────────────────────── -->
+<section id="stats">
+  <div class="stats-grid">
+    <div class="stat-item">
+      <div class="stat-number" data-target="12000" data-suffix="+">0+</div>
+      <div class="stat-label">Usuarios activos</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number" data-target="4800000" data-suffix="">0</div>
+      <div class="stat-label">Transacciones registradas</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number" data-target="98" data-suffix="%">0%</div>
+      <div class="stat-label">Usuarios satisfechos</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number gold">$0</div>
+      <div class="stat-label">Costo para empezar</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── DASHBOARD PREVIEW ─────────────────────────────────── -->
+<section style="padding:100px 24px;background:#fff;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="section-center" style="margin-bottom:52px;">
+      <div class="section-label">Dashboard</div>
+      <h2 class="section-title">Todo en un solo lugar</h2>
+      <p class="section-sub">Visualiza ingresos, gastos y ahorros en un dashboard simple, claro y poderoso.</p>
+    </div>
+
+    <div class="dash-mockup">
+      <!-- KPI row -->
+      <div class="kpi-row">
+        <div class="kpi-card" style="border-top:3px solid var(--primary)">
+          <div class="kpi-label">Ingresos</div>
+          <div class="kpi-val">$54,000</div>
+          <div class="kpi-delta" style="color:#22c55e">+8% vs mes ant.</div>
+        </div>
+        <div class="kpi-card" style="border-top:3px solid #f87171">
+          <div class="kpi-label">Gastos</div>
+          <div class="kpi-val">$28,420</div>
+          <div class="kpi-delta" style="color:#ef4444">-3% vs mes ant.</div>
+        </div>
+        <div class="kpi-card" style="border-top:3px solid var(--primary)">
+          <div class="kpi-label">Ahorros</div>
+          <div class="kpi-val">$25,580</div>
+          <div class="kpi-delta" style="color:#22c55e">+14% vs mes ant.</div>
+        </div>
+      </div>
+      <!-- Charts -->
+      <div class="dash-charts">
+        <div class="dash-bars">
+          <div class="chart-title">Flujo anual</div>
+          <div class="bar-chart" id="dash-bars"></div>
+        </div>
+        <div class="dash-donut">
+          <div class="chart-title">Por categoría</div>
+          <svg id="donut-svg" width="80" height="80" viewBox="0 0 80 80"></svg>
+          <div class="donut-legend">
+            <div class="donut-legend-item"><div class="donut-dot" style="background:var(--primary)"></div><span>Comida 38%</span></div>
+            <div class="donut-legend-item"><div class="donut-dot" style="background:var(--yellow)"></div><span>Transporte 22%</span></div>
+            <div class="donut-legend-item"><div class="donut-dot" style="background:#34d399"></div><span>Hogar 25%</span></div>
+            <div class="donut-legend-item"><div class="donut-dot" style="background:#f87171"></div><span>Ocio 15%</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FEATURES ──────────────────────────────────────────── -->
+<section id="features" style="padding:100px 24px;background:var(--muted);">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div class="section-center" style="margin-bottom:52px;">
+      <div class="section-label">Features</div>
+      <h2 class="section-title">Todo lo que puedes hacer</h2>
+      <p class="section-sub">Funciones diseñadas para darte control, claridad y acción real sobre tu dinero.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feat-card"><div class="accent-blob" style="background:var(--primary)"></div><div class="icon">🎯</div><h3>Metas personalizadas</h3><p>Define objetivos de ahorro, sigue tu progreso y celebra cada logro.</p></div>
+      <div class="feat-card"><div class="accent-blob" style="background:#34d399"></div><div class="icon">🗂️</div><h3>Categorías a tu medida</h3><p>Crea y personaliza categorías de ingresos, gastos y ahorro como quieras.</p></div>
+      <div class="feat-card"><div class="accent-blob" style="background:var(--yellow)"></div><div class="icon">📊</div><h3>Gráficas claras</h3><p>Visualiza tu dinero con gráficas simples e intuitivas al instante.</p></div>
+      <div class="feat-card"><div class="accent-blob" style="background:#f472b6"></div><div class="icon">🧾</div><h3>Registro con IA</h3><p>Escanea recibos y registra transacciones automáticamente con inteligencia artificial.</p></div>
+      <div class="feat-card"><div class="accent-blob" style="background:#f87171"></div><div class="icon">🔔</div><h3>Alertas y recordatorios</h3><p>No pierdas pagos importantes, fechas límite ni metas de ahorro.</p></div>
+      <div class="feat-card"><div class="accent-blob" style="background:#60a5fa"></div><div class="icon">📥</div><h3>Exporta tu data</h3><p>Descarga todo tu historial financiero en CSV o Excel cuando quieras.</p></div>
+      <div class="feat-card"><div class="accent-blob" style="background:var(--yellow)"></div><div class="icon">💡</div><h3>Contenido educativo</h3><p>Videos y tips prácticos para tomar mejores decisiones con tu dinero.</p></div>
+      <div class="feat-card"><div class="accent-blob" style="background:var(--primary)"></div><div class="icon">📅</div><h3>Automatización</h3><p>Programa ingresos recurrentes y organiza tu flujo de dinero sin esfuerzo.</p></div>
+      <div class="feat-card"><div class="accent-blob" style="background:#34d399"></div><div class="icon">📱</div><h3>Multiplataforma</h3><p>Funciona perfecto en móvil, tablet y desktop. Sin conexión bancaria obligatoria.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── HOW IT WORKS ───────────────────────────────────────── -->
+<section id="como-funciona" style="padding:100px 24px;background:#fff;">
+  <div style="max-width:900px;margin:0 auto;text-align:center;">
+    <div class="section-label">Proceso</div>
+    <h2 class="section-title" style="margin-bottom:52px;">Empieza en 3 pasos</h2>
+    <div class="steps-grid">
+      <div class="step"><div class="step-num">01</div><h3>Crea tu cuenta</h3><p>Registro gratuito en menos de 60 segundos.</p></div>
+      <div class="step"><div class="step-num">02</div><h3>Registra tus movimientos</h3><p>Manual o con escaneo IA de recibos.</p></div>
+      <div class="step"><div class="step-num">03</div><h3>Entiende tu dinero</h3><p>Visualiza, analiza y toma control real.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── TRANSACTIONS ───────────────────────────────────────── -->
+<section style="padding:100px 24px;background:var(--muted);">
+  <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;">
+
+    <div style="background:#fff;border-radius:20px;padding:24px;box-shadow:0 12px 40px rgba(0,0,0,.06);">
+      <div style="font-weight:700;margin-bottom:16px;">Transacciones recientes</div>
+      <div class="txn-full-row"><div class="txn-full-ico">🛒</div><div class="txn-full-info"><div class="name">Supermercado La Comer</div><div class="sub">Comida · Hoy 14:30</div></div><span class="txn-amt neg">-$1,240</span></div>
+      <div class="txn-full-row"><div class="txn-full-ico">💼</div><div class="txn-full-info"><div class="name">Depósito nómina</div><div class="sub">Ingreso · Hoy 09:00</div></div><span class="txn-amt pos">+$18,000</span></div>
+      <div class="txn-full-row"><div class="txn-full-ico">🍕</div><div class="txn-full-info"><div class="name">Domino's Pizza</div><div class="sub">Comida · Ayer 20:15</div></div><span class="txn-amt neg">-$380</span></div>
+      <div class="txn-full-row"><div class="txn-full-ico">⚡</div><div class="txn-full-info"><div class="name">CFE Electricidad</div><div class="sub">Hogar · Mar 15</div></div><span class="txn-amt neg">-$520</span></div>
+      <div class="txn-full-row" style="border:none"><div class="txn-full-ico">🚌</div><div class="txn-full-info"><div class="name">Transporte CDMX</div><div class="sub">Transporte · Mar 14</div></div><span class="txn-amt neg">-$180</span></div>
+    </div>
+
+    <div>
+      <div class="section-label">Control total</div>
+      <h2 style="font-size:clamp(1.8rem,3.5vw,2.4rem);font-weight:800;letter-spacing:-.02em;line-height:1.15;">Cada peso.<br>Registrado.</h2>
+      <p style="color:var(--gray);margin-top:16px;line-height:1.7;">Registra, clasifica y analiza cada movimiento financiero para tomar mejores decisiones. Con categorías inteligentes y filtros flexibles, encontrar cualquier transacción es instantáneo.</p>
+      <ul class="check-list">
+        <li><span class="ck">✓</span> Búsqueda y filtros avanzados</li>
+        <li><span class="ck">✓</span> Categorización automática con IA</li>
+        <li><span class="ck">✓</span> Historial ilimitado de movimientos</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ── TESTIMONIALS ──────────────────────────────────────── -->
+<section style="padding:100px 24px;background:#fff;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="section-center" style="margin-bottom:52px;">
+      <div class="section-label">Testimonios</div>
+      <h2 class="section-title">Lo que dicen nuestros usuarios</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testi-card">
+        <div class="stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p>"Por fin entiendo en qué se va mi dinero. Cada Menudo cambió completamente cómo manejo mis finanzas personales."</p>
+        <div class="testi-author"><div class="testi-avatar">V</div><div><div class="testi-name">Valeria Morales</div><div class="testi-role">Freelance diseñadora</div></div></div>
+      </div>
+      <div class="testi-card">
+        <div class="stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p>"El dashboard es clarísimo. En 5 minutos ya tenía todo configurado y vi cosas que no sabía de mis gastos."</p>
+        <div class="testi-author"><div class="testi-avatar">R</div><div><div class="testi-name">Rodrigo Salinas</div><div class="testi-role">Emprendedor</div></div></div>
+      </div>
+      <div class="testi-card">
+        <div class="stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p>"Al fin una app de finanzas que no necesita conectarse al banco. Perfecta para registrar todo manualmente."</p>
+        <div class="testi-author"><div class="testi-avatar">C</div><div><div class="testi-name">Camila Torres</div><div class="testi-role">Estudiante universitaria</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── LEARN ─────────────────────────────────────────────── -->
+<section id="learn" style="padding:100px 24px;background:var(--muted);">
+  <div style="max-width:1100px;margin:0 auto;text-align:center;">
+    <div class="section-label">Aprende</div>
+    <h2 class="section-title">Aprende a usar Cada Menudo</h2>
+    <p class="section-sub" style="margin:12px auto 48px;">Videos simples para sacar el máximo provecho de la app y mejorar tus finanzas.</p>
+    <div class="videos-grid">
+      <div class="video-card">
+        <div class="video-thumb">📊<div class="play-btn"><span>▶</span></div></div>
+        <div class="video-info"><h4>Configurar tu primer presupuesto</h4><div class="video-meta"><span>⏱ 3:24</span><span>👁 8.2K vistas</span></div></div>
+      </div>
+      <div class="video-card">
+        <div class="video-thumb">🧾<div class="play-btn"><span>▶</span></div></div>
+        <div class="video-info"><h4>Escanear recibos con IA</h4><div class="video-meta"><span>⏱ 2:41</span><span>👁 6.7K vistas</span></div></div>
+      </div>
+      <div class="video-card">
+        <div class="video-thumb">🎯<div class="play-btn"><span>▶</span></div></div>
+        <div class="video-info"><h4>Crear y cumplir metas de ahorro</h4><div class="video-meta"><span>⏱ 4:12</span><span>👁 11K vistas</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA BAND ───────────────────────────────────────────── -->
+<section id="cta-band">
+  <div class="orb" style="width:400px;height:400px;background:var(--secondary);top:-200px;left:50%;transform:translateX(-50%);"></div>
+  <div style="position:relative;z-index:1;">
+    <h2>Empieza hoy.<br><span class="gold">Tu yo del futuro</span> te lo agradecerá.</h2>
+    <p>Únete a miles de personas que ya tienen claridad total sobre su dinero.</p>
+    <a href="#signup" class="btn-yellow">Crear cuenta gratis →</a>
+    <p class="sub">Sin tarjeta. Sin trampas. Siempre gratis.</p>
+  </div>
+</section>
+
+<!-- ── AUTH ──────────────────────────────────────────────── -->
+<section id="login" style="padding:100px 24px;background:var(--muted);">
+  <div style="max-width:880px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:48px;">
+      <h2 style="font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;letter-spacing:-.02em;">Tu cuenta te espera</h2>
+    </div>
+    <div class="auth-grid">
+      <!-- Login -->
+      <div class="login-card">
+        <div class="form-eyebrow">Ya tienes cuenta</div>
+        <div class="form-title">Iniciar sesión</div>
+        <div class="form-fields">
+          <input class="cm-input" type="email" placeholder="tu@email.com" />
+          <input class="cm-input" type="password" placeholder="Contraseña" />
+          <button class="btn-login">Entrar →</button>
+          <p class="form-footer">¿Olvidaste tu contraseña? <a href="#">Recuperar</a></p>
+        </div>
+      </div>
+      <!-- Signup -->
+      <div class="signup-card" id="signup">
+        <div class="form-eyebrow">Nuevo aquí</div>
+        <div class="form-title">Crear cuenta gratis</div>
+        <div class="form-fields">
+          <input class="cm-input light" type="text" placeholder="Tu nombre" />
+          <input class="cm-input light" type="email" placeholder="tu@email.com" />
+          <input class="cm-input light" type="password" placeholder="Contraseña (mín. 8 caracteres)" />
+          <button class="btn-signup">Empezar gratis →</button>
+          <p class="form-footer">Sin tarjeta de crédito. Gratis para siempre.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ─────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <div class="footer-logo-icon">💰</div>
+          <span>Cada Menudo</span>
+        </div>
+        <p>Tu aliado financiero personal. Toma control de tu dinero, hoy.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Producto</h4>
+          <ul>
+            <li><a href="#hero">Inicio</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#learn">Aprende</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="/terms">Términos</a></li>
+            <li><a href="/privacy">Privacidad</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Cada Menudo. Todos los derechos reservados.</span>
+      <span>Hecho con 💙 para tus finanzas</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ── Bar charts ─────────────────────────────────────────── */
+function renderBars(containerId, data, color) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  const max = Math.max(...data.map(d => d.v));
+  el.innerHTML = data.map((d, i) => `
+    <div class="bar-col">
+      <div class="bar-fill" style="
+        height:${(d.v/max)*56}px;
+        background:${d.highlight ? color : color+'33'};
+        animation-delay:${i*.08}s;
+      "></div>
+      <span class="bar-label">${d.l}</span>
+    </div>
+  `).join('');
+}
+
+renderBars('hero-bars', [
+  {l:'Ene',v:3200},{l:'Feb',v:2800},{l:'Mar',v:3800,highlight:true},
+  {l:'Abr',v:2600},{l:'May',v:3100},{l:'Jun',v:2900}
+], '#3956E8');
+
+renderBars('dash-bars', [
+  {l:'Ene',v:6200},{l:'Feb',v:5800},{l:'Mar',v:7400,highlight:true},
+  {l:'Abr',v:6800},{l:'May',v:8100,highlight:true},{l:'Jun',v:7200},
+  {l:'Jul',v:6900},{l:'Ago',v:7600},{l:'Sep',v:8400},
+  {l:'Oct',v:7800},{l:'Nov',v:9200,highlight:true},{l:'Dic',v:8800}
+], '#3956E8');
+
+/* ── Donut chart ────────────────────────────────────────── */
+(function() {
+  const svg = document.getElementById('donut-svg');
+  if (!svg) return;
+  const cx=40, cy=40, r=30, stroke=12;
+  const circ = 2*Math.PI*r;
+  const segments = [38, 22, 25, 15];
+  const colors = ['#3956E8','#E8C239','#34d399','#f87171'];
+  let offset = 0;
+  let html = '';
+  segments.forEach((pct, i) => {
+    const dash = (pct/100)*circ;
+    html += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none"
+      stroke="${colors[i]}" stroke-width="${stroke}"
+      stroke-dasharray="${dash} ${circ-dash}"
+      stroke-dashoffset="${-offset}"
+      transform="rotate(-90 ${cx} ${cy})"
+      stroke-linecap="round"
+      style="transition:stroke-dasharray .6s ease"/>`;
+    offset += dash;
+  });
+  html += `<circle cx="${cx}" cy="${cy}" r="${r - stroke/2 - 2}" fill="white"/>`;
+  svg.innerHTML = html;
+})();
+
+/* ── Animated counters ──────────────────────────────────── */
+function animateCounter(el, target, suffix, duration) {
+  const start = performance.now();
+  function update(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = Math.floor(eased * target);
+    el.textContent = current.toLocaleString() + suffix;
+    if (progress < 1) requestAnimationFrame(update);
+    else el.textContent = target.toLocaleString() + suffix;
+  }
+  requestAnimationFrame(update);
+}
+
+const counters = document.querySelectorAll('[data-target]');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    const el = entry.target;
+    const target = parseInt(el.dataset.target);
+    const suffix = el.dataset.suffix || '';
+    animateCounter(el, target, suffix, 1500);
+    obs.unobserve(el);
+  });
+}, { threshold: 0.5 });
+counters.forEach(c => obs.observe(c));
+</script>
+</body>
+</html>
