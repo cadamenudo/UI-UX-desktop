@@ -332,13 +332,15 @@
 
     /* ── Responsive (original) ── */
     @media (max-width: 900px) {
-      .hero-inner { grid-template-columns: 1fr; }
-      .hero-mockup-wrap { display: none; }
       .auth-grid { grid-template-columns: 1fr; }
       .dash-charts { flex-direction: column; }
       .ai-intro-grid { grid-template-columns: 1fr; gap: 28px; }
       .desktop-chat-wrap { grid-template-columns: 1fr; }
       .chat-sidebar { display: none; }
+    }
+    @media (max-width: 768px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-mockup-wrap { display: none; }
     }
     @media (max-width: 640px) {
       nav { display: none; }
