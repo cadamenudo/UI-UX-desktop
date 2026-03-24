@@ -280,38 +280,7 @@ const $   = s => document.querySelector(s);
 const mk  = (m,y) => `${y}_${m}`;
 
 /* ─── In-memory store (works sin localStorage) ─── */
-const allData = {
-  '2026_0': {
-    ingresos: [{nombre:'Salario',custom:'Empleo principal',monto:4800},{nombre:'Freelance',custom:'Diseño web',monto:400}],
-    gastosData: {
-      ahorro:    [{nombre:'Cuentas de ahorro',custom:'Fondo emergencia',monto:300},{nombre:'Cuentas de retiro',custom:'401k',monto:480}],
-      deuda:     [{nombre:'Hipoteca (o renta)',custom:'Apartamento',monto:1400},{nombre:'Préstamo de auto',custom:'Toyota 2022',monto:380},{nombre:'Tarjetas de crédito',custom:'Visa',monto:200}],
-      diarios:   [{nombre:'Supermercado',custom:'',monto:390},{nombre:'Comidas afuera',custom:'',monto:120},{nombre:'Telecomunicaciones',custom:'Internet + cel',monto:110},{nombre:'Entretenimiento',custom:'',monto:45}],
-      seguros:   [{nombre:'Médico',custom:'Plan familiar',monto:310},{nombre:'Auto',custom:'',monto:140}],
-      impuestos: [{nombre:'Federal',custom:'',monto:720},{nombre:'Medicare',custom:'',monto:70},{nombre:'Seguro Social 1',custom:'',monto:150}]
-    }
-  },
-  '2026_1': {
-    ingresos: [{nombre:'Salario',custom:'Empleo principal',monto:4800},{nombre:'Bonos',custom:'Bono anual',monto:1500},{nombre:'Freelance',custom:'',monto:250}],
-    gastosData: {
-      ahorro:    [{nombre:'Cuentas de ahorro',custom:'',monto:500},{nombre:'Cuentas de retiro',custom:'401k',monto:480},{nombre:'Cuenta de inversiones',custom:'ETFs',monto:200}],
-      deuda:     [{nombre:'Hipoteca (o renta)',custom:'Apartamento',monto:1400},{nombre:'Préstamo de auto',custom:'Toyota 2022',monto:380},{nombre:'Tarjetas de crédito',custom:'Visa + Amex',monto:400}],
-      diarios:   [{nombre:'Supermercado',custom:'',monto:410},{nombre:'Comidas afuera',custom:'San Valentín',monto:280},{nombre:'Telecomunicaciones',custom:'',monto:110},{nombre:'Regalos y mesada',custom:'San Valentín',monto:150},{nombre:'Entretenimiento',custom:'',monto:60}],
-      seguros:   [{nombre:'Médico',custom:'Plan familiar',monto:310},{nombre:'Auto',custom:'',monto:140},{nombre:'Vida',custom:'',monto:55}],
-      impuestos: [{nombre:'Federal',custom:'',monto:720},{nombre:'Medicare',custom:'',monto:70},{nombre:'Seguro Social 1',custom:'',monto:150}]
-    }
-  },
-  '2026_2': {
-    ingresos: [{nombre:'Salario',custom:'Empleo principal',monto:4800},{nombre:'Negocio / Side Hustle',custom:'Consultoría',monto:1200},{nombre:'Freelance',custom:'Diseño gráfico',monto:600}],
-    gastosData: {
-      ahorro:    [{nombre:'Cuentas de retiro',custom:'401k',monto:480},{nombre:'Cuentas de ahorro',custom:'Fondo emergencia',monto:300},{nombre:'Cuenta de inversiones',custom:'ETFs',monto:200}],
-      deuda:     [{nombre:'Hipoteca (o renta)',custom:'Apartamento',monto:1400},{nombre:'Préstamo de auto',custom:'Toyota 2022',monto:380},{nombre:'Tarjetas de crédito',custom:'Visa + Amex',monto:250}],
-      diarios:   [{nombre:'Supermercado',custom:'',monto:420},{nombre:'Comidas afuera',custom:'Restaurantes',monto:180},{nombre:'Telecomunicaciones',custom:'Internet + cel',monto:110},{nombre:'Entretenimiento',custom:'Netflix, Spotify',monto:45},{nombre:'Gastos médicos y dentista',custom:'Copago',monto:80},{nombre:'Cuidado personal',custom:'Gym + peluquería',monto:75},{nombre:'Gasolina',custom:'',monto:120}],
-      seguros:   [{nombre:'Médico',custom:'Plan familiar',monto:310},{nombre:'Auto',custom:'Full coverage',monto:140},{nombre:'Vida',custom:'Term life',monto:55}],
-      impuestos: [{nombre:'Federal',custom:'',monto:720},{nombre:'Estatales y locales',custom:'Florida',monto:0},{nombre:'Medicare',custom:'',monto:70},{nombre:'Seguro Social 1',custom:'',monto:150}]
-    }
-  },
-};
+const allData = {};
 
 /* Merge any existing localStorage data into allData on startup */
 try{
