@@ -129,7 +129,19 @@ td{padding:7px 8px;border-bottom:1px solid var(--card)}
 .legend-pct{font-weight:700;font-size:.82rem;white-space:nowrap;flex-shrink:0}
 .legend-amt{font-size:.78rem;color:var(--gray);white-space:nowrap;text-align:right;flex-shrink:0;min-width:64px}
 
-/* ─── Responsive ─── */
+/* ─── Print ─── */
+@media print {
+  .sidebar { display: none !important; }
+  .app { grid-template-columns: 1fr !important; }
+  .main { padding: 16px !important; }
+  * { color: #000 !important; background: #fff !important;
+      border-color: #ccc !important; box-shadow: none !important; }
+  .sc-head, .gb-head, .balance-card { background: #f0f0f0 !important; }
+  .sc-total, .gb-subtotal, .val, .bc-val { color: #000 !important; }
+  .btn-action, .add-row-btn, .delete-btn { display: none !important; }
+  .section-card { break-inside: avoid; border: 1px solid #999 !important; }
+  .group-block  { break-inside: avoid; }
+}
 @media(max-width:900px){
   .app{grid-template-columns:1fr}
   .sidebar{height:auto;position:static}
@@ -490,36 +502,56 @@ async function descargarPDF(){
     y+=58;
 
     // ── section renderer ──
+    const SECTION_LABELS={
+      'Ingresos':       'INGRESOS',
+      'Ahorro':         'AHORRO',
+      'Pago de Deuda':  'PAGO DE DEUDA',
+      'Gastos Diarios': 'GASTOS DIARIOS',
+      'Seguros':        'SEGUROS',
+      'Impuestos':      'IMPUESTOS',
+    };
     const renderSection=(titulo,emoji,rows,colorRgb)=>{
-      checkPage(40);
-      // section header
+      checkPage(56);
+      // section banner
       doc.setFillColor(...colorRgb);
-      doc.roundedRect(ML,y,CW,24,4,4,'F');
-      doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(10);
-      doc.text(emoji+' '+titulo.toUpperCase(),ML+10,y+16);
+      doc.roundedRect(ML,y,CW,28,4,4,'F');
+      doc.setTextColor(255,255,255);
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(10);
+      const label=SECTION_LABELS[titulo]||titulo.toUpperCase();
+      doc.text(label, ML+12, y+18);
       const sub=rows.reduce((a,b)=>a+(+b.monto||0),0);
-      doc.text(fmt(sub),PW-MR-8,y+16,{align:'right'});
-      y+=30;
+      doc.text(fmt(sub), PW-MR-10, y+18, {align:'right'});
+      y+=38; // ← more space after banner
+
       // column headers
-      doc.setTextColor(100,116,139);doc.setFont('helvetica','normal');doc.setFontSize(7.5);
-      doc.text('CATEGORÍA',ML+4,y);
-      doc.text('NOMBRE',ML+CW*0.42,y);
-      doc.text('MONTO',PW-MR-8,y,{align:'right'});
-      y+=4; hline(y,[229,231,235]); y+=8;
+      doc.setTextColor(100,116,139);
+      doc.setFont('helvetica','normal');
+      doc.setFontSize(7.5);
+      doc.text('CATEGORÍA',  ML+4,       y);
+      doc.text('NOMBRE',     ML+CW*0.42, y);
+      doc.text('MONTO',      PW-MR-8,    y, {align:'right'});
+      y+=5;
+      hline(y,[200,210,220]);
+      y+=10;
+
       // rows
       rows.forEach((r,ri)=>{
-        checkPage(18);
-        if(ri%2===0){doc.setFillColor(247,248,252);doc.rect(ML,y-10,CW,17,'F');}
-        doc.setTextColor(15,23,42);doc.setFont('helvetica','normal');doc.setFontSize(9);
-        const cat=r.nombre||'—';
-        const nom=r.custom||'—';
-        doc.text(cat,ML+4,y,{maxWidth:CW*0.38});
-        doc.text(nom,ML+CW*0.42,y,{maxWidth:CW*0.36});
+        checkPage(20);
+        if(ri%2===0){
+          doc.setFillColor(247,248,252);
+          doc.rect(ML, y-12, CW, 18, 'F');
+        }
+        doc.setTextColor(15,23,42);
+        doc.setFont('helvetica','normal');
+        doc.setFontSize(9);
+        doc.text(r.nombre||'—',  ML+4,       y, {maxWidth:CW*0.38});
+        doc.text(r.custom||'—',  ML+CW*0.42, y, {maxWidth:CW*0.36});
         doc.setFont('helvetica','bold');
-        doc.text(fmt(r.monto||0),PW-MR-8,y,{align:'right'});
-        y+=17;
+        doc.text(fmt(r.monto||0), PW-MR-8, y, {align:'right'});
+        y+=18;
       });
-      y+=6;
+      y+=10; // space after section
     };
 
     // ── INGRESOS ──
