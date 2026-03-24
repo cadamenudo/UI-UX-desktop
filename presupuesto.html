@@ -73,6 +73,11 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;font
 .btn-pdf:hover{background:#f0d050;transform:translateY(-1px);box-shadow:0 4px 12px rgba(232,194,57,.4)}
 .btn-print{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25)}
 .btn-print:hover{background:rgba(255,255,255,.2)}
+.btn-clear{background:rgba(220,38,38,.18);color:#fca5a5;border:1px solid rgba(220,38,38,.35)}
+.btn-clear:hover{background:rgba(220,38,38,.35);color:#fff}
+.month-btn{position:relative}
+.month-dot{position:absolute;top:4px;right:4px;width:6px;height:6px;border-radius:50%;background:var(--accent);display:none}
+.month-btn.has-data .month-dot{display:block}
 
 /* ─── Main Content ─── */
 .main{padding:32px;overflow-y:auto;display:flex;flex-direction:column;gap:28px}
@@ -186,6 +191,7 @@ td{padding:7px 8px;border-bottom:1px solid var(--card)}
   <div class="sidebar-actions">
     <button class="btn-action btn-pdf" id="btnPDF">⬇ Descargar PDF</button>
     <button class="btn-action btn-print" id="btnPrint">🖨 Imprimir</button>
+    <button class="btn-action btn-clear" id="btnClear">🗑 Borrar este mes</button>
   </div>
 </aside>
 
@@ -263,66 +269,137 @@ const GASTO_GRUPOS = [
 const CHART_COLORS = ['#3956E8','#7459D9','#E8C239','#0EA5E9','#F97316'];
 
 /* ─── State ─── */
-let selectedMonth = 2; // Marzo
-let selectedYear = 2025;
-let ingresos = [
-  {nombre:'Salario',             custom:'Empleo principal',  monto:4800},
-  {nombre:'Negocio / Side Hustle', custom:'Consultoría',    monto:1200},
-  {nombre:'Freelance',           custom:'Diseño gráfico',   monto:600},
-];
-let gastosData = {
-  ahorro: [
-    {nombre:'Cuentas de retiro',   custom:'401k',            monto:480},
-    {nombre:'Cuentas de ahorro',   custom:'Fondo emergencia',monto:300},
-    {nombre:'Cuenta de inversiones',custom:'ETFs',           monto:200},
-  ],
-  deuda: [
-    {nombre:'Hipoteca (o renta)',  custom:'Apartamento',     monto:1400},
-    {nombre:'Préstamo de auto',    custom:'Toyota 2022',     monto:380},
-    {nombre:'Tarjetas de crédito', custom:'Visa + Amex',     monto:250},
-  ],
-  diarios: [
-    {nombre:'Supermercado',        custom:'',                monto:420},
-    {nombre:'Comidas afuera',      custom:'Restaurantes',    monto:180},
-    {nombre:'Telecomunicaciones',  custom:'Internet + cel',  monto:110},
-    {nombre:'Entretenimiento',     custom:'Netflix, Spotify',monto:45},
-    {nombre:'Gastos médicos y dentista', custom:'Copago',    monto:80},
-    {nombre:'Cuidado personal',    custom:'Gym + peluquería',monto:75},
-    {nombre:'Gasolina',            custom:'',                monto:120},
-  ],
-  seguros: [
-    {nombre:'Médico',              custom:'Plan familiar',   monto:310},
-    {nombre:'Auto',                custom:'Full coverage',   monto:140},
-    {nombre:'Vida',                custom:'Term life',       monto:55},
-  ],
-  impuestos: [
-    {nombre:'Federal',             custom:'Withholding',     monto:720},
-    {nombre:'Estatales y locales', custom:'Florida',         monto:0},
-    {nombre:'Medicare',            custom:'',                monto:70},
-    {nombre:'Seguro Social 1',     custom:'',                monto:150},
-  ],
-};
-let pie;
+let selectedMonth = new Date().getMonth();
+let selectedYear  = new Date().getFullYear();
+let ingresos   = [];
+let gastosData = {};
 
 /* ─── Helpers ─── */
 const fmt = n => isNaN(n)||n==null ? '$0' : n.toLocaleString('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0});
-const $ = s => document.querySelector(s);
+const $   = s => document.querySelector(s);
+const mk  = (m,y) => `${y}_${m}`;
+
+/* ─── In-memory store (works sin localStorage) ─── */
+const allData = {
+  '2026_0': {
+    ingresos: [{nombre:'Salario',custom:'Empleo principal',monto:4800},{nombre:'Freelance',custom:'Diseño web',monto:400}],
+    gastosData: {
+      ahorro:    [{nombre:'Cuentas de ahorro',custom:'Fondo emergencia',monto:300},{nombre:'Cuentas de retiro',custom:'401k',monto:480}],
+      deuda:     [{nombre:'Hipoteca (o renta)',custom:'Apartamento',monto:1400},{nombre:'Préstamo de auto',custom:'Toyota 2022',monto:380},{nombre:'Tarjetas de crédito',custom:'Visa',monto:200}],
+      diarios:   [{nombre:'Supermercado',custom:'',monto:390},{nombre:'Comidas afuera',custom:'',monto:120},{nombre:'Telecomunicaciones',custom:'Internet + cel',monto:110},{nombre:'Entretenimiento',custom:'',monto:45}],
+      seguros:   [{nombre:'Médico',custom:'Plan familiar',monto:310},{nombre:'Auto',custom:'',monto:140}],
+      impuestos: [{nombre:'Federal',custom:'',monto:720},{nombre:'Medicare',custom:'',monto:70},{nombre:'Seguro Social 1',custom:'',monto:150}]
+    }
+  },
+  '2026_1': {
+    ingresos: [{nombre:'Salario',custom:'Empleo principal',monto:4800},{nombre:'Bonos',custom:'Bono anual',monto:1500},{nombre:'Freelance',custom:'',monto:250}],
+    gastosData: {
+      ahorro:    [{nombre:'Cuentas de ahorro',custom:'',monto:500},{nombre:'Cuentas de retiro',custom:'401k',monto:480},{nombre:'Cuenta de inversiones',custom:'ETFs',monto:200}],
+      deuda:     [{nombre:'Hipoteca (o renta)',custom:'Apartamento',monto:1400},{nombre:'Préstamo de auto',custom:'Toyota 2022',monto:380},{nombre:'Tarjetas de crédito',custom:'Visa + Amex',monto:400}],
+      diarios:   [{nombre:'Supermercado',custom:'',monto:410},{nombre:'Comidas afuera',custom:'San Valentín',monto:280},{nombre:'Telecomunicaciones',custom:'',monto:110},{nombre:'Regalos y mesada',custom:'San Valentín',monto:150},{nombre:'Entretenimiento',custom:'',monto:60}],
+      seguros:   [{nombre:'Médico',custom:'Plan familiar',monto:310},{nombre:'Auto',custom:'',monto:140},{nombre:'Vida',custom:'',monto:55}],
+      impuestos: [{nombre:'Federal',custom:'',monto:720},{nombre:'Medicare',custom:'',monto:70},{nombre:'Seguro Social 1',custom:'',monto:150}]
+    }
+  },
+  '2026_2': {
+    ingresos: [{nombre:'Salario',custom:'Empleo principal',monto:4800},{nombre:'Negocio / Side Hustle',custom:'Consultoría',monto:1200},{nombre:'Freelance',custom:'Diseño gráfico',monto:600}],
+    gastosData: {
+      ahorro:    [{nombre:'Cuentas de retiro',custom:'401k',monto:480},{nombre:'Cuentas de ahorro',custom:'Fondo emergencia',monto:300},{nombre:'Cuenta de inversiones',custom:'ETFs',monto:200}],
+      deuda:     [{nombre:'Hipoteca (o renta)',custom:'Apartamento',monto:1400},{nombre:'Préstamo de auto',custom:'Toyota 2022',monto:380},{nombre:'Tarjetas de crédito',custom:'Visa + Amex',monto:250}],
+      diarios:   [{nombre:'Supermercado',custom:'',monto:420},{nombre:'Comidas afuera',custom:'Restaurantes',monto:180},{nombre:'Telecomunicaciones',custom:'Internet + cel',monto:110},{nombre:'Entretenimiento',custom:'Netflix, Spotify',monto:45},{nombre:'Gastos médicos y dentista',custom:'Copago',monto:80},{nombre:'Cuidado personal',custom:'Gym + peluquería',monto:75},{nombre:'Gasolina',custom:'',monto:120}],
+      seguros:   [{nombre:'Médico',custom:'Plan familiar',monto:310},{nombre:'Auto',custom:'Full coverage',monto:140},{nombre:'Vida',custom:'Term life',monto:55}],
+      impuestos: [{nombre:'Federal',custom:'',monto:720},{nombre:'Estatales y locales',custom:'Florida',monto:0},{nombre:'Medicare',custom:'',monto:70},{nombre:'Seguro Social 1',custom:'',monto:150}]
+    }
+  },
+};
+
+/* Merge any existing localStorage data into allData on startup */
+try{
+  for(let m=0;m<12;m++){
+    for(let y=2024;y<=2030;y++){
+      const raw=localStorage.getItem('presupuesto_'+y+'_'+m);
+      if(raw){ const d=JSON.parse(raw); allData[mk(m,y)]=d; }
+    }
+  }
+}catch(e){}
+
+function emptyMonthData(){
+  const g={};
+  GASTO_GRUPOS.forEach(gr=>g[gr.key]=[{nombre:gr.items[0],custom:'',monto:0}]);
+  return {ingresos:[{nombre:INGRESO_OPTS[0],custom:'',monto:0}], gastosData:g};
+}
+
+function saveMonth(){
+  const key=mk(selectedMonth,selectedYear);
+  allData[key]={
+    ingresos: JSON.parse(JSON.stringify(ingresos)),
+    gastosData: JSON.parse(JSON.stringify(gastosData))
+  };
+  try{ localStorage.setItem('presupuesto_'+key, JSON.stringify(allData[key])); }catch(e){}
+}
+
+function loadMonth(){
+  const d=allData[mk(selectedMonth,selectedYear)];
+  if(d){
+    ingresos   = JSON.parse(JSON.stringify(d.ingresos));
+    gastosData = JSON.parse(JSON.stringify(d.gastosData));
+    GASTO_GRUPOS.forEach(g=>{ if(!gastosData[g.key]) gastosData[g.key]=[{nombre:g.items[0],custom:'',monto:0}]; });
+  } else {
+    const empty=emptyMonthData();
+    ingresos=empty.ingresos; gastosData=empty.gastosData;
+  }
+}
+
+function monthHasData(m,y){
+  const d=allData[mk(m,y)];
+  if(!d) return false;
+  const hasIncome  = d.ingresos?.some(r=>(+r.monto||0)>0);
+  const hasExpense = d.gastosData && Object.values(d.gastosData).some(arr=>arr.some(r=>(+r.monto||0)>0));
+  return hasIncome||hasExpense;
+}
 
 /* ─── Month Grid ─── */
 function renderMonthGrid(){
-  const grid = $('#monthGrid'); grid.innerHTML='';
+  const grid=$('#monthGrid'); grid.innerHTML='';
   MONTHS.forEach((m,i)=>{
-    const btn = document.createElement('button');
-    btn.className = 'month-btn' + (i===selectedMonth?' active':'');
-    btn.textContent = m;
-    btn.onclick = ()=>{ selectedMonth=i; renderMonthGrid(); updateTitle(); };
+    const btn=document.createElement('button');
+    const active=i===selectedMonth;
+    const hasData=monthHasData(i,selectedYear);
+    btn.className='month-btn'+(active?' active':'')+(hasData?' has-data':'');
+    btn.innerHTML=m+'<span class="month-dot"></span>';
+    btn.onclick=()=>{
+      saveMonth();
+      selectedMonth=i;
+      loadMonth();
+      renderMonthGrid(); updateTitle(); renderIngresos(); renderGastos(); recalc();
+    };
     grid.appendChild(btn);
   });
 }
-$('#yearInput').addEventListener('change',e=>{selectedYear=parseInt(e.target.value)||2025;updateTitle();});
+$('#yearInput').value=selectedYear;
+$('#yearInput').addEventListener('change',e=>{
+  saveMonth();
+  selectedYear=parseInt(e.target.value)||new Date().getFullYear();
+  loadMonth();
+  renderMonthGrid(); updateTitle(); renderIngresos(); renderGastos(); recalc();
+});
 function updateTitle(){
-  $('#pageTitle').textContent = MONTHS_FULL[selectedMonth]+' '+selectedYear;
+  $('#pageTitle').textContent=MONTHS_FULL[selectedMonth]+' '+selectedYear;
 }
+
+/* ─── Clear Month ─── */
+$('#btnClear').addEventListener('click',()=>{
+  const nombre=MONTHS_FULL[selectedMonth]+' '+selectedYear;
+  if(confirm(`¿Borrar todos los datos de ${nombre}? Esta acción no se puede deshacer.`)){
+    delete allData[mk(selectedMonth,selectedYear)];
+    try{ localStorage.removeItem('presupuesto_'+mk(selectedMonth,selectedYear)); }catch(e){}
+    const empty=emptyMonthData();
+    ingresos=empty.ingresos; gastosData=empty.gastosData;
+    renderMonthGrid(); renderIngresos(); renderGastos(); recalc();
+  }
+});
+
+let pie;
 
 /* ─── Ingresos ─── */
 function renderIngresos(){
@@ -341,11 +418,11 @@ function renderIngresos(){
     tbody.appendChild(tr);
   });
 }
-window.onIngresoNombre=(i,v)=>{ingresos[i].nombre=v; recalc();}
-window.onIngresoCustom=(i,v)=>{ingresos[i].custom=v;}
-window.onIngresoMonto=(i,v)=>{ingresos[i].monto=parseFloat(v)||0; recalc();}
-window.delIngreso=(i)=>{if(ingresos.length>1)ingresos.splice(i,1); renderIngresos(); recalc();}
-$('#addIngreso').onclick=()=>{ingresos.push({nombre:INGRESO_OPTS[0],custom:'',monto:0}); renderIngresos();}
+window.onIngresoNombre=(i,v)=>{ingresos[i].nombre=v; saveMonth(); recalc();}
+window.onIngresoCustom=(i,v)=>{ingresos[i].custom=v; saveMonth();}
+window.onIngresoMonto=(i,v)=>{ingresos[i].monto=parseFloat(v)||0; saveMonth(); recalc();}
+window.delIngreso=(i)=>{if(ingresos.length>1)ingresos.splice(i,1); saveMonth(); renderIngresos(); recalc();}
+$('#addIngreso').onclick=()=>{ingresos.push({nombre:INGRESO_OPTS[0],custom:'',monto:0}); saveMonth(); renderIngresos();}
 
 /* ─── Gastos ─── */
 function renderGastos(){
@@ -392,11 +469,11 @@ window.toggleGroup=(key,headEl)=>{
   body.classList.toggle('open');
   tog.classList.toggle('open');
 }
-window.onGastoNombre=(g,i,v)=>{gastosData[g][i].nombre=v; recalc();}
-window.onGastoCustom=(g,i,v)=>{gastosData[g][i].custom=v;}
-window.onGastoMonto=(g,i,v)=>{gastosData[g][i].monto=parseFloat(v)||0; recalc();}
-window.delGasto=(g,i)=>{if(gastosData[g].length>1)gastosData[g].splice(i,1); renderGastos(); recalc();}
-window.addRowGasto=(g)=>{const opts=GASTO_GRUPOS.find(x=>x.key===g).items;gastosData[g].push({nombre:opts[0],custom:'',monto:0});renderGastos();}
+window.onGastoNombre=(g,i,v)=>{gastosData[g][i].nombre=v; saveMonth(); recalc();}
+window.onGastoCustom=(g,i,v)=>{gastosData[g][i].custom=v; saveMonth();}
+window.onGastoMonto=(g,i,v)=>{gastosData[g][i].monto=parseFloat(v)||0; saveMonth(); recalc();}
+window.delGasto=(g,i)=>{if(gastosData[g].length>1)gastosData[g].splice(i,1); saveMonth(); renderGastos(); recalc();}
+window.addRowGasto=(g)=>{const opts=GASTO_GRUPOS.find(x=>x.key===g).items;gastosData[g].push({nombre:opts[0],custom:'',monto:0}); saveMonth(); renderGastos();}
 
 /* ─── Recalc ─── */
 function totGrupo(k){return gastosData[k].reduce((a,b)=>a+(+b.monto||0),0);}
@@ -586,6 +663,7 @@ $('#btnPDF').addEventListener('click',descargarPDF);
 $('#btnPrint').addEventListener('click',()=>window.print());
 
 /* ─── Init ─── */
+loadMonth();
 renderMonthGrid();
 updateTitle();
 renderIngresos();
