@@ -81,6 +81,14 @@
     .del-btn{border:none;background:transparent;color:var(--muted);cursor:pointer;font-size:.9rem;opacity:.4;padding:0 2px}
     .del-btn:hover{opacity:1;color:var(--rrt)}
 
+    /* BUDGET GROUP ROWS */
+    .brow-group{margin-bottom:2px}
+    .brow-detail{display:none;background:var(--bg);border-radius:var(--rs);margin:0 0 4px;overflow:hidden}
+    .brow-detail.on{display:block}
+    .brow-sub{display:flex;align-items:center;gap:10px;padding:7px 12px;border-bottom:1px solid var(--bdr)}
+    .brow-sub:last-child{border-bottom:none}
+    .brow-sub-name{flex:1;font-size:.82rem;color:var(--muted)}
+
     /* TOTALS */
     .totals{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
     .tot-box{background:var(--bg);border-radius:var(--rs);padding:12px;text-align:center}
@@ -501,26 +509,102 @@ document.addEventListener('click',e=>{
 function renderB(area){
   const el=$('b-'+area); el.innerHTML='';
   if(BUD[area].length===0){
-    const labels={ingresos:'ingresos',gastos:'gastos',ahorro:'ahorro'};
     el.innerHTML=`<div style="text-align:center;padding:20px 0;color:var(--muted);font-size:.83rem">
-      Sin categorías todavía — usa el asistente o toca &quot;+ Añadir&quot;.
+      Sin categorías todavía — usa el asistente o toca "+ Añadir".
     </div>`;
     return;
   }
+
+  // Group by item.g
+  const groups = new Map();
   BUD[area].forEach((item,i)=>{
-    const row=document.createElement('div'); row.className='brow';
-    const nm=document.createElement('div'); nm.className='brow-name'; nm.textContent=item.name;
-    const tog=document.createElement('div'); tog.className='tipo-tog';
-    const bf=document.createElement('button'); bf.textContent='Fijo'; bf.type='button'; if(item.f) bf.className='f';
-    bf.onclick=()=>{BUD[area][i].f=true;renderB(area);};
-    const bv=document.createElement('button'); bv.textContent='Var'; bv.type='button'; if(!item.f) bv.className='v';
-    bv.onclick=()=>{BUD[area][i].f=false;renderB(area);};
+    const g = item.g || item.name;
+    if(!groups.has(g)) groups.set(g,[]);
+    groups.get(g).push({item,i});
+  });
+
+  groups.forEach((members, grpName)=>{
+    const grpTotal = members.reduce((s,{item})=>s+(item.v||0),0);
+    const allFixed = members.every(({item})=>item.f);
+
+    // ── Group header row ──────────────────────────────────────
+    const wrap = document.createElement('div');
+    wrap.className = 'brow-group';
+
+    const header = document.createElement('div');
+    header.className = 'brow';
+    header.style.cursor = 'pointer';
+
+    const nm = document.createElement('div');
+    nm.className = 'brow-name';
+    nm.style.display = 'flex'; nm.style.alignItems = 'center'; nm.style.gap = '6px';
+
+    const arrow = document.createElement('span');
+    arrow.textContent = '›';
+    arrow.style.cssText = 'color:var(--muted);font-size:.9rem;transition:transform .2s;display:inline-block';
+
+    const nameSpan = document.createElement('span');
+    nameSpan.textContent = grpName;
+    nm.append(arrow, nameSpan);
+
+    const tog = document.createElement('div'); tog.className='tipo-tog';
+    const bf = document.createElement('button'); bf.textContent='Fijo'; bf.type='button'; if(allFixed) bf.className='f';
+    bf.onclick = e=>{ e.stopPropagation(); members.forEach(({i})=>{ BUD[area][i].f=true; }); renderB(area); };
+    const bv = document.createElement('button'); bv.textContent='Var'; bv.type='button'; if(!allFixed) bv.className='v';
+    bv.onclick = e=>{ e.stopPropagation(); members.forEach(({i})=>{ BUD[area][i].f=false; }); renderB(area); };
     tog.append(bf,bv);
-    const inp=document.createElement('input'); inp.type='number'; inp.className='amt-inp'; inp.value=item.v; inp.min=0;
-    inp.oninput=()=>{BUD[area][i].v=parseFloat(inp.value)||0;renderTots();refreshVs();};
-    const del=document.createElement('button'); del.className='del-btn'; del.textContent='✕';
-    del.onclick=()=>{BUD[area].splice(i,1);renderB(area);renderTots();refreshVs();};
-    row.append(nm,tog,inp,del); el.appendChild(row);
+
+    const totalSpan = document.createElement('span');
+    totalSpan.style.cssText = 'font-weight:800;font-size:.9rem;min-width:80px;text-align:right';
+    totalSpan.textContent = fmt(grpTotal);
+
+    const del = document.createElement('button'); del.className='del-btn'; del.textContent='✕';
+    del.onclick = e=>{ e.stopPropagation();
+      members.forEach(({i})=>{ BUD[area][i]._del=true; });
+      BUD[area] = BUD[area].filter(x=>!x._del);
+      renderB(area); renderTots(); refreshVs();
+    };
+
+    header.append(nm, tog, totalSpan, del);
+
+    // ── Subcategory detail (collapsed by default) ─────────────
+    const detail = document.createElement('div');
+    detail.className = 'brow-detail';
+
+    members.forEach(({item,i})=>{
+      const srow = document.createElement('div');
+      srow.className = 'brow-sub';
+
+      const sname = document.createElement('span');
+      sname.className = 'brow-sub-name';
+      sname.textContent = item.name;
+
+      const sinp = document.createElement('input');
+      sinp.type='number'; sinp.className='amt-inp'; sinp.value=item.v||0; sinp.min=0;
+      sinp.style.width='88px';
+      sinp.oninput=()=>{
+        BUD[area][i].v=parseFloat(sinp.value)||0;
+        totalSpan.textContent=fmt(members.reduce((s,{item})=>s+(item.v||0),0));
+        renderTots(); refreshVs();
+      };
+
+      const sdel = document.createElement('button'); sdel.className='del-btn'; sdel.textContent='✕';
+      sdel.onclick=e=>{ e.stopPropagation(); BUD[area].splice(i,1); renderB(area); renderTots(); refreshVs(); };
+
+      srow.append(sname, sinp, sdel);
+      detail.appendChild(srow);
+    });
+
+    // Toggle expand/collapse
+    let open = false;
+    header.onclick = ()=>{
+      open = !open;
+      detail.classList.toggle('on', open);
+      arrow.style.transform = open ? 'rotate(90deg)' : '';
+    };
+
+    wrap.append(header, detail);
+    el.appendChild(wrap);
   });
 }
 function renderAll(){renderB('ingresos');renderB('gastos');renderB('ahorro');renderTots();}
@@ -859,7 +943,11 @@ function wizRenderBody(){
       </div>
       <div class="sheet-foot" style="margin-top:12px">
         <button class="btn-ghost" onclick="closeSheet('m-wiz')">Cancelar</button>
-        <button class="btn-solid" id="wiz-next-btn" onclick="wizNext()" disabled style="opacity:.4">Continuar →</button>
+        ${hasHistory()
+          ? `<button class="btn-ghost" id="wiz-manual-btn" onclick="wizNext()" disabled style="opacity:.4;flex:1">Ajustar uno a uno</button>
+             <button class="btn-solid" id="wiz-next-btn" onclick="wizApplyAvgs()" disabled style="opacity:.4">Aplicar promedios ✓</button>`
+          : `<button class="btn-solid" id="wiz-next-btn" onclick="wizNext()" disabled style="opacity:.4">Continuar →</button>`
+        }
       </div>`;
 
     WIZ_CATS.forEach((cat,i)=>{
@@ -876,6 +964,8 @@ function wizRenderBody(){
         const btn = $('wiz-next-btn');
         btn.disabled = wizSelected.length === 0;
         btn.style.opacity = wizSelected.length ? '1' : '.4';
+        const mb = $('wiz-manual-btn');
+        if(mb){ mb.disabled=wizSelected.length===0; mb.style.opacity=wizSelected.length?'1':'.4'; }
       };
       container.appendChild(div);
     });
@@ -883,6 +973,8 @@ function wizRenderBody(){
     const btn = $('wiz-next-btn');
     btn.disabled = wizSelected.length === 0;
     btn.style.opacity = wizSelected.length ? '1' : '.4';
+    const mb2 = $('wiz-manual-btn');
+    if(mb2){ mb2.disabled=wizSelected.length===0; mb2.style.opacity=wizSelected.length?'1':'.4'; }
 
   } else if(wizStep <= wizSelected.length){
     // ── Per-category amount ──
@@ -981,6 +1073,27 @@ function wizSaveAndNext(){
 
 function wizBack(){
   if(wizStep > 0){ wizStep--; wizRenderBody(); }
+}
+
+function wizApplyAvgs(){
+  // Apply historical averages directly — skip per-category steps
+  const newBud = {ingresos:[],gastos:[],ahorro:[]};
+  wizSelected.forEach(i=>{
+    const cat = WIZ_CATS[i];
+    const avg = wizAvg(cat.name);
+    const perSub = cat.subs.length > 0 ? Math.round(avg / cat.subs.length) : 0;
+    cat.subs.forEach(subName=>{
+      const prev = BUD[cat.area].find(x=>x.name===subName);
+      newBud[cat.area].push(prev
+        ? {...prev, v: perSub}
+        : {id:cat.area[0]+Date.now()+Math.random(), name:subName, g:cat.name, v:perSub, f:false}
+      );
+    });
+  });
+  ['ingresos','gastos','ahorro'].forEach(a=>{ if(newBud[a].length) BUD[a]=newBud[a]; });
+  renderAll(); refreshVs();
+  closeSheet('m-wiz');
+  $('wiz-banner').style.display='none';
 }
 
 function applyWiz(){
