@@ -186,7 +186,29 @@
     .sug-chk{width:17px;height:17px;accent-color:var(--p);cursor:pointer;flex-shrink:0}
     .area-hdr{font-size:.7rem;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;padding:10px 0 3px;border-top:1px solid var(--bdr)}
 
-    @media(max-width:440px){.totals{grid-template-columns:repeat(3,1fr)}.ring-wrap{flex-direction:column;align-items:flex-start}}
+
+
+    /* VS TABLE */
+    .vs-table{width:100%;border-collapse:collapse;border-radius:var(--rs);overflow:hidden;border:1px solid var(--bdr)}
+    .vs-th-empty{background:var(--bg);width:120px;border-right:1px solid var(--bdr);border-bottom:1px solid var(--bdr)}
+    .vs-th{background:var(--bg);font-size:.82rem;font-weight:800;color:var(--text);text-align:center;padding:12px 16px;border-right:1px solid var(--bdr);border-bottom:1px solid var(--bdr)}
+    .vs-th:last-child{border-right:none}
+    .vs-td-lbl{background:var(--bg);font-size:.75rem;font-weight:700;color:var(--muted);padding:16px;border-right:1px solid var(--bdr);letter-spacing:.02em;white-space:nowrap}
+    .vs-td{text-align:center;padding:16px;font-size:1.1rem;font-weight:800;border-right:1px solid var(--bdr)}
+    .vs-td:last-child{border-right:none}
+    .vs-tr-pres td{border-bottom:1px solid var(--bdr)}
+
+    /* SUMMARY BLOCKS */
+    .sum-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+    .sum-block{background:var(--card);border-radius:var(--r);border:1px solid var(--bdr);padding:16px 18px}
+    .sum-block-lbl{font-size:.7rem;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px}
+    .sum-line{display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;border-bottom:1px solid var(--bdr);font-size:.85rem}
+    .sum-line:last-child{border-bottom:none}
+    .sum-line-name{color:var(--muted)}
+    .sum-line-val{font-weight:700}
+    .sum-total{display:flex;justify-content:space-between;align-items:baseline;padding-top:10px;margin-top:4px;border-top:2px solid var(--bdr);font-size:.9rem;font-weight:800}
+    @media(max-width:440px){.sum-grid{grid-template-columns:1fr}}
+    @media(max-width:440px){.totals{grid-template-columns:repeat(3,1fr)}}
   </style>
 </head>
 <body>
@@ -272,32 +294,44 @@
   <!-- ======= TAB: VS REAL ======= -->
   <div class="tab-pane" id="pane-vsreal">
 
-    <!-- Ring summary -->
+    <!-- 1. Resumen -->
     <div class="card">
-      <div class="ring-wrap">
-        <div class="ring-canvas-wrap"><canvas id="ring"></canvas></div>
-        <div class="ring-info" id="ring-info"></div>
-      </div>
+      <div class="card-title">Resumen</div>
+      <table class="vs-table">
+        <thead>
+          <tr>
+            <th class="vs-th-empty"></th>
+            <th class="vs-th">Ingresos</th>
+            <th class="vs-th">Gastos</th>
+            <th class="vs-th">Ahorro</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="vs-tr-pres">
+            <td class="vs-td-lbl">Presupuestado</td>
+            <td class="vs-td"><span id="vs-pi">$0</span></td>
+            <td class="vs-td"><span id="vs-pg">$0</span></td>
+            <td class="vs-td"><span id="vs-pa">$0</span></td>
+          </tr>
+          <tr class="vs-tr-real">
+            <td class="vs-td-lbl">Real</td>
+            <td class="vs-td"><span id="vs-ri">$0</span></td>
+            <td class="vs-td"><span id="vs-rg">$0</span></td>
+            <td class="vs-td"><span id="vs-ra">$0</span></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
-    <!-- Projection -->
+    <!-- 2. Proyección -->
     <div id="projcard"></div>
 
-    <!-- Categories -->
+    <!-- 3. Como vas -->
     <div class="card">
-      <div class="card-title">¿Cómo vas? <span id="vs-period" style="font-size:.78rem;color:var(--muted);font-weight:600"></span></div>
+      <div class="card-title">¿Cómo vas?</div>
       <div id="catlist"></div>
     </div>
 
-    <!-- Trend -->
-    <div class="card">
-      <div class="card-title">Últimos 3 meses</div>
-      <div style="display:flex;gap:16px;font-size:.75rem;color:var(--muted);margin-bottom:10px">
-        <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--pm);margin-right:4px"></span>Presupuesto</span>
-        <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--p);margin-right:4px"></span>Real</span>
-      </div>
-      <div class="chart-wrap"><canvas id="trend"></canvas></div>
-    </div>
   </div>
 
 </div>
@@ -552,36 +586,27 @@ function applyCat(){
 }
 
 // VS REAL
-let ringC=null, trendC=null;
-function refreshVs(){renderRing();renderProj();renderCats();renderTrend();renderNotifs();}
+let trendC=null;
+function refreshVs(){renderRing();renderProj();renderCats();renderNotifs();}
 
 function renderRing(){
-  const pres=totPres('gastos'), real=totReal('gastos',curM);
-  const porc=pres>0?Math.round(real/pres*100):0;
-  const m=MONTHS[curM];
-  const ctx=$('ring').getContext('2d');
-  if(ringC) ringC.destroy();
-  const over=real>pres;
-  ringC=new Chart(ctx,{
-    type:'doughnut',
-    data:{labels:['Gastado','Libre'],datasets:[{
-      data:over?[pres,0]:[real,pres-real],
-      backgroundColor:over?['#ef4444','#e8eaf0']:['#3956e8','#e8eaf0'],
-      borderWidth:0
-    }]},
-    options:{responsive:true,maintainAspectRatio:false,cutout:'74%',plugins:{legend:{display:false},tooltip:{enabled:false}},animation:{duration:500}}
+  const presI=totPres('ingresos'), presG=totPres('gastos'), presA=totPres('ahorro');
+  const realI=totReal('ingresos',curM), realG=totReal('gastos',curM), realA=totReal('ahorro',curM);
+
+  $('vs-pi').textContent=fmt(presI);
+  $('vs-pg').textContent=fmt(presG);
+  $('vs-pa').textContent=fmt(presA);
+
+  $('vs-ri').textContent=fmt(realI);
+  $('vs-rg').textContent=fmt(realG);
+  $('vs-ra').textContent=fmt(realA);
+
+  // color real vs pres
+  // color the real row: green if on track, red if not
+  $('vs-ri').closest('tr').querySelectorAll('.vs-td span').forEach((sp,i)=>{
+    const ok=[realI>=presI, realG<=presG, realA>=presA][i];
+    sp.style.color=ok?'var(--ggt)':'var(--rrt)';
   });
-  const diff=pres-real;
-  $('ring-info').innerHTML=`
-    <span class="chip ${chipC(porc)}" style="align-self:flex-start">${porc<=90?'Vas bien 👍':porc<=110?'Cerca del límite ⚠️':'Excedido ❌'}</span>
-    <div class="ring-big" style="margin-top:6px">${fmt(real)}<span style="font-size:.85rem;font-weight:600;color:var(--muted)"> / ${fmt(pres)}</span></div>
-    <div class="ring-sub">gastado de tu presupuesto</div>
-    <div class="ring-row">
-      <div class="ring-stat"><div class="ring-stat-lbl">Disponible</div><div class="ring-stat-val" style="color:${diff>=0?'var(--ggt)':'var(--rrt)'}">${diff>=0?'':'-'}${fmt(diff)}</div></div>
-      <div class="ring-stat"><div class="ring-stat-lbl">Días restantes</div><div class="ring-stat-val">${m.total-m.passed}</div></div>
-      <div class="ring-stat"><div class="ring-stat-lbl">% usado</div><div class="ring-stat-val" style="color:${pCol(porc)}">${porc}%</div></div>
-    </div>`;
-  $('vs-period').textContent=m.label;
 }
 
 function renderProj(){
@@ -597,48 +622,107 @@ function renderProj(){
     <div>${over?`Si sigues así te pasarás por <strong>${fmt(proj-pres)}</strong> al final del mes.`:`Vas bien — al ritmo actual terminarás en <strong>${fmt(proj)}</strong>.`}<small>Basado en ${m.passed} días de gasto real.</small></div>`;
 }
 
-function renderCats(){
-  const list=$('catlist'); list.innerHTML='';
-  const rm=realMap('gastos',curM);
-  const seenG=new Set();
-  BUD.gastos.forEach((item,i)=>{
-    if(seenG.has(item.g)) return; seenG.add(item.g);
-    const subs=BUD.gastos.filter(x=>x.g===item.g);
-    const gp=subs.reduce((s,x)=>s+(x.v||0),0);
-    const gr=subs.reduce((s,x)=>s+(rm.get(x.name)||0),0);
-    const gporc=gp>0?Math.round(gr/gp*100):0;
-    const m=MONTHS[curM];
-    const proj=m.passed<m.total&&gr>0?Math.round(gr/m.passed*m.total):null;
-    const grpTxns=TXN.filter(t=>t.m===curM&&t.a==='gastos'&&t.g===item.g).slice(-3).reverse();
-    const wrap=document.createElement('div'); wrap.className='cat-item';
-    wrap.innerHTML=`
-      <div class="cat-row">
-        <div class="cat-icon">${ICONS[item.g]||'📦'}</div>
-        <div class="cat-body">
-          <div class="cat-top">
-            <span class="cat-name">${item.g}</span>
-            <div class="cat-right-info">
-              ${item.f?'<span class="chip cgray" style="font-size:.65rem">Fijo</span>':''}
-              <span class="cat-pct" style="color:${pCol(gporc)}">${gporc}%</span>
-            </div>
-          </div>
-          <div class="bar"><div class="bf b${pC(gporc)}" style="width:${Math.min(gporc,100)}%"></div></div>
-          <div class="cat-bottom">
-            <span>${fmt(gr)} de ${fmt(gp)}</span>
-            ${proj?`<span>Proy. fin mes: <strong>${fmt(proj)}</strong></span>`:''}
+function makeCatRow(opts){
+  // opts: { icon, label, pres, real, chip, subs, txns, proj, uid }
+  const {icon,label,pres,real,chip,subs,txns,proj,uid}=opts;
+  const porc=pres>0?Math.round(real/pres*100):0;
+  const wrap=document.createElement('div'); wrap.className='cat-item';
+  wrap.innerHTML=`
+    <div class="cat-row">
+      <div class="cat-icon">${icon}</div>
+      <div class="cat-body">
+        <div class="cat-top">
+          <span class="cat-name">${label}</span>
+          <div class="cat-right-info">
+            ${chip||''}
+            <span class="cat-pct" style="color:${pCol(porc)}">${porc}%</span>
           </div>
         </div>
+        <div class="bar"><div class="bf b${pC(porc)}" style="width:${Math.min(porc,100)}%"></div></div>
+        <div class="cat-bottom">
+          <span>${fmt(real)} de ${fmt(pres)}</span>
+          ${proj?`<span>Proy: <strong>${fmt(proj)}</strong></span>`:''}
+        </div>
       </div>
-      <div class="cat-detail" id="cd${i}">
-        ${subs.map(s=>{const sr=rm.get(s.name)||0,sp=s.v||0,sw=sp>0?Math.min(Math.round(sr/sp*100),100):0,sc=pC(sw);
-          return `<div class="sub-row"><span class="sub-name">${s.name}</span><div class="sub-bar"><div class="b${sc}" style="width:${sw}%"></div></div><span class="sub-amt">${fmt(sr)} / ${fmt(sp)}</span></div>`;
-        }).join('')}
-        ${grpTxns.length?`<div class="txn-block"><div class="txn-lbl">Últimas transacciones</div>${grpTxns.map(t=>`<div class="txn-row"><span class="txn-desc">${t.desc}</span><span class="txn-date">${t.d}</span><span class="txn-amt">-${fmt(t.v)}</span></div>`).join('')}</div>`:''}
-      </div>`;
-    wrap.querySelector('.cat-row').addEventListener('click',()=>{wrap.querySelector('.cat-detail').classList.toggle('on');});
-    list.appendChild(wrap);
-  });
-  if(!BUD.gastos.length) list.innerHTML='<p style="color:var(--muted);font-size:.85rem">Añade categorías de gastos en la pestaña Presupuesto.</p>';
+    </div>
+    <div class="cat-detail" id="cd-${uid}">
+      ${subs.map(s=>{
+        const sw=s.pres>0?Math.min(Math.round(s.real/s.pres*100),100):0;
+        return `<div class="sub-row">
+          <span class="sub-name">${s.name}</span>
+          <div class="sub-bar"><div class="b${pC(sw)}" style="width:${sw}%"></div></div>
+          <span class="sub-amt">${fmt(s.real)} / ${fmt(s.pres)}</span>
+        </div>`;
+      }).join('')}
+      ${txns&&txns.length?`<div class="txn-block"><div class="txn-lbl">Últimas transacciones</div>${txns.map(t=>`<div class="txn-row"><span class="txn-desc">${t.desc}</span><span class="txn-date">${t.d}</span><span class="txn-amt">${t.sign}${fmt(t.v)}</span></div>`).join('')}</div>`:''}
+    </div>`;
+  wrap.querySelector('.cat-row').addEventListener('click',()=>document.getElementById('cd-'+uid).classList.toggle('on'));
+  return wrap;
+}
+
+function renderCats(){
+  const list=$('catlist'); list.innerHTML='';
+  const m=MONTHS[curM];
+
+  // ── SECCIÓN LABEL ──
+  const makeLabel=txt=>{const d=document.createElement('div');d.style.cssText='font-size:.7rem;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;padding:14px 0 6px;border-top:1px solid var(--bdr)';d.textContent=txt;return d;};
+
+  // ── INGRESOS — fila única colapsable ──
+  if(BUD.ingresos.length){
+    list.appendChild(makeLabel('Ingresos'));
+    const rmI=realMap('ingresos',curM);
+    const totalP=BUD.ingresos.reduce((s,x)=>s+(x.v||0),0);
+    const totalR=BUD.ingresos.reduce((s,x)=>s+(rmI.get(x.name)||0),0);
+    const txns=TXN.filter(t=>t.m===curM&&t.a==='ingresos').slice(-4).reverse().map(t=>({...t,sign:'+'}));
+    list.appendChild(makeCatRow({
+      icon:'💰', label:'Ingresos totales', pres:totalP, real:totalR,
+      chip:'', proj:null, uid:'ingresos-total',
+      subs:BUD.ingresos.map(s=>({name:s.name,pres:s.v||0,real:rmI.get(s.name)||0})),
+      txns,
+    }));
+  }
+
+  // ── GASTOS — una fila por grupo ──
+  if(BUD.gastos.length){
+    list.appendChild(makeLabel('Gastos'));
+    const rmG=realMap('gastos',curM);
+    const seenG=new Set();
+    BUD.gastos.forEach((item,i)=>{
+      if(seenG.has(item.g)) return; seenG.add(item.g);
+      const subs=BUD.gastos.filter(x=>x.g===item.g);
+      const gp=subs.reduce((s,x)=>s+(x.v||0),0);
+      const gr=subs.reduce((s,x)=>s+(rmG.get(x.name)||0),0);
+      const proj=m.passed<m.total&&gr>0?Math.round(gr/m.passed*m.total):null;
+      const txns=TXN.filter(t=>t.m===curM&&t.a==='gastos'&&t.g===item.g).slice(-3).reverse().map(t=>({...t,sign:'-'}));
+      const hasFijo=subs.some(x=>x.f);
+      list.appendChild(makeCatRow({
+        icon:ICONS[item.g]||'📦', label:item.g, pres:gp, real:gr,
+        chip:hasFijo?'<span class="chip cgray" style="font-size:.65rem">Fijo</span>':'',
+        proj, uid:'g-'+i,
+        subs:subs.map(s=>({name:s.name,pres:s.v||0,real:rmG.get(s.name)||0})),
+        txns,
+      }));
+    });
+  }
+
+  // ── AHORRO — una fila por categoría ──
+  if(BUD.ahorro.length){
+    list.appendChild(makeLabel('Ahorro'));
+    const rmA=realMap('ahorro',curM);
+    BUD.ahorro.forEach((item,i)=>{
+      const txns=TXN.filter(t=>t.m===curM&&t.a==='ahorro'&&t.cat===item.name).slice(-3).reverse().map(t=>({...t,sign:'+'}));
+      list.appendChild(makeCatRow({
+        icon:ICONS[item.g]||'🏦', label:item.name, pres:item.v||0,
+        real:rmA.get(item.name)||0,
+        chip:item.f?'<span class="chip cgray" style="font-size:.65rem">Fijo</span>':'',
+        proj:null, uid:'a-'+i,
+        subs:[], txns,
+      }));
+    });
+  }
+
+  if(!BUD.gastos.length&&!BUD.ingresos.length&&!BUD.ahorro.length)
+    list.innerHTML='<p style="color:var(--muted);font-size:.85rem">Añade categorías en la pestaña Presupuesto.</p>';
 }
 
 function renderTrend(){
