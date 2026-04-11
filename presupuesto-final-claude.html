@@ -170,24 +170,33 @@
     .chk-item{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border-radius:var(--rs);border:1px solid var(--bdr);margin-bottom:5px;background:#fafbfc;font-size:.85rem}
     .chk-item input{width:17px;height:17px;accent-color:var(--p);cursor:pointer}
 
-    /* WIZARD STEPS */
-    .wstep{display:none}
-    .wstep.on{display:block}
-    .ws-dots{display:flex;gap:4px;justify-content:center;margin-bottom:14px}
-    .ws-dot{width:6px;height:6px;border-radius:99px;background:#e8eaf0;transition:all .2s}
-    .ws-dot.on{background:var(--p);width:14px}
-    .sug-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--bdr)}
-    .sug-item:last-child{border-bottom:none}
-    .sug-info{flex:1}
-    .sug-name{font-size:.85rem;font-weight:700}
-    .sug-avg{font-size:.73rem;color:var(--muted)}
-    .sug-inp{width:82px;border-radius:999px;border:1px solid var(--bdr);padding:5px 9px;font-size:.8rem;text-align:right;font-family:"Nunito",sans-serif;background:#fafbfc}
-    .sug-inp:focus{outline:none;border-color:var(--p)}
-    .sug-chk{width:17px;height:17px;accent-color:var(--p);cursor:pointer;flex-shrink:0}
-    .area-hdr{font-size:.7rem;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;padding:10px 0 3px;border-top:1px solid var(--bdr)}
+    /* WIZARD NEW */
+    .wiz-progress-bar{height:4px;background:#e8eaf0;border-radius:99px;margin-bottom:22px;overflow:hidden}
+    .wiz-progress-fill{height:100%;background:linear-gradient(90deg,var(--p),var(--s));border-radius:99px;transition:width .4s ease}
+    .wiz-step-label{font-size:.72rem;font-weight:700;color:var(--muted);letter-spacing:.04em;margin-bottom:18px;display:flex;justify-content:space-between}
+    .wiz-question{font-size:1.15rem;font-weight:800;margin-bottom:6px;line-height:1.3}
+    .wiz-hint{font-size:.82rem;color:var(--muted);margin-bottom:22px}
+    .wiz-big-input{width:100%;border-radius:16px;border:2px solid var(--bdr);padding:16px 20px;font-size:1.8rem;font-weight:800;font-family:"Nunito",sans-serif;text-align:center;background:#fafbfc;transition:border-color .2s;outline:none;color:var(--text)}
+    .wiz-big-input:focus{border-color:var(--p);background:#fff}
+    .wiz-avg-ref{text-align:center;font-size:.8rem;color:var(--muted);margin-top:10px}
+    .wiz-avg-ref strong{color:var(--text);font-weight:700}
+    .wiz-balance-bar{background:var(--bg);border-radius:var(--rs);padding:12px 16px;margin:18px 0 4px;display:flex;align-items:center;justify-content:space-between}
+    .wiz-balance-lbl{font-size:.78rem;color:var(--muted)}
+    .wiz-balance-val{font-size:1rem;font-weight:800}
+    .cat-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+    .cat-chip{border:2px solid var(--bdr);background:#fff;border-radius:12px;padding:10px 14px;cursor:pointer;font-family:"Nunito",sans-serif;font-size:.85rem;font-weight:700;display:flex;align-items:center;gap:7px;transition:all .15s;color:var(--text)}
+    .cat-chip:hover{border-color:var(--pm);background:var(--pl)}
+    .cat-chip.on{border-color:var(--p);background:var(--pl);color:var(--p)}
+    .cat-chip-icon{font-size:1.1rem}
+    .wiz-summary-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--bdr);font-size:.85rem}
+    .wiz-summary-row:last-child{border-bottom:none}
+    .wiz-summary-name{color:var(--muted)}
+    .wiz-summary-val{font-weight:800}
 
 
 
+    /* VS RESUMEN */
+    .vs-row-lbl2{font-size:.7rem;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}
     /* VS TABLE */
     .vs-table{width:100%;border-collapse:collapse;border-radius:var(--rs);overflow:hidden;border:1px solid var(--bdr)}
     .vs-th-empty{background:var(--bg);width:120px;border-right:1px solid var(--bdr);border-bottom:1px solid var(--bdr)}
@@ -297,30 +306,18 @@
     <!-- 1. Resumen -->
     <div class="card">
       <div class="card-title">Resumen</div>
-      <table class="vs-table">
-        <thead>
-          <tr>
-            <th class="vs-th-empty"></th>
-            <th class="vs-th">Ingresos</th>
-            <th class="vs-th">Gastos</th>
-            <th class="vs-th">Ahorro</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="vs-tr-pres">
-            <td class="vs-td-lbl">Presupuestado</td>
-            <td class="vs-td"><span id="vs-pi">$0</span></td>
-            <td class="vs-td"><span id="vs-pg">$0</span></td>
-            <td class="vs-td"><span id="vs-pa">$0</span></td>
-          </tr>
-          <tr class="vs-tr-real">
-            <td class="vs-td-lbl">Real</td>
-            <td class="vs-td"><span id="vs-ri">$0</span></td>
-            <td class="vs-td"><span id="vs-rg">$0</span></td>
-            <td class="vs-td"><span id="vs-ra">$0</span></td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="vs-row-lbl2">Presupuestado</div>
+      <div class="totals" style="margin-bottom:14px">
+        <div class="tot-box"><div class="tot-lbl">Ingresos</div><div class="tot-val" id="vs-pi">$0</div></div>
+        <div class="tot-box"><div class="tot-lbl">Gastos</div><div class="tot-val" id="vs-pg">$0</div></div>
+        <div class="tot-box"><div class="tot-lbl">Ahorro</div><div class="tot-val" id="vs-pa">$0</div></div>
+      </div>
+      <div class="vs-row-lbl2">Real</div>
+      <div class="totals">
+        <div class="tot-box"><div class="tot-lbl">Ingresos</div><div class="tot-val" id="vs-ri">$0</div></div>
+        <div class="tot-box"><div class="tot-lbl">Gastos</div><div class="tot-val" id="vs-rg">$0</div></div>
+        <div class="tot-box"><div class="tot-lbl">Ahorro</div><div class="tot-val" id="vs-ra">$0</div></div>
+      </div>
     </div>
 
     <!-- 2. Proyección -->
@@ -353,42 +350,15 @@
 
 <!-- MODAL: WIZARD -->
 <div class="overlay" id="m-wiz">
-  <div class="sheet" style="max-width:480px">
+  <div class="sheet" style="max-width:460px" id="wiz-sheet">
     <div class="sheet-handle"></div>
-    <button class="sheet-close" onclick="closeSheet('m-wiz')">×</button>
-
-    <div class="wstep on" id="ws1">
-      <div class="ws-dots"><div class="ws-dot on"></div><div class="ws-dot"></div><div class="ws-dot"></div></div>
-      <div class="sheet-title">¿Cómo solías gastar?</div>
-      <div class="sheet-sub">Esto es lo que gastaste los últimos 2 meses. Te ayudará a poner metas realistas.</div>
-      <div id="ws1-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px"></div>
-      <div class="sheet-foot">
-        <button class="btn-ghost" onclick="closeSheet('m-wiz')">Cancelar</button>
-        <button class="btn-solid" onclick="wsGo(2)">Ver sugerencias →</button>
-      </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+      <button class="btn-ghost" style="flex:0;padding:4px 10px;font-size:.78rem;border-radius:999px" id="wiz-back-btn" onclick="wizBack()" style="visibility:hidden">← Atrás</button>
+      <button class="sheet-close" onclick="closeSheet('m-wiz')">×</button>
     </div>
-
-    <div class="wstep" id="ws2">
-      <div class="ws-dots"><div class="ws-dot on"></div><div class="ws-dot on"></div><div class="ws-dot"></div></div>
-      <div class="sheet-title">Ajusta tu presupuesto</div>
-      <div class="sheet-sub">Montos basados en tu promedio real. Puedes cambiarlos y marcar solo los que quieras.</div>
-      <div id="ws2-list" style="max-height:320px;overflow-y:auto"></div>
-      <div class="sheet-foot">
-        <button class="btn-ghost" onclick="wsGo(1)">← Atrás</button>
-        <button class="btn-solid" onclick="wsGo(3)">Continuar →</button>
-      </div>
-    </div>
-
-    <div class="wstep" id="ws3">
-      <div class="ws-dots"><div class="ws-dot on"></div><div class="ws-dot on"></div><div class="ws-dot on"></div></div>
-      <div class="sheet-title">¡Todo listo! 🎉</div>
-      <div class="sheet-sub">Tu presupuesto queda así. Puedes editarlo en cualquier momento.</div>
-      <div id="ws3-body" style="background:var(--bg);border-radius:var(--rs);padding:12px;margin-bottom:4px"></div>
-      <div class="sheet-foot">
-        <button class="btn-ghost" onclick="wsGo(2)">← Atrás</button>
-        <button class="btn-solid" onclick="applyWiz()">Aplicar presupuesto ✓</button>
-      </div>
-    </div>
+    <div class="wiz-progress-bar"><div class="wiz-progress-fill" id="wiz-prog" style="width:0%"></div></div>
+    <div class="wiz-step-label"><span id="wiz-step-lbl"></span><span id="wiz-step-count"></span></div>
+    <div id="wiz-body"></div>
   </div>
 </div>
 
@@ -460,26 +430,7 @@ const CAT={
 };
 
 let curM=2, tipo='mensual', catArea=null;
-const BUD={
-  ingresos:[
-    {id:'i1',name:'Salario',          g:'Pago por trabajo',v:2500,f:true},
-    {id:'i2',name:'Bono',             g:'Pago por trabajo',v:300, f:false},
-    {id:'i3',name:'Negocio propio',   g:'Otros ingresos',  v:400, f:false},
-  ],
-  gastos:[
-    {id:'g1',name:'Hipoteca / Alquiler',      g:'Vivienda',       v:900, f:true},
-    {id:'g2',name:'Servicios básicos',        g:'Vivienda',       v:180, f:true},
-    {id:'g3',name:'Supermercado',             g:'Alimentación',   v:320, f:false},
-    {id:'g4',name:'Comidas fuera',            g:'Alimentación',   v:130, f:false},
-    {id:'g5',name:'Gasolina',                 g:'Transporte',     v:90,  f:false},
-    {id:'g6',name:'Transp. público / Uber',   g:'Transporte',     v:30,  f:false},
-    {id:'g7',name:'Entretenimiento',          g:'Otros',          v:150, f:false},
-  ],
-  ahorro:[
-    {id:'a1',name:'Fondo de emergencia', g:'Emergencia', v:200, f:true},
-    {id:'a2',name:'Ahorro meta',         g:'Metas',      v:150, f:false},
-  ],
-};
+const BUD={ingresos:[], gastos:[], ahorro:[]};
 
 const $=id=>document.getElementById(id);
 const fmt=n=>'$'+Math.abs(n||0).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
@@ -526,6 +477,13 @@ document.addEventListener('click',e=>{
 // BUDGET TAB
 function renderB(area){
   const el=$('b-'+area); el.innerHTML='';
+  if(BUD[area].length===0){
+    const labels={ingresos:'ingresos',gastos:'gastos',ahorro:'ahorro'};
+    el.innerHTML=`<div style="text-align:center;padding:20px 0;color:var(--muted);font-size:.83rem">
+      Sin categorías de ${labels[area]} — usa el asistente o añade manualmente.
+    </div>`;
+    return;
+  }
   BUD[area].forEach((item,i)=>{
     const row=document.createElement('div'); row.className='brow';
     const nm=document.createElement('div'); nm.className='brow-name'; nm.textContent=item.name;
@@ -602,11 +560,9 @@ function renderRing(){
   $('vs-ra').textContent=fmt(realA);
 
   // color real vs pres
-  // color the real row: green if on track, red if not
-  $('vs-ri').closest('tr').querySelectorAll('.vs-td span').forEach((sp,i)=>{
-    const ok=[realI>=presI, realG<=presG, realA>=presA][i];
-    sp.style.color=ok?'var(--ggt)':'var(--rrt)';
-  });
+  $('vs-ri').style.color=realI>=presI?'var(--ggt)':'var(--rrt)';
+  $('vs-rg').style.color=realG<=presG?'var(--ggt)':'var(--rrt)';
+  $('vs-ra').style.color=realA>=presA?'var(--ggt)':'var(--rrt)';
 }
 
 function renderProj(){
@@ -757,65 +713,228 @@ function renderNotifs(){
   });
 }
 
-// WIZARD
-function openWiz(){
-  const grid=$('ws1-grid'); grid.innerHTML='';
-  MONTHS.slice(0,2).forEach((m,i)=>{
-    const d=document.createElement('div');
-    d.style.cssText='background:var(--bg);border-radius:var(--rs);padding:12px;border:1px solid var(--bdr)';
-    d.innerHTML=`<div style="font-size:.73rem;font-weight:700;color:var(--muted);margin-bottom:6px">${m.label}</div>
-      <div style="font-size:.9rem;font-weight:800;color:var(--rrt)">${fmt(totReal('gastos',i))}</div>
-      <div style="font-size:.75rem;color:var(--ggt)">ingresos: ${fmt(totReal('ingresos',i))}</div>`;
-    grid.appendChild(d);
-  });
-  const list=$('ws2-list'); list.innerHTML='';
-  ['ingresos','gastos','ahorro'].forEach(area=>{
-    const aLabel={ingresos:'Ingresos',gastos:'Gastos',ahorro:'Ahorro'}[area];
-    const seen=new Set();
-    const cats=TXN.filter(t=>t.m<=1&&t.a===area).map(t=>({name:t.cat,g:t.g})).filter(x=>{if(seen.has(x.name))return false;seen.add(x.name);return true;});
-    if(!cats.length) return;
-    const hdr=document.createElement('div'); hdr.className='area-hdr'; hdr.textContent=aLabel; list.appendChild(hdr);
-    cats.forEach(c=>{
-      const avg=Math.round(TXN.filter(t=>t.m<=1&&t.a===area&&t.cat===c.name).reduce((s,t)=>s+t.v,0)/2);
-      const row=document.createElement('div'); row.className='sug-item';
-      row.innerHTML=`<div class="sug-info"><div class="sug-name">${c.name}</div><div class="sug-avg">Promedio: ${fmt(avg)}/mes</div></div>
-        <input type="number" class="sug-inp" data-cat="${c.name}" data-g="${c.g}" data-a="${area}" value="${avg}" min="0"/>
-        <input type="checkbox" class="sug-chk" ${avg>0?'checked':''}/>`;
-      list.appendChild(row);
-    });
-  });
-  wsGo(1); $('m-wiz').classList.add('on');
-}
-function wsGo(n){
-  document.querySelectorAll('.wstep').forEach(x=>x.classList.remove('on'));
-  $('ws'+n).classList.add('on');
-  if(n===3) buildWs3();
-}
-function buildWs3(){
-  const rows=document.querySelectorAll('#ws2-list .sug-item');
-  let html='', tg=0;
-  rows.forEach(r=>{
-    const chk=r.querySelector('.sug-chk'), inp=r.querySelector('.sug-inp');
-    if(!chk.checked) return;
-    const v=parseFloat(inp.value)||0; if(inp.dataset.a==='gastos') tg+=v;
-    html+=`<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--bdr);font-size:.83rem"><span>${inp.dataset.cat}</span><span style="font-weight:700">${fmt(v)}</span></div>`;
-  });
-  $('ws3-body').innerHTML=html+`<div style="display:flex;justify-content:space-between;padding:8px 0 0;font-weight:800;font-size:.88rem"><span>Total gastos</span><span style="color:var(--rrt)">${fmt(tg)}</span></div>`;
-}
-function applyWiz(){
-  const rows=document.querySelectorAll('#ws2-list .sug-item');
-  const nb={ingresos:[],gastos:[],ahorro:[]};
-  rows.forEach(r=>{
-    const chk=r.querySelector('.sug-chk'), inp=r.querySelector('.sug-inp');
-    if(!chk.checked) return;
-    const a=inp.dataset.a, name=inp.dataset.cat, g=inp.dataset.g, v=parseFloat(inp.value)||0;
-    const prev=BUD[a].find(x=>x.name===name);
-    nb[a].push(prev?{...prev,v}:{id:a[0]+Date.now()+Math.random(),name,g,v,f:false});
-  });
-  ['ingresos','gastos','ahorro'].forEach(a=>{if(nb[a].length) BUD[a]=nb[a];});
-  renderAll(); refreshVs(); closeSheet('m-wiz'); $('wiz-banner').style.display='none';
+// WIZARD ─────────────────────────────────────────────────────
+const WIZ_CATS = [
+  {name:'Vivienda',       area:'gastos',   subs:['Hipoteca / Alquiler','Servicios básicos']},
+  {name:'Alimentación',   area:'gastos',   subs:['Supermercado','Comidas fuera']},
+  {name:'Transporte',     area:'gastos',   subs:['Gasolina','Transp. público / Uber']},
+  {name:'Entretenimiento',area:'gastos',   subs:['Entretenimiento']},
+  {name:'Salario',        area:'ingresos', subs:['Salario']},
+  {name:'Extra',          area:'ingresos', subs:['Negocio propio','Bono']},
+  {name:'Emergencia',     area:'ahorro',   subs:['Fondo de emergencia']},
+  {name:'Metas',          area:'ahorro',   subs:['Ahorro meta']},
+];
+
+let wizSelected = [];   // indices from WIZ_CATS
+let wizAmounts  = {};   // cat name -> amount
+let wizStep     = 0;    // 0 = selection, 1..N = per-cat, N+1 = confirm
+
+function wizAvg(cat){
+  const subs = WIZ_CATS.find(c=>c.name===cat)?.subs || [];
+  const total = TXN.filter(t=>t.m<=1&&subs.includes(t.cat)).reduce((s,t)=>s+t.v,0);
+  return Math.round(total / 2);
 }
 
+function wizLiveBalance(){
+  const income  = WIZ_CATS.filter(c=>c.area==='ingresos').reduce((s,c)=>{
+    const v = wizAmounts[c.name]; return s + (v!=null ? v : wizAvg(c.name));
+  },0);
+  const spending = WIZ_CATS.filter(c=>c.area==='gastos'&&wizSelected.includes(WIZ_CATS.indexOf(c))).reduce((s,c)=>{
+    const v = wizAmounts[c.name]; return s + (v!=null ? v : 0);
+  },0);
+  const saving = WIZ_CATS.filter(c=>c.area==='ahorro'&&wizSelected.includes(WIZ_CATS.indexOf(c))).reduce((s,c)=>{
+    const v = wizAmounts[c.name]; return s + (v!=null ? v : 0);
+  },0);
+  return income - spending - saving;
+}
+
+function wizRenderProgress(){
+  const total = wizSelected.length + 2; // selection + N cats + confirm
+  const pct = wizStep === 0 ? 5 : wizStep >= total-1 ? 100 : Math.round((wizStep/(total-1))*100);
+  $('wiz-prog').style.width = pct + '%';
+  const backBtn = $('wiz-back-btn');
+  backBtn.style.visibility = wizStep > 0 ? 'visible' : 'hidden';
+  if(wizStep === 0){
+    $('wiz-step-lbl').textContent = 'Paso 1 — Selecciona categorías';
+    $('wiz-step-count').textContent = '';
+  } else if(wizStep <= wizSelected.length){
+    $('wiz-step-lbl').textContent = WIZ_CATS[wizSelected[wizStep-1]].name;
+    $('wiz-step-count').textContent = wizStep + ' / ' + wizSelected.length;
+  } else {
+    $('wiz-step-lbl').textContent = 'Resumen';
+    $('wiz-step-count').textContent = '';
+  }
+}
+
+function wizRenderBody(){
+  wizRenderProgress();
+  const body = $('wiz-body');
+
+  if(wizStep === 0){
+    // ── Category selection ──
+    const groups = [
+      {label:'Ingresos',  area:'ingresos'},
+      {label:'Gastos',    area:'gastos'},
+      {label:'Ahorro',    area:'ahorro'},
+    ];
+    const groupsHtml = groups.map(g=>`
+      <div style="margin-bottom:14px">
+        <div style="font-size:.72rem;font-weight:700;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px">${g.label}</div>
+        <div class="cat-chips" id="chips-${g.area}"></div>
+      </div>`).join('');
+    body.innerHTML = `
+      <div class="wiz-question">${(BUD.ingresos.length+BUD.gastos.length+BUD.ahorro.length)>0 ? 'Ajusta tu presupuesto' : '¿Qué quieres presupuestar?'}</div>
+      <div class="wiz-hint">${(BUD.ingresos.length+BUD.gastos.length+BUD.ahorro.length)>0 ? 'Estas son tus categorías actuales. Puedes agregar o quitar las que quieras.' : 'Selecciona las categorías que quieras incluir. Puedes cambiarlas después.'}</div>
+      ${groupsHtml}
+      <div class="wiz-balance-bar">
+        <span class="wiz-balance-lbl">Categorías seleccionadas</span>
+        <span class="wiz-balance-val" id="wiz-sel-count">0</span>
+      </div>
+      <div class="sheet-foot" style="margin-top:12px">
+        <button class="btn-ghost" onclick="closeSheet('m-wiz')">Cancelar</button>
+        <button class="btn-solid" id="wiz-next-btn" onclick="wizNext()" disabled style="opacity:.4">Continuar →</button>
+      </div>`;
+
+    WIZ_CATS.forEach((cat,i)=>{
+      const container = $('chips-'+cat.area);
+      if(!container) return;
+      const div = document.createElement('div');
+      div.className = 'cat-chip' + (wizSelected.includes(i)?' on':'');
+      div.innerHTML = cat.name;
+      div.onclick = ()=>{
+        const idx = wizSelected.indexOf(i);
+        if(idx>-1) wizSelected.splice(idx,1); else wizSelected.push(i);
+        div.classList.toggle('on');
+        $('wiz-sel-count').textContent = wizSelected.length;
+        const btn = $('wiz-next-btn');
+        btn.disabled = wizSelected.length === 0;
+        btn.style.opacity = wizSelected.length ? '1' : '.4';
+      };
+      container.appendChild(div);
+    });
+    $('wiz-sel-count').textContent = wizSelected.length;
+    const btn = $('wiz-next-btn');
+    btn.disabled = wizSelected.length === 0;
+    btn.style.opacity = wizSelected.length ? '1' : '.4';
+
+  } else if(wizStep <= wizSelected.length){
+    // ── Per-category amount ──
+    const cat = WIZ_CATS[wizSelected[wizStep-1]];
+    const avg = wizAvg(cat.name);
+    const cur = wizAmounts[cat.name] ?? avg;
+    const bal = wizLiveBalance();
+    const balColor = bal >= 0 ? 'var(--ggt)' : 'var(--rrt)';
+    body.innerHTML = `
+      <div class="wiz-question">¿Cuánto presupuestas para ${cat.name}?</div>
+      <div class="wiz-hint">${cat.area==='ingresos'?'¿Cuánto sueles recibir cada mes?':cat.area==='ahorro'?'¿Cuánto quieres apartar cada mes?':'¿Cuánto sueles gastar en esto cada mes?'}</div>
+      <input class="wiz-big-input" id="wiz-inp" type="number" min="0" placeholder="$0" value="${cur||''}" />
+      ${avg>0?`<div class="wiz-avg-ref">Tu promedio los últimos 2 meses: <strong>${fmt(avg)}</strong></div>`:''}
+      <div class="wiz-balance-bar">
+        <span class="wiz-balance-lbl">Balance mensual estimado</span>
+        <span class="wiz-balance-val" id="wiz-bal" style="color:${balColor}">${fmt(bal)}</span>
+      </div>
+      <div class="sheet-foot" style="margin-top:12px">
+        <button class="btn-ghost" onclick="wizNext()" style="flex:1">Saltar</button>
+        <button class="btn-solid" onclick="wizSaveAndNext()">
+          ${wizStep < wizSelected.length ? 'Siguiente →' : 'Ver resumen →'}
+        </button>
+      </div>`;
+    const inp = $('wiz-inp');
+    inp.focus(); inp.select();
+    inp.oninput = ()=>{
+      wizAmounts[cat.name] = parseFloat(inp.value)||0;
+      const b = wizLiveBalance();
+      $('wiz-bal').textContent = fmt(b);
+      $('wiz-bal').style.color = b>=0?'var(--ggt)':'var(--rrt)';
+    };
+
+  } else {
+    // ── Confirmation ──
+    const rows = wizSelected.map(i=>{
+      const cat = WIZ_CATS[i];
+      const v = wizAmounts[cat.name]||0;
+      return `<div class="wiz-summary-row">
+        <span class="wiz-summary-name">${cat.name}</span>
+        <span class="wiz-summary-val">${fmt(v)}</span>
+      </div>`;
+    }).join('');
+    const bal = wizLiveBalance();
+    body.innerHTML = `
+      <div class="wiz-question">¡Todo listo! 🎉</div>
+      <div class="wiz-hint">Tu presupuesto queda así. Puedes editarlo en cualquier momento.</div>
+      <div style="background:var(--bg);border-radius:var(--rs);padding:12px 14px;margin-bottom:12px">${rows}</div>
+      <div class="wiz-balance-bar">
+        <span class="wiz-balance-lbl">Balance mensual estimado</span>
+        <span class="wiz-balance-val" style="color:${bal>=0?'var(--ggt)':'var(--rrt)'}">${fmt(bal)}</span>
+      </div>
+      <div class="sheet-foot" style="margin-top:12px">
+        <button class="btn-ghost" onclick="wizBack()">← Atrás</button>
+        <button class="btn-solid" onclick="applyWiz()">Aplicar presupuesto ✓</button>
+      </div>`;
+  }
+}
+
+function openWiz(){
+  wizStep = 0;
+  wizAmounts = {};
+  wizSelected = [];
+
+  const hasExisting = BUD.ingresos.length + BUD.gastos.length + BUD.ahorro.length > 0;
+
+  if(hasExisting){
+    // Pre-select and pre-fill from existing budget
+    WIZ_CATS.forEach((cat,i)=>{
+      const existing = BUD[cat.area].filter(x=>cat.subs.includes(x.name));
+      if(existing.length > 0){
+        wizSelected.push(i);
+        wizAmounts[cat.name] = existing.reduce((s,x)=>s+(x.v||0),0);
+      }
+    });
+  }
+
+  $('m-wiz').classList.add('on');
+  wizRenderBody();
+}
+
+function wizNext(){
+  wizStep++;
+  wizRenderBody();
+}
+
+function wizSaveAndNext(){
+  const cat = WIZ_CATS[wizSelected[wizStep-1]];
+  const inp = $('wiz-inp');
+  if(inp) wizAmounts[cat.name] = parseFloat(inp.value)||0;
+  wizStep++;
+  wizRenderBody();
+}
+
+function wizBack(){
+  if(wizStep > 0){ wizStep--; wizRenderBody(); }
+}
+
+function applyWiz(){
+  const newBud = {ingresos:[],gastos:[],ahorro:[]};
+  wizSelected.forEach(i=>{
+    const cat = WIZ_CATS[i];
+    const v = wizAmounts[cat.name]||0;
+    cat.subs.forEach(subName=>{
+      const prev = BUD[cat.area].find(x=>x.name===subName);
+      newBud[cat.area].push(prev ? {...prev,v:Math.round(v/cat.subs.length)} : {
+        id:cat.area[0]+Date.now()+Math.random(),
+        name:subName, g:cat.name, v:Math.round(v/cat.subs.length), f:false
+      });
+    });
+  });
+  ['ingresos','gastos','ahorro'].forEach(a=>{ if(newBud[a].length) BUD[a]=newBud[a]; });
+  renderAll(); refreshVs();
+  closeSheet('m-wiz');
+  $('wiz-banner').style.display='none';
+}
+
+// Old stubs no longer needed
+function wsGo(){}
+function buildWs3(){}
 function closeSheet(id){$(id).classList.remove('on');}
 document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o) o.classList.remove('on');}));
 
