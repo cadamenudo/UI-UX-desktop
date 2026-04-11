@@ -58,8 +58,7 @@
     .card-title .right{display:flex;align-items:center;gap:8px}
 
     /* WIZARD BANNER */
-    .wiz-banner{background:linear-gradient(135deg,var(--pl),#f0eeff);border:1px solid var(--pm);border-radius:var(--r);padding:16px 18px;display:flex;align-items:center;gap:14px;margin-bottom:16px}
-    .wiz-icon{font-size:1.5rem;flex-shrink:0}
+    .wiz-banner{background:linear-gradient(135deg,var(--pl),#f0eeff);border:1px solid var(--pm);border-radius:var(--r);padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:16px}
     .wiz-text{flex:1}
     .wiz-text strong{font-size:.88rem;color:var(--p);font-weight:800;display:block}
     .wiz-text small{font-size:.78rem;color:var(--muted)}
@@ -269,12 +268,11 @@
   <!-- ======= TAB: PRESUPUESTO ======= -->
   <div class="tab-pane on" id="pane-budget">
     <div class="wiz-banner" id="wiz-banner">
-      <div class="wiz-icon">✨</div>
       <div class="wiz-text">
-        <strong>Configura tu presupuesto en segundos</strong>
-        <small>Usamos tu historial para sugerirte montos realistas.</small>
+        <strong id="wiz-banner-title">Configura tu presupuesto</strong>
+        <small id="wiz-banner-sub"></small>
       </div>
-      <button class="wiz-btn" onclick="openWiz()">Empezar</button>
+      <button class="wiz-btn" onclick="openWiz()" id="wiz-banner-btn">Empezar</button>
     </div>
 
     <div class="card">
@@ -364,58 +362,58 @@
 
 <script>
 const TXN=[
-  {m:0,d:'11-01',desc:'Nómina',        cat:'Salario',                  g:'Pago por trabajo',a:'ingresos',v:2500},
-  {m:0,d:'11-03',desc:'Alquiler',      cat:'Hipoteca / Alquiler',      g:'Vivienda',        a:'gastos',  v:880},
+  {m:0,d:'11-01',desc:'Nómina',        cat:'Salario',                   g:'Pago por trabajo',a:'ingresos',v:2500},
+  {m:0,d:'11-03',desc:'Alquiler',      cat:'Hipoteca / Alquiler',      g:'Casa',        a:'gastos',  v:880},
   {m:0,d:'11-05',desc:'Mercadona',     cat:'Supermercado',             g:'Alimentación',    a:'gastos',  v:145},
-  {m:0,d:'11-07',desc:'Gasolina',      cat:'Gasolina',                 g:'Transporte',      a:'gastos',  v:55},
-  {m:0,d:'11-10',desc:'Netflix',       cat:'Entretenimiento',          g:'Otros',           a:'gastos',  v:15},
+  {m:0,d:'11-07',desc:'Gasolina',      cat:'Gasolina',                 g:'Transportación',      a:'gastos',  v:55},
+  {m:0,d:'11-10',desc:'Netflix',       cat:'Entretenimiento',           g:'Entretenimiento',           a:'gastos',  v:15},
   {m:0,d:'11-12',desc:'Mercadona',     cat:'Supermercado',             g:'Alimentación',    a:'gastos',  v:122},
   {m:0,d:'11-14',desc:'Restaurante',   cat:'Comidas fuera',            g:'Alimentación',    a:'gastos',  v:48},
-  {m:0,d:'11-15',desc:'Uber',          cat:'Transp. público / Uber',   g:'Transporte',      a:'gastos',  v:22},
-  {m:0,d:'11-16',desc:'Luz y agua',    cat:'Servicios básicos',        g:'Vivienda',        a:'gastos',  v:180},
-  {m:0,d:'11-18',desc:'Freelance',     cat:'Negocio propio',           g:'Otros ingresos',  a:'ingresos',v:380},
-  {m:0,d:'11-20',desc:'Gasolina',      cat:'Gasolina',                 g:'Transporte',      a:'gastos',  v:55},
-  {m:0,d:'11-22',desc:'Cine',          cat:'Entretenimiento',          g:'Otros',           a:'gastos',  v:32},
+  {m:0,d:'11-15',desc:'Uber',          cat:'Transp. público / Uber',   g:'Transportación',      a:'gastos',  v:22},
+  {m:0,d:'11-16',desc:'Luz y agua',    cat:'Servicios básicos',        g:'Casa',        a:'gastos',  v:180},
+  {m:0,d:'11-18',desc:'Freelance',     cat:'Negocio propio',            g:'Pago por trabajo',  a:'ingresos',v:380},
+  {m:0,d:'11-20',desc:'Gasolina',      cat:'Gasolina',                 g:'Transportación',      a:'gastos',  v:55},
+  {m:0,d:'11-22',desc:'Cine',          cat:'Entretenimiento',           g:'Entretenimiento',           a:'gastos',  v:32},
   {m:0,d:'11-25',desc:'Mercadona',     cat:'Supermercado',             g:'Alimentación',    a:'gastos',  v:128},
   {m:0,d:'11-26',desc:'Sushi',         cat:'Comidas fuera',            g:'Alimentación',    a:'gastos',  v:55},
-  {m:0,d:'11-28',desc:'Fondo emerg.',  cat:'Fondo de emergencia',      g:'Emergencia',      a:'ahorro',  v:220},
-  {m:0,d:'11-30',desc:'Ahorro viaje',  cat:'Ahorro meta',              g:'Metas',           a:'ahorro',  v:120},
-  {m:1,d:'12-01',desc:'Nómina',        cat:'Salario',                  g:'Pago por trabajo',a:'ingresos',v:2500},
-  {m:1,d:'12-02',desc:'Alquiler',      cat:'Hipoteca / Alquiler',      g:'Vivienda',        a:'gastos',  v:880},
-  {m:1,d:'12-03',desc:'Bono navidad',  cat:'Bono',                     g:'Pago por trabajo',a:'ingresos',v:320},
+  {m:0,d:'11-28',desc:'Fondo emerg.',  cat:'Fondo de emergencia',       g:'Emergencia',       a:'ahorro',  v:220},
+  {m:0,d:'11-30',desc:'Ahorro viaje',  cat:'Ahorro meta',               g:'Meta específica',           a:'ahorro',  v:120},
+  {m:1,d:'12-01',desc:'Nómina',        cat:'Salario',                   g:'Pago por trabajo',a:'ingresos',v:2500},
+  {m:1,d:'12-02',desc:'Alquiler',      cat:'Hipoteca / Alquiler',      g:'Casa',        a:'gastos',  v:880},
+  {m:1,d:'12-03',desc:'Bono navidad',  cat:'Bono',                      g:'Pago por trabajo',a:'ingresos',v:320},
   {m:1,d:'12-05',desc:'Mercadona',     cat:'Supermercado',             g:'Alimentación',    a:'gastos',  v:155},
-  {m:1,d:'12-07',desc:'Gasolina',      cat:'Gasolina',                 g:'Transporte',      a:'gastos',  v:60},
-  {m:1,d:'12-10',desc:'Luz y agua',    cat:'Servicios básicos',        g:'Vivienda',        a:'gastos',  v:195},
+  {m:1,d:'12-07',desc:'Gasolina',      cat:'Gasolina',                 g:'Transportación',      a:'gastos',  v:60},
+  {m:1,d:'12-10',desc:'Luz y agua',    cat:'Servicios básicos',        g:'Casa',        a:'gastos',  v:195},
   {m:1,d:'12-12',desc:'Cena navidad',  cat:'Comidas fuera',            g:'Alimentación',    a:'gastos',  v:95},
-  {m:1,d:'12-14',desc:'Regalos',       cat:'Entretenimiento',          g:'Otros',           a:'gastos',  v:135},
+  {m:1,d:'12-14',desc:'Regalos',       cat:'Entretenimiento',           g:'Entretenimiento',           a:'gastos',  v:135},
   {m:1,d:'12-15',desc:'Mercadona esp.',cat:'Supermercado',             g:'Alimentación',    a:'gastos',  v:198},
   {m:1,d:'12-18',desc:'Rest. familia', cat:'Comidas fuera',            g:'Alimentación',    a:'gastos',  v:85},
-  {m:1,d:'12-20',desc:'Freelance',     cat:'Negocio propio',           g:'Otros ingresos',  a:'ingresos',v:400},
-  {m:1,d:'12-22',desc:'Gasolina',      cat:'Gasolina',                 g:'Transporte',      a:'gastos',  v:40},
+  {m:1,d:'12-20',desc:'Freelance',     cat:'Negocio propio',            g:'Pago por trabajo',  a:'ingresos',v:400},
+  {m:1,d:'12-22',desc:'Gasolina',      cat:'Gasolina',                 g:'Transportación',      a:'gastos',  v:40},
   {m:1,d:'12-24',desc:'Nochebuena',    cat:'Comidas fuera',            g:'Alimentación',    a:'gastos',  v:55},
-  {m:1,d:'12-26',desc:'Uber fiestas',  cat:'Transp. público / Uber',   g:'Transporte',      a:'gastos',  v:35},
-  {m:1,d:'12-28',desc:'Suscripciones', cat:'Entretenimiento',          g:'Otros',           a:'gastos',  v:25},
-  {m:1,d:'12-30',desc:'Fondo emerg.',  cat:'Fondo de emergencia',      g:'Emergencia',      a:'ahorro',  v:200},
-  {m:1,d:'12-31',desc:'Ahorro viaje',  cat:'Ahorro meta',              g:'Metas',           a:'ahorro',  v:100},
-  {m:2,d:'01-01',desc:'Nómina',        cat:'Salario',                  g:'Pago por trabajo',a:'ingresos',v:2500},
-  {m:2,d:'01-02',desc:'Alquiler',      cat:'Hipoteca / Alquiler',      g:'Vivienda',        a:'gastos',  v:880},
+  {m:1,d:'12-26',desc:'Uber fiestas',  cat:'Transp. público / Uber',   g:'Transportación',      a:'gastos',  v:35},
+  {m:1,d:'12-28',desc:'Suscripciones', cat:'Entretenimiento',           g:'Entretenimiento',           a:'gastos',  v:25},
+  {m:1,d:'12-30',desc:'Fondo emerg.',  cat:'Fondo de emergencia',       g:'Emergencia',       a:'ahorro',  v:200},
+  {m:1,d:'12-31',desc:'Ahorro viaje',  cat:'Ahorro meta',               g:'Meta específica',           a:'ahorro',  v:100},
+  {m:2,d:'01-01',desc:'Nómina',        cat:'Salario',                   g:'Pago por trabajo',a:'ingresos',v:2500},
+  {m:2,d:'01-02',desc:'Alquiler',      cat:'Hipoteca / Alquiler',      g:'Casa',        a:'gastos',  v:880},
   {m:2,d:'01-03',desc:'Mercadona',     cat:'Supermercado',             g:'Alimentación',    a:'gastos',  v:148},
-  {m:2,d:'01-04',desc:'Gasolina',      cat:'Gasolina',                 g:'Transporte',      a:'gastos',  v:60},
+  {m:2,d:'01-04',desc:'Gasolina',      cat:'Gasolina',                 g:'Transportación',      a:'gastos',  v:60},
   {m:2,d:'01-05',desc:'Restaurante',   cat:'Comidas fuera',            g:'Alimentación',    a:'gastos',  v:42},
-  {m:2,d:'01-06',desc:'Luz y agua',    cat:'Servicios básicos',        g:'Vivienda',        a:'gastos',  v:195},
-  {m:2,d:'01-07',desc:'Uber',          cat:'Transp. público / Uber',   g:'Transporte',      a:'gastos',  v:25},
-  {m:2,d:'01-08',desc:'Netflix',       cat:'Entretenimiento',          g:'Otros',           a:'gastos',  v:25},
+  {m:2,d:'01-06',desc:'Luz y agua',    cat:'Servicios básicos',        g:'Casa',        a:'gastos',  v:195},
+  {m:2,d:'01-07',desc:'Uber',          cat:'Transp. público / Uber',   g:'Transportación',      a:'gastos',  v:25},
+  {m:2,d:'01-08',desc:'Netflix',       cat:'Entretenimiento',           g:'Entretenimiento',           a:'gastos',  v:25},
   {m:2,d:'01-09',desc:'Mercadona',     cat:'Supermercado',             g:'Alimentación',    a:'gastos',  v:112},
-  {m:2,d:'01-10',desc:'Freelance',     cat:'Negocio propio',           g:'Otros ingresos',  a:'ingresos',v:380},
+  {m:2,d:'01-10',desc:'Freelance',     cat:'Negocio propio',            g:'Pago por trabajo',  a:'ingresos',v:380},
   {m:2,d:'01-11',desc:'Cena',          cat:'Comidas fuera',            g:'Alimentación',    a:'gastos',  v:68},
-  {m:2,d:'01-12',desc:'Gasolina',      cat:'Gasolina',                 g:'Transporte',      a:'gastos',  v:50},
+  {m:2,d:'01-12',desc:'Gasolina',      cat:'Gasolina',                 g:'Transportación',      a:'gastos',  v:50},
   {m:2,d:'01-13',desc:'Mercadona',     cat:'Supermercado',             g:'Alimentación',    a:'gastos',  v:90},
-  {m:2,d:'01-13',desc:'Cine',          cat:'Entretenimiento',          g:'Otros',           a:'gastos',  v:20},
-  {m:2,d:'01-14',desc:'Uber trabajo',  cat:'Transp. público / Uber',   g:'Transporte',      a:'gastos',  v:20},
+  {m:2,d:'01-13',desc:'Cine',          cat:'Entretenimiento',           g:'Entretenimiento',           a:'gastos',  v:20},
+  {m:2,d:'01-14',desc:'Uber trabajo',  cat:'Transp. público / Uber',   g:'Transportación',      a:'gastos',  v:20},
   {m:2,d:'01-14',desc:'Almuerzo',      cat:'Comidas fuera',            g:'Alimentación',    a:'gastos',  v:35},
   {m:2,d:'01-15',desc:'Cena fuera',    cat:'Comidas fuera',            g:'Alimentación',    a:'gastos',  v:65},
-  {m:2,d:'01-15',desc:'Fondo emerg.',  cat:'Fondo de emergencia',      g:'Emergencia',      a:'ahorro',  v:220},
-  {m:2,d:'01-15',desc:'Ahorro viaje',  cat:'Ahorro meta',              g:'Metas',           a:'ahorro',  v:120},
+  {m:2,d:'01-15',desc:'Fondo emerg.',  cat:'Fondo de emergencia',       g:'Emergencia',       a:'ahorro',  v:220},
+  {m:2,d:'01-15',desc:'Ahorro viaje',  cat:'Ahorro meta',               g:'Meta específica',           a:'ahorro',  v:120},
 ];
 const MONTHS=[
   {label:'Noviembre 2024',short:'Nov',total:30,passed:30},
@@ -424,9 +422,34 @@ const MONTHS=[
 ];
 const ICONS={Vivienda:'🏠',Alimentación:'🛒',Transporte:'🚗',Otros:'🎬','Pago por trabajo':'💼','Otros ingresos':'💡',Emergencia:'🛡️',Metas:'🎯'};
 const CAT={
-  ingresos:{'Pago por trabajo':['Salario','Bono','Comisión'],'Otros ingresos':['Negocio propio','Propina']},
-  gastos:{'Vivienda':['Hipoteca / Alquiler','Servicios básicos','Mantenimiento'],'Alimentación':['Supermercado','Comidas fuera','Pedido a domicilio'],'Transporte':['Gasolina','Mantenimiento vehículo','Transp. público / Uber'],'Otros':['Entretenimiento','Regalos','Suscripciones']},
-  ahorro:{'Emergencia':['Fondo de emergencia'],'Metas':['Ahorro meta','Viaje']},
+  ingresos:{
+    'Pago por trabajo':   ['Salario','Bono','Comisión','Negocio propio','Pago por hora','Propina'],
+    'Ganancia de capital':['Acciones','Bonos o renta fija','ETF, fondo mutuo, etc.','Casa/Apartamento/Tierra','Auto'],
+    'Ingreso pasivo':     ['Anualidad','Dividendos e Intereses','Pensión','Renta inmueble','Seguro Social'],
+  },
+  gastos:{
+    'Alimentación':        ['Supermercado','Comidas fuera','Pedido a domicilio'],
+    'Casa':                ['Hipoteca / Alquiler','Servicios básicos','Mantenimiento'],
+    'Transportación':      ['Gasolina','Mantenimiento','Transporte público / Uber'],
+    'Seguros':             ['Salud','Auto','Vida'],
+    'Gastos Médicos':      ['Consultas','Medicamentos','Procedimientos'],
+    'Deuda':               ['Tarjetas de crédito','Préstamos estudiantiles','Otros préstamos'],
+    'Entretenimiento':     ['Cine','Conciertos','Streaming'],
+    'Telecomunicaciones':  ['Teléfono','Internet','TV'],
+    'Cuidado Personal':    ['Peluquería','Cosméticos','Spa / Barbería'],
+    'Dependientes':        ['Cuidado de niños','Cuidado de mayores','Educación'],
+    'Impuestos':           ['Seguro social','Propiedad','Venta','Estatales','Federales','Municipales'],
+    'Regalos y donaciones':['Familia','Amigos','Instituciones'],
+  },
+  ahorro:{
+    'Emergencia':       ['Fondo corto plazo','Fondo largo plazo','Reserva médica'],
+    'Meta específica':  ['Vacaciones','Auto','Casa','Boda','Educación de hijos'],
+    'Retiro':           ['IRA / Roth IRA','401(k)','Pensión privada'],
+    'Inversión':        ['Cuenta brokerage','Fondo indexado','Cripto','Crowdfunding'],
+    'Ahorro personal':  ['Ahorro mensual','Ahorro en efectivo','Cuenta de ahorro tradicional'],
+    'Ahorro para hijos':['Educación','Regalos futuros','Fondo universitario'],
+    'Otros':            ['Donaciones planificadas','Proyectos personales','Fondo de libertad financiera'],
+  },
 };
 
 let curM=2, tipo='mensual', catArea=null;
@@ -459,7 +482,7 @@ document.querySelectorAll('#seg button').forEach(b=>{
     ['ingresos','gastos','ahorro'].forEach(a=>{BUD[a]=BUD[a].map(x=>({...x,v:Math.round(x.v*f)}));});
     tipo=nt;
     document.querySelectorAll('#seg button').forEach(x=>x.classList.remove('on')); b.classList.add('on');
-    renderAll(); refreshVs();
+    renderAll(); refreshVs(); updateWizBanner();
   });
 });
 
@@ -480,7 +503,7 @@ function renderB(area){
   if(BUD[area].length===0){
     const labels={ingresos:'ingresos',gastos:'gastos',ahorro:'ahorro'};
     el.innerHTML=`<div style="text-align:center;padding:20px 0;color:var(--muted);font-size:.83rem">
-      Sin categorías de ${labels[area]} — usa el asistente o añade manualmente.
+      Sin categorías todavía — usa el asistente o toca &quot;+ Añadir&quot;.
     </div>`;
     return;
   }
@@ -714,15 +737,51 @@ function renderNotifs(){
 }
 
 // WIZARD ─────────────────────────────────────────────────────
+function hasHistory(){
+  return TXN.length > 0;
+}
+
+function updateWizBanner(){
+  const title = $('wiz-banner-title');
+  const sub   = $('wiz-banner-sub');
+  const btn   = $('wiz-banner-btn');
+  if(!title) return;
+  if(hasHistory()){
+    title.textContent = 'Configura tu presupuesto en segundos';
+    sub.textContent   = 'Usamos tu historial para sugerirte montos realistas.';
+    btn.textContent   = 'Usar mi historial';
+  } else {
+    title.textContent = '¿Por dónde empiezo?';
+    sub.textContent   = 'Te guiamos paso a paso para crear tu primer presupuesto.';
+    btn.textContent   = 'Crear presupuesto';
+  }
+}
 const WIZ_CATS = [
-  {name:'Vivienda',       area:'gastos',   subs:['Hipoteca / Alquiler','Servicios básicos']},
-  {name:'Alimentación',   area:'gastos',   subs:['Supermercado','Comidas fuera']},
-  {name:'Transporte',     area:'gastos',   subs:['Gasolina','Transp. público / Uber']},
-  {name:'Entretenimiento',area:'gastos',   subs:['Entretenimiento']},
-  {name:'Salario',        area:'ingresos', subs:['Salario']},
-  {name:'Extra',          area:'ingresos', subs:['Negocio propio','Bono']},
-  {name:'Emergencia',     area:'ahorro',   subs:['Fondo de emergencia']},
-  {name:'Metas',          area:'ahorro',   subs:['Ahorro meta']},
+  // Ingresos
+  {name:'Pago por trabajo',    area:'ingresos', subs:['Salario','Bono','Comisión','Negocio propio','Pago por hora','Propina']},
+  {name:'Ganancia de capital', area:'ingresos', subs:['Acciones','Bonos o renta fija','ETF, fondo mutuo, etc.','Casa/Apartamento/Tierra','Auto']},
+  {name:'Ingreso pasivo',      area:'ingresos', subs:['Anualidad','Dividendos e Intereses','Pensión','Renta inmueble','Seguro Social']},
+  // Gastos
+  {name:'Alimentación',        area:'gastos',   subs:['Supermercado','Comidas fuera','Pedido a domicilio']},
+  {name:'Casa',                area:'gastos',   subs:['Hipoteca / Alquiler','Servicios básicos','Mantenimiento']},
+  {name:'Transportación',      area:'gastos',   subs:['Gasolina','Mantenimiento','Transporte público / Uber']},
+  {name:'Seguros',             area:'gastos',   subs:['Salud','Auto','Vida']},
+  {name:'Gastos Médicos',      area:'gastos',   subs:['Consultas','Medicamentos','Procedimientos']},
+  {name:'Deuda',               area:'gastos',   subs:['Tarjetas de crédito','Préstamos estudiantiles','Otros préstamos']},
+  {name:'Entretenimiento',     area:'gastos',   subs:['Cine','Conciertos','Streaming']},
+  {name:'Telecomunicaciones',  area:'gastos',   subs:['Teléfono','Internet','TV']},
+  {name:'Cuidado Personal',    area:'gastos',   subs:['Peluquería','Cosméticos','Spa / Barbería']},
+  {name:'Dependientes',        area:'gastos',   subs:['Cuidado de niños','Cuidado de mayores','Educación']},
+  {name:'Impuestos',           area:'gastos',   subs:['Seguro social','Propiedad','Venta','Estatales','Federales','Municipales']},
+  {name:'Regalos y donaciones',area:'gastos',   subs:['Familia','Amigos','Instituciones']},
+  // Ahorro
+  {name:'Emergencia',          area:'ahorro',   subs:['Fondo corto plazo','Fondo largo plazo','Reserva médica']},
+  {name:'Meta específica',     area:'ahorro',   subs:['Vacaciones','Auto','Casa','Boda','Educación de hijos']},
+  {name:'Retiro',              area:'ahorro',   subs:['IRA / Roth IRA','401(k)','Pensión privada']},
+  {name:'Inversión',           area:'ahorro',   subs:['Cuenta brokerage','Fondo indexado','Cripto','Crowdfunding']},
+  {name:'Ahorro personal',     area:'ahorro',   subs:['Ahorro mensual','Ahorro en efectivo','Cuenta de ahorro tradicional']},
+  {name:'Ahorro para hijos',   area:'ahorro',   subs:['Educación','Regalos futuros','Fondo universitario']},
+  {name:'Otros ahorros',       area:'ahorro',   subs:['Donaciones planificadas','Proyectos personales','Fondo de libertad financiera']},
 ];
 
 let wizSelected = [];   // indices from WIZ_CATS
@@ -783,8 +842,16 @@ function wizRenderBody(){
         <div class="cat-chips" id="chips-${g.area}"></div>
       </div>`).join('');
     body.innerHTML = `
-      <div class="wiz-question">${(BUD.ingresos.length+BUD.gastos.length+BUD.ahorro.length)>0 ? 'Ajusta tu presupuesto' : '¿Qué quieres presupuestar?'}</div>
-      <div class="wiz-hint">${(BUD.ingresos.length+BUD.gastos.length+BUD.ahorro.length)>0 ? 'Estas son tus categorías actuales. Puedes agregar o quitar las que quieras.' : 'Selecciona las categorías que quieras incluir. Puedes cambiarlas después.'}</div>
+      <div class="wiz-question">${(()=>{
+        const hasBud = BUD.ingresos.length+BUD.gastos.length+BUD.ahorro.length > 0;
+        return hasBud ? 'Ajusta tu presupuesto' : '¿Qué quieres presupuestar?';
+      })()}</div>
+      <div class="wiz-hint">${(()=>{
+        const hasBud = BUD.ingresos.length+BUD.gastos.length+BUD.ahorro.length > 0;
+        if(hasBud) return 'Estas son tus categorías actuales. Agrega o quita las que quieras.';
+        if(hasHistory()) return 'Selecciona las categorías para las que quieras crear un presupuesto.';
+        return 'Selecciona en qué áreas quieres llevar control. Empieza con las más importantes.';
+      })()}</div>
       ${groupsHtml}
       <div class="wiz-balance-bar">
         <span class="wiz-balance-lbl">Categorías seleccionadas</span>
@@ -828,7 +895,10 @@ function wizRenderBody(){
       <div class="wiz-question">¿Cuánto presupuestas para ${cat.name}?</div>
       <div class="wiz-hint">${cat.area==='ingresos'?'¿Cuánto sueles recibir cada mes?':cat.area==='ahorro'?'¿Cuánto quieres apartar cada mes?':'¿Cuánto sueles gastar en esto cada mes?'}</div>
       <input class="wiz-big-input" id="wiz-inp" type="number" min="0" placeholder="$0" value="${cur||''}" />
-      ${avg>0?`<div class="wiz-avg-ref">Tu promedio los últimos 2 meses: <strong>${fmt(avg)}</strong></div>`:''}
+      ${avg>0
+        ? `<div class="wiz-avg-ref">Tu promedio los últimos 2 meses: <strong>${fmt(avg)}</strong></div>`
+        : `<div class="wiz-avg-ref">Escribe el monto que quieres destinar. Puedes ajustarlo después.</div>`
+      }
       <div class="wiz-balance-bar">
         <span class="wiz-balance-lbl">Balance mensual estimado</span>
         <span class="wiz-balance-val" id="wiz-bal" style="color:${balColor}">${fmt(bal)}</span>
@@ -927,7 +997,7 @@ function applyWiz(){
     });
   });
   ['ingresos','gastos','ahorro'].forEach(a=>{ if(newBud[a].length) BUD[a]=newBud[a]; });
-  renderAll(); refreshVs();
+  renderAll(); refreshVs(); updateWizBanner();
   closeSheet('m-wiz');
   $('wiz-banner').style.display='none';
 }
@@ -938,7 +1008,7 @@ function buildWs3(){}
 function closeSheet(id){$(id).classList.remove('on');}
 document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o) o.classList.remove('on');}));
 
-renderAll(); refreshVs();
+renderAll(); refreshVs(); updateWizBanner();
 </script>
 </body>
 </html>
