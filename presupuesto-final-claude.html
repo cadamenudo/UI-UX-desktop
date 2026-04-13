@@ -14,8 +14,13 @@
 
     /* HEADER */
     .hdr-title-block{display:flex;flex-direction:column;gap:3px}
+    .month-pills{display:flex;gap:6px;flex-wrap:nowrap;margin-top:4px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px}
+    .month-pills::-webkit-scrollbar{display:none}
+    .month-pill{border:1px solid var(--bdr);background:var(--card);border-radius:999px;padding:4px 12px;font-size:.78rem;font-weight:600;cursor:pointer;color:var(--muted);font-family:"Nunito",sans-serif;transition:all .15s}
+    .month-pill:hover{border-color:var(--pm);color:var(--p)}
+    .month-pill.on{background:var(--pl);border-color:var(--pm);color:var(--p);font-weight:700}
     .hdr-title-block .seg{margin-top:6px}
-    .hdr{margin-bottom:24px}
+    .hdr{margin-bottom:16px}
     .hdr-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
     .hdr h1{font-size:1.5rem;font-weight:800;line-height:1.1}
     .hdr-sub{font-size:.83rem;color:var(--muted);margin-top:2px}
@@ -48,7 +53,7 @@
     .notif-empty{padding:14px;text-align:center;font-size:.82rem;color:var(--muted)}
 
     /* TABS */
-    .tabs{display:flex;gap:4px;background:var(--pl);border-radius:999px;padding:3px;width:fit-content;margin-bottom:22px}
+    .tabs{display:flex;gap:4px;background:var(--pl);border-radius:999px;padding:3px;width:fit-content;margin-bottom:22px;display:none}
     .tab{border:none;background:transparent;border-radius:999px;padding:7px 20px;font-size:.85rem;font-weight:700;cursor:pointer;color:var(--muted);font-family:"Nunito",sans-serif;transition:all .18s}
     .tab.on{background:var(--card);color:var(--p);box-shadow:0 2px 8px rgba(57,86,232,.12)}
     .tab-pane{display:none}
@@ -239,7 +244,7 @@
       .page{padding:16px 14px 90px}
 
       /* Header — title + bell only, controls below */
-      .hdr{margin-bottom:16px}
+      .hdr{margin-bottom:12px}
       .hdr-top{flex-wrap:nowrap;gap:8px}
       .hdr h1{font-size:1.25rem}
       .hdr-sub{font-size:.75rem}
@@ -248,21 +253,9 @@
       .period-pill{padding:5px 10px;font-size:.78rem;min-width:0}
       .bell-btn{width:32px;height:32px}
 
-      /* Tabs → fixed bottom nav */
-      .tabs{
-        position:fixed;bottom:0;left:0;right:0;
-        width:100%;border-radius:0;
-        background:var(--card);
-        border-top:1px solid var(--bdr);
-        padding:8px 16px calc(8px + env(safe-area-inset-bottom));
-        display:flex;gap:8px;z-index:300;
-        box-shadow:0 -4px 20px rgba(15,23,42,.08);
-      }
-      .tab{
-        flex:1;border-radius:12px;padding:10px 8px;
-        font-size:.82rem;
-      }
-      .tab.on{background:var(--pl);color:var(--p)}
+      /* Tabs inline on mobile too */
+      .tabs-inline{background:#e5e7ff}
+      .tab{padding:6px 12px;font-size:.8rem}
 
       /* Cards */
       .card{padding:14px;border-radius:16px;margin-bottom:12px}
@@ -332,26 +325,34 @@
 
   <!-- HEADER -->
   <div class="hdr">
-    <div class="hdr-top">
-      <div class="hdr-title-block">
-        <h1>Presupuesto</h1>
-        <div class="hdr-sub" id="hdr-sub">Enero 2025</div>
+    <h1>Presupuesto</h1>
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;width:100%;margin-top:10px;gap:12px">
+      <!-- LEFT: mensual/anual, meses en fila siguiente -->
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-start;min-width:0;flex:1">
         <div class="seg" id="seg">
           <button class="on" data-t="mensual">Mensual</button>
           <button data-t="anual">Anual</button>
         </div>
+        <div class="month-pills" id="month-pills">
+          <button class="month-pill on" onclick="setPeriod(0,this)">Ene</button>
+          <button class="month-pill" onclick="setPeriod(1,this)">Feb</button>
+          <button class="month-pill" onclick="setPeriod(2,this)">Mar</button>
+          <button class="month-pill" onclick="setPeriod(3,this)">Abr</button>
+          <button class="month-pill" onclick="setPeriod(4,this)">May</button>
+          <button class="month-pill" onclick="setPeriod(5,this)">Jun</button>
+          <button class="month-pill" onclick="setPeriod(6,this)">Jul</button>
+          <button class="month-pill" onclick="setPeriod(7,this)">Ago</button>
+          <button class="month-pill" onclick="setPeriod(8,this)">Sep</button>
+          <button class="month-pill" onclick="setPeriod(9,this)">Oct</button>
+          <button class="month-pill" onclick="setPeriod(10,this)">Nov</button>
+          <button class="month-pill" onclick="setPeriod(11,this)">Dic</button>
+        </div>
       </div>
-      <div class="hdr-right">
-        <div class="rel">
-          <div class="period-pill" onclick="toggleDrop('pdrop')">
-            <span id="plabel">Enero 2025</span>
-            <svg viewBox="0 0 12 12"><path d="M2 4l4 4 4-4"/></svg>
-          </div>
-          <div class="drop period-drop" id="pdrop">
-            <div class="period-opt" onclick="setPeriod(0,this)">Noviembre 2024</div>
-            <div class="period-opt" onclick="setPeriod(1,this)">Diciembre 2024</div>
-            <div class="period-opt on" onclick="setPeriod(2,this)">Enero 2025</div>
-          </div>
+      <!-- RIGHT: tabs + bell -->
+      <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+        <div class="tabs-inline">
+          <button class="tab on" data-tab="budget">Presupuesto</button>
+          <button class="tab" data-tab="vsreal">Vs real</button>
         </div>
         <div class="rel">
           <button class="bell-btn" id="bell" onclick="toggleDrop('ndrop')">
@@ -365,12 +366,6 @@
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- TABS -->
-  <div class="tabs">
-    <button class="tab on" data-tab="budget">Presupuesto</button>
-    <button class="tab" data-tab="vsreal">Vs real</button>
   </div>
 
   <!-- ======= TAB: PRESUPUESTO ======= -->
@@ -466,63 +461,72 @@
 
 <script>
 const TXN=[
-  {m:0,d:'11-01',desc:'Nómina',        cat:'Salario',                   g:'Pago por trabajo',a:'ingresos',v:2500},
-  {m:0,d:'11-03',desc:'Alquiler',      cat:'Hipoteca / Alquiler',      g:'Casa',        a:'gastos',  v:880},
-  {m:0,d:'11-05',desc:'Mercadona',     cat:'Supermercado',             g:'Alimentación',    a:'gastos',  v:145},
-  {m:0,d:'11-07',desc:'Gasolina',      cat:'Gasolina',                 g:'Transportación',      a:'gastos',  v:55},
-  {m:0,d:'11-10',desc:'Netflix',       cat:'Entretenimiento',           g:'Entretenimiento',           a:'gastos',  v:15},
-  {m:0,d:'11-12',desc:'Mercadona',     cat:'Supermercado',             g:'Alimentación',    a:'gastos',  v:122},
-  {m:0,d:'11-14',desc:'Restaurante',   cat:'Comidas fuera',            g:'Alimentación',    a:'gastos',  v:48},
-  {m:0,d:'11-15',desc:'Uber',          cat:'Transp. público / Uber',   g:'Transportación',      a:'gastos',  v:22},
-  {m:0,d:'11-16',desc:'Luz y agua',    cat:'Servicios básicos',        g:'Casa',        a:'gastos',  v:180},
-  {m:0,d:'11-18',desc:'Freelance',     cat:'Negocio propio',            g:'Pago por trabajo',  a:'ingresos',v:380},
-  {m:0,d:'11-20',desc:'Gasolina',      cat:'Gasolina',                 g:'Transportación',      a:'gastos',  v:55},
-  {m:0,d:'11-22',desc:'Cine',          cat:'Entretenimiento',           g:'Entretenimiento',           a:'gastos',  v:32},
-  {m:0,d:'11-25',desc:'Mercadona',     cat:'Supermercado',             g:'Alimentación',    a:'gastos',  v:128},
-  {m:0,d:'11-26',desc:'Sushi',         cat:'Comidas fuera',            g:'Alimentación',    a:'gastos',  v:55},
-  {m:0,d:'11-28',desc:'Fondo emerg.',  cat:'Fondo de emergencia',       g:'Emergencia',       a:'ahorro',  v:220},
-  {m:0,d:'11-30',desc:'Ahorro viaje',  cat:'Ahorro meta',               g:'Meta específica',           a:'ahorro',  v:120},
-  {m:1,d:'12-01',desc:'Nómina',        cat:'Salario',                   g:'Pago por trabajo',a:'ingresos',v:2500},
-  {m:1,d:'12-02',desc:'Alquiler',      cat:'Hipoteca / Alquiler',      g:'Casa',        a:'gastos',  v:880},
-  {m:1,d:'12-03',desc:'Bono navidad',  cat:'Bono',                      g:'Pago por trabajo',a:'ingresos',v:320},
-  {m:1,d:'12-05',desc:'Mercadona',     cat:'Supermercado',             g:'Alimentación',    a:'gastos',  v:155},
-  {m:1,d:'12-07',desc:'Gasolina',      cat:'Gasolina',                 g:'Transportación',      a:'gastos',  v:60},
-  {m:1,d:'12-10',desc:'Luz y agua',    cat:'Servicios básicos',        g:'Casa',        a:'gastos',  v:195},
-  {m:1,d:'12-12',desc:'Cena navidad',  cat:'Comidas fuera',            g:'Alimentación',    a:'gastos',  v:95},
-  {m:1,d:'12-14',desc:'Regalos',       cat:'Entretenimiento',           g:'Entretenimiento',           a:'gastos',  v:135},
-  {m:1,d:'12-15',desc:'Mercadona esp.',cat:'Supermercado',             g:'Alimentación',    a:'gastos',  v:198},
-  {m:1,d:'12-18',desc:'Rest. familia', cat:'Comidas fuera',            g:'Alimentación',    a:'gastos',  v:85},
-  {m:1,d:'12-20',desc:'Freelance',     cat:'Negocio propio',            g:'Pago por trabajo',  a:'ingresos',v:400},
-  {m:1,d:'12-22',desc:'Gasolina',      cat:'Gasolina',                 g:'Transportación',      a:'gastos',  v:40},
-  {m:1,d:'12-24',desc:'Nochebuena',    cat:'Comidas fuera',            g:'Alimentación',    a:'gastos',  v:55},
-  {m:1,d:'12-26',desc:'Uber fiestas',  cat:'Transp. público / Uber',   g:'Transportación',      a:'gastos',  v:35},
-  {m:1,d:'12-28',desc:'Suscripciones', cat:'Entretenimiento',           g:'Entretenimiento',           a:'gastos',  v:25},
-  {m:1,d:'12-30',desc:'Fondo emerg.',  cat:'Fondo de emergencia',       g:'Emergencia',       a:'ahorro',  v:200},
-  {m:1,d:'12-31',desc:'Ahorro viaje',  cat:'Ahorro meta',               g:'Meta específica',           a:'ahorro',  v:100},
-  {m:2,d:'01-01',desc:'Nómina',        cat:'Salario',                   g:'Pago por trabajo',a:'ingresos',v:2500},
-  {m:2,d:'01-02',desc:'Alquiler',      cat:'Hipoteca / Alquiler',      g:'Casa',        a:'gastos',  v:880},
-  {m:2,d:'01-03',desc:'Mercadona',     cat:'Supermercado',             g:'Alimentación',    a:'gastos',  v:148},
-  {m:2,d:'01-04',desc:'Gasolina',      cat:'Gasolina',                 g:'Transportación',      a:'gastos',  v:60},
-  {m:2,d:'01-05',desc:'Restaurante',   cat:'Comidas fuera',            g:'Alimentación',    a:'gastos',  v:42},
-  {m:2,d:'01-06',desc:'Luz y agua',    cat:'Servicios básicos',        g:'Casa',        a:'gastos',  v:195},
-  {m:2,d:'01-07',desc:'Uber',          cat:'Transp. público / Uber',   g:'Transportación',      a:'gastos',  v:25},
-  {m:2,d:'01-08',desc:'Netflix',       cat:'Entretenimiento',           g:'Entretenimiento',           a:'gastos',  v:25},
-  {m:2,d:'01-09',desc:'Mercadona',     cat:'Supermercado',             g:'Alimentación',    a:'gastos',  v:112},
-  {m:2,d:'01-10',desc:'Freelance',     cat:'Negocio propio',            g:'Pago por trabajo',  a:'ingresos',v:380},
-  {m:2,d:'01-11',desc:'Cena',          cat:'Comidas fuera',            g:'Alimentación',    a:'gastos',  v:68},
-  {m:2,d:'01-12',desc:'Gasolina',      cat:'Gasolina',                 g:'Transportación',      a:'gastos',  v:50},
-  {m:2,d:'01-13',desc:'Mercadona',     cat:'Supermercado',             g:'Alimentación',    a:'gastos',  v:90},
-  {m:2,d:'01-13',desc:'Cine',          cat:'Entretenimiento',           g:'Entretenimiento',           a:'gastos',  v:20},
-  {m:2,d:'01-14',desc:'Uber trabajo',  cat:'Transp. público / Uber',   g:'Transportación',      a:'gastos',  v:20},
-  {m:2,d:'01-14',desc:'Almuerzo',      cat:'Comidas fuera',            g:'Alimentación',    a:'gastos',  v:35},
-  {m:2,d:'01-15',desc:'Cena fuera',    cat:'Comidas fuera',            g:'Alimentación',    a:'gastos',  v:65},
-  {m:2,d:'01-15',desc:'Fondo emerg.',  cat:'Fondo de emergencia',       g:'Emergencia',       a:'ahorro',  v:220},
-  {m:2,d:'01-15',desc:'Ahorro viaje',  cat:'Ahorro meta',               g:'Meta específica',           a:'ahorro',  v:120},
+  {m:10,d:'11-01',desc:'Nómina',        cat:'Salario',                   g:'Pago por trabajo',a:'ingresos',v:2500},
+  {m:10,d:'11-03',desc:'Alquiler',      cat:'Hipoteca / Alquiler',      g:'Casa',        a:'gastos',  v:880},
+  {m:10,d:'11-05',desc:'Mercadona',     cat:'Supermercado',             g:'Alimentación',    a:'gastos',  v:145},
+  {m:10,d:'11-07',desc:'Gasolina',      cat:'Gasolina',                 g:'Transportación',      a:'gastos',  v:55},
+  {m:10,d:'11-10',desc:'Netflix',       cat:'Entretenimiento',           g:'Entretenimiento',           a:'gastos',  v:15},
+  {m:10,d:'11-12',desc:'Mercadona',     cat:'Supermercado',             g:'Alimentación',    a:'gastos',  v:122},
+  {m:10,d:'11-14',desc:'Restaurante',   cat:'Comidas fuera',            g:'Alimentación',    a:'gastos',  v:48},
+  {m:10,d:'11-15',desc:'Uber',          cat:'Transp. público / Uber',   g:'Transportación',      a:'gastos',  v:22},
+  {m:10,d:'11-16',desc:'Luz y agua',    cat:'Servicios básicos',        g:'Casa',        a:'gastos',  v:180},
+  {m:10,d:'11-18',desc:'Freelance',     cat:'Negocio propio',            g:'Pago por trabajo',  a:'ingresos',v:380},
+  {m:10,d:'11-20',desc:'Gasolina',      cat:'Gasolina',                 g:'Transportación',      a:'gastos',  v:55},
+  {m:10,d:'11-22',desc:'Cine',          cat:'Entretenimiento',           g:'Entretenimiento',           a:'gastos',  v:32},
+  {m:10,d:'11-25',desc:'Mercadona',     cat:'Supermercado',             g:'Alimentación',    a:'gastos',  v:128},
+  {m:10,d:'11-26',desc:'Sushi',         cat:'Comidas fuera',            g:'Alimentación',    a:'gastos',  v:55},
+  {m:10,d:'11-28',desc:'Fondo emerg.',  cat:'Fondo de emergencia',       g:'Emergencia',       a:'ahorro',  v:220},
+  {m:10,d:'11-30',desc:'Ahorro viaje',  cat:'Ahorro meta',               g:'Meta específica',           a:'ahorro',  v:120},
+  {m:11,d:'12-01',desc:'Nómina',        cat:'Salario',                   g:'Pago por trabajo',a:'ingresos',v:2500},
+  {m:11,d:'12-02',desc:'Alquiler',      cat:'Hipoteca / Alquiler',      g:'Casa',        a:'gastos',  v:880},
+  {m:11,d:'12-03',desc:'Bono navidad',  cat:'Bono',                      g:'Pago por trabajo',a:'ingresos',v:320},
+  {m:11,d:'12-05',desc:'Mercadona',     cat:'Supermercado',             g:'Alimentación',    a:'gastos',  v:155},
+  {m:11,d:'12-07',desc:'Gasolina',      cat:'Gasolina',                 g:'Transportación',      a:'gastos',  v:60},
+  {m:11,d:'12-10',desc:'Luz y agua',    cat:'Servicios básicos',        g:'Casa',        a:'gastos',  v:195},
+  {m:11,d:'12-12',desc:'Cena navidad',  cat:'Comidas fuera',            g:'Alimentación',    a:'gastos',  v:95},
+  {m:11,d:'12-14',desc:'Regalos',       cat:'Entretenimiento',           g:'Entretenimiento',           a:'gastos',  v:135},
+  {m:11,d:'12-15',desc:'Mercadona esp.',cat:'Supermercado',             g:'Alimentación',    a:'gastos',  v:198},
+  {m:11,d:'12-18',desc:'Rest. familia', cat:'Comidas fuera',            g:'Alimentación',    a:'gastos',  v:85},
+  {m:11,d:'12-20',desc:'Freelance',     cat:'Negocio propio',            g:'Pago por trabajo',  a:'ingresos',v:400},
+  {m:11,d:'12-22',desc:'Gasolina',      cat:'Gasolina',                 g:'Transportación',      a:'gastos',  v:40},
+  {m:11,d:'12-24',desc:'Nochebuena',    cat:'Comidas fuera',            g:'Alimentación',    a:'gastos',  v:55},
+  {m:11,d:'12-26',desc:'Uber fiestas',  cat:'Transp. público / Uber',   g:'Transportación',      a:'gastos',  v:35},
+  {m:11,d:'12-28',desc:'Suscripciones', cat:'Entretenimiento',           g:'Entretenimiento',           a:'gastos',  v:25},
+  {m:11,d:'12-30',desc:'Fondo emerg.',  cat:'Fondo de emergencia',       g:'Emergencia',       a:'ahorro',  v:200},
+  {m:11,d:'12-31',desc:'Ahorro viaje',  cat:'Ahorro meta',               g:'Meta específica',           a:'ahorro',  v:100},
+  {m:0,d:'01-01',desc:'Nómina',        cat:'Salario',                   g:'Pago por trabajo',a:'ingresos',v:2500},
+  {m:0,d:'01-02',desc:'Alquiler',      cat:'Hipoteca / Alquiler',      g:'Casa',        a:'gastos',  v:880},
+  {m:0,d:'01-03',desc:'Mercadona',     cat:'Supermercado',             g:'Alimentación',    a:'gastos',  v:148},
+  {m:0,d:'01-04',desc:'Gasolina',      cat:'Gasolina',                 g:'Transportación',      a:'gastos',  v:60},
+  {m:0,d:'01-05',desc:'Restaurante',   cat:'Comidas fuera',            g:'Alimentación',    a:'gastos',  v:42},
+  {m:0,d:'01-06',desc:'Luz y agua',    cat:'Servicios básicos',        g:'Casa',        a:'gastos',  v:195},
+  {m:0,d:'01-07',desc:'Uber',          cat:'Transp. público / Uber',   g:'Transportación',      a:'gastos',  v:25},
+  {m:0,d:'01-08',desc:'Netflix',       cat:'Entretenimiento',           g:'Entretenimiento',           a:'gastos',  v:25},
+  {m:0,d:'01-09',desc:'Mercadona',     cat:'Supermercado',             g:'Alimentación',    a:'gastos',  v:112},
+  {m:0,d:'01-10',desc:'Freelance',     cat:'Negocio propio',            g:'Pago por trabajo',  a:'ingresos',v:380},
+  {m:0,d:'01-11',desc:'Cena',          cat:'Comidas fuera',            g:'Alimentación',    a:'gastos',  v:68},
+  {m:0,d:'01-12',desc:'Gasolina',      cat:'Gasolina',                 g:'Transportación',      a:'gastos',  v:50},
+  {m:0,d:'01-13',desc:'Mercadona',     cat:'Supermercado',             g:'Alimentación',    a:'gastos',  v:90},
+  {m:0,d:'01-13',desc:'Cine',          cat:'Entretenimiento',           g:'Entretenimiento',           a:'gastos',  v:20},
+  {m:0,d:'01-14',desc:'Uber trabajo',  cat:'Transp. público / Uber',   g:'Transportación',      a:'gastos',  v:20},
+  {m:0,d:'01-14',desc:'Almuerzo',      cat:'Comidas fuera',            g:'Alimentación',    a:'gastos',  v:35},
+  {m:0,d:'01-15',desc:'Cena fuera',    cat:'Comidas fuera',            g:'Alimentación',    a:'gastos',  v:65},
+  {m:0,d:'01-15',desc:'Fondo emerg.',  cat:'Fondo de emergencia',       g:'Emergencia',       a:'ahorro',  v:220},
+  {m:0,d:'01-15',desc:'Ahorro viaje',  cat:'Ahorro meta',               g:'Meta específica',           a:'ahorro',  v:120},
 ];
 const MONTHS=[
-  {label:'Noviembre 2024',short:'Nov',total:30,passed:30},
-  {label:'Diciembre 2024',short:'Dic',total:31,passed:31},
-  {label:'Enero 2025',    short:'Ene',total:31,passed:15},
+  {label:'Enero 2025',    short:'Ene', total:31, passed:15},
+  {label:'Febrero 2025',  short:'Feb', total:28, passed:0},
+  {label:'Marzo 2025',    short:'Mar', total:31, passed:0},
+  {label:'Abril 2025',    short:'Abr', total:30, passed:0},
+  {label:'Mayo 2025',     short:'May', total:31, passed:0},
+  {label:'Junio 2025',    short:'Jun', total:30, passed:0},
+  {label:'Julio 2025',    short:'Jul', total:31, passed:0},
+  {label:'Agosto 2025',   short:'Ago', total:31, passed:0},
+  {label:'Septiembre 2025',short:'Sep',total:30, passed:0},
+  {label:'Octubre 2025',  short:'Oct', total:31, passed:0},
+  {label:'Noviembre 2025',short:'Nov', total:30, passed:0},
+  {label:'Diciembre 2025',short:'Dic', total:31, passed:0},
 ];
 const ICONS={Vivienda:'🏠',Alimentación:'🛒',Transporte:'🚗',Otros:'🎬','Pago por trabajo':'💼','Otros ingresos':'💡',Emergencia:'🛡️',Metas:'🎯'};
 const CAT={
@@ -556,7 +560,7 @@ const CAT={
   },
 };
 
-let curM=2, tipo='mensual', catArea=null;
+let curM=0, tipo='mensual', catArea=null;
 const BUD={ingresos:[], gastos:[], ahorro:[]};
 
 const $=id=>document.getElementById(id);
@@ -595,6 +599,7 @@ document.querySelectorAll('#seg button').forEach(b=>{
     ['ingresos','gastos','ahorro'].forEach(a=>{BUD[a]=BUD[a].map(x=>({...x,v:Math.round(x.v*f)}));});
     tipo=nt;
     document.querySelectorAll('#seg button').forEach(x=>x.classList.remove('on')); b.classList.add('on');
+    const mp=$('month-pills'); if(mp) mp.style.display = nt==='mensual'?'flex':'none';
     renderAll(); refreshVs(); updateWizBanner();
   });
 });
@@ -602,12 +607,13 @@ document.querySelectorAll('#seg button').forEach(b=>{
 // PERIOD
 function toggleDrop(id){$(id).classList.toggle('on');}
 function setPeriod(i,el){
-  curM=i; $('plabel').textContent=MONTHS[i].label; $('hdr-sub').textContent=MONTHS[i].label;
-  document.querySelectorAll('.period-opt').forEach(x=>x.classList.remove('on')); el.classList.add('on');
-  $('pdrop').classList.remove('on'); refreshVs();
+  curM=i;
+  document.querySelectorAll('.month-pill').forEach(x=>x.classList.remove('on'));
+  el.classList.add('on');
+  refreshVs();
 }
 document.addEventListener('click',e=>{
-  if(!e.target.closest('.rel')) {$('pdrop').classList.remove('on');$('ndrop').classList.remove('on');}
+  if(!e.target.closest('.rel')) { const pd=$('pdrop'); if(pd) pd.classList.remove('on'); const nd=$('ndrop'); if(nd) nd.classList.remove('on'); }
 });
 
 // BUDGET TAB
