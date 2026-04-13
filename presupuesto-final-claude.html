@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+\<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8"/>
@@ -14,9 +14,9 @@
 
     /* HEADER */
     .hdr-title-block{display:flex;flex-direction:column;gap:3px}
-    .month-pills{display:flex;gap:6px;flex-wrap:nowrap;margin-top:4px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px}
+    .month-pills{display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px;margin-top:8px}
     .month-pills::-webkit-scrollbar{display:none}
-    .month-pill{border:1px solid var(--bdr);background:var(--card);border-radius:999px;padding:4px 12px;font-size:.78rem;font-weight:600;cursor:pointer;color:var(--muted);font-family:"Nunito",sans-serif;transition:all .15s}
+    .month-pill{border:1px solid var(--bdr);background:var(--card);border-radius:999px;padding:4px 12px;font-size:.78rem;font-weight:600;cursor:pointer;color:var(--muted);font-family:"Nunito",sans-serif;transition:all .15s;flex-shrink:0;white-space:nowrap}
     .month-pill:hover{border-color:var(--pm);color:var(--p)}
     .month-pill.on{background:var(--pl);border-color:var(--pm);color:var(--p);font-weight:700}
     .hdr-title-block .seg{margin-top:6px}
@@ -26,11 +26,13 @@
     .hdr-sub{font-size:.83rem;color:var(--muted);margin-top:2px}
     .hdr-right{display:flex;align-items:center;gap:8px}
     .seg{display:inline-flex;background:#e8eaf0;border-radius:999px;padding:3px;gap:2px}
+    .tabs-inline{display:inline-flex;background:#e5e7ff;border-radius:999px;padding:3px;gap:4px}
     .seg button{border:none;background:transparent;padding:5px 12px;border-radius:999px;font-size:.8rem;color:var(--muted);cursor:pointer;font-family:"Nunito",sans-serif;font-weight:600}
     .seg button.on{background:#fff;color:var(--p);font-weight:700}
     .period-pill{display:inline-flex;align-items:center;gap:5px;background:var(--card);border:1px solid var(--bdr);border-radius:999px;padding:5px 12px;font-size:.82rem;font-weight:600;cursor:pointer}
     .period-pill svg{width:11px;height:11px;stroke:var(--muted);fill:none;stroke-width:2}
     .bell-btn{position:relative;width:34px;height:34px;border-radius:999px;background:var(--card);border:1px solid var(--bdr);display:flex;align-items:center;justify-content:center;cursor:pointer}
+    .bell-mobile-only{display:none}
     .bell-btn svg{width:15px;height:15px;stroke:var(--muted);fill:none;stroke-width:1.8}
     .bell-dot{position:absolute;top:5px;right:5px;width:8px;height:8px;border-radius:999px;background:var(--rr);border:2px solid var(--bg);display:none}
     .bell-dot.show{display:block}
@@ -243,19 +245,23 @@
       body{font-size:14px}
       .page{padding:16px 14px 90px}
 
-      /* Header — title + bell only, controls below */
+      /* Header — h1 row with bell, controls row below */
       .hdr{margin-bottom:12px}
-      .hdr-top{flex-wrap:nowrap;gap:8px}
       .hdr h1{font-size:1.25rem}
-      .hdr-sub{font-size:.75rem}
-      .hdr-right{gap:6px}
-      .seg button{padding:5px 9px;font-size:.75rem}
-      .period-pill{padding:5px 10px;font-size:.78rem;min-width:0}
-      .bell-btn{width:32px;height:32px}
+      .hdr-h1-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+      .hdr-controls-row{margin-top:0}
+      .seg button{padding:4px 9px;font-size:.75rem}
+      .bell-btn{width:30px;height:30px}
+      .bell-mobile-only{display:flex}
+      #bell{display:none!important}
 
-      /* Tabs inline on mobile too */
-      .tabs-inline{background:#e5e7ff}
-      .tab{padding:6px 12px;font-size:.8rem}
+      /* Tabs inline */
+      .tabs-inline{background:#e5e7ff;border-radius:999px}
+      .tab{padding:5px 10px;font-size:.78rem}
+
+      /* Month pills */
+      .month-pills{gap:5px;margin-top:6px;overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch}
+      .month-pill{padding:3px 9px;font-size:.75rem}
 
       /* Cards */
       .card{padding:14px;border-radius:16px;margin-bottom:12px}
@@ -325,34 +331,29 @@
 
   <!-- HEADER -->
   <div class="hdr">
-    <h1>Presupuesto</h1>
-    <div style="display:flex;align-items:flex-start;justify-content:space-between;width:100%;margin-top:10px;gap:12px">
-      <!-- LEFT: mensual/anual, meses en fila siguiente -->
-      <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-start;min-width:0;flex:1">
-        <div class="seg" id="seg">
-          <button class="on" data-t="mensual">Mensual</button>
-          <button data-t="anual">Anual</button>
-        </div>
-        <div class="month-pills" id="month-pills">
-          <button class="month-pill on" onclick="setPeriod(0,this)">Ene</button>
-          <button class="month-pill" onclick="setPeriod(1,this)">Feb</button>
-          <button class="month-pill" onclick="setPeriod(2,this)">Mar</button>
-          <button class="month-pill" onclick="setPeriod(3,this)">Abr</button>
-          <button class="month-pill" onclick="setPeriod(4,this)">May</button>
-          <button class="month-pill" onclick="setPeriod(5,this)">Jun</button>
-          <button class="month-pill" onclick="setPeriod(6,this)">Jul</button>
-          <button class="month-pill" onclick="setPeriod(7,this)">Ago</button>
-          <button class="month-pill" onclick="setPeriod(8,this)">Sep</button>
-          <button class="month-pill" onclick="setPeriod(9,this)">Oct</button>
-          <button class="month-pill" onclick="setPeriod(10,this)">Nov</button>
-          <button class="month-pill" onclick="setPeriod(11,this)">Dic</button>
+    <div class="hdr-h1-row">
+      <h1>Presupuesto</h1>
+      <div class="bell-mobile-only rel">
+        <button class="bell-btn" onclick="toggleDrop('ndrop')">
+          <svg viewBox="0 0 20 20"><path d="M10 2a6 6 0 0 0-6 6v3l-1.5 2.5h15L16 11V8a6 6 0 0 0-6-6z"/><path d="M8 16.5a2 2 0 0 0 4 0" stroke-linecap="round"/></svg>
+          <div class="bell-dot" id="bdot-m"></div>
+        </button>
+        <div class="drop notif-drop" id="ndrop-m">
+          <div class="notif-head">Alertas</div>
+          <div id="nlist-m"></div>
         </div>
       </div>
-      <!-- RIGHT: tabs + bell -->
+    </div>
+    <!-- ROW 1: Mensual/Anual  ←→  Tabs + Bell -->
+    <div style="display:flex;align-items:center;justify-content:space-between;width:100%;margin-top:10px">
+      <div class="seg" id="seg">
+        <button class="on" data-t="mensual">Mensual</button>
+        <button data-t="anual">Anual</button>
+      </div>
       <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
         <div class="tabs-inline">
-          <button class="tab on" data-tab="budget">Presupuesto</button>
-          <button class="tab" data-tab="vsreal">Vs real</button>
+          <button class="tab on" data-tab="budget">Plan</button>
+          <button class="tab" data-tab="vsreal">Real</button>
         </div>
         <div class="rel">
           <button class="bell-btn" id="bell" onclick="toggleDrop('ndrop')">
@@ -365,6 +366,21 @@
           </div>
         </div>
       </div>
+    </div>
+    <!-- ROW 2: Meses (full width, scrollable) -->
+    <div class="month-pills" id="month-pills">
+      <button class="month-pill on" onclick="setPeriod(0,this)">Ene</button>
+      <button class="month-pill" onclick="setPeriod(1,this)">Feb</button>
+      <button class="month-pill" onclick="setPeriod(2,this)">Mar</button>
+      <button class="month-pill" onclick="setPeriod(3,this)">Abr</button>
+      <button class="month-pill" onclick="setPeriod(4,this)">May</button>
+      <button class="month-pill" onclick="setPeriod(5,this)">Jun</button>
+      <button class="month-pill" onclick="setPeriod(6,this)">Jul</button>
+      <button class="month-pill" onclick="setPeriod(7,this)">Ago</button>
+      <button class="month-pill" onclick="setPeriod(8,this)">Sep</button>
+      <button class="month-pill" onclick="setPeriod(9,this)">Oct</button>
+      <button class="month-pill" onclick="setPeriod(10,this)">Nov</button>
+      <button class="month-pill" onclick="setPeriod(11,this)">Dic</button>
     </div>
   </div>
 
@@ -840,14 +856,21 @@ function renderTrend(){
 function renderNotifs(){
   const alerts=BUD.gastos.map(x=>{const rm=realMap('gastos',curM);const r=rm.get(x.name)||0,p=x.v||0;return{...x,r,porc:p>0?Math.round(r/p*100):0};}).filter(x=>x.porc>=85);
   $('bdot').className='bell-dot'+(alerts.length?' show':'');
+  const bdotm=$('bdot-m'); if(bdotm) bdotm.className='bell-dot'+(alerts.length?' show':'');
   const list=$('nlist'); list.innerHTML='';
-  if(!alerts.length){list.innerHTML='<div class="notif-empty">Sin alertas 🎉</div>';return;}
+  const listm=$('nlist-m'); if(listm) listm.innerHTML='';
+  if(!alerts.length){
+    list.innerHTML='<div class="notif-empty">Sin alertas 🎉</div>';
+    if(listm) listm.innerHTML='<div class="notif-empty">Sin alertas 🎉</div>';
+    return;
+  }
   alerts.forEach(x=>{
     const over=x.porc>100;
     const d=document.createElement('div'); d.className='notif-item';
     d.innerHTML=`<div class="ndot" style="background:${over?'var(--rr)':'var(--yy)'}"></div>
       <div class="notif-body"><strong>${x.name}</strong> al ${x.porc}%<small>${fmt(x.r)} de ${fmt(x.v)}</small></div>`;
     list.appendChild(d);
+    if(listm) listm.appendChild(d.cloneNode(true));
   });
 }
 
