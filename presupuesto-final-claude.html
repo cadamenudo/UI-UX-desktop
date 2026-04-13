@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <title>Presupuesto – Cada Menudo</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
@@ -13,6 +13,8 @@
     .page{max-width:740px;margin:0 auto;padding:28px 18px 60px}
 
     /* HEADER */
+    .hdr-title-block{display:flex;flex-direction:column;gap:3px}
+    .hdr-title-block .seg{margin-top:6px}
     .hdr{margin-bottom:24px}
     .hdr-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
     .hdr h1{font-size:1.5rem;font-weight:800;line-height:1.1}
@@ -59,6 +61,8 @@
 
     /* WIZARD BANNER */
     .wiz-banner{background:linear-gradient(135deg,var(--pl),#f0eeff);border:1px solid var(--pm);border-radius:var(--r);padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:16px}
+    .wiz-banner-btn-full{width:100%;background:var(--pl);border:1px solid var(--pm);border-radius:var(--r);padding:12px 18px;font-size:.88rem;font-weight:700;color:var(--p);cursor:pointer;font-family:"Nunito",sans-serif;text-align:center;margin-bottom:14px;display:block}
+    .wiz-banner-btn-full:hover{background:var(--pm)}
     .wiz-text{flex:1}
     .wiz-text strong{font-size:.88rem;color:var(--p);font-weight:800;display:block}
     .wiz-text small{font-size:.78rem;color:var(--muted)}
@@ -67,7 +71,7 @@
 
     /* BUDGET ROWS */
     .section-lbl{font-size:.7rem;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
-    .add-btn{border:none;background:var(--pl);color:var(--p);border-radius:999px;padding:4px 12px;font-size:.73rem;font-weight:700;cursor:pointer;font-family:"Nunito",sans-serif}
+    .add-btn{border:none;background:transparent;color:var(--p);padding:0;font-size:.72rem;font-weight:700;cursor:pointer;font-family:"Nunito",sans-serif;opacity:.8}
     .brow{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--bdr)}
     .brow:last-child{border-bottom:none;padding-bottom:0}
     .brow:first-of-type{padding-top:0}
@@ -224,7 +228,103 @@
     .sum-line-val{font-weight:700}
     .sum-total{display:flex;justify-content:space-between;align-items:baseline;padding-top:10px;margin-top:4px;border-top:2px solid var(--bdr);font-size:.9rem;font-weight:800}
     @media(max-width:440px){.sum-grid{grid-template-columns:1fr}}
-    @media(max-width:440px){.totals{grid-template-columns:repeat(3,1fr)}}
+
+    /* ═══════════════════════════════════════════
+       MOBILE  (≤ 600px)
+    ═══════════════════════════════════════════ */
+    @media(max-width:600px){
+
+      /* Base */
+      body{font-size:14px}
+      .page{padding:16px 14px 90px}
+
+      /* Header — title + bell only, controls below */
+      .hdr{margin-bottom:16px}
+      .hdr-top{flex-wrap:nowrap;gap:8px}
+      .hdr h1{font-size:1.25rem}
+      .hdr-sub{font-size:.75rem}
+      .hdr-right{gap:6px}
+      .seg button{padding:5px 9px;font-size:.75rem}
+      .period-pill{padding:5px 10px;font-size:.78rem;min-width:0}
+      .bell-btn{width:32px;height:32px}
+
+      /* Tabs → fixed bottom nav */
+      .tabs{
+        position:fixed;bottom:0;left:0;right:0;
+        width:100%;border-radius:0;
+        background:var(--card);
+        border-top:1px solid var(--bdr);
+        padding:8px 16px calc(8px + env(safe-area-inset-bottom));
+        display:flex;gap:8px;z-index:300;
+        box-shadow:0 -4px 20px rgba(15,23,42,.08);
+      }
+      .tab{
+        flex:1;border-radius:12px;padding:10px 8px;
+        font-size:.82rem;
+      }
+      .tab.on{background:var(--pl);color:var(--p)}
+
+      /* Cards */
+      .card{padding:14px;border-radius:16px;margin-bottom:12px}
+      .card-title{font-size:.88rem;margin-bottom:10px}
+
+      /* Wizard banner */
+      .wiz-banner{padding:12px 14px;border-radius:14px}
+      .wiz-text strong{font-size:.85rem}
+      .wiz-btn{padding:7px 12px;font-size:.78rem;white-space:nowrap}
+
+      /* Budget rows */
+      .brow{gap:8px;padding:10px 0}
+      .brow-name{flex:1;font-size:.85rem}
+      .amt-inp{width:100px;font-size:.88rem}
+      .brow-sub{padding:8px 10px}
+      .brow-sub-name{font-size:.8rem}
+      .section-lbl{font-size:.68rem;margin-bottom:8px}
+
+
+      /* Totals boxes */
+      .totals{gap:8px}
+      .tot-box{padding:10px 8px}
+      .tot-lbl{font-size:.68rem}
+      .tot-val{font-size:.88rem}
+      .save-btn{padding:12px;font-size:.88rem}
+
+      /* VS REAL resumen table → 2 stacked rows */
+      .vs-table{display:block;border:none}
+      .vs-table thead{display:none}
+      .vs-table tbody{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+      .vs-table tr{display:flex;flex-direction:column;background:var(--bg);border-radius:var(--rs);overflow:hidden;border:1px solid var(--bdr)}
+      .vs-td-lbl{font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;padding:8px 12px 4px;background:var(--bg);border-right:none!important;text-align:center}
+      .vs-td{padding:8px 12px 10px;font-size:.88rem;border-right:none!important;text-align:center;background:var(--card)}
+      .vs-tr-pres td,.vs-tr-real td{border-bottom:none!important}
+
+      /* VS REAL category rows */
+      .cat-item{padding:11px 0}
+      .cat-icon{width:30px;height:30px;border-radius:8px;font-size:.9rem}
+      .cat-name{font-size:.84rem}
+      .cat-pct{font-size:.8rem}
+      .bar{height:5px}
+      .cat-bottom{font-size:.72rem}
+
+      /* Projection */
+      .proj{padding:10px 12px;font-size:.82rem;border-radius:var(--rs)}
+      .proj-emoji{font-size:1rem}
+
+      /* Dropdowns */
+      .notif-drop{width:240px;right:-8px}
+      .period-drop{right:0}
+
+      /* Category chips in wizard */
+      .cat-chip{padding:9px 12px;font-size:.82rem;border-radius:10px}
+
+      /* Wizard sheet */
+      .wiz-question{font-size:1rem}
+      .wiz-big-input{font-size:1.5rem;padding:14px 16px}
+
+      /* Sheet footer buttons */
+      .sheet-foot{padding-top:12px;margin-top:12px}
+      .btn-ghost,.btn-solid{padding:11px;font-size:.83rem}
+    }
   </style>
 </head>
 <body>
@@ -233,15 +333,15 @@
   <!-- HEADER -->
   <div class="hdr">
     <div class="hdr-top">
-      <div>
+      <div class="hdr-title-block">
         <h1>Presupuesto</h1>
         <div class="hdr-sub" id="hdr-sub">Enero 2025</div>
-      </div>
-      <div class="hdr-right">
         <div class="seg" id="seg">
           <button class="on" data-t="mensual">Mensual</button>
           <button data-t="anual">Anual</button>
         </div>
+      </div>
+      <div class="hdr-right">
         <div class="rel">
           <div class="period-pill" onclick="toggleDrop('pdrop')">
             <span id="plabel">Enero 2025</span>
@@ -275,13 +375,9 @@
 
   <!-- ======= TAB: PRESUPUESTO ======= -->
   <div class="tab-pane on" id="pane-budget">
-    <div class="wiz-banner" id="wiz-banner">
-      <div class="wiz-text">
-        <strong id="wiz-banner-title">Configura tu presupuesto</strong>
-        <small id="wiz-banner-sub"></small>
-      </div>
-      <button class="wiz-btn" onclick="openWiz()" id="wiz-banner-btn">Empezar</button>
-    </div>
+    <button class="wiz-banner-btn-full" id="wiz-banner" onclick="openWiz()">
+      <span id="wiz-banner-title">Usar mi historial</span>
+    </button>
 
     <div class="card">
       <div class="section-lbl">Ingresos <button class="add-btn" onclick="openCatM('ingresos')">+ Añadir</button></div>
@@ -312,7 +408,7 @@
     <!-- 1. Resumen -->
     <div class="card">
       <div class="card-title">Resumen</div>
-      <div class="vs-row-lbl2">Presupuestado</div>
+      <div class="vs-row-lbl2">Plan</div>
       <div class="totals" style="margin-bottom:14px">
         <div class="tot-box"><div class="tot-lbl">Ingresos</div><div class="tot-val" id="vs-pi">$0</div></div>
         <div class="tot-box"><div class="tot-lbl">Gastos</div><div class="tot-val" id="vs-pg">$0</div></div>
@@ -465,7 +561,16 @@ const BUD={ingresos:[], gastos:[], ahorro:[]};
 
 const $=id=>document.getElementById(id);
 const fmt=n=>'$'+Math.abs(n||0).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
-function realMap(area,mes){const m=new Map();TXN.filter(t=>t.m===mes&&t.a===area).forEach(t=>m.set(t.cat,(m.get(t.cat)||0)+t.v));return m;}
+function realMap(area,mes){
+  // Map by WIZ_CAT name (top-level category)
+  const m=new Map();
+  TXN.filter(t=>t.m===mes&&t.a===area).forEach(t=>{
+    const wc = WIZ_CATS.find(c=>c.area===area&&c.subs.includes(t.cat));
+    const key = wc ? wc.name : t.g || t.cat;
+    m.set(key,(m.get(key)||0)+t.v);
+  });
+  return m;
+}
 function totPres(area){return BUD[area].reduce((s,x)=>s+(x.v||0),0);}
 function totReal(area,mes){let s=0;realMap(area,mes).forEach(v=>s+=v);return s;}
 function pC(p){return p<=90?'g':p<=110?'y':'r';}
@@ -508,103 +613,24 @@ document.addEventListener('click',e=>{
 // BUDGET TAB
 function renderB(area){
   const el=$('b-'+area); el.innerHTML='';
-  if(BUD[area].length===0){
-    el.innerHTML=`<div style="text-align:center;padding:20px 0;color:var(--muted);font-size:.83rem">
-      Sin categorías todavía — usa el asistente o toca "+ Añadir".
-    </div>`;
-    return;
-  }
-
-  // Group by item.g
-  const groups = new Map();
+  if(BUD[area].length===0) return;
   BUD[area].forEach((item,i)=>{
-    const g = item.g || item.name;
-    if(!groups.has(g)) groups.set(g,[]);
-    groups.get(g).push({item,i});
-  });
-
-  groups.forEach((members, grpName)=>{
-    const grpTotal = members.reduce((s,{item})=>s+(item.v||0),0);
-    const allFixed = members.every(({item})=>item.f);
-
-    // ── Group header row ──────────────────────────────────────
-    const wrap = document.createElement('div');
-    wrap.className = 'brow-group';
-
-    const header = document.createElement('div');
-    header.className = 'brow';
-    header.style.cursor = 'pointer';
+    const row = document.createElement('div');
+    row.className = 'brow';
 
     const nm = document.createElement('div');
     nm.className = 'brow-name';
-    nm.style.display = 'flex'; nm.style.alignItems = 'center'; nm.style.gap = '6px';
+    nm.textContent = item.name;
 
-    const arrow = document.createElement('span');
-    arrow.textContent = '›';
-    arrow.style.cssText = 'color:var(--muted);font-size:.9rem;transition:transform .2s;display:inline-block';
-
-    const nameSpan = document.createElement('span');
-    nameSpan.textContent = grpName;
-    nm.append(arrow, nameSpan);
-
-    const tog = document.createElement('div'); tog.className='tipo-tog';
-    const bf = document.createElement('button'); bf.textContent='Fijo'; bf.type='button'; if(allFixed) bf.className='f';
-    bf.onclick = e=>{ e.stopPropagation(); members.forEach(({i})=>{ BUD[area][i].f=true; }); renderB(area); };
-    const bv = document.createElement('button'); bv.textContent='Var'; bv.type='button'; if(!allFixed) bv.className='v';
-    bv.onclick = e=>{ e.stopPropagation(); members.forEach(({i})=>{ BUD[area][i].f=false; }); renderB(area); };
-    tog.append(bf,bv);
-
-    const totalSpan = document.createElement('span');
-    totalSpan.style.cssText = 'font-weight:800;font-size:.9rem;min-width:80px;text-align:right';
-    totalSpan.textContent = fmt(grpTotal);
+    const inp = document.createElement('input');
+    inp.type='number'; inp.className='amt-inp'; inp.value=item.v||0; inp.min=0;
+    inp.oninput=()=>{ BUD[area][i].v=parseFloat(inp.value)||0; renderTots(); refreshVs(); };
 
     const del = document.createElement('button'); del.className='del-btn'; del.textContent='✕';
-    del.onclick = e=>{ e.stopPropagation();
-      members.forEach(({i})=>{ BUD[area][i]._del=true; });
-      BUD[area] = BUD[area].filter(x=>!x._del);
-      renderB(area); renderTots(); refreshVs();
-    };
+    del.onclick=()=>{ BUD[area].splice(i,1); renderB(area); renderTots(); refreshVs(); };
 
-    header.append(nm, tog, totalSpan, del);
-
-    // ── Subcategory detail (collapsed by default) ─────────────
-    const detail = document.createElement('div');
-    detail.className = 'brow-detail';
-
-    members.forEach(({item,i})=>{
-      const srow = document.createElement('div');
-      srow.className = 'brow-sub';
-
-      const sname = document.createElement('span');
-      sname.className = 'brow-sub-name';
-      sname.textContent = item.name;
-
-      const sinp = document.createElement('input');
-      sinp.type='number'; sinp.className='amt-inp'; sinp.value=item.v||0; sinp.min=0;
-      sinp.style.width='88px';
-      sinp.oninput=()=>{
-        BUD[area][i].v=parseFloat(sinp.value)||0;
-        totalSpan.textContent=fmt(members.reduce((s,{item})=>s+(item.v||0),0));
-        renderTots(); refreshVs();
-      };
-
-      const sdel = document.createElement('button'); sdel.className='del-btn'; sdel.textContent='✕';
-      sdel.onclick=e=>{ e.stopPropagation(); BUD[area].splice(i,1); renderB(area); renderTots(); refreshVs(); };
-
-      srow.append(sname, sinp, sdel);
-      detail.appendChild(srow);
-    });
-
-    // Toggle expand/collapse
-    let open = false;
-    header.onclick = ()=>{
-      open = !open;
-      detail.classList.toggle('on', open);
-      arrow.style.transform = open ? 'rotate(90deg)' : '';
-    };
-
-    wrap.append(header, detail);
-    el.appendChild(wrap);
+    row.append(nm,inp,del);
+    el.appendChild(row);
   });
 }
 function renderAll(){renderB('ingresos');renderB('gastos');renderB('ahorro');renderTots();}
@@ -623,28 +649,27 @@ function openCatM(area){
   $('m-cats-title').textContent='Categorías de '+titles[area].toLowerCase();
   const cur=new Set(BUD[area].map(x=>x.name));
   const list=$('m-cats-list'); list.innerHTML='';
-  Object.entries(CAT[area]).forEach(([grp,items])=>{
-    const gd=document.createElement('div'); gd.className='chk-grp';
-    const gt=document.createElement('div'); gt.className='chk-grp-title'; gt.textContent=grp;
-    gd.appendChild(gt);
-    items.forEach(name=>{
-      const row=document.createElement('div'); row.className='chk-item';
-      const lbl=document.createElement('span'); lbl.textContent=name;
-      const chk=document.createElement('input'); chk.type='checkbox'; chk.value=name; chk.dataset.g=grp;
-      if(cur.has(name)) chk.checked=true;
-      row.append(lbl,chk); gd.appendChild(row);
-    });
-    list.appendChild(gd);
+  // Show only top-level category names (keys of CAT[area])
+  Object.keys(CAT[area]).forEach(grp=>{
+    const row=document.createElement('div'); row.className='chk-item';
+    const lbl=document.createElement('span'); lbl.textContent=grp;
+    const chk=document.createElement('input'); chk.type='checkbox'; chk.value=grp; chk.dataset.g=grp;
+    if(cur.has(grp)) chk.checked=true;
+    row.append(lbl,chk); list.appendChild(row);
   });
   $('m-cats').classList.add('on');
 }
 function applyCat(){
   if(!catArea) return;
+  // collect checked groups (unique)
+  const checkedGroups = new Set();
+  $('m-cats-list').querySelectorAll('input[type=checkbox]').forEach(c=>{
+    if(c.checked) checkedGroups.add(c.dataset.g);
+  });
   const prev=new Map(BUD[catArea].map(x=>[x.name,x]));
   const next=[];
-  $('m-cats-list').querySelectorAll('input[type=checkbox]').forEach(c=>{
-    if(!c.checked) return;
-    next.push(prev.get(c.value)||{id:catArea[0]+Date.now(),name:c.value,g:c.dataset.g,v:0,f:false});
+  checkedGroups.forEach(grp=>{
+    next.push(prev.get(grp)||{id:catArea[0]+Date.now()+Math.random(),name:grp,area:catArea,v:0});
   });
   BUD[catArea]=next;
   renderB(catArea); renderTots(); refreshVs(); closeSheet('m-cats');
@@ -740,7 +765,7 @@ function renderCats(){
     list.appendChild(makeCatRow({
       icon:'💰', label:'Ingresos totales', pres:totalP, real:totalR,
       chip:'', proj:null, uid:'ingresos-total',
-      subs:BUD.ingresos.map(s=>({name:s.name,pres:s.v||0,real:rmI.get(s.name)||0})),
+      subs:[],
       txns,
     }));
   }
@@ -827,17 +852,11 @@ function hasHistory(){
 
 function updateWizBanner(){
   const title = $('wiz-banner-title');
-  const sub   = $('wiz-banner-sub');
-  const btn   = $('wiz-banner-btn');
   if(!title) return;
   if(hasHistory()){
-    title.textContent = 'Configura tu presupuesto en segundos';
-    sub.textContent   = 'Usamos tu historial para sugerirte montos realistas.';
-    btn.textContent   = 'Usar mi historial';
+    title.textContent = 'Usar mi historial';
   } else {
-    title.textContent = '¿Por dónde empiezo?';
-    sub.textContent   = 'Te guiamos paso a paso para crear tu primer presupuesto.';
-    btn.textContent   = 'Crear presupuesto';
+    title.textContent = 'Crear mi presupuesto';
   }
 }
 const WIZ_CATS = [
@@ -944,8 +963,7 @@ function wizRenderBody(){
       <div class="sheet-foot" style="margin-top:12px">
         <button class="btn-ghost" onclick="closeSheet('m-wiz')">Cancelar</button>
         ${hasHistory()
-          ? `<button class="btn-ghost" id="wiz-manual-btn" onclick="wizNext()" disabled style="opacity:.4;flex:1">Ajustar uno a uno</button>
-             <button class="btn-solid" id="wiz-next-btn" onclick="wizApplyAvgs()" disabled style="opacity:.4">Aplicar promedios ✓</button>`
+          ? `<button class="btn-solid" id="wiz-next-btn" onclick="wizApplyAvgs()" disabled style="opacity:.4">Aplicar promedios ✓</button>`
           : `<button class="btn-solid" id="wiz-next-btn" onclick="wizNext()" disabled style="opacity:.4">Continuar →</button>`
         }
       </div>`;
@@ -964,8 +982,7 @@ function wizRenderBody(){
         const btn = $('wiz-next-btn');
         btn.disabled = wizSelected.length === 0;
         btn.style.opacity = wizSelected.length ? '1' : '.4';
-        const mb = $('wiz-manual-btn');
-        if(mb){ mb.disabled=wizSelected.length===0; mb.style.opacity=wizSelected.length?'1':'.4'; }
+
       };
       container.appendChild(div);
     });
@@ -973,8 +990,7 @@ function wizRenderBody(){
     const btn = $('wiz-next-btn');
     btn.disabled = wizSelected.length === 0;
     btn.style.opacity = wizSelected.length ? '1' : '.4';
-    const mb2 = $('wiz-manual-btn');
-    if(mb2){ mb2.disabled=wizSelected.length===0; mb2.style.opacity=wizSelected.length?'1':'.4'; }
+
 
   } else if(wizStep <= wizSelected.length){
     // ── Per-category amount ──
@@ -1046,10 +1062,10 @@ function openWiz(){
   if(hasExisting){
     // Pre-select and pre-fill from existing budget
     WIZ_CATS.forEach((cat,i)=>{
-      const existing = BUD[cat.area].filter(x=>cat.subs.includes(x.name));
-      if(existing.length > 0){
+      const existing = BUD[cat.area].find(x=>x.name===cat.name);
+      if(existing){
         wizSelected.push(i);
-        wizAmounts[cat.name] = existing.reduce((s,x)=>s+(x.v||0),0);
+        wizAmounts[cat.name] = existing.v||0;
       }
     });
   }
@@ -1076,19 +1092,12 @@ function wizBack(){
 }
 
 function wizApplyAvgs(){
-  // Apply historical averages directly — skip per-category steps
   const newBud = {ingresos:[],gastos:[],ahorro:[]};
   wizSelected.forEach(i=>{
     const cat = WIZ_CATS[i];
     const avg = wizAvg(cat.name);
-    const perSub = cat.subs.length > 0 ? Math.round(avg / cat.subs.length) : 0;
-    cat.subs.forEach(subName=>{
-      const prev = BUD[cat.area].find(x=>x.name===subName);
-      newBud[cat.area].push(prev
-        ? {...prev, v: perSub}
-        : {id:cat.area[0]+Date.now()+Math.random(), name:subName, g:cat.name, v:perSub, f:false}
-      );
-    });
+    const prev = BUD[cat.area].find(x=>x.name===cat.name);
+    newBud[cat.area].push(prev ? {...prev, v:avg} : {id:cat.area[0]+Date.now()+Math.random(), name:cat.name, area:cat.area, v:avg});
   });
   ['ingresos','gastos','ahorro'].forEach(a=>{ if(newBud[a].length) BUD[a]=newBud[a]; });
   renderAll(); refreshVs();
@@ -1097,19 +1106,14 @@ function wizApplyAvgs(){
 }
 
 function applyWiz(){
-  const newBud = {ingresos:[],gastos:[],ahorro:[]};
+  const newBud={ingresos:[],gastos:[],ahorro:[]};
   wizSelected.forEach(i=>{
-    const cat = WIZ_CATS[i];
-    const v = wizAmounts[cat.name]||0;
-    cat.subs.forEach(subName=>{
-      const prev = BUD[cat.area].find(x=>x.name===subName);
-      newBud[cat.area].push(prev ? {...prev,v:Math.round(v/cat.subs.length)} : {
-        id:cat.area[0]+Date.now()+Math.random(),
-        name:subName, g:cat.name, v:Math.round(v/cat.subs.length), f:false
-      });
-    });
+    const cat=WIZ_CATS[i];
+    const v=wizAmounts[cat.name]||0;
+    const prev=BUD[cat.area].find(x=>x.name===cat.name);
+    newBud[cat.area].push(prev?{...prev,v}:{id:cat.area[0]+Date.now()+Math.random(),name:cat.name,area:cat.area,v});
   });
-  ['ingresos','gastos','ahorro'].forEach(a=>{ if(newBud[a].length) BUD[a]=newBud[a]; });
+  ['ingresos','gastos','ahorro'].forEach(a=>{if(newBud[a].length) BUD[a]=newBud[a];});
   renderAll(); refreshVs(); updateWizBanner();
   closeSheet('m-wiz');
   $('wiz-banner').style.display='none';
