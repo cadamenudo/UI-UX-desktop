@@ -552,7 +552,7 @@
       <div class="chat-sidebar">
         <div class="chat-sidebar-top">
           <div class="chat-sidebar-bot">
-            <div class="chat-sidebar-avatar" style="overflow:hidden;"><img src="https://raw.githubusercontent.com/cadamenudo/UI-UX/main/assets/icons/app_icon.png" style="width:100%;height:100%;object-fit:contain;padding:4px;" /></div>
+            <div class="chat-sidebar-avatar" style="overflow:hidden;background:#fff !important;border:1.5px solid var(--border);"><img src="https://raw.githubusercontent.com/cadamenudo/UI-UX/main/assets/icons/app_icon.png" style="width:100%;height:100%;object-fit:contain;padding:4px;" /></div>
             <div>
               <div style="font-weight:800;font-size:.95rem;">Menudito</div>
               <div style="font-size:.72rem;color:var(--gray);display:flex;align-items:center;gap:4px;">
@@ -573,7 +573,7 @@
       <div class="chat-main">
         <div class="chat-main-header">
           <div class="chat-main-bot-info">
-            <div class="chat-main-avatar" style="overflow:hidden;"><img src="https://raw.githubusercontent.com/cadamenudo/UI-UX/main/assets/icons/app_icon.png" style="width:100%;height:100%;object-fit:contain;padding:4px;" /></div>
+            <div class="chat-main-avatar" style="overflow:hidden;background:#fff !important;border:1.5px solid var(--border);"><img src="https://raw.githubusercontent.com/cadamenudo/UI-UX/main/assets/icons/app_icon.png" style="width:100%;height:100%;object-fit:contain;padding:4px;" /></div>
             <div>
               <div style="font-weight:700;font-size:.9rem;">Menudito</div>
               <div style="font-size:.72rem;color:#22c55e;font-weight:600;">● En línea</div>
@@ -728,7 +728,7 @@
 
 <div id="chat-win">
   <div class="fab-header">
-    <div class="fab-avatar" style="overflow:hidden;"><img src="https://raw.githubusercontent.com/cadamenudo/UI-UX/main/assets/icons/app_icon.png" style="width:100%;height:100%;object-fit:contain;padding:4px;" /></div>
+    <div class="fab-avatar" style="overflow:hidden;background:#fff !important;border:1.5px solid rgba(255,255,255,.3);"><img src="https://raw.githubusercontent.com/cadamenudo/UI-UX/main/assets/icons/app_icon.png" style="width:100%;height:100%;object-fit:contain;padding:4px;" /></div>
     <div>
       <div class="fab-name">Menudito</div>
       <div class="fab-status"><span style="width:6px;height:6px;border-radius:50%;background:#4ade80;display:inline-block;"></span> Asistente de Cada Menudo</div>
@@ -981,7 +981,7 @@ function makeBubble(html, isUser) {
   wrap.style.cssText = `display:flex;gap:8px;align-items:flex-end;justify-content:${isUser?'flex-end':'flex-start'};margin-bottom:12px;`;
   if (!isUser) {
     const av = document.createElement('div');
-    av.style.cssText = 'width:28px;height:28px;border-radius:50%;background:var(--gradient-primary);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;';
+    av.style.cssText = 'width:28px;height:28px;border-radius:50%;background:#fff;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;';
     av.innerHTML = '<img src="https://raw.githubusercontent.com/cadamenudo/UI-UX/main/assets/icons/app_icon.png" style="width:100%;height:100%;object-fit:contain;padding:4px;" />'; wrap.appendChild(av);
   }
   const b = document.createElement('div');
@@ -992,7 +992,7 @@ function makeBubble(html, isUser) {
 function makeTyping() {
   const wrap = document.createElement('div');
   wrap.style.cssText = 'display:flex;gap:8px;align-items:flex-end;margin-bottom:12px;';
-  wrap.innerHTML = `<div style="width:28px;height:28px;border-radius:50%;background:var(--gradient-primary);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;"><img src="https://raw.githubusercontent.com/cadamenudo/UI-UX/main/assets/icons/app_icon.png" style="width:100%;height:100%;object-fit:contain;padding:4px;" /></div><div style="background:#fff;border:1.5px solid var(--border);border-radius:16px 16px 16px 4px;padding:10px 16px;display:flex;gap:5px;align-items:center;"><span style="width:6px;height:6px;border-radius:50%;background:var(--gray);animation:pulse 1s infinite 0s both;display:block;"></span><span style="width:6px;height:6px;border-radius:50%;background:var(--gray);animation:pulse 1s infinite .2s both;display:block;"></span><span style="width:6px;height:6px;border-radius:50%;background:var(--gray);animation:pulse 1s infinite .4s both;display:block;"></span></div>`;
+  wrap.innerHTML = `<div style="width:28px;height:28px;border-radius:50%;background:#fff;border:1.5px solid #e5e7eb;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;"><img src="https://raw.githubusercontent.com/cadamenudo/UI-UX/main/assets/icons/app_icon.png" style="width:100%;height:100%;object-fit:cover;" /></div><div style="background:#fff;border:1.5px solid var(--border);border-radius:16px 16px 16px 4px;padding:10px 16px;display:flex;gap:5px;align-items:center;"><span style="width:6px;height:6px;border-radius:50%;background:var(--gray);animation:pulse 1s infinite 0s both;display:block;"></span><span style="width:6px;height:6px;border-radius:50%;background:var(--gray);animation:pulse 1s infinite .2s both;display:block;"></span><span style="width:6px;height:6px;border-radius:50%;background:var(--gray);animation:pulse 1s infinite .4s both;display:block;"></span></div>`;
   return wrap;
 }
 
@@ -1043,7 +1043,7 @@ function deskAddMsg(html, isUser) {
   wrap.style.cssText = `display:flex;gap:10px;align-items:flex-end;justify-content:${isUser?'flex-end':'flex-start'};margin-bottom:14px;`;
   if (!isUser) {
     const av = document.createElement('div');
-    av.style.cssText = 'width:30px;height:30px;border-radius:50%;background:var(--gradient-primary);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;';
+    av.style.cssText = 'width:30px;height:30px;border-radius:50%;background:#fff;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;';
     av.innerHTML = '<img src="https://raw.githubusercontent.com/cadamenudo/UI-UX/main/assets/icons/app_icon.png" style="width:100%;height:100%;object-fit:contain;padding:4px;" />'; wrap.appendChild(av);
   }
   const b = document.createElement('div');
