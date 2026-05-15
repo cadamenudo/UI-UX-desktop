@@ -608,27 +608,61 @@
       <h2 style="font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;letter-spacing:-.02em;">Tu cuenta te espera</h2>
     </div>
     <div class="auth-grid">
+
+      <!-- LOGIN -->
       <div class="login-card">
         <div class="form-eyebrow">Ya tienes cuenta</div>
         <div class="form-title">Iniciar sesión</div>
         <div class="form-fields">
           <input class="cm-input" type="email" placeholder="tu@email.com" />
           <input class="cm-input" type="password" placeholder="Contraseña" />
-          <button class="btn-login">Entrar →</button>
+          <button class="btn-login" style="background:var(--gradient-primary);border-radius:12px;padding:14px;font-size:.95rem;font-weight:700;color:#fff;border:none;cursor:pointer;font-family:'Nunito',sans-serif;width:100%;transition:opacity .2s;" onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">Entrar →</button>
           <p class="form-footer">¿Olvidaste tu contraseña? <a href="#">Recuperar</a></p>
         </div>
       </div>
+
+      <!-- SIGNUP -->
       <div class="signup-card" id="signup">
         <div class="form-eyebrow">Nuevo aquí</div>
         <div class="form-title">Crear cuenta gratis</div>
         <div class="form-fields">
-          <input class="cm-input light" type="text" placeholder="Tu nombre" />
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <input class="cm-input light" type="text" placeholder="Nombre" />
+            <input class="cm-input light" type="text" placeholder="Apellido" />
+          </div>
           <input class="cm-input light" type="email" placeholder="tu@email.com" />
+          <div style="display:grid;grid-template-columns:90px 1fr;gap:10px;">
+            <input class="cm-input light" type="text" placeholder="+1" style="text-align:center;" />
+            <input class="cm-input light" type="tel" placeholder="Teléfono" />
+          </div>
           <input class="cm-input light" type="password" placeholder="Contraseña (mín. 8 caracteres)" />
-          <button class="btn-signup">Empezar gratis →</button>
+
+          <!-- Legal checkboxes -->
+          <div style="background:rgba(255,255,255,.12);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:10px;margin-top:2px;">
+
+            <!-- Checkbox 1: Términos -->
+            <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;">
+              <input type="checkbox" style="width:16px;height:16px;margin-top:2px;flex-shrink:0;accent-color:#fff;cursor:pointer;" />
+              <span style="font-size:.78rem;color:rgba(255,255,255,.9);line-height:1.5;">
+                Acepto los <a href="/terms" style="color:#fff;font-weight:700;text-decoration:underline;">Términos y Políticas</a>
+              </span>
+            </label>
+
+            <!-- Checkbox 2: SMS -->
+            <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;">
+              <input type="checkbox" style="width:16px;height:16px;margin-top:2px;flex-shrink:0;accent-color:#fff;cursor:pointer;" />
+              <span style="font-size:.75rem;color:rgba(255,255,255,.82);line-height:1.5;">
+                Al proporcionar su número de teléfono, usted acepta recibir mensajes de texto informativos de Cada Menudo. El consentimiento no es una condición de compra. Pueden aplicarse la frecuencia de mensajes y tarifas por mensajes y datos. Responda <strong style="color:#fff;">HELP</strong> para ayuda y <strong style="color:#fff;">STOP</strong> para cancelar. <a href="/sms-terms" style="color:#fff;font-weight:700;text-decoration:underline;">SMS Terms</a>
+              </span>
+            </label>
+
+          </div>
+
+          <button class="btn-signup" style="margin-top:4px;">Empezar gratis →</button>
           <p class="form-footer">Sin tarjeta de crédito. Gratis para siempre.</p>
         </div>
       </div>
+
     </div>
   </div>
 </section>
@@ -819,11 +853,11 @@ function getBotResponse(text) {
   if (has('descuento','anual','ahorro del plan','71'))
     return 'Pagando mensual serían $71.88 al año. Con el plan anual pagas solo <strong>$49.99</strong> — ahorras aproximadamente un <strong>30%</strong> 💸';
   if (has('limite de tiempo','plan free caduca','free por siempre'))
-    return 'No. El plan Free puede usarse <strong>sin límite de tiempo</strong> ♾️ con las funciones disponibles para ese tier.';
+    return 'No. El plan Free puede usarse <strong>sin límite de tiempo</strong> ♾️ con las funciones de ese tier.';
 
   // Plan Free — detalle
   if (has('plan free','gratis','sin costo','que incluye el free','free incluye','limitaciones del free'))
-    return 'El <strong>Plan Free es gratis para siempre</strong> 🎉 Incluye:<br>✅ Registro manual de transacciones<br>✅ Ver totales e historial del último mes<br>✅ Gráficos del mes actual<br>✅ Categorías existentes<br>✅ Videos educativos<br><br>No incluye: metas, historial completo, IA, exportar, mensajes de colores, recurrencias ni categorías personalizadas.';
+    return 'El <strong>Plan Free es gratis</strong> 🎉 Incluye:<br>✅ Registro manual de transacciones<br>✅ Ver totales e historial del último mes<br>✅ Gráficos del mes actual<br>✅ Categorías existentes<br>✅ Videos educativos<br><br>No incluye: metas, historial completo, IA, exportar, mensajes de colores, recurrencias ni categorías personalizadas.';
 
   // Plan Básico — detalle
   if (has('plan basico incluye','basico incluye','que incluye el plan basico'))
@@ -835,7 +869,7 @@ function getBotResponse(text) {
   if (has('volver al free','cancelar y seguir','downgrade'))
     return 'Sí. Puedes cancelar el Plan Básico y seguir usando el plan Free con sus funciones limitadas 👍';
   if (has('pierdo mi informacion','se borra','se pierde'))
-    return 'No. Tu información se mantiene siempre 🔒 Al hacer upgrade o cancelar, solo cambian las funciones que tienes disponibles.';
+    return 'No. Tu información se mantiene 🔒 Al hacer upgrade o cancelar, solo cambian las funciones disponibles.';
 
   // Cancelación y reembolsos
   if (has('cancelar','cancelacion','reembolso','devolucion','tarjeta rechazada'))
@@ -845,11 +879,11 @@ function getBotResponse(text) {
 
   // IA y registro automático
   if (has('ia','inteligencia artificial','registro automatico','ai registra','ai en cada','que significa ai','sirve la ai'))
-    return 'La <strong>IA del Plan Básico</strong> registra transacciones automáticamente 🤖 Identifica y organiza cada movimiento como ingreso, gasto o ahorro. Tú solo revisas y confirmas. El registro manual siempre sigue disponible.';
+    return 'La <strong>IA del Plan Básico</strong> registra transacciones automáticamente 🤖 Identifica y organiza cada movimiento como ingreso, gasto o ahorro. Tú solo revisas y confirmas. El registro manual también está disponible.';
   if (has('ia para categorias','ai crea categorias'))
     return 'La IA está pensada principalmente para <strong>registrar transacciones automáticamente</strong> 🤖 Para crear o modificar categorías, usa la sección Categorías del Plan Básico.';
   if (has('ai reemplaza','reemplaza el registro'))
-    return 'No. La IA es una herramienta adicional para hacer el registro más rápido 🤖 Siempre puedes registrar manualmente si prefieres.';
+    return 'No. La IA es una herramienta adicional para hacer el registro más rápido 🤖 Puedes registrar manualmente si prefieres.';
 
   // Transacciones
   if (has('que es una transaccion','que es transaccion'))
