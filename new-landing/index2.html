@@ -615,6 +615,7 @@
 </style>
 
 <script>
+document.addEventListener("DOMContentLoaded", function() {
 (function() {
   const CHANNEL_ID = 'UCuzrRDrdMm9MzZMGF8cuLqA';
   const grid = document.getElementById('yt-videos-grid');
@@ -697,6 +698,7 @@
   s.onerror = showFallback;
   document.head.appendChild(s);
 })();
+}); // DOMContentLoaded
 </script>
 
 <section id="ai-chat">
@@ -1338,9 +1340,12 @@ setTimeout(() => { if (!chatOpen) chatBadge.style.display = 'flex'; }, 3000);
   <!-- Email -->
   <a href="mailto:tech@cadamenudo.com"
      title="Envíanos un email"
-     style="width:50px;height:50px;border-radius:50%;background:var(--gradient-primary);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(57,86,232,.4);transition:transform .2s,box-shadow .2s;text-decoration:none;"
+     target="_blank"
+     rel="noopener"
+     style="width:50px;height:50px;border-radius:50%;background:var(--gradient-primary);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(57,86,232,.4);transition:transform .2s,box-shadow .2s;text-decoration:none;cursor:pointer;"
      onmouseover="this.style.transform='scale(1.12)';this.style.boxShadow='0 6px 24px rgba(57,86,232,.6)'"
-     onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 4px 16px rgba(57,86,232,.4)'">
+     onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 4px 16px rgba(57,86,232,.4)'"
+     onclick="window.location='mailto:tech@cadamenudo.com'">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
       <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
       <polyline points="22,6 12,13 2,6"/>
