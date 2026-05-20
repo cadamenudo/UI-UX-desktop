@@ -296,13 +296,35 @@
     <div>
       <div class="hero-badge fade-up">
         <div class="pulse-dot" style="width:8px;height:8px;border-radius:50%;background:#22c55e;flex-shrink:0;"></div>
-        <span>Más de 12,000 usuarios activos</span>
+        <span>Disponible en iOS y Android</span>
       </div>
       <h1 class="fade-up delay-1">Tu dinero.<br><span class="accent">Claro.</span><br>Sin excusas.</h1>
       <p class="hero-desc fade-up delay-2">Cada Menudo te ayuda a entender exactamente en qué se va tu dinero, organizar tus gastos y tomar control real de tus finanzas personales.</p>
       <div class="hero-ctas fade-up delay-3">
         <a href="#signup" class="btn-primary-lg">Crear cuenta →</a>
         <a href="#features" class="btn-outline">Ver features</a>
+      </div>
+
+      <!-- App store badges -->
+      <div class="fade-up delay-4" style="display:flex;gap:12px;margin-top:24px;flex-wrap:wrap;align-items:center;">
+        <a href="https://apps.apple.com" target="_blank" rel="noopener"
+           style="display:inline-flex;align-items:center;gap:8px;background:#000;color:#fff;padding:10px 18px;border-radius:10px;text-decoration:none;transition:opacity .2s;"
+           onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+          <div style="line-height:1.2;">
+            <div style="font-size:.6rem;opacity:.8;">Disponible en</div>
+            <div style="font-size:.85rem;font-weight:700;font-family:'Nunito',sans-serif;">App Store</div>
+          </div>
+        </a>
+        <a href="https://play.google.com" target="_blank" rel="noopener"
+           style="display:inline-flex;align-items:center;gap:8px;background:#000;color:#fff;padding:10px 18px;border-radius:10px;text-decoration:none;transition:opacity .2s;"
+           onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M3.18 23.76c.3.17.64.22.99.14l12.12-6.99-2.55-2.55-10.56 9.4zM.94 1.07C.36 1.4 0 2.01 0 2.78v18.44c0 .77.36 1.38.94 1.71l.1.06 10.33-10.33v-.24L1.04 1.01l-.1.06zM22.35 10.55l-2.9-1.67-2.87 2.87 2.87 2.87 2.92-1.68c.83-.48.83-1.92-.02-2.39zM3.18.24l12.12 6.99-2.55 2.55L2.19.38 3.18.24z"/></svg>
+          <div style="line-height:1.2;">
+            <div style="font-size:.6rem;opacity:.8;">Disponible en</div>
+            <div style="font-size:.85rem;font-weight:700;font-family:'Nunito',sans-serif;">Google Play</div>
+          </div>
+        </a>
       </div>
       <div class="hero-trust fade-up delay-4">
         <span>✅ Sin conexión bancaria</span>
@@ -312,7 +334,7 @@
     <div class="hero-mockup-wrap float">
       <div style="position:absolute;inset:-30px;background:radial-gradient(ellipse at center,rgba(57,86,232,.15) 0%,transparent 70%);border-radius:50%;"></div>
       <img src="https://cadamenudo.github.io/UI-UX/assets/logo/CM_homepage.png" alt="Cada Menudo App" style="width:300px;max-width:100%;display:block;position:relative;z-index:1;filter:drop-shadow(0 24px 48px rgba(0,0,0,.28));" />
-      <div class="badge-gold float2">💰 +$18,000 hoy</div>
+      <div class="badge-gold float2">💰 +$500 hoy</div>
       <div class="badge-white float">
         <div class="prog-label">Meta vacaciones</div>
         <div class="prog-row"><div class="prog-bar"><div class="prog-fill" style="width:68%"></div></div><span class="prog-pct">68%</span></div>
@@ -730,40 +752,193 @@ function getBotResponse(text) {
   var t = text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
   var has = function() { for (var i=0;i<arguments.length;i++) { if (t.indexOf(arguments[i])!==-1) return true; } return false; };
 
+  // Saludos
   if (has('hola','buenas','hey','hi','buenos dias','buenas tardes','buenas noches'))
     return '¡Hola! 👋 Soy <strong>Menudito</strong>, el asistente de Cada Menudo. ¿En qué puedo ayudarte hoy?';
   if (has('gracias','thank','excelente','perfecto','genial','muy bien'))
-    return '¡Con mucho gusto! 😊 ¿Tienes otra pregunta?';
-  if (has('que es cada menudo','para que sirve','mision','proposito'))
-    return 'Cada Menudo es una app para organizar tus ingresos, gastos y ahorros 💰 Registra todo, visualiza gráficos claros, planifica metas y aprende hábitos financieros.';
-  if (has('cuanto cuesta','precio','costo','plan basico cuesta','cuanto vale','mensual','anual'))
-    return 'El <strong>Plan Básico</strong> cuesta <strong>$5.99/mes</strong> o <strong>$49.99/año</strong> (~30% de descuento) 💰 Contáctanos para más información sobre planes disponibles.';
-  if (has('plan free','sin costo','que incluye el free'))
-    return 'Para conocer los planes disponibles y sus funciones, visita nuestra sección de planes o escríbenos a <strong>tech@cadamenudo.com</strong> 📧';
-  if (has('plan basico incluye','basico incluye','que incluye el plan basico'))
-    return 'El <strong>Plan Básico</strong> incluye: historial completo, metas de ahorro, registro con IA, exportar data, categorías personalizadas, mensajes de colores, comparación mes vs mes y recurrencias automáticas 🚀';
-  if (has('meta','metas de ahorro','crear meta','objetivo de ahorro'))
-    return 'En la sección <strong>Metas</strong>, toca Nueva Meta, escribe el nombre, define el monto objetivo y guarda 🎯 Cuando la cumples ¡se pone verde! Disponible en el Plan Básico.';
-  if (has('ia','inteligencia artificial','registro automatico'))
-    return 'La <strong>IA del Plan Básico</strong> registra transacciones automáticamente 🤖 Identifica y organiza cada movimiento como ingreso, gasto o ahorro.';
-  if (has('colores','alerta','verde','amarillo','rojo','semaforo','mensaje inteligente'))
-    return '🟢 <strong>Verde</strong>: estás en control<br>🟡 <strong>Amarillo</strong>: al límite del presupuesto<br>🔴 <strong>Rojo</strong>: déficit — gastos superan ingresos';
-  if (has('seguro','privacidad','datos seguros','protegen mis datos'))
-    return 'Tus datos están seguros 🔒 Cada Menudo protege tu información personal y financiera. No vendemos ni compartimos tus datos sin autorización.';
-  if (has('banco','conexion bancaria','conectar banco'))
-    return 'Actualmente <strong>no hay conexión bancaria</strong> 🔒 Cada Menudo funciona con registro manual e IA según tu plan. La conexión bancaria está en desarrollo.';
-  if (has('exportar','descargar','excel','csv'))
-    return 'Exportar data está disponible en el <strong>Plan Básico</strong> 📥 Puedes descargar en <strong>Excel y CSV</strong>.';
-  if (has('soporte','contacto','whatsapp','ayuda tecnica'))
-    return '¡Estamos aquí! 💬<br>📧 <strong>Email:</strong> tech@cadamenudo.com<br>📱 <strong>WhatsApp:</strong> <a href="https://api.whatsapp.com/send/?phone=17862027191" target="_blank" style="color:var(--primary);font-weight:700;">Escríbenos aquí</a>';
-  if (has('como me registro','crear cuenta','crear mi cuenta'))
-    return 'Solo necesitas tu <strong>nombre, correo y contraseña</strong> ⚡ Crea tu cuenta en cadamenudo.com en menos de 60 segundos.';
-  if (has('descargar','app store','google play','play store'))
-    return '¡Sí! Descarga Cada Menudo en <strong>Apple App Store</strong> 🍎 o <strong>Google Play Store</strong> 🤖 También disponible en web.';
-  if (has('cancelar','cancelacion','reembolso'))
-    return 'Cancela desde <strong>Perfil → Suscripción y Pago</strong> 📋 Mantienes acceso al Plan Básico hasta el final del período pagado.';
+    return '¡Con mucho gusto! 😊 ¿Tienes otra pregunta sobre Cada Menudo?';
 
-  return 'Buena pregunta 🤔 Escríbenos a <strong>tech@cadamenudo.com</strong> o por <a href="https://api.whatsapp.com/send/?phone=17862027191" target="_blank" style="color:var(--primary);font-weight:700;">WhatsApp</a> y te ayudamos. ¿Tienes otra duda?';
+  // Misión y propósito
+  if (has('que es cada menudo','para que sirve','para que es','proposito'))
+    return 'Cada Menudo es una aplicación web que te ayuda a organizar tus ingresos, gastos y ahorros 💰 Te permite registrar todo, visualizar gráficos claros, planificar metas y aprender hábitos financieros. El objetivo es aumentar tu ahorro y tu claridad financiera paso a paso.';
+  if (has('por que usar','importante usar','por que es importante','reduce el estres','estres financiero'))
+    return 'Porque la falta de claridad financiera genera estrés y te impide crecer 📊 Con Cada Menudo sabes hacia dónde va tu dinero, construyes metas y das pasos hacia tu libertad financiera.';
+  if (has('filosofia','registrar visualizar','planificar y aprender','mision'))
+    return 'La filosofía es simple: <strong>registrar, visualizar, planificar y aprender</strong> 💡 Cuando sabes dónde está tu menudo, puedes controlar mejor tu dinero y avanzar hacia tus metas.';
+  if (has('cada menudo educa','solo app','tambien ensena','contenido educativo'))
+    return 'Cada Menudo también educa 🎓 Incluye videos y consejos para ayudarte a entender mejor tu dinero, crear hábitos y tomar decisiones más claras.';
+
+  // Historia y origen
+  if (has('quien creo','quien la creo','xavier serbia','fundador','creador'))
+    return 'Cada Menudo fue creada por <strong>Xavier Serbia</strong>, comunicador y educador financiero con amplia experiencia ayudando a los hispanos a mejorar el manejo de su dinero 🙌';
+  if (has('como nacio','como surgio','origen','historia','por que creo','idea nacio'))
+    return 'La idea nació de la propia experiencia de Xavier Serbia. Llevaba el control de sus gastos guardando recibos en la cartera y usando hojas de Excel 📋 Con la nueva tecnología entendió que podía crear una app para registrar ingresos, gastos o ahorros desde el teléfono, en cualquier lugar.';
+  if (has('comunidad hispana','problema hispano','hispanos','xavier vio'))
+    return 'Xavier identificó que a muchas personas en la comunidad hispana les cuesta monitorear y controlar sus gastos 🌎 Esa falta de claridad hace difícil ahorrar, planificar y construir riqueza. Cada Menudo nació para resolver ese problema.';
+
+  // Registro y cuenta
+  if (has('como me registro','crear cuenta','como registro','crear mi cuenta','registro'))
+    return 'Solo necesitas tu <strong>nombre, correo y contraseña</strong> ⚡ Crea tu cuenta desde cadamenudo.com y comienza desde tu celular, tablet o computadora.';
+  if (has('perfil','modificar datos','actualizar perfil','cambiar nombre','cambiar correo'))
+    return 'Puedes actualizar tu nombre, email, teléfono, contraseña y preferencias de uso desde la sección <strong>Perfil</strong> ⚙️';
+
+  // Acceso a la app
+  if (has('como accedo','como entro','login','iniciar sesion','ingresar a la app'))
+    return 'Visita <strong>cadamenudo.com/login</strong> e inicia sesión con tu correo y contraseña 🌐 También disponible en Apple App Store y Google Play Store.';
+  if (has('app store','google play','play store','apple store','descargar app'))
+    return 'Descarga Cada Menudo en <strong>Apple App Store</strong> 🍎 o <strong>Google Play Store</strong> 🤖 También puedes usarla directo desde tu navegador en cadamenudo.com.';
+  if (has('sincroniza','varios dispositivos','misma cuenta','telefono y computadora'))
+    return 'Tu información se <strong>sincroniza automáticamente</strong> entre dispositivos 📲 Usa la misma cuenta en tu celular, tablet o computadora.';
+  if (has('olvide','contrasena','recuperar acceso','reset'))
+    return 'En la pantalla de login selecciona <strong>"Olvidé mi contraseña"</strong> 🔑 y sigue las instrucciones para recuperar el acceso a tu cuenta.';
+  if (has('donde puedo usar','pais','disponible en','web app','celular','computadora','tablet'))
+    return 'Puedes usar Cada Menudo en <strong>cualquier país</strong> 🌎 desde celular, tablet o computadora. Disponible en web, App Store y Google Play.';
+  if (has('necesito descargar','solo web','sin descargar'))
+    return 'No necesariamente 👍 También puedes usar Cada Menudo directamente desde tu navegador web en cadamenudo.com, sin necesidad de descargar nada.';
+
+  // Menú y navegación
+  if (has('menu','secciones','que tiene el menu','navegacion'))
+    return 'El menú principal incluye: <strong>Tablero, Transacciones, Nueva Transacción, Metas, Buscador, Categorías, Videos, Perfil, Suscripción, Moneda, Legal y Contacto</strong> 📱';
+  if (has('tablero','dashboard','que veo en el tablero'))
+    return 'En el <strong>Tablero</strong> ves lo más importante de tu dinero: ingresos, gastos, ahorro, alertas de colores, gráficos de metas, línea de ingresos vs gastos y gráficas de dona 📊 Con el Plan Básico tienes más análisis y comparaciones.';
+
+  // Funcionalidades
+  if (has('que puedo hacer','funciones','funcionalidades','que ofrece'))
+    return 'Con Cada Menudo puedes 🚀<br>✅ Registrar ingresos, gastos y ahorros<br>✅ Ver gráficos claros<br>✅ Crear metas de ahorro<br>✅ Guardar fotos de recibos<br>✅ Configurar tu moneda<br>✅ Ver videos educativos<br>✅ Y con el Plan Básico: comparación mes vs mes, historial completo, recurrencias, exportar data y registro con AI';
+  if (has('foto','recibo','factura','comprobante','imagen de recibo'))
+    return 'Puedes tomar una foto del recibo o factura y guardarla como <strong>respaldo digital</strong> junto a la transacción 📸 Se conserva mientras tu cuenta esté activa.';
+  if (has('moneda','divisa','usd','mxn','dop','eur','tipo de moneda','nomenclatura'))
+    return 'Puedes elegir la moneda de tu preferencia (USD, EUR, MXN, DOP, etc.) 💱 Importante: Cada Menudo <strong>no convierte divisas automáticamente</strong>, solo identifica el tipo que usas.';
+  if (has('recordatorio','notificacion','aviso','recordar'))
+    return 'Sí, Cada Menudo incluye <strong>recordatorios</strong> para mantener el hábito de registrar tus transacciones y dar seguimiento a tus metas 🔔';
+
+  // Transacciones
+  if (has('que es una transaccion','que es transaccion'))
+    return 'Una transacción es cualquier <strong>ingreso, gasto o ahorro</strong> que registres en la app 📝';
+  if (has('como registro una transaccion','nueva transaccion','registrar gasto','registrar ingreso','como anoto','como agrego'))
+    return 'En <strong>Nueva Transacción</strong> ingresa: monto, tipo (ingreso/gasto/ahorro), categoría, subcategoría, fecha, lugar y comentario opcional 🧾 También puedes añadir una foto del recibo.';
+  if (has('editar transaccion','borrar transaccion','eliminar transaccion','modificar transaccion'))
+    return 'Editar y borrar transacciones está disponible en el <strong>Plan Básico</strong> ✏️';
+  if (has('historial','transacciones anteriores','historial completo','ver mis transacciones'))
+    return 'Con el <strong>Plan Básico</strong> tienes acceso al historial completo de transacciones 📋 Puedes revisar todos tus movimientos sin límite de tiempo.';
+
+  // Tipos de ingreso
+  if (has('tipos de ingreso','como se dividen','tres categorias','ingreso por trabajo','ingreso pasivo','ganancia de capital'))
+    return 'Cada Menudo divide los ingresos en 3 tipos 💼<br><strong>1. Ingreso por trabajo:</strong> salario, propinas, comisiones, bonos<br><strong>2. Ingreso pasivo:</strong> rentas, dividendos, intereses, pensión<br><strong>3. Ganancia de capital:</strong> venta de acciones, bienes raíces u otros activos';
+  if (has('ingreso pasivo'))
+    return 'El ingreso pasivo es un flujo de dinero que generalmente no requiere mucho esfuerzo diario 💸 Por ejemplo: rentas, dividendos, intereses, pensión, seguro social o ganancias de ciertos negocios.';
+  if (has('ganancia de capital'))
+    return 'Es la ganancia que recibes cuando vendes un activo por más de lo que pagaste originalmente 📈 Por ejemplo: acciones, bienes raíces, un auto u otros activos.';
+
+  // Ahorro y metas
+  if (has('como registro el ahorro','registrar ahorro','como ahorro','ahorro es'))
+    return 'El ahorro se registra como una transacción dentro de la categoría <strong>Ahorro</strong> 🐷 En Cada Menudo lo vemos como un pago a tu yo futuro.';
+  if (has('meta','metas de ahorro','crear meta','como creo una meta','objetivo de ahorro','nueva meta'))
+    return 'En la sección <strong>Metas</strong>, toca Nueva Meta, escribe el nombre, define el monto objetivo y guarda 🎯 Puedes ordenarlas por prioridad y revisar tu progreso. Cuando la cumples ¡aparece en verde!';
+  if (has('que pasa cuando cumplo','cumplo una meta','meta en verde'))
+    return 'Cuando una meta se cumple, aparece en color <strong>verde</strong> 🟢 indicando que alcanzaste ese objetivo. ¡A celebrar!';
+
+  // Alertas de colores
+  if (has('colores','alerta','verde','amarillo','rojo','semaforo','mensaje inteligente','superavit','deficit','mensajes de colores'))
+    return 'Los mensajes de colores te indican cómo va tu dinero 🚦<br>🟢 <strong>Verde:</strong> tus ingresos superan gastos + ahorro. Tienes un sobrante real y estás en control.<br>🟡 <strong>Amarillo:</strong> estás al límite del presupuesto.<br>🔴 <strong>Rojo:</strong> gastos + ahorro superan tus ingresos. Puede indicar déficit o uso de deuda.<br><br>Fórmula: <em>Ingreso = Gastos + Ahorro</em>';
+
+  // Planes — precios
+  if (has('cuanto cuesta','precio','costo','plan basico cuesta','cuanto vale'))
+    return 'El <strong>Plan Básico</strong> cuesta <strong>$5.99/mes</strong> o <strong>$49.99/año</strong> 💰<br>Pagando mensual durante 12 meses serían $71.88. Con el plan anual ahorras aproximadamente un 30%.';
+  if (has('cuales planes','que planes tiene','planes disponibles','estructura de planes'))
+    return 'Cada Menudo tiene dos planes disponibles: uno de entrada para comenzar y el <strong>Plan Básico</strong>, que es la experiencia completa 🚀 Escríbenos para conocer cuál se adapta mejor a ti.';
+
+  // Plan Básico — detalle
+  if (has('plan basico incluye','basico incluye','que incluye el plan basico','que tiene el plan basico'))
+    return 'El <strong>Plan Básico</strong> incluye 🚀<br>✅ Historial completo de transacciones<br>✅ Crear metas de ahorro con seguimiento<br>✅ Registro automático con AI<br>✅ Exportar data (Excel y CSV)<br>✅ Crear, modificar y borrar categorías<br>✅ Mensajes inteligentes de colores<br>✅ Comparación mes vs mes<br>✅ Recurrencias automáticas<br>✅ Editar y borrar transacciones<br>✅ Breakdown por subcategorías';
+
+  // Comparación de planes
+  if (has('diferencia entre','comparar plan','que es mejor','cual escoger'))
+    return 'El plan de entrada te permite comenzar a organizar tu dinero de forma sencilla. El <strong>Plan Básico</strong> es la experiencia completa 🚀<br><br>Con el Plan Básico obtienes: historial completo, metas, AI para registrar automáticamente, exportar data, categorías personalizadas, mensajes de colores, comparación mes vs mes y recurrencias. Todo lo que necesitas para un control financiero profundo y automatizado.';
+
+  // Prueba gratuita
+  if (has('prueba','14 dias','trial','probar','prueba del plan'))
+    return 'Tienes <strong>14 días</strong> para probar todas las funciones del Plan Básico 🎉 Las condiciones se indicarán al momento de suscribirte.';
+
+  // Upgrade / cancelación
+  if (has('upgrade','cambiar de plan','pasar al plan basico','suscribir'))
+    return 'Puedes hacer upgrade al Plan Básico en cualquier momento desde la sección <strong>Suscripción</strong> ⚡ Tu información no se pierde.';
+  if (has('cancelar','cancelacion'))
+    return 'Cancela desde <strong>Perfil → Suscripción y Pago</strong> 📋 Mantienes acceso al Plan Básico hasta el final del período pagado.';
+  if (has('reembolso','devolucion','reembolsos'))
+    return 'No se hacen reembolsos parciales 📋 Mantienes acceso al Plan Básico hasta que termine el ciclo de facturación pagado.';
+  if (has('pierdo mi informacion','se borra','se pierde','informacion al cancelar'))
+    return 'No. Tu información se mantiene 🔒 Al hacer upgrade o cancelar, solo cambian las funciones disponibles.';
+
+  // Pagos y facturación
+  if (has('metodo de pago','tarjeta','facturacion','cobro','cambiar pago','pago rechazado'))
+    return 'Aceptamos <strong>tarjeta de crédito o débito</strong> 💳 Gestiona tu método de pago desde <strong>Perfil → Suscripción y Pago</strong>. Si tu tarjeta es rechazada, te notificaremos para que la actualices.';
+
+  // IA y registro automático
+  if (has('inteligencia artificial','registro automatico','ai registra','que significa ai','como funciona la ai','como funciona el ai','que hace la ai','que es la ai','usar ai','con ai'))
+    return 'La <strong>AI del Plan Básico</strong> registra transacciones automáticamente 🤖 Identifica y organiza cada movimiento como ingreso, gasto o ahorro. Tú solo revisas y confirmas. El registro manual también siempre está disponible.';
+  if (has('ai reemplaza','reemplaza el registro','sin ai'))
+    return 'No. La AI es una herramienta adicional para hacer el registro más rápido 🤖 Puedes registrar manualmente si prefieres.';
+  if (has('ai para categorias','ai crea categorias'))
+    return 'La función de AI está pensada principalmente para <strong>registrar transacciones automáticamente</strong> 🤖 Para crear o modificar categorías, usa la sección Categorías del Plan Básico.';
+
+  // Categorías
+  if (has('mis propias categorias','crear categoria','nueva categoria','categorias personalizadas','cambiar categoria','borrar categoria','modificar categoria','personalizar gasto','puedo poner mis'))
+    return 'En el <strong>Plan Básico</strong> puedes crear, modificar y borrar categorías y subcategorías 🗂️ Organiza tu dinero a tu manera. Para categorías existentes, siempre están disponibles desde el inicio.';
+  if (has('que son las categorias','para que sirven las categorias'))
+    return 'Las categorías son grupos para organizar ingresos, gastos y ahorro 🗂️ Te ayudan a saber de dónde viene y hacia dónde se va tu dinero con mayor detalle.';
+  if (has('recurrencia','pago fijo','ingreso fijo','programar pago','automatizar pago','pagos automaticos'))
+    return 'En el <strong>Plan Básico</strong> puedes programar recurrencias 📅 Configura pagos o ingresos fijos (mensual, quincenal, anual) para que se registren automáticamente.';
+
+  // Gráficos y reportes
+  if (has('grafico','grafica','tablero','reporte','dona','comparacion mes','breakdown'))
+    return 'Cada Menudo muestra gráficos para entender tus ingresos, gastos y ahorro 📊 Con el Plan Básico tienes análisis más detallado, comparación mes vs mes y breakdown por subcategorías.';
+  if (has('breakdown','subcategor','detalle por categoria'))
+    return 'El <strong>breakdown por subcategorías</strong> te muestra el detalle dentro de cada categoría 🔍 Por ejemplo, dentro de Alimentación puedes ver cuánto fue en supermercado vs restaurantes.';
+
+  // Exportar data
+  if (has('exportar','descargar','excel','csv','bajar datos','respaldo'))
+    return 'Exportar data está disponible en el <strong>Plan Básico</strong> 📥 Puedes descargar en <strong>Excel y CSV</strong> para revisar reportes y conservar respaldos.';
+
+  // Recibos
+  if (has('elimino una transaccion con recibo','que pasa si borro','borro transaccion con foto'))
+    return 'Si eliminas una transacción, también se elimina el recibo asociado a esa transacción 🗑️';
+  if (has('cuanto tiempo se guardan','recibos guardados','tiempo recibos'))
+    return 'Los recibos se guardan mientras mantengas activa tu cuenta 📸 Si cierras la cuenta, puedes decidir si deseas que guardemos la información o que la eliminemos.';
+
+  // Datos y cuenta
+  if (has('cerrar cuenta','eliminar cuenta','borrar mi cuenta','cerrar mi cuenta'))
+    return 'Puedes solicitar eliminar tu cuenta y tus datos en cualquier momento 🔒 También puedes optar por conservar tu información para futura referencia si decides regresar.';
+  if (has('que pasa con mi informacion','si cierro mi cuenta','informacion al cerrar'))
+    return 'Si cierras tu cuenta, puedes decidir si quieres que guardemos tu información para futura referencia o si prefieres que la eliminemos 📋';
+
+  // Banco y seguridad
+  if (has('banco','conexion bancaria','conectar banco','link bancario'))
+    return 'No actualmente 🏦<br><br>Cada Menudo está diseñado para usuarios de muchos países, y las conexiones bancarias suelen ser regionales. Esto significa que una solución que funciona en un país puede no funcionar en otro, lo que hace difícil ofrecer una conexión bancaria universal para toda nuestra comunidad.<br><br>Por ahora, Cada Menudo se enfoca en el registro y monitoreo de ingresos, gastos y ahorros de forma simple y accesible para cualquier usuario, sin importar dónde viva.<br><br>Sin embargo, no descartamos incorporar conexiones bancarias en el futuro para aquellos mercados que muestren suficiente interés y donde existan soluciones tecnológicas confiables para hacerlo posible.<br><br>Mientras tanto, puedes registrar tus transacciones manualmente y aprovechar las herramientas de automatización disponibles dentro de la app 💪';
+  if (has('vende mi informacion','venden datos','comparte mi informacion','terceros'))
+    return 'No. Cada Menudo <strong>no vende ni comparte</strong> tu información personal con terceros sin tu consentimiento 🔒';
+  if (has('quien puede ver','quien ve mis','pueden ver mis gastos','quien tiene acceso'))
+    return 'Solo <strong>tú</strong> tienes acceso a tus transacciones e información financiera desde tu cuenta 🔐 Nadie más puede ver tus gastos.';
+  if (has('guardan mis datos bancarios','datos bancarios','credenciales','contrasena bancaria'))
+    return 'No. Cada Menudo <strong>no almacena credenciales bancarias</strong> 🔒 Actualmente no hay conexión bancaria automática.';
+  if (has('seguro','privacidad','datos seguros','protegen mis datos','app es segura','informacion privada','mi informacion es privada','protegen'))
+    return 'Sí. Cada Menudo protege tu información personal y financiera con medidas de seguridad 🔒 Tu información es privada y solo tú tienes acceso a ella desde tu cuenta.';
+
+  // Hábitos
+  if (has('habito','habitos','rutina financiera','que recomienda'))
+    return 'Registra tus transacciones con frecuencia y revisa tu tablero regularmente 📆 Ese hábito te da claridad, evita sorpresas y reduce el estrés financiero.';
+
+  // Roadmap
+  if (has('futuro','proximas funciones','roadmap','en desarrollo','nuevas funciones'))
+    return 'Estamos trabajando en conexión bancaria, más opciones de descarga de data, mejoras en reportes y herramientas inteligentes para facilitar el uso de la app 🚀';
+
+  // Soporte y contacto
+  if (has('soporte','contacto','contactar','whatsapp','tech@','correo de soporte','ayuda tecnica','problema tecnico','como contacto'))
+    return '¡Estamos aquí para ayudarte! 💬<br>📧 <strong>Email:</strong> tech@cadamenudo.com<br>📱 <strong>WhatsApp:</strong> <a href="https://api.whatsapp.com/send/?phone=17862027191&text=Hola+necesito+ayuda+con+mi+cuenta+en+Cada+Menudo" target="_blank" style="color:var(--primary);font-weight:700;">Escríbenos aquí</a>';
+  if (has('tutorial','video','videos educativos','aprende'))
+    return 'La sección <strong>Videos</strong> incluye guías y contenido educativo para aprender a usar la app y mejorar tus hábitos financieros 🎓';
+
+  return 'Buena pregunta 🤔 Escríbenos a <strong>tech@cadamenudo.com</strong> o por <a href="https://api.whatsapp.com/send/?phone=17862027191&text=Hola+necesito+ayuda+con+mi+cuenta+en+Cada+Menudo" target="_blank" style="color:var(--primary);font-weight:700;">WhatsApp</a> y te ayudamos. ¿Tienes otra duda?';
 }
 
 function makeBubble(html, isUser) {
@@ -788,19 +963,24 @@ function makeTyping() {
 }
 
 var TOPICS = [
-  {label:'Planes y precios',    q:'¿Cuánto cuesta el Plan Básico?'},
-  {label:'Metas de ahorro',     q:'¿Cómo creo una meta de ahorro?'},
-  {label:'Registro con IA',     q:'¿Cómo funciona el registro automático con IA?'},
-  {label:'Alertas de colores',  q:'¿Qué significan los mensajes de colores?'},
-  {label:'Privacidad',          q:'¿Mis datos están seguros?'},
-  {label:'Exportar datos',      q:'¿Puedo exportar mi información?'},
-  {label:'Soporte',             q:'¿Cómo contacto a soporte?'},
+  {label:'¿Qué es Cada Menudo?',        q:'¿Qué es Cada Menudo?'},
+  {label:'Planes y precios',             q:'¿Cuánto cuesta el Plan Básico?'},
+  {label:'Plan Básico — qué incluye',    q:'¿Qué incluye el Plan Básico?'},
+  {label:'Metas de ahorro',              q:'¿Cómo creo una meta de ahorro?'},
+  {label:'Registro con AI',              q:'¿Cómo funciona el registro automático con AI?'},
+  {label:'Alertas de colores',           q:'¿Qué significan los mensajes de colores?'},
+  {label:'Categorías personalizadas',    q:'¿Puedo crear mis propias categorías?'},
+  {label:'Exportar datos',               q:'¿Puedo exportar mi información?'},
+  {label:'Privacidad y seguridad',       q:'¿Mis datos están seguros?'},
+  {label:'Conexión bancaria',            q:'¿La app tiene conexión bancaria?'},
+  {label:'Cancelación y pagos',          q:'¿Cómo cancelo mi suscripción?'},
+  {label:'Soporte',                      q:'¿Cómo contacto al soporte?'},
 ];
 var CHIPS = [
   '¿Qué es Cada Menudo?',
   '¿Cuánto cuesta el Plan Básico?',
-  '¿La app tiene conexión bancaria?',
-  '¿Cómo registro un gasto?',
+  '¿Cómo registro una transacción?',
+  '¿Hay período de prueba del Plan Básico?',
 ];
 
 var sidebarEl = document.getElementById('sidebar-topics');
@@ -917,7 +1097,7 @@ function fabBotMsg(html) {
 
 function renderFabChips() {
   fabQuick.innerHTML = '';
-  ['¿Qué es Cada Menudo?','¿Cuánto cuesta?','¿Cómo registro un gasto?','Contactar soporte'].forEach(function(label) {
+  ['¿Qué es Cada Menudo?','Plan Básico','¿Cómo registro un gasto?','Contactar soporte'].forEach(function(label) {
     var c = document.createElement('button');
     c.style.cssText = 'background:#fff;border:1.5px solid var(--border);border-radius:100px;padding:5px 12px;font-size:.75rem;font-weight:600;font-family:\'Nunito\',sans-serif;color:var(--primary);cursor:pointer;transition:background .15s,color .15s;';
     c.textContent = label;
