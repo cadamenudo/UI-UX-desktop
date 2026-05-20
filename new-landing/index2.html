@@ -338,23 +338,67 @@
       <span style="background:var(--muted);border-radius:100px;padding:6px 16px;font-size:.8rem;font-weight:700;color:var(--primary);">🧾 Últimas transacciones</span>
       <span style="background:var(--muted);border-radius:100px;padding:6px 16px;font-size:.8rem;font-weight:700;color:var(--primary);">📅 Filtro por fechas</span>
     </div>
-    <div style="position:relative;max-width:960px;margin:0 auto;">
-      <div style="position:absolute;inset:-2px;background:var(--gradient-primary);border-radius:18px;filter:blur(0px);z-index:0;opacity:.25;"></div>
-      <div style="position:relative;z-index:1;background:#1e1b4b;border-radius:14px;padding:12px 16px 0;box-shadow:0 32px 80px rgba(57,86,232,.25),0 8px 24px rgba(0,0,0,.15);">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-          <div style="display:flex;gap:6px;">
-            <span style="width:11px;height:11px;border-radius:50%;background:#ff5f57;display:block;"></span>
-            <span style="width:11px;height:11px;border-radius:50%;background:#febc2e;display:block;"></span>
-            <span style="width:11px;height:11px;border-radius:50%;background:#28c840;display:block;"></span>
+    <!-- Laptop mockup -->
+    <div style="position:relative;max-width:900px;margin:0 auto;">
+      <!-- glow -->
+      <div style="position:absolute;inset:0;background:var(--gradient-primary);border-radius:24px;filter:blur(48px);opacity:.18;z-index:0;transform:scale(.92) translateY(8%);"></div>
+
+      <div style="position:relative;z-index:1;">
+        <!-- Screen lid -->
+        <div style="background:linear-gradient(160deg,#2a2a3a 0%,#1a1a28 100%);border-radius:16px 16px 0 0;padding:12px 12px 0;box-shadow:0 -2px 0 rgba(255,255,255,.08) inset;">
+          <!-- Webcam dot -->
+          <div style="display:flex;justify-content:center;margin-bottom:8px;">
+            <div style="width:7px;height:7px;border-radius:50%;background:#3a3a4a;border:1.5px solid #4a4a5a;"></div>
           </div>
-          <div style="flex:1;background:rgba(255,255,255,.1);border-radius:6px;padding:5px 12px;font-size:11px;color:rgba(255,255,255,.5);font-family:'Nunito',sans-serif;">
-            🔒 app.cadamenudo.com/tablero
+          <!-- Screen bezel -->
+          <div style="background:#0a0a14;border-radius:8px;overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,.06) inset;">
+            <img src="https://cadamenudo.github.io/UI-UX/assets/logo/desktop1.png"
+                 alt="Dashboard Cada Menudo"
+                 style="width:100%;display:block;" />
           </div>
         </div>
-        <img src="https://cadamenudo.github.io/UI-UX/assets/screenshots/dashboard.png"
-             alt="Dashboard Cada Menudo"
-             onerror="this.style.display='none'"
-             style="width:100%;display:block;border-radius:6px 6px 0 0;" />
+
+        <!-- Hinge -->
+        <div style="background:linear-gradient(180deg,#1a1a28 0%,#2e2e3e 100%);height:10px;width:100%;position:relative;">
+          <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.06) 0%,transparent 60%);"></div>
+        </div>
+
+        <!-- Base / keyboard -->
+        <div style="background:linear-gradient(180deg,#2e2e3e 0%,#232333 100%);border-radius:0 0 6px 6px;padding:10px 40px 6px;box-shadow:0 4px 0 #16162200;">
+          <!-- Keyboard rows (decorative) -->
+          <div style="display:flex;flex-direction:column;gap:3px;opacity:.35;">
+            <div style="display:flex;gap:3px;">
+              <div style="height:5px;background:#4a4a5a;border-radius:2px;flex:1;"></div>
+              <div style="height:5px;background:#4a4a5a;border-radius:2px;flex:1;"></div>
+              <div style="height:5px;background:#4a4a5a;border-radius:2px;flex:1;"></div>
+              <div style="height:5px;background:#4a4a5a;border-radius:2px;flex:1;"></div>
+              <div style="height:5px;background:#4a4a5a;border-radius:2px;flex:1;"></div>
+              <div style="height:5px;background:#4a4a5a;border-radius:2px;flex:1;"></div>
+              <div style="height:5px;background:#4a4a5a;border-radius:2px;flex:1;"></div>
+              <div style="height:5px;background:#4a4a5a;border-radius:2px;flex:1;"></div>
+              <div style="height:5px;background:#4a4a5a;border-radius:2px;flex:1;"></div>
+              <div style="height:5px;background:#4a4a5a;border-radius:2px;flex:1;"></div>
+            </div>
+            <div style="display:flex;gap:3px;">
+              <div style="height:5px;background:#4a4a5a;border-radius:2px;flex:1.2;"></div>
+              <div style="height:5px;background:#4a4a5a;border-radius:2px;flex:1;"></div>
+              <div style="height:5px;background:#4a4a5a;border-radius:2px;flex:1;"></div>
+              <div style="height:5px;background:#4a4a5a;border-radius:2px;flex:1;"></div>
+              <div style="height:5px;background:#4a4a5a;border-radius:2px;flex:1;"></div>
+              <div style="height:5px;background:#4a4a5a;border-radius:2px;flex:1;"></div>
+              <div style="height:5px;background:#4a4a5a;border-radius:2px;flex:1;"></div>
+              <div style="height:5px;background:#4a4a5a;border-radius:2px;flex:1.2;"></div>
+            </div>
+            <div style="display:flex;gap:3px;justify-content:center;">
+              <div style="height:5px;background:#4a4a5a;border-radius:2px;width:38%;"></div>
+            </div>
+          </div>
+          <!-- Trackpad -->
+          <div style="width:22%;height:14px;background:#3a3a4a;border-radius:4px;margin:5px auto 0;opacity:.5;border:1px solid rgba(255,255,255,.06);"></div>
+        </div>
+
+        <!-- Bottom stand shadow -->
+        <div style="height:8px;background:linear-gradient(180deg,#16162a 0%,transparent 100%);border-radius:0 0 40px 40px;margin:0 60px;opacity:.6;"></div>
       </div>
     </div>
   </div>
