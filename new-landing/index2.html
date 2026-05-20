@@ -301,12 +301,11 @@
       <h1 class="fade-up delay-1">Tu dinero.<br><span class="accent">Claro.</span><br>Sin excusas.</h1>
       <p class="hero-desc fade-up delay-2">Cada Menudo te ayuda a entender exactamente en qué se va tu dinero, organizar tus gastos y tomar control real de tus finanzas personales.</p>
       <div class="hero-ctas fade-up delay-3">
-        <a href="#signup" class="btn-primary-lg">Crear cuenta gratis →</a>
+        <a href="#signup" class="btn-primary-lg">Crear cuenta →</a>
         <a href="#features" class="btn-outline">Ver features</a>
       </div>
       <div class="hero-trust fade-up delay-4">
         <span>✅ Sin conexión bancaria</span>
-        <span>✅ 100% gratis</span>
         <span>✅ Datos privados</span>
       </div>
     </div>
@@ -419,7 +418,7 @@
     <div class="section-label">Proceso</div>
     <h2 class="section-title" style="margin-bottom:52px;">Empieza en 3 pasos</h2>
     <div class="steps-grid">
-      <div class="step"><div class="step-num">01</div><h3>Crea tu cuenta</h3><p>Registro gratuito en menos de 60 segundos.</p></div>
+      <div class="step"><div class="step-num">01</div><h3>Crea tu cuenta</h3><p>Registro rápido en menos de 60 segundos.</p></div>
       <div class="step"><div class="step-num">02</div><h3>Registra tus movimientos</h3><p>Manual o con escaneo IA de recibos.</p></div>
       <div class="step"><div class="step-num">03</div><h3>Entiende tu dinero</h3><p>Visualiza, analiza y toma control real.</p></div>
     </div>
@@ -563,8 +562,8 @@
   <div style="position:relative;z-index:1;">
     <h2>Empieza hoy.<br><span class="gold">Tu yo del futuro</span> te lo agradecerá.</h2>
     <p>Únete a miles de personas que ya tienen claridad total sobre su dinero.</p>
-    <a href="#signup" class="btn-yellow">Crear cuenta gratis →</a>
-    <p class="sub">Sin tarjeta. Sin trampas. Siempre gratis.</p>
+    <a href="#signup" class="btn-yellow">Crear cuenta →</a>
+    <p class="sub">Sin tarjeta. Sin trampas.</p>
   </div>
 </section>
 
@@ -587,7 +586,7 @@
       </div>
       <div class="signup-card" id="signup">
         <div class="form-eyebrow">Nuevo aquí</div>
-        <div class="form-title">Crear cuenta gratis</div>
+        <div class="form-title">Crear cuenta</div>
         <div class="form-fields">
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
             <input class="cm-input light" type="text" placeholder="Nombre" />
@@ -609,8 +608,8 @@
               <span style="font-size:.75rem;color:rgba(255,255,255,.82);line-height:1.5;">Al proporcionar su número de teléfono, usted acepta recibir mensajes de texto informativos de Cada Menudo. El consentimiento no es una condición de compra. Responda <strong style="color:#fff;">HELP</strong> para ayuda y <strong style="color:#fff;">STOP</strong> para cancelar. <a href="/sms-terms" style="color:#fff;font-weight:700;text-decoration:underline;">SMS Terms</a></span>
             </label>
           </div>
-          <button class="btn-signup" style="margin-top:4px;">Empezar gratis →</button>
-          <p class="form-footer">Sin tarjeta de crédito. Gratis para siempre.</p>
+          <button class="btn-signup" style="margin-top:4px;">Empezar →</button>
+          <p class="form-footer">Sin tarjeta de crédito requerida.</p>
         </div>
       </div>
     </div>
@@ -738,17 +737,17 @@ function getBotResponse(text) {
   if (has('que es cada menudo','para que sirve','mision','proposito'))
     return 'Cada Menudo es una app para organizar tus ingresos, gastos y ahorros 💰 Registra todo, visualiza gráficos claros, planifica metas y aprende hábitos financieros.';
   if (has('cuanto cuesta','precio','costo','plan basico cuesta','cuanto vale','mensual','anual'))
-    return 'El <strong>Plan Básico</strong> cuesta <strong>$5.99/mes</strong> o <strong>$49.99/año</strong> (~30% de descuento) 💰 El plan Free es completamente gratis sin límite de tiempo.';
-  if (has('plan free','gratis','sin costo','que incluye el free'))
-    return 'El <strong>Plan Free es gratis</strong> 🎉 Incluye registro manual, historial del último mes, gráficos del mes actual, categorías existentes y videos educativos.';
+    return 'El <strong>Plan Básico</strong> cuesta <strong>$5.99/mes</strong> o <strong>$49.99/año</strong> (~30% de descuento) 💰 Contáctanos para más información sobre planes disponibles.';
+  if (has('plan free','sin costo','que incluye el free'))
+    return 'Para conocer los planes disponibles y sus funciones, visita nuestra sección de planes o escríbenos a <strong>tech@cadamenudo.com</strong> 📧';
   if (has('plan basico incluye','basico incluye','que incluye el plan basico'))
-    return 'El <strong>Plan Básico</strong> incluye todo lo del Free más: historial completo, metas de ahorro, registro con IA, exportar data, categorías personalizadas, mensajes de colores, comparación mes vs mes y recurrencias automáticas 🚀';
+    return 'El <strong>Plan Básico</strong> incluye: historial completo, metas de ahorro, registro con IA, exportar data, categorías personalizadas, mensajes de colores, comparación mes vs mes y recurrencias automáticas 🚀';
   if (has('meta','metas de ahorro','crear meta','objetivo de ahorro'))
     return 'En la sección <strong>Metas</strong>, toca Nueva Meta, escribe el nombre, define el monto objetivo y guarda 🎯 Cuando la cumples ¡se pone verde! Disponible en el Plan Básico.';
   if (has('ia','inteligencia artificial','registro automatico'))
     return 'La <strong>IA del Plan Básico</strong> registra transacciones automáticamente 🤖 Identifica y organiza cada movimiento como ingreso, gasto o ahorro.';
   if (has('colores','alerta','verde','amarillo','rojo','semaforo','mensaje inteligente'))
-    return '🟢 <strong>Verde</strong>: estás en control<br>🟡 <strong>Amarillo</strong>: al límite del presupuesto<br>🔴 <strong>Rojo</strong>: déficit — gastos superan ingresos<br><em>Disponible en el Plan Básico.</em>';
+    return '🟢 <strong>Verde</strong>: estás en control<br>🟡 <strong>Amarillo</strong>: al límite del presupuesto<br>🔴 <strong>Rojo</strong>: déficit — gastos superan ingresos';
   if (has('seguro','privacidad','datos seguros','protegen mis datos'))
     return 'Tus datos están seguros 🔒 Cada Menudo protege tu información personal y financiera. No vendemos ni compartimos tus datos sin autorización.';
   if (has('banco','conexion bancaria','conectar banco'))
@@ -762,7 +761,7 @@ function getBotResponse(text) {
   if (has('descargar','app store','google play','play store'))
     return '¡Sí! Descarga Cada Menudo en <strong>Apple App Store</strong> 🍎 o <strong>Google Play Store</strong> 🤖 También disponible en web.';
   if (has('cancelar','cancelacion','reembolso'))
-    return 'Cancela desde <strong>Perfil → Suscripción y Pago</strong> 📋 Mantienes acceso al Plan Básico hasta el final del período pagado y luego pasas al plan Free.';
+    return 'Cancela desde <strong>Perfil → Suscripción y Pago</strong> 📋 Mantienes acceso al Plan Básico hasta el final del período pagado.';
 
   return 'Buena pregunta 🤔 Escríbenos a <strong>tech@cadamenudo.com</strong> o por <a href="https://api.whatsapp.com/send/?phone=17862027191" target="_blank" style="color:var(--primary);font-weight:700;">WhatsApp</a> y te ayudamos. ¿Tienes otra duda?';
 }
@@ -790,7 +789,6 @@ function makeTyping() {
 
 var TOPICS = [
   {label:'Planes y precios',    q:'¿Cuánto cuesta el Plan Básico?'},
-  {label:'Plan Free',           q:'¿Qué incluye el plan Free?'},
   {label:'Metas de ahorro',     q:'¿Cómo creo una meta de ahorro?'},
   {label:'Registro con IA',     q:'¿Cómo funciona el registro automático con IA?'},
   {label:'Alertas de colores',  q:'¿Qué significan los mensajes de colores?'},
@@ -801,8 +799,8 @@ var TOPICS = [
 var CHIPS = [
   '¿Qué es Cada Menudo?',
   '¿Cuánto cuesta el Plan Básico?',
-  '¿Qué incluye el plan Free?',
   '¿La app tiene conexión bancaria?',
+  '¿Cómo registro un gasto?',
 ];
 
 var sidebarEl = document.getElementById('sidebar-topics');
@@ -857,7 +855,7 @@ function deskBotMsg(html) {
 
 function renderDeskSugg() {
   dSugg.innerHTML = '';
-  ['¿Qué incluye el Free?','¿Cuánto cuesta?','Registro con IA','Alertas de colores'].forEach(function(label) {
+  ['¿Cuánto cuesta?','Registro con IA','Alertas de colores','Exportar datos'].forEach(function(label) {
     var c = document.createElement('button');
     c.style.cssText = 'background:var(--muted);border:1.5px solid var(--border);border-radius:100px;padding:5px 13px;font-size:.75rem;font-weight:600;font-family:\'Nunito\',sans-serif;color:var(--primary);cursor:pointer;transition:background .15s,color .15s;';
     c.textContent = label;
@@ -919,7 +917,7 @@ function fabBotMsg(html) {
 
 function renderFabChips() {
   fabQuick.innerHTML = '';
-  ['¿Qué es Cada Menudo?','¿Cuánto cuesta?','Plan Free vs Básico','¿Cómo registro un gasto?'].forEach(function(label) {
+  ['¿Qué es Cada Menudo?','¿Cuánto cuesta?','¿Cómo registro un gasto?','Contactar soporte'].forEach(function(label) {
     var c = document.createElement('button');
     c.style.cssText = 'background:#fff;border:1.5px solid var(--border);border-radius:100px;padding:5px 12px;font-size:.75rem;font-weight:600;font-family:\'Nunito\',sans-serif;color:var(--primary);cursor:pointer;transition:background .15s,color .15s;';
     c.textContent = label;
