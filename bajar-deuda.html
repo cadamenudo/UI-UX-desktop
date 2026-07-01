@@ -456,10 +456,13 @@
     <div class="sp-prog-track"><div class="sp-prog-fill" id="spProgressFill" style="width:0%"></div></div>
   </div>
   <div class="sp-body" id="spBody"></div>
-  <div class="sp-foot">
-    <div class="sp-done-info" id="spDoneInfo"></div>
-    <button class="btn ghost" onclick="closeSidePanel()">Ahora no</button>
-    <button class="btn primary" id="spContinueBtn" onclick="spContinue()" disabled style="opacity:.4">Registrar →</button>
+  <div class="sp-foot" style="flex-direction:column;gap:8px;">
+    <div style="display:flex;gap:8px;width:100%;">
+      <div class="sp-done-info" id="spDoneInfo"></div>
+      <button class="btn ghost" onclick="closeSidePanel()">Ahora no</button>
+      <button class="btn primary" id="spContinueBtn" onclick="spContinue()" disabled style="opacity:.4">Registrar →</button>
+    </div>
+    <button onclick="closeSidePanel();openCleanDebtModal();" style="width:100%;padding:9px;border:1px solid var(--border);border-radius:10px;background:#fff;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;color:var(--gray);cursor:pointer;">+ Agregar deuda que no está en la lista</button>
   </div>
 </div>
 
@@ -518,7 +521,7 @@ let unlinkedPayments=[
 ];
 
 let selectedDebtId=null, currentSort='balance', editingDebtId=null;
-let obSelected=null, spSelected=null, pendingPayment=null;
+let obSelected=null, spSelected=null, pendingPayment=null, pendingPaymentWasSet=false;
 
 // DOM
 const debtListEl=document.getElementById('debtList');
@@ -537,7 +540,10 @@ document.addEventListener('DOMContentLoaded',()=>{
   });
   filterCatEl.addEventListener('change',render);
   if(qEl) qEl.addEventListener('input',debounce(render,120));
-  document.getElementById('btnNewDebt').addEventListener('click',()=>openSidePanel());
+  document.getElementById('btnNewDebt').addEventListener('click',()=>{
+    const pending=unlinkedPayments.filter(p=>!p.linked).length;
+    if(pending>0) openSidePanel(); else openCleanDebtModal();
+  });
   document.getElementById('btnEditDebt').addEventListener('click',()=>{
     const d=getSelectedDebt(); if(!d)return;
     editingDebtId=d.id;
@@ -734,9 +740,28 @@ function spContinue(){
   openDebtModalWithPayment(p);
 }
 
+/* ── Open clean debt modal (manual entry) ── */
+function openCleanDebtModal(){
+  editingDebtId=null;
+  pendingPayment=null;
+  document.getElementById('debtModalTitle').textContent='Nueva deuda';
+  document.getElementById('saveDebt').textContent='Crear deuda';
+  document.getElementById('deleteDebtBtn').style.display='none';
+  document.getElementById('newName').value='';
+  document.getElementById('newCategory').value='';
+  document.getElementById('newOriginal').value='';
+  document.getElementById('newApr').value='';
+  document.getElementById('newMonthly').value='';
+  document.getElementById('newNote').value='';
+  document.getElementById('linkedBadge').style.display='none';
+  openModal(document.getElementById('overlayDebt'));
+  setTimeout(()=>document.getElementById('newName').focus(),50);
+}
+
 /* ── Open debt modal pre-filled from payment ── */
 function openDebtModalWithPayment(p){
   editingDebtId=null;
+  pendingPaymentWasSet=true;
   document.getElementById('debtModalTitle').textContent='Registrar deuda';
   document.getElementById('saveDebt').textContent='Crear deuda';
   document.getElementById('deleteDebtBtn').style.display='none';
@@ -801,12 +826,16 @@ function saveDebtHandler(){
 
   render();
 
-  // If still unlinked payments, reopen side panel after short delay
+  // Only reopen side panel if this came from a linked payment (not manual)
+  const cameFromPayment = !editingDebtId && pendingPaymentWasSet;
+  pendingPaymentWasSet = false;
   const remaining=unlinkedPayments.filter(p=>!p.linked);
-  if(remaining.length>0){
+  if(cameFromPayment && remaining.length>0){
     setTimeout(()=>openSidePanel(),400);
-  } else {
+  } else if(remaining.length===0 && cameFromPayment){
     showToast('✅','¡Todas las deudas registradas!');
+  } else {
+    showToast('✅','Deuda registrada.');
   }
 }
 
