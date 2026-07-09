@@ -68,6 +68,7 @@
     .cg-name{font-size:.9rem;font-weight:800;color:var(--text);}
     .cg-meta{font-size:.75rem;color:var(--muted);margin-top:2px;font-weight:600;}
     .cg-rt{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+    .cg-total-amt{font-size:.9rem;font-weight:900;color:#0f172a;}
     .cg-chv{font-size:.85rem;color:#9ca3af;transition:transform .25s;display:inline-block;}
     .cg.open .cg-chv{transform:rotate(180deg);}
     .cg-body{max-height:0;overflow:hidden;transition:max-height .3s cubic-bezier(.4,0,.2,1);}
@@ -492,9 +493,10 @@ function renderArea(area) {
     hd.innerHTML = `
       <div class="cg-left">
         <div class="cg-name">${cat}</div>
-        <div class="cg-meta">${partLabel} · ${fmt(total)}</div>
+        <div class="cg-meta">${partLabel}</div>
       </div>
       <div class="cg-rt">
+        <span class="cg-total-amt">${fmt(total)}</span>
         <span class="cg-chv">⌄</span>
       </div>`;
     hd.addEventListener('click', () => {
