@@ -124,6 +124,15 @@
     .btn-secondary{border-radius:999px;border:1px solid var(--border);background:#fff;color:var(--muted);font-size:.8rem;padding:6px 12px;font-weight:600;cursor:pointer;font-family:inherit;}
 
     /* ── VS REAL ── */
+    /* ── KPI comparison table ── */
+    .kpi-table{width:100%;border-collapse:collapse;font-size:.88rem;}
+    .kpi-table th{padding:11px 16px;background:#f9fafb;font-weight:700;color:var(--muted);border-bottom:2px solid var(--border);text-align:left;}
+    .kpi-table td{padding:13px 16px;border-bottom:1px solid var(--border);}
+    .kpi-table tbody tr:last-child td{border-bottom:none;}
+    .kpi-table tbody tr:hover td{background:#fafbff;}
+    .kpi-num{font-weight:800;font-size:.92rem;color:var(--text);}
+    .diff-pos{color:#15803d;}.diff-neg{color:#b91c1c;}
+
     .banner{margin-top:8px;margin-bottom:20px;padding:12px 16px;border-radius:12px;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:var(--shadow);background:var(--success-bg);color:var(--success-text);font-size:.9rem;flex-wrap:wrap;}
     .banner strong{font-weight:800;}
     .banner .banner-sec{color:var(--muted);}
@@ -293,15 +302,51 @@
 
   <!-- ══ TAB 2: VS REAL ══ -->
   <section id="tab-vsreal" class="tab-content">
-    <section class="banner" id="bannerResumen">
-      <div><strong>SUPER:</strong> Estás usando el <strong id="textoPorcentajeUsado">0%</strong> de tu presupuesto de gastos.</div>
-      <span class="banner-sec">Te quedan <strong id="textoRestante">$0</strong> para gastar sin salirte del plan.</span>
-    </section>
-    <section class="kpi-row">
-      <article class="kpi-card"><span class="kpi-label">Presupuesto de gastos</span><div class="kpi-value" id="kpiPresupuestoGastos">$0</div><div class="kpi-sub">Total que planeaste gastar.</div></article>
-      <article class="kpi-card"><span class="kpi-label">Gasto real</span><div class="kpi-value" id="kpiGastoReal">$0</div><div class="kpi-sub">Suma de tus gastos reales.</div></article>
-      <article class="kpi-card"><span class="kpi-label">Diferencia</span><div class="kpi-value" id="kpiDiferencia">$0</div><div class="kpi-sub"><span id="badgeEstado" class="chip-status green">Dentro del presupuesto</span></div></article>
-    </section>
+
+    <!-- 3-area KPI table -->
+    <div class="kpi-table-wrap card" style="margin-bottom:20px;padding:0;overflow:hidden;">
+      <table class="kpi-table">
+        <thead>
+          <tr>
+            <th style="width:140px;">Área</th>
+            <th>Presupuestado</th>
+            <th>Real</th>
+            <th>Diferencia</th>
+            <th>% ejecutado</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- INGRESOS -->
+          <tr id="kpi-row-ingresos">
+            <td><span style="display:inline-flex;align-items:center;gap:6px;font-weight:800;">💰 Ingresos</span></td>
+            <td id="kpi-pres-ingresos" class="kpi-num">$0</td>
+            <td id="kpi-real-ingresos" class="kpi-num">$0</td>
+            <td id="kpi-diff-ingresos" class="kpi-num">$0</td>
+            <td id="kpi-pct-ingresos"  class="kpi-num">—</td>
+            <td><span id="kpi-badge-ingresos" class="chip-status green">—</span></td>
+          </tr>
+          <!-- GASTOS -->
+          <tr id="kpi-row-gastos">
+            <td><span style="display:inline-flex;align-items:center;gap:6px;font-weight:800;">🛒 Gastos</span></td>
+            <td id="kpi-pres-gastos" class="kpi-num">$0</td>
+            <td id="kpi-real-gastos" class="kpi-num">$0</td>
+            <td id="kpi-diff-gastos" class="kpi-num">$0</td>
+            <td id="kpi-pct-gastos"  class="kpi-num">—</td>
+            <td><span id="kpi-badge-gastos" class="chip-status green">—</span></td>
+          </tr>
+          <!-- AHORRO -->
+          <tr id="kpi-row-ahorro">
+            <td><span style="display:inline-flex;align-items:center;gap:6px;font-weight:800;">🎯 Ahorro</span></td>
+            <td id="kpi-pres-ahorro" class="kpi-num">$0</td>
+            <td id="kpi-real-ahorro" class="kpi-num">$0</td>
+            <td id="kpi-diff-ahorro" class="kpi-num">$0</td>
+            <td id="kpi-pct-ahorro"  class="kpi-num">—</td>
+            <td><span id="kpi-badge-ahorro" class="chip-status green">—</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
     <section class="main-row">
       <article class="card">
         <div class="card-header">
@@ -779,22 +824,41 @@ function updateVsRealChart() {
 }
 
 function updateKPIs() {
-  const presGas = sumArea('gastos');
-  const realGas = sumReal('gastos');
-  const diff    = presGas - realGas;
-  const pct     = presGas > 0 ? (realGas/presGas)*100 : 0;
+  const areas = ['ingresos','gastos','ahorro'];
 
-  document.getElementById('kpiPresupuestoGastos').textContent = fmt(presGas);
-  document.getElementById('kpiGastoReal').textContent         = fmt(realGas);
-  document.getElementById('kpiDiferencia').textContent        = fmt(diff);
-  document.getElementById('textoPorcentajeUsado').textContent = Math.round(pct)+'%';
-  document.getElementById('textoRestante').textContent        = fmt(Math.abs(diff));
+  areas.forEach(area => {
+    const pres = sumArea(area);
+    const real = sumReal(area);
+    const pct  = pres > 0 ? (real / pres) * 100 : 0;
 
-  const badge = document.getElementById('badgeEstado');
-  badge.className = 'chip-status';
-  if (pct <= 90)        { badge.classList.add('green');  badge.textContent = 'Dentro del presupuesto'; }
-  else if (pct <= 110)  { badge.classList.add('yellow'); badge.textContent = 'Cerca del límite'; }
-  else                  { badge.classList.add('red');    badge.textContent = 'Sobre el presupuesto'; }
+    // For gastos: positive diff = under budget (good). Others: positive = over plan (good).
+    const diff      = area === 'gastos' ? pres - real : real - pres;
+    const isGood    = area === 'gastos' ? real <= pres * 1.0  : real >= pres * 0.9;
+    const isWarning = area === 'gastos' ? (pct > 90 && pct <= 110) : (pct >= 70 && pct < 90);
+
+    document.getElementById('kpi-pres-'+area).textContent = fmt(pres);
+    document.getElementById('kpi-real-'+area).textContent = fmt(real);
+    document.getElementById('kpi-pct-'+area).textContent  = pres > 0 ? Math.round(pct)+'%' : '—';
+
+    const diffEl = document.getElementById('kpi-diff-'+area);
+    diffEl.textContent  = (diff >= 0 ? '+' : '') + fmt(diff);
+    diffEl.className    = 'kpi-num ' + (diff >= 0 ? 'diff-pos' : 'diff-neg');
+
+    const badge = document.getElementById('kpi-badge-'+area);
+    badge.className = 'chip-status';
+    if (pres === 0) {
+      badge.textContent = 'Sin presupuesto';
+      badge.classList.add('yellow');
+    } else if (area === 'gastos') {
+      if (pct <= 90)       { badge.classList.add('green');  badge.textContent = 'Bajo presupuesto'; }
+      else if (pct <= 100) { badge.classList.add('yellow'); badge.textContent = 'Cerca del límite'; }
+      else                 { badge.classList.add('red');    badge.textContent = 'Sobre el presupuesto'; }
+    } else {
+      if (pct >= 95)       { badge.classList.add('green');  badge.textContent = 'En meta'; }
+      else if (pct >= 70)  { badge.classList.add('yellow'); badge.textContent = 'Cerca de la meta'; }
+      else                 { badge.classList.add('red');    badge.textContent = 'Bajo la meta'; }
+    }
+  });
 }
 
 function renderDesvios() {
